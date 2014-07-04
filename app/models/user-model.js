@@ -15,7 +15,10 @@ define([
       slug       : '',
       URL        : '',
       avatar     : ''
-    }
+    },
+
+    idAttribute: 'ID',
+    urlRoot: '/users',
   });
 
   return User;

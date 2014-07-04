@@ -32,10 +32,27 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: '/wp-json/posts',
+    urlRoot: '/posts',
 
     getAuthor: function () {
       return new User(this.get('author'));
+    },
+
+    fetchRevisions: function (id) {
+      return this.fetchMeta(id, 'version-history');
+    },
+
+    fetchComments: function (id) {
+      return this.fetchMeta(id, 'replies');
+    },
+
+    fetchMeta: function (id, link) {
+      id = id || '';
+      return $.isEmptyObject(this.get('meta')) ? false : $.get(this.getMetaUrl(link) + '/' + id);
+    },
+
+    getMetaUrl: function (link) {
+      return this.get('meta').links[link];
     }
   });
 
