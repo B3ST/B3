@@ -1,5 +1,6 @@
 define([
-  'models/user-model'
+  'models/user-model',
+  'sinon'
 ], function (User) {
   describe("User", function() {
     beforeEach(function() {
@@ -7,52 +8,72 @@ define([
     });
 
     describe("When instantiating a User", function() {
-      beforeEach(function() {
-        this.model = new User();
-      });
-
       it("should have null ID", function() {
         expect(this.model.get('ID')).toBe(null);
       });
 
-      it("should have an empty username", function() {
-        expect(this.model.get('username')).toBe('');
+      using('model fields', ['username', 'email', 'password', 'name', 'first_name', 'last_name', 'nickname', 'slug', 'URL', 'avatar'], function (field) {
+        it("should have an empty " + field, function() {
+          expect(this.model.get(field)).toBe('');
+        });
+      });
+    });
+
+    describe("When fetching users", function() {
+      beforeEach(function() {
+        this.server = sinon.fakeServer.create();
+        this.model  = new User({ID: 1});
       });
 
-      it("should have an empty email", function() {
-        expect(this.model.get('email')).toBe('');
+      afterEach(function() {
+        this.server.restore();
       });
 
-      it("should have an empty password", function() {
-        expect(this.model.get('password')).toBe('');
+      describe("When fetching is successful", function() {
+        it("should set its attributes", function() {
+          var response = {
+            ID: 1,
+            username: 'wordpress',
+            email: 'generic@wordpress.org',
+            password: '',
+            name: 'WordPress',
+            first_name: 'Word',
+            last_name: 'Press',
+            nickname: 'The WordPresser',
+            slug: 'wordpress',
+            URL: 'http://wordpress.org',
+            avatar: 'http://s.w.org/style/images/wp-header-logo-2x.png?1'
+          };
+
+          this.server.respondWith(
+            'GET',
+            '/users/1',
+            [200, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
+          );
+
+          this.model.fetch();
+          this.server.respond();
+
+          expect(this.model.get('username')).toBe('wordpress');
+          expect(this.model.get('email')).toBe('generic@wordpress.org');
+        });
       });
 
-      it("should have an empty name", function() {
-        expect(this.model.get('name')).toBe('');
-      });
+      describe("When fetching fails", function() {
+        it("should maintain its attributes", function() {
+          var response = '';
+          this.server.respondWith(
+            'GET',
+            '/users/1',
+            [404, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
+          );
 
-      it("should have an empty first_name", function() {
-        expect(this.model.get('first_name')).toBe('');
-      });
+          this.model.fetch();
+          this.server.respond();
 
-      it("should have an empty last_name", function() {
-        expect(this.model.get('last_name')).toBe('');
-      });
-
-      it("should have an empty nickname", function() {
-        expect(this.model.get('nickname')).toBe('');
-      });
-
-      it("should have an empty slug", function() {
-        expect(this.model.get('slug')).toBe('');
-      });
-
-      it("should have an empty URL", function() {
-        expect(this.model.get('URL')).toBe('');
-      });
-
-      it("should have an empty avatar", function() {
-        expect(this.model.get('avatar')).toBe('');
+          var empty = new User({ID: 1});
+          expect(this.model.attributes).toEqual(this.model.attributes);
+        });
       });
     });
   });
