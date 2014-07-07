@@ -61,7 +61,8 @@ require(["jquery", "backbone", "marionette", "jasmine-html", "bootstrap", "backb
     var root  = '../../../../test/jasmine/specs/';
     var specs = [
       root + 'core/models/post-model.spec',
-      root + 'core/models/user-model.spec'
+      root + 'core/models/post-status-model.spec',
+      root + 'core/models/user-model.spec',
     ];
 
     $(function() {
