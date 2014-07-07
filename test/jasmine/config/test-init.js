@@ -62,7 +62,9 @@ require(["jquery", "backbone", "marionette", "jasmine-html", "bootstrap", "backb
     var specs = [
       root + 'core/models/post-model.spec',
       root + 'core/models/post-status-model.spec',
+      root + 'core/models/post-types-model.spec',
       root + 'core/models/user-model.spec',
+      root + 'core/models/taxonomy-model.spec'
     ];
 
     $(function() {
