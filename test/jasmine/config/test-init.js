@@ -60,13 +60,23 @@ require(["jquery", "backbone", "marionette", "jasmine-html", "bootstrap", "backb
   function($, Backbone, Marionette, jasmine) {
     var root  = '../../../../test/jasmine/specs/';
     var specs = [
+      // models
       root + 'core/models/post-model.spec',
       root + 'core/models/post-status-model.spec',
-      root + 'core/models/post-types-model.spec',
+      root + 'core/models/post-type-model.spec',
       root + 'core/models/page-model.spec',
       root + 'core/models/user-model.spec',
       root + 'core/models/taxonomy-model.spec',
-      root + 'core/models/media-model.spec'
+      root + 'core/models/media-model.spec',
+
+      // collections
+      root + 'core/collections/user-collection.spec',
+      root + 'core/collections/post-collection.spec',
+      root + 'core/collections/post-status-collection.spec',
+      root + 'core/collections/post-type-collection.spec',
+      root + 'core/collections/page-collection.spec',
+      root + 'core/collections/taxonomy-collection.spec',
+      root + 'core/collections/media-collection.spec'
     ];
 
     $(function() {
