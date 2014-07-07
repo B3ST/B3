@@ -63,6 +63,7 @@ require(["jquery", "backbone", "marionette", "jasmine-html", "bootstrap", "backb
       root + 'core/models/post-model.spec',
       root + 'core/models/post-status-model.spec',
       root + 'core/models/post-types-model.spec',
+      root + 'core/models/page-model.spec',
       root + 'core/models/user-model.spec',
       root + 'core/models/taxonomy-model.spec',
       root + 'core/models/media-model.spec'
