@@ -9,13 +9,14 @@ define([
       title          : '',
       status         : 'inherit',
       type           : 'attachment',
-      author         : {},
+      parent         : 0,
+      author         : new User(),
       content        : '',
       link           : '',
-      date           : '',
-      date_gmt       : '',
-      modified       : '',
-      modified_gmt   : '',
+      date           : new Date(),
+      date_gmt       : new Date(),
+      modified       : new Date(),
+      modified_gmt   : new Date(),
       format         : 'standard',
       slug           : '',
       guid           : '',
@@ -34,11 +35,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: '/media',
-
-    getAuthor: function () {
-      return new User(this.get('author'));
-    }
+    urlRoot: '/media'
   });
 
   return Media;

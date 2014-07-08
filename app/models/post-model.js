@@ -9,12 +9,13 @@ define([
       title          : '',
       status         : 'draft',
       type           : 'post',
-      author         : {},
+      parent         : 0,
+      author         : new User(),
       content        : '',
       link           : '',
-      date           : '',
-      date_gmt       : '',
-      modified       : '',
+      date           : new Date(),
+      date_gmt       : new Date(),
+      modified       : new Date(),
       format         : 'standard',
       slug           : '',
       guid           : '',
@@ -33,10 +34,6 @@ define([
 
     idAttribute: 'ID',
     urlRoot: '/posts',
-
-    getAuthor: function () {
-      return new User(this.get('author'));
-    },
 
     fetchRevisions: function (id) {
       return this.fetchMeta(id, 'version-history');

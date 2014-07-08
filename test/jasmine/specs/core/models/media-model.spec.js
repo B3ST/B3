@@ -20,6 +20,10 @@ define([
         expect(this.model.get('type')).toEqual('attachment');
       });
 
+      it("should have no parent", function() {
+        expect(this.model.get('parent')).toEqual(0);
+      });
+
       it("should have 0 as menu_order", function() {
         expect(this.model.get('menu_order')).toEqual(0);
       });
@@ -40,6 +44,16 @@ define([
         expect(this.model.get('terms')).toEqual([]);
       });
 
+      it("should have author defined", function() {
+        expect(this.model.get('author') instanceof Backbone.Model).toBeTruthy();
+      });
+
+      using('model fields', ['date', 'date_gmt', 'modified', 'modified_gmt'], function (field) {
+        it("should have " + field + " defined", function() {
+          expect(this.model.get(field) instanceof Date).toBeTruthy();
+        });
+      });
+
       using('model fields', ['date_tz', 'modified_tz'], function (field) {
         it('should have ' + field + ' set to Etc/UTC', function() {
           expect(this.model.get(field)).toEqual('Etc/UTC');
@@ -52,28 +66,17 @@ define([
         });
       });
 
-      using('model fields', ['image_meta', 'meta', 'author'], function (field) {
+      using('model fields', ['image_meta', 'meta'], function (field) {
         it("should have an empty " + field + " object", function() {
           expect(this.model.get(field)).toEqual({});
         });
       });
 
-      using('model fields', ['title', 'content', 'link', 'date', 'date_gmt', 'modified', 'modified_gmt', 'slug', 'guid', 'excerpt', 'source'], function (field) {
+      using('model fields', ['title', 'content', 'link', 'slug', 'guid', 'excerpt', 'source'], function (field) {
         it("should have an empty " + field, function() {
           expect(this.model.get(field)).toEqual('');
         });
       });
-    });
-  });
-
-  describe(".getAuthor", function() {
-    it("should return a User model of the author", function() {
-      var model  = new Media({author: {"ID":1,"username":"admin","name":"admin","first_name":"word","last_name":"press","nickname":"wordpress","slug":"admin","URL":"","avatar":"","description":"","registered":"2013-04-04T16:58:14+00:00","meta":{"links":{"self":"http://example.com/wp-json/users/1","archives":"http://example.com/wp-json/users/1/posts"}}}});
-      var author = model.getAuthor();
-
-      expect(author.get('ID')).toEqual(1);
-      expect(author.get('username')).toEqual('admin');
-      expect(author.get('name')).toEqual('admin');
     });
   });
 
@@ -102,6 +105,10 @@ define([
 
         expect(this.model.get('title')).toEqual('143Construction-600&#215;400');
         expect(this.model.get('status')).toEqual('inherit');
+
+        expect(this.model.get('author').get('ID')).toEqual(1);
+        expect(this.model.get('author').get('username')).toEqual('admin');
+        expect(this.model.get('author').get('name')).toEqual('admin');
       });
     });
 
