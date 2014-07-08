@@ -14,7 +14,13 @@ define([
         });
       });
 
-      using('model fields', ['title', 'content', 'link', 'slug', 'guid', 'excerpt', 'date', 'date_gmt', 'modified'], function(field) {
+      using('model fields', ['author', 'date', 'date_gmt', 'modified'], function (field) {
+        it("should have " + field + " defined", function() {
+          expect(this.model.get(field)).toBeDefined();
+        });
+      });
+
+      using('model fields', ['title', 'content', 'link', 'slug', 'guid', 'excerpt'], function(field) {
         it("should have an empty " + field, function() {
           expect(this.model.get(field)).toBe('');
         });
@@ -32,10 +38,14 @@ define([
         });
       });
 
-      using('model fields', ['author', 'terms', 'post_meta', 'meta'], function(field) {
+      using('model fields', ['terms', 'post_meta', 'meta'], function(field) {
         it("should have an empty object for " + field, function() {
           expect(this.model.get(field)).toEqual({});
         });
+      });
+
+      it("should not be a parent", function() {
+        expect(this.model.get('parent')).toEqual(0);
       });
 
       it("should have draft set for status", function() {
@@ -56,17 +66,6 @@ define([
 
       it("should have no menu_order", function() {
         expect(this.model.get('menu_order')).toBe(0);
-      });
-    });
-
-    describe(".getAuthor", function() {
-      it("should return a User model of author", function() {
-        this.post   = new Post({author: {"ID":1,"username":"admin","name":"admin","first_name":"","last_name":"","nickname":"admin","slug":"admin","URL":"","avatar":"http:\/\/1.gravatar.com\/avatar\/b17c1f19d80bf8f61c3f14962153f959?s=96","description":"","email":"admin@example.com","registered":"2014-03-05T18:37:51+00:00","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}}});
-        this.author = this.post.getAuthor();
-
-        expect(this.author.get('ID')).toBe(1);
-        expect(this.author.get('username')).toBe('admin');
-        expect(this.author.get('email')).toBe('admin@example.com');
       });
     });
 
@@ -96,11 +95,11 @@ define([
           expect(this.post.get('ID')).toBe(1);
           expect(this.post.get('title')).toBe('Test Post');
 
-          expect(this.post.getAuthor().get('username')).toBe('admin');
-          expect(this.post.getAuthor().get('ID')).toBe(1);
+          expect(this.post.get('author').get('username')).toBe('admin');
+          expect(this.post.get('author').get('ID')).toBe(1);
 
-          expect(this.post.get('date')).toBe('2014-05-11T19:29:15+00:00');
-          expect(this.post.get('modified')).toBe('2014-05-11T19:29:15+00:00');
+          expect(this.post.get('date')).toEqual(new Date('2014-05-11T19:29:15+00:00'));
+          expect(this.post.get('modified')).toEqual(new Date('2014-05-11T19:29:15+00:00'));
         });
       });
 

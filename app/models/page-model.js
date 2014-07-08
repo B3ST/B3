@@ -8,10 +8,11 @@ define([
       ID             : null,
       title          : '',
       content        : '',
-      date           : '',
-      date_gmt       : '',
-      modified       : '',
-      modified_gmt   : '',
+      parent         : 0,
+      date           : new Date(),
+      date_gmt       : new Date(),
+      modified       : new Date(),
+      modified_gmt   : new Date(),
       slug           : '',
       guid           : '',
       excerpt        : '',
@@ -26,16 +27,12 @@ define([
       terms          : [],
       date_tz        : 'Etc/UTC',
       modified_tz    : 'Etc/UTC',
-      author         : {},
+      author         : new User(),
       meta           : {}
     },
 
     idAttribute: 'ID',
     urlRoot: '/pages',
-
-    getAuthor: function () {
-      return new User(this.get('author'));
-    },
   });
 
   return Page;
