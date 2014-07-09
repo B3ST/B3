@@ -72,6 +72,7 @@ require([
     root + 'core/models/post-model.spec',
     root + 'core/models/post-status-model.spec',
     root + 'core/models/post-type-model.spec',
+    root + 'core/models/revision-model.spec',
     root + 'core/models/comment-model.spec',
     root + 'core/models/page-model.spec',
     root + 'core/models/user-model.spec',
@@ -83,6 +84,8 @@ require([
     root + 'core/collections/post-collection.spec',
     root + 'core/collections/post-status-collection.spec',
     root + 'core/collections/post-type-collection.spec',
+    root + 'core/collections/comment-collection.spec',
+    root + 'core/collections/revision-collection.spec',
     root + 'core/collections/page-collection.spec',
     root + 'core/collections/taxonomy-collection.spec',
     root + 'core/collections/media-collection.spec'
