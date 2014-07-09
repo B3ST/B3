@@ -1,7 +1,8 @@
 define([
   'jquery',
-  'backbone'
-], function ($, Backbone) {
+  'backbone',
+  'collections/term-collection'
+], function ($, Backbone, Terms) {
   var Taxonomy = Backbone.Model.extend({
     defaults: {
       name         : '',
@@ -16,9 +17,24 @@ define([
     idAttribute: 'slug',
     urlRoot: '/taxonomies',
 
-    fetchTerms: function (id) {
+    fetchTerms: function (callbacks, id) {
       id = id || '';
-      return $.isEmptyObject(this.get('meta')) ? false : $.get(this.get('meta').links.archives);
+      if ($.isEmptyObject(this.get('meta'))) {
+        return false;
+      } else {
+        $.get(this.get('meta').links.archives)
+          .done(function (data) {
+            var init = (id == '' ? Terms : new Terms().model);
+            if (callbacks.done) {
+              callbacks.done(new init(data));
+            }
+          })
+          .fail(function (data) {
+            if (callbacks.fail) {
+              callbacks.fail(data);
+            }
+          });
+      }
     }
   });
 
