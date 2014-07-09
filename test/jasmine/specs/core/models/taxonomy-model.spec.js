@@ -89,7 +89,7 @@ define([
       describe("When fetching term collection is successful", function() {
         it("should return the term collection", function() {
           var response = [
-            {"ID":2,"name":"News","slug":"news","description":"This is the news category.","parent":null,"count":8,"link":"http:\/\/example.com\/category\/news\/","meta":{"links":{"collection":"http:\/\/example.com\/wp-json\/taxonomies\/category\/terms","self":"http:\/\/example.com\/wp-json\/taxonomies\/category\/terms\/1"}}}
+            {"ID":2,"name":"News", "taxonomy":"category", "slug":"news","description":"This is the news category.","parent":null,"count":8,"link":"http:\/\/example.com\/category\/news\/","meta":{"links":{"collection":"http:\/\/example.com\/wp-json\/taxonomies\/category\/terms","self":"http:\/\/example.com\/wp-json\/taxonomies\/category\/terms\/1"}}}
           ];
 
           this.server.respondWith(
@@ -98,8 +98,8 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.model.fetchTerms().done(function (data) {
-            expect(data).toEqual(response);
+          this.model.fetchTerms({
+            done: function (data) { expect(data.models[0].attributes).toEqual(response[0]); }
           });
           this.server.respond();
         });
@@ -115,9 +115,9 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.model.fetchTerms(2).done(function (data) {
-            expect(data).toEqual(response);
-          });
+          this.model.fetchTerms({
+            done: function (data) { expect(data).toEqual(response); }
+          }, 2);
           this.server.respond();
         });
       });
@@ -132,9 +132,10 @@ define([
             [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
           );
 
-          this.model.fetchTerms()
-            .done(function (data) { expect(true).toBeFalsy(); })
-            .fail(function (data) { expect(data).not.toEqual({}); });
+          this.model.fetchTerms({
+            done: function (data) { expect(true).toBeFalsy(); },
+            fail: function (data) { expect(data).not.toEqual({}); }
+          });
         });
       });
 
