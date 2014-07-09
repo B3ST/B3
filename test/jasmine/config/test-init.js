@@ -77,6 +77,7 @@ require([
     root + 'core/models/page-model.spec',
     root + 'core/models/user-model.spec',
     root + 'core/models/taxonomy-model.spec',
+    root + 'core/models/term-model.spec',
     root + 'core/models/media-model.spec',
 
     // collections
