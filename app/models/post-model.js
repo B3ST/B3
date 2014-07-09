@@ -1,8 +1,12 @@
 define([
   'jquery',
   'backbone',
-  'models/user-model'
-], function ($, Backbone, User) {
+  'models/user-model',
+  'models/comment-model',
+  'models/revision-model',
+  'collections/comment-collection',
+  'collections/revision-collection'
+], function ($, Backbone, User, Comment, Revision, Comments, Revisions) {
   var Post = Backbone.Model.extend({
     defaults: {
       ID             : null,
@@ -35,17 +39,30 @@ define([
     idAttribute: 'ID',
     urlRoot: '/posts',
 
-    fetchRevisions: function (id) {
-      return this.fetchMeta(id, 'version-history');
+    fetchRevisions: function (callbacks, id) {
+      return this.fetchMeta(id, 'version-history', Revisions, callbacks);
     },
 
-    fetchComments: function (id) {
-      return this.fetchMeta(id, 'replies');
+    fetchComments: function (callbacks, id) {
+      return this.fetchMeta(id, 'replies', Comments, callbacks);
     },
 
-    fetchMeta: function (id, link) {
+    fetchMeta: function (id, link, collection, callbacks) {
       id = id || '';
-      return $.isEmptyObject(this.get('meta')) ? false : $.get(this.getMetaUrl(link) + '/' + id);
+      if ($.isEmptyObject(this.get('meta'))) {
+        return false;
+      } else {
+        $.get(this.getMetaUrl(link) + '/' + id).done(function (data) {
+            var init = (id == '' ? collection : new collection().model);
+            if (callbacks.done) {
+              callbacks.done(new init(data));
+            }
+          }).fail(function (data) {
+            if (callbacks.fail) {
+              callbacks.fail(data);
+            }
+          });
+      }
     },
 
     getMetaUrl: function (link) {

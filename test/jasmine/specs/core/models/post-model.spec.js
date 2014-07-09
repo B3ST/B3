@@ -144,8 +144,8 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.post.fetchRevisions().done(function (data) {
-            expect(data).toEqual(response);
+          this.post.fetchRevisions({
+            done: function (data) { expect(data.models[0].attributes).toEqual(response[0]); }
           });
 
           this.server.respond();
@@ -161,9 +161,9 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.post.fetchRevisions(1).done(function (data) {
-            expect(data).toEqual(response);
-          });
+          this.post.fetchRevisions({
+            done: function (data) { expect(data.attributes).toEqual(response); }
+          }, 1);
 
           this.server.respond();
         });
@@ -178,9 +178,10 @@ define([
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.post.fetchRevisions()
-            .done(function (data) { expect(false).toBeTruthy(); })
-            .fail(function (data) { expect(data).not.toEqual({}) });
+          this.post.fetchRevisions({
+            done: function (data) { expect(false).toBeTruthy(); },
+            fail: function (data) { expect(data).not.toEqual({}) }
+          });
 
           this.server.respond();
         });
@@ -216,8 +217,8 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.post.fetchComments().done(function (data) {
-            expect(data).toEqual(response)
+          this.post.fetchComments({
+            done: function (data) { expect(data.models[0].attributes).toEqual(response[0]) }
           });
 
           this.server.respond();
@@ -234,9 +235,9 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.post.fetchComments(1).done(function (data) {
-            expect(data).toEqual(response);
-          });
+          this.post.fetchComments({
+            done: function (data) { expect(data.attributes).toEqual(response); }
+          }, 1);
 
           this.server.respond();
         });
@@ -252,9 +253,10 @@ define([
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.post.fetchComments()
-            .done(function (data) { expect(false).toBeTruthy(); })
-            .fail(function (data) { expect(data).not.toEqual({}); });
+          this.post.fetchComments( {
+            done: function (data) { expect(false).toBeTruthy(); },
+            fail: function (data) { expect(data).not.toEqual({}); }
+          });
 
           this.server.respond();
         });
