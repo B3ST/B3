@@ -2,11 +2,9 @@ define([
   'jquery',
   'backbone',
   'models/user-model',
-  'models/comment-model',
-  'models/revision-model',
   'collections/comment-collection',
   'collections/revision-collection'
-], function ($, Backbone, User, Comment, Revision, Comments, Revisions) {
+], function ($, Backbone, User, Comments, Revisions) {
   var Post = Backbone.Model.extend({
     defaults: {
       ID             : null,
