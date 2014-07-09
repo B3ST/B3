@@ -1,20 +1,20 @@
 require.config({
-  baseUrl: "../../../../app",
+  baseUrl: WP_API_SETTINGS.root + "/app",
   // 3rd party script alias names (Easier to type "jquery" than "libs/jquery, etc")
   // probably a good idea to keep version numbers in the file names for updates checking
   paths: {
     // Core Libraries
-    "jquery": "../../libs/jquery",
-    "jqueryui": "../../libs/jqueryui",
-    "underscore": "../../libs/lodash",
-    "backbone": "../../libs/backbone",
-    "marionette": "../../libs/backbone.marionette",
-    "handlebars": "../../libs/handlebars",
+    "jquery": WP_API_SETTINGS.root + "/libs/jquery",
+    "jqueryui": WP_API_SETTINGS.root + "/libs/jqueryui",
+    "underscore": WP_API_SETTINGS.root + "/libs/lodash",
+    "backbone": WP_API_SETTINGS.root + "/libs/backbone",
+    "marionette": WP_API_SETTINGS.root + "/libs/backbone.marionette",
+    "handlebars": WP_API_SETTINGS.root + "/libs/handlebars",
 
     // Plugins
-    "backbone.validateAll": "../../libs/plugins/Backbone.validateAll",
-    "bootstrap": "../../libs/plugins/bootstrap",
-    "text": "../../libs/plugins/text"
+    "backbone.validateAll": WP_API_SETTINGS.root + "/libs/plugins/Backbone.validateAll",
+    "bootstrap": WP_API_SETTINGS.root + "/libs/plugins/bootstrap",
+    "text": WP_API_SETTINGS.root + "/libs/plugins/text"
   },
   // Sets the configuration for your third party scripts that are not AMD compatible
   shim: {
@@ -43,12 +43,13 @@ require([
   "jquery",
   "backbone",
   "app",
+  "models/settings-model",
   "routers/app-router",
   "controllers/controller",
   "jqueryui",
   "bootstrap",
   "backbone.validateAll"
-], function ($, Backbone, App, AppRouter, Controller) {
+], function ($, Backbone, App, Settings, AppRouter, Controller) {
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
   Backbone.Model.prototype.toJSON = function() {
@@ -105,6 +106,21 @@ require([
       object.fetch();
       return object;
     }
+  };
+
+  Backbone.Model.prototype.sync = function (method, model, options) {
+    options = options || {};
+
+    var beforeSend = options.beforeSend;
+    options.beforeSend = function(xhr) {
+      xhr.setRequestHeader('X-WP-Nonce', Settings.get('nonce'));
+
+      if (beforeSend) {
+        return beforeSend.apply(this, arguments);
+      }
+    };
+
+    return Backbone.sync(method, model, options);
   };
 
   App.appRouter = new AppRouter({
