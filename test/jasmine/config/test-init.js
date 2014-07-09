@@ -89,6 +89,7 @@ require([
     root + 'core/collections/revision-collection.spec',
     root + 'core/collections/page-collection.spec',
     root + 'core/collections/taxonomy-collection.spec',
+    root + 'core/collections/term-collection.spec',
     root + 'core/collections/media-collection.spec'
   ];
 
