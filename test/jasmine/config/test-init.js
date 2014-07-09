@@ -80,6 +80,8 @@ require([
     root + 'core/models/term-model.spec',
     root + 'core/models/media-model.spec',
 
+    root + 'core/models/settings-model.spec',
+
     // collections
     root + 'core/collections/user-collection.spec',
     root + 'core/collections/post-collection.spec',
