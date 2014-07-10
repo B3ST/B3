@@ -1,7 +1,8 @@
 define([
   'models/post-status-model',
+  'models/settings-model',
   'sinon'
-], function (PostStatus) {
+], function (PostStatus, Settings) {
   describe("PostStatus", function() {
     beforeEach(function() {
       this.model = new PostStatus();
@@ -49,7 +50,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/statuses/publish',
+            Settings.get('url') + '/posts/statuses/publish',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -68,7 +69,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/statuses/publish',
+            Settings.get('url') + '/posts/statuses/publish',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

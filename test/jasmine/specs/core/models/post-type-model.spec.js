@@ -1,7 +1,8 @@
 define([
   'models/post-type-model',
+  'models/settings-model',
   'sinon'
-], function (PostType) {
+], function (PostType, Settings) {
   describe("PostType", function() {
     beforeEach(function() {
       this.model = new PostType();
@@ -49,7 +50,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/types/page',
+            Settings.get('url') + '/posts/types/page',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -67,7 +68,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/types/page',
+            Settings.get('url') + '/posts/types/page',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

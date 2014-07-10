@@ -1,8 +1,9 @@
 define([
   'jquery',
   'backbone',
-  'models/user-model'
-], function ($, Backbone, User) {
+  'models/user-model',
+  'models/settings-model'
+], function ($, Backbone, User, Settings) {
   var Media = Backbone.Model.extend({
     defaults: {
       ID             : null,
@@ -35,7 +36,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: '/media'
+    urlRoot: Settings.get('url') + '/media'
   });
 
   return Media;

@@ -1,7 +1,8 @@
 define([
   'models/user-model',
+  'models/settings-model',
   'sinon'
-], function (User) {
+], function (User, Settings) {
   describe("User", function() {
     beforeEach(function() {
       this.model = new User();
@@ -47,7 +48,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/users/1',
+            Settings.get('url') + '/users/1',
             [200, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
 
@@ -64,7 +65,7 @@ define([
           var response = '';
           this.server.respondWith(
             'GET',
-            '/users/1',
+            Settings.get('url') + '/users/1',
             [404, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
 

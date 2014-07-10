@@ -2,9 +2,10 @@ define([
   'jquery',
   'backbone',
   'models/user-model',
+  'models/settings-model',
   'collections/comment-collection',
   'collections/revision-collection'
-], function ($, Backbone, User, Comments, Revisions) {
+], function ($, Backbone, User, Settings, Comments, Revisions) {
   var Post = Backbone.Model.extend({
     defaults: {
       ID             : null,
@@ -35,7 +36,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: '/posts',
+    urlRoot: Settings.get('url') + '/posts',
 
     fetchRevisions: function (callbacks, id) {
       return this.fetchMeta(id, 'version-history', Revisions, callbacks);

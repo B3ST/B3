@@ -1,8 +1,9 @@
 define([
   'jquery',
   'backbone',
-  'collections/term-collection'
-], function ($, Backbone, Terms) {
+  'models/settings-model',
+  'collections/term-collection',
+], function ($, Backbone, Settings, Terms) {
   var Taxonomy = Backbone.Model.extend({
     defaults: {
       name         : '',
@@ -15,7 +16,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: '/taxonomies',
+    urlRoot: Settings.get('url') + '/taxonomies',
 
     fetchTerms: function (callbacks, id) {
       id = id || '';

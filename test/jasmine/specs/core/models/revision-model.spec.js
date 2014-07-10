@@ -1,7 +1,8 @@
 define([
   'models/revision-model',
+  'models/settings-model',
   'sinon'
-], function (Revision) {
+], function (Revision, Settings) {
   describe("Revision", function() {
     describe("When initializing Revision", function() {
       beforeEach(function() {
@@ -65,7 +66,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/1/revisions/1',
+            Settings.get('url') + '/posts/1/revisions/1',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -84,7 +85,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/1/revisions/1',
+            Settings.get('url') + '/posts/1/revisions/1',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

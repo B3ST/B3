@@ -1,8 +1,9 @@
 define([
   'jquery',
   'backbone',
-  'models/user-model'
-], function ($, Backbone, User) {
+  'models/user-model',
+  'models/settings-model'
+], function ($, Backbone, User, Settings) {
   var Revision = Backbone.Model.extend({
     defaults: {
       ID           : null,
@@ -29,7 +30,7 @@ define([
     url: function () {
       var pid = this.get('post') || '',
           rid = this.get('ID') || '';
-      return '/posts/' + pid + '/revisions/' + rid;
+      return Settings.get('url') + '/posts/' + pid + '/revisions/' + rid;
     }
   });
 
