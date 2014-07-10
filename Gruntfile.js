@@ -5,29 +5,29 @@ module.exports = function(grunt) {
     requirejs: {
       mainJS: {
         options: {
-          baseUrl: "public/js/",
+          baseUrl: ".",
           paths: {
             "app": "app/config/init"
           },
           wrap: true,
-          name: "libs/almond",
+          name: "node_modules/almond/almond",
           preserveLicenseComments: false,
           optimize: "uglify",
-          mainConfigFile: "public/js/app/config/init.js",
+          mainConfigFile: "app/config/init.js",
           include: ["app"],
-          out: "public/js/app/config/init.min.js"
+          out: "app/config/init.min.js"
         }
       },
       mainCSS: {
         options: {
           optimizeCss: "standard",
-          cssIn: "./public/css/app.css",
-          out: "./public/css/app.min.css"
+          cssIn: "./styles/*.css",
+          out: "./style.css"
         }
       }
     },
     jshint: {
-      files: ['Gruntfile.js', 'public/js/app/**/*.js', '!public/js/app/**/*min.js'],
+      files: ['Gruntfile.js', 'app/**/*.js', '!app/**/*min.js'],
       options: {
         globals: {
           jQuery: true,
