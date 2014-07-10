@@ -1,0 +1,23 @@
+{
+  "name": "b3",
+  "title": "B3: Backbone Bootstrap Boilerplate",
+  "description": "",
+  "version": "0.0.1",
+  "homepage": "http://log.pt",
+  "author": {
+    "name": "Luís Rodrigues",
+    "email": "luis.rodrigues@log.pt",
+    "url": ""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "express": "^4.5.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "jshint": "^2.5.2",
+    "requirejs": "^2.1.14"
+  },
+  "main": "./server/server",
+  "keywords": []
+}
