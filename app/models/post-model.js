@@ -1,20 +1,23 @@
 define([
   'jquery',
   'backbone',
-  'models/user-model'
-], function ($, Backbone, User) {
+  'models/user-model',
+  'collections/comment-collection',
+  'collections/revision-collection'
+], function ($, Backbone, User, Comments, Revisions) {
   var Post = Backbone.Model.extend({
     defaults: {
       ID             : null,
       title          : '',
       status         : 'draft',
       type           : 'post',
-      author         : {},
+      parent         : 0,
+      author         : new User(),
       content        : '',
       link           : '',
-      date           : '',
-      date_gmt       : '',
-      modified       : '',
+      date           : new Date(),
+      date_gmt       : new Date(),
+      modified       : new Date(),
       format         : 'standard',
       slug           : '',
       guid           : '',
@@ -32,10 +35,36 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: '/wp-json/posts',
+    urlRoot: '/posts',
 
-    getAuthor: function () {
-      return new User(this.get('author'));
+    fetchRevisions: function (callbacks, id) {
+      return this.fetchMeta(id, 'version-history', Revisions, callbacks);
+    },
+
+    fetchComments: function (callbacks, id) {
+      return this.fetchMeta(id, 'replies', Comments, callbacks);
+    },
+
+    fetchMeta: function (id, link, collection, callbacks) {
+      id = id || '';
+      if ($.isEmptyObject(this.get('meta'))) {
+        return false;
+      } else {
+        $.get(this.getMetaUrl(link) + '/' + id).done(function (data) {
+            var init = (id == '' ? collection : new collection().model);
+            if (callbacks.done) {
+              callbacks.done(new init(data));
+            }
+          }).fail(function (data) {
+            if (callbacks.fail) {
+              callbacks.fail(data);
+            }
+          });
+      }
+    },
+
+    getMetaUrl: function (link) {
+      return this.get('meta').links[link];
     }
   });
 
