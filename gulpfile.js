@@ -5,20 +5,22 @@ var $             = require('gulp-load-plugins')();
 var jshintStylish = require('jshint-stylish');
 
 var source = {
-    app:        './app/**/*.js',
-    styles:     ['./app/styles/less/**/*.less', './app/styles/less/**/*.css'],
-    stylesMain: './app/styles/less/style.less',
-    templates:  './app/templates/**/*.html',
-    images:     ['./app/assets/images/**/*.png', './app/assets/images/**/*.jpg', './app/assets/images/**/*.jpeg'],
-    fonts:      ['./app/assets/fonts/**/*.otf', './app/assets/fonts/**/*.ttf', './app/assets/fonts/**/*.woff'],
+    app:       './app/**/*.js',
+    style:    './app/styles/less/style.less',
+    css:       './app/styles/**/*.css',
+    less:      './app/styles/less/**/*.less',
+    sass:      './app/styles/sass/**/*.scss',
+    templates: './app/templates/**/*.html',
+    images:    './app/assets/images/**/*',
+    fonts:     './app/assets/fonts/**/*.{eot,svg,ttf,woff}',
 };
 
 var dest = {
-    app:       './dist/app',
-    styles:    '.',
-    templates: './dist/app/templates',
-    images:    './dist/app/assets/images',
-    fonts:     './dist/app/assets/fonts'
+    app:       './dist',
+    style:    '.',
+    templates: './dist/templates',
+    images:    './dist/assets/images',
+    fonts:     './dist/assets/fonts'
 };
 
 var root = '.';
@@ -26,11 +28,11 @@ var dist = './dist';
 
 gulp.task('styles', function () {
     // TODO: $.csslint()
-    return gulp.src(source.stylesMain)
+    return gulp.src(source.style)
         .pipe($.less())
         .pipe($.autoprefixer('last 1 version'))
         .pipe($.minifyCss())
-        .pipe(gulp.dest(dest.styles))
+        .pipe(gulp.dest(dest.style))
         .pipe($.size());
 });
 
@@ -50,28 +52,44 @@ gulp.task('templates', function () {
 });
 
 gulp.task('images', function () {
-    // TODO: Image compress.
     return gulp.src(source.images)
-        .pipe(gulp.dest(dest.images));
+        .pipe($.cache($.imagemin({
+            optimizationLevel: 3,
+            progressive: true,
+            interlaced: true
+        })))
+        .pipe(gulp.dest(dest.images))
+        .pipe($.size());
 });
 
 gulp.task('fonts', function () {
-    return gulp.src(source.fonts)
-        .pipe(gulp.dest(dest.fonts));
+    return $.bowerFiles()
+        .pipe($.filter(source.fonts))
+        .pipe($.flatten())
+        .pipe(gulp.dest(dest.fonts))
+        .pipe($.size());
 });
 
 gulp.task('watch', function () {
-    gulp.run(['scripts', 'templates', 'styles', 'images', 'fonts']);
+    var server = $.livereload();
 
-    gulp.watch(source.app,       ['scripts']);
+    gulp.watch([
+        source.app,
+        source.css,
+        source.less,
+        source.sass,
+        source.templates,
+        source.images,
+        source.fonts,
+    ]).on('change', function (file) {
+        server.changed(file.path);
+    });
+
+    gulp.watch(source.app, ['scripts']);
     gulp.watch(source.templates, ['templates']);
-    gulp.watch(source.styles,    ['styles']);
-    gulp.watch(source.images,    ['images']);
-    gulp.watch(source.fonts,     ['fonts']);
-});
-
-gulp.task('build', ['scripts', 'templates', 'styles', 'images', 'fonts'], function () {
-
+    gulp.watch([source.css, source.less, source.sass], ['styles']);
+    gulp.watch(source.images, ['images']);
+    gulp.watch(source.fonts, ['fonts']);
 });
 
 gulp.task('test', ['build'], function () {
@@ -81,6 +99,13 @@ gulp.task('test', ['build'], function () {
     // TODO: $.coverage()
 });
 
-gulp.task('default', ['build'], function () {
+gulp.task('clean', function () {
+    return gulp.src(dest.app, { read: false })
+        .pipe($.clean());
+});
 
+gulp.task('build', ['scripts', 'templates', 'styles', 'images', 'fonts']);
+
+gulp.task('default', ['clean'], function () {
+    gulp.start(['build']);
 });
