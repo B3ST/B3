@@ -94,8 +94,8 @@ require([
     root + 'core/collections/term-collection.spec',
     root + 'core/collections/media-collection.spec',
 
-    // layouts
-    root + 'core/layouts/content-layout.spec'
+    // app
+    root + 'core/app.spec'
   ];
 
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];

@@ -10,10 +10,7 @@
 <html class="no-js ui-mobile-rendering" lang="en"> <!--<![endif]-->
 <?php wp_head() ?>
 <body>
-  <div data-role="page">
-    <header></header>
-    <div id="main" class="container-fluid"></div>
-    <footer class="footer navbar navbar-fixed-bottom"></footer>
+  <div id="main" data-role="page">
   </div>
 </body>
 </html>
