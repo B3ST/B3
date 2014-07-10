@@ -46,7 +46,8 @@
     "jasmine-runner-node": "0.0.1",
     "jshint": "^2.5.2",
     "jshint-stylish": "^0.4.0",
-    "requirejs": "^2.1.14"
+    "requirejs": "^2.1.14",
+    "run-sequence": "^0.3.6"
   },
   "main": "./server/server",
   "keywords": []

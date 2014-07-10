@@ -2,6 +2,7 @@
 
 var gulp          = require('gulp');
 var $             = require('gulp-load-plugins')();
+var runSequence   = require('run-sequence');
 var jshintStylish = require('jshint-stylish');
 var browserSync   = require('browser-sync');
 var reload        = browserSync.reload;
@@ -38,8 +39,6 @@ gulp.task('build:styles', function () {
  */
 gulp.task('build:scripts', function () {
     return gulp.src('app/**/*.js')
-        .pipe($.jshint())
-        .pipe($.jshint.reporter(jshintStylish))
         .pipe($.uglify())
         .pipe(gulp.dest('dist/'))
         .pipe($.size({title: 'scripts'}));
@@ -160,7 +159,9 @@ gulp.task('clean', function () {
 /**
  * gulp build
  */
-gulp.task('build', ['bower', 'build:scripts', 'build:templates', 'build:styles', 'build:images', 'build:fonts']);
+gulp.task('build', function (cb) {
+    runSequence( 'bower', ['jshint', 'build:scripts', 'build:templates', 'build:styles', 'build:images', 'build:fonts'], cb );
+});
 
 /**
  * gulp
