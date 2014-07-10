@@ -9,7 +9,7 @@ require.config({
     "underscore": WP_API_SETTINGS.root + "/libs/lodash",
     "backbone": WP_API_SETTINGS.root + "/libs/backbone",
     "marionette": WP_API_SETTINGS.root + "/libs/backbone.marionette",
-    "handlebars": WP_API_SETTINGS.root + "/libs/handlebars",
+    "dust": WP_API_SETTINGS.root + "/libs/dust",
 
     // Plugins
     "backbone.validateAll": WP_API_SETTINGS.root + "/libs/plugins/Backbone.validateAll",
@@ -30,8 +30,8 @@ require.config({
       // Exports the global window.Marionette object
       "exports": "Marionette"
     },
-    "handlebars": {
-      "exports": "Handlebars"
+    "dust": {
+      "exports": "dust"
     },
     // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
     "backbone.validateAll": ["backbone"]

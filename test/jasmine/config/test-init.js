@@ -9,7 +9,7 @@ require.config({
     "underscore": "../../../../libs/lodash",
     "backbone": "../../../../libs/backbone",
     "marionette": "../../../../libs/backbone.marionette",
-    "handlebars": "../../../../libs/handlebars",
+    "dust": "../../../../libs/dust",
 
     // Test Libraries
     "jasmine": "../../../../libs/jasmine",
@@ -35,8 +35,8 @@ require.config({
       // Exports the global window.Marionette object
       "exports": "Marionette"
     },
-    "handlebars": {
-      "exports": "Handlebars"
+    "dust": {
+      "exports": "dust"
     },
     // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
     "backbone.validateAll": ["backbone"],
@@ -92,7 +92,10 @@ require([
     root + 'core/collections/page-collection.spec',
     root + 'core/collections/taxonomy-collection.spec',
     root + 'core/collections/term-collection.spec',
-    root + 'core/collections/media-collection.spec'
+    root + 'core/collections/media-collection.spec',
+
+    // layouts
+    root + 'core/layouts/content-layout.spec'
   ];
 
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
