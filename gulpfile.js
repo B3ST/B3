@@ -2,125 +2,169 @@
 
 var gulp          = require('gulp');
 var $             = require('gulp-load-plugins')();
-var browserSync   = require('browser-sync');
 var jshintStylish = require('jshint-stylish');
+var browserSync   = require('browser-sync');
+var reload        = browserSync.reload;
 
-var source = {
-    index:     './index.php',
-    app:       './app/**/*.js',
-    style:     './app/styles/less/style.less',
-    css:       './app/styles/**/*.css',
-    less:      './app/styles/less/**/*.less',
-    sass:      './app/styles/sass/**/*.scss',
-    templates: './app/templates/**/*.html',
-    images:    './app/assets/images/**/*',
-    fonts:     './app/assets/fonts/**/*.{eot,svg,ttf,woff}',
-};
+var AUTOPREFIXER_BROWSERS = [
+    'ie >= 10',
+    'ie_mob >= 10',
+    'ff >= 30',
+    'chrome >= 34',
+    'safari >= 7',
+    'opera >= 23',
+    'ios >= 7',
+    'android >= 4.4',
+    'bb >= 10'
+];
 
-var dest = {
-    root:      './',
-    index:     './index.php',
-    app:       './dist',
-    lib:       './lib',
-    style:     './style.css',
-    templates: './dist/templates',
-    images:    './dist/assets/images',
-    fonts:     './dist/assets/fonts'
-};
-
-gulp.task('styles', function () {
-    return gulp.src(source.style)
+/**
+ * gulp build:styles
+ */
+gulp.task('build:styles', function () {
+    return gulp.src('app/styles/less/style.less')
         .pipe($.less())
-        .pipe($.autoprefixer('last 1 version'))
+        .on('error', console.error.bind(console))
+        .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
         .pipe($.csslint())
         .pipe($.minifyCss())
-        .pipe($.concat(dest.style))
-        .pipe(gulp.dest(dest.root))
-        .pipe($.size());
+        .pipe($.concat('style.css'))
+        .pipe(gulp.dest('./'))
+        .pipe($.size({title: 'styles'}));
 });
 
-gulp.task('scripts', function () {
-    return gulp.src(source.app)
+/**
+ * gulp build:scripts
+ */
+gulp.task('build:scripts', function () {
+    return gulp.src('app/**/*.js')
         .pipe($.jshint())
         .pipe($.jshint.reporter(jshintStylish))
         .pipe($.uglify())
-        .pipe(gulp.dest(dest.app))
-        .pipe($.size());
+        .pipe(gulp.dest('dist/'))
+        .pipe($.size({title: 'scripts'}));
 });
 
-gulp.task('templates', function () {
-    return gulp.src(source.templates)
-        .pipe(gulp.dest(dest.templates));
+/**
+ * gulp build:templates
+ */
+gulp.task('build:templates', function () {
+    return gulp.src('app/templates/**/*.html')
+        .pipe(gulp.dest('dist/templates/'))
+        .pipe($.size({title: 'templates'}));
 });
 
-gulp.task('images', function () {
-    return gulp.src(source.images)
+/**
+ * gulp build:images
+ */
+gulp.task('build:images', function () {
+    return gulp.src('app/assets/images/**/*')
         .pipe($.cache($.imagemin({
-            optimizationLevel: 3,
             progressive: true,
             interlaced: true
         })))
-        .pipe(gulp.dest(dest.images))
-        .pipe($.size());
+        .pipe(gulp.dest('dist/assets/images/'))
+        .pipe($.size({title: 'images'}));
 });
 
-gulp.task('fonts', function () {
+/**
+ * gulp build:fonts
+ */
+gulp.task('build:fonts', function () {
     return $.bowerFiles()
-        .pipe($.filter(source.fonts))
+        .pipe($.filter('app/assets/fonts/**/*.{eot,svg,ttf,woff}'))
         .pipe($.flatten())
-        .pipe(gulp.dest(dest.fonts))
-        .pipe($.size());
+        .pipe(gulp.dest('dist/assets/fonts/'))
+        .pipe($.size({title: 'fonts'}));
 });
 
+/**
+ * gulp bower
+ */
 gulp.task('bower', function () {
     return $.bower()
-        .pipe(gulp.dest(dest.lib));
+        .pipe(gulp.dest('lib/'));
 });
 
-gulp.task('browser-sync', function () {
+/**
+ * gulp jshint
+ */
+gulp.task('jshint', function () {
+    return gulp.src('app/**/*.js')
+        .pipe(reload({stream: true, once: true}))
+        .pipe($.jshint())
+        .pipe($.jshint.reporter('jshint-stylish'))
+        .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+});
+
+/**
+ * gulp jasmine
+ */
+gulp.task('jasmine', function () {
+    // TODO: Jasmine + RequireJS
+    return gulp.src('test/jasmine/spec/**/*.spec.js')
+        .pipe($.coverage.instrument({
+            pattern: ['**/*.spec.js'],
+            debugDirectory: 'debug'
+        }))
+        .pipe($.jasmine())
+        .pipe($.coverage.report({
+            outFile: 'test/jasmine/coverage.html'
+        }));
+});
+
+/**
+ * gulp phpunit
+ */
+gulp.task('phpunit', function () {
+    return gulp.src('test/phpunit/**/test*.php')
+        .pipe($.phpunit());
+});
+
+/**
+ * gulp test
+ */
+gulp.task('test', ['jasmine', 'phpunit']);
+
+/**
+ * gulp watch
+ */
+gulp.task('watch', function () {
+
     browserSync({
+        notify: false,
         server: {
-            baseDir: dest.root
-            // proxy: "wordpress.local"
+            baseDir: ['.', '.tmp', 'app']
         }
     });
+
+    /**
+     * Rebuild on changed sources:
+     */
+    gulp.watch('index.{html,php}',                         reload);
+    gulp.watch('app/**/*.js',                              ['build:scripts', reload]);
+    gulp.watch('app/templates/**/*.html',                  ['build:templates', reload]);
+    gulp.watch('app/styles/**/*.{css,less,scss}',          ['build:styles', reload]);
+    gulp.watch('app/assets/images/**/*',                   ['build:images', reload]);
+    gulp.watch('app/assets/fonts/**/*.{eot,svg,ttf,woff}', ['build:fonts', reload]);
 });
 
-gulp.task('watch', ['build', 'browser-sync'], function () {
-
-    gulp.watch([
-        dest.index,
-        dest.app,
-        dest.lib,
-        dest.style,
-        dest.templates,
-        dest.images,
-        dest.fonts,
-    ]).on('change', function (file) {
-        gulp.src(file)
-            .pipe(browserSync.reload({stream:true, once: true}));
-    });
-   
-    gulp.watch(source.app, ['scripts']);
-    gulp.watch(source.templates, ['templates']);
-    gulp.watch([source.css, source.less, source.sass], ['styles']);
-    gulp.watch(source.images, ['images']);
-    gulp.watch(source.fonts, ['fonts']);
-});
-
-gulp.task('test', ['build'], function () {
-    // TODO: $.coverage()
-    return gulp.src('./test/jasmine/config/test-init.js')
-        .pipe($.jasmine());
-});
-
+/**
+ * gulp clean
+ */
 gulp.task('clean', function () {
-    return gulp.src([dest.app, dest.lib], { read: false })
-        .pipe($.clean());
+    return gulp.src(['dist/', 'lib/'], { read: false })
+        .pipe($.rimraf());
 });
 
-gulp.task('build', ['bower', 'scripts', 'templates', 'styles', 'images', 'fonts']);
+/**
+ * gulp build
+ */
+gulp.task('build', ['bower', 'build:scripts', 'build:templates', 'build:styles', 'build:images', 'build:fonts']);
 
+/**
+ * gulp
+ */
 gulp.task('default', ['clean'], function () {
     gulp.start(['build']);
 });

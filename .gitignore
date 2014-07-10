@@ -3,6 +3,10 @@
 dist/**/*
 lib/**/*
 
+# Tests
+.coverrun
+test/jasmine/coverage.html
+
 # JavaScript
 node_modules/**/*
 bower_components/**/*
