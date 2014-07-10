@@ -6,7 +6,7 @@ var jshintStylish = require('jshint-stylish');
 
 var source = {
     app:       './app/**/*.js',
-    style:    './app/styles/less/style.less',
+    style:     './app/styles/less/style.less',
     css:       './app/styles/**/*.css',
     less:      './app/styles/less/**/*.less',
     sass:      './app/styles/sass/**/*.scss',
@@ -17,27 +17,25 @@ var source = {
 
 var dest = {
     app:       './dist',
-    style:    '.',
+    lib:       './lib',
+    style:     '.',
     templates: './dist/templates',
     images:    './dist/assets/images',
     fonts:     './dist/assets/fonts'
 };
 
-var root = '.';
-var dist = './dist';
-
 gulp.task('styles', function () {
-    // TODO: $.csslint()
     return gulp.src(source.style)
         .pipe($.less())
         .pipe($.autoprefixer('last 1 version'))
+        .pipe($.csslint())
         .pipe($.minifyCss())
+        .pipe($.concat('style.css'))
         .pipe(gulp.dest(dest.style))
         .pipe($.size());
 });
 
 gulp.task('scripts', function () {
-    // TODO:
     return gulp.src(source.app)
         .pipe($.jshint())
         .pipe($.jshint.reporter(jshintStylish))
@@ -70,6 +68,11 @@ gulp.task('fonts', function () {
         .pipe($.size());
 });
 
+gulp.task('bower', function () {
+    return $.bower()
+        .pipe(gulp.dest(dest.lib));
+});
+
 gulp.task('watch', function () {
     var server = $.livereload();
 
@@ -93,18 +96,17 @@ gulp.task('watch', function () {
 });
 
 gulp.task('test', ['build'], function () {
-    // TODO: $.jshint()
-    // TODO: $.jasmine()
-    // TODO: $.complexity()
     // TODO: $.coverage()
+    return gulp.src('./test/jasmine/config/test-init.js')
+        .pipe($.jasmine());
 });
 
 gulp.task('clean', function () {
-    return gulp.src(dest.app, { read: false })
+    return gulp.src([dest.app, dest.lib], { read: false })
         .pipe($.clean());
 });
 
-gulp.task('build', ['scripts', 'templates', 'styles', 'images', 'fonts']);
+gulp.task('build', ['bower', 'scripts', 'templates', 'styles', 'images', 'fonts']);
 
 gulp.task('default', ['clean'], function () {
     gulp.start(['build']);
