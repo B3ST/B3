@@ -2,9 +2,11 @@
 
 var gulp          = require('gulp');
 var $             = require('gulp-load-plugins')();
+var browserSync   = require('browser-sync');
 var jshintStylish = require('jshint-stylish');
 
 var source = {
+    index:     './index.php',
     app:       './app/**/*.js',
     style:     './app/styles/less/style.less',
     css:       './app/styles/**/*.css',
@@ -16,9 +18,11 @@ var source = {
 };
 
 var dest = {
+    root:      './',
+    index:     './index.php',
     app:       './dist',
     lib:       './lib',
-    style:     '.',
+    style:     './style.css',
     templates: './dist/templates',
     images:    './dist/assets/images',
     fonts:     './dist/assets/fonts'
@@ -30,8 +34,8 @@ gulp.task('styles', function () {
         .pipe($.autoprefixer('last 1 version'))
         .pipe($.csslint())
         .pipe($.minifyCss())
-        .pipe($.concat('style.css'))
-        .pipe(gulp.dest(dest.style))
+        .pipe($.concat(dest.style))
+        .pipe(gulp.dest(dest.root))
         .pipe($.size());
 });
 
@@ -73,21 +77,30 @@ gulp.task('bower', function () {
         .pipe(gulp.dest(dest.lib));
 });
 
-gulp.task('watch', function () {
-    var server = $.livereload();
+gulp.task('browser-sync', function () {
+    browserSync({
+        server: {
+            baseDir: dest.root
+            // proxy: "wordpress.local"
+        }
+    });
+});
+
+gulp.task('watch', ['build', 'browser-sync'], function () {
 
     gulp.watch([
-        source.app,
-        source.css,
-        source.less,
-        source.sass,
-        source.templates,
-        source.images,
-        source.fonts,
+        dest.index,
+        dest.app,
+        dest.lib,
+        dest.style,
+        dest.templates,
+        dest.images,
+        dest.fonts,
     ]).on('change', function (file) {
-        server.changed(file.path);
+        gulp.src(file)
+            .pipe(browserSync.reload({stream:true, once: true}));
     });
-
+   
     gulp.watch(source.app, ['scripts']);
     gulp.watch(source.templates, ['templates']);
     gulp.watch([source.css, source.less, source.sass], ['styles']);
