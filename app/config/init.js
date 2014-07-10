@@ -44,12 +44,13 @@ require([
   "backbone",
   "app",
   "models/settings-model",
+  "models/user-model",
   "routers/app-router",
   "controllers/controller",
   "jqueryui",
   "bootstrap",
   "backbone.validateAll"
-], function ($, Backbone, App, Settings, AppRouter, Controller) {
+], function ($, Backbone, App, Settings, User, AppRouter, Controller) {
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
   Backbone.Model.prototype.toJSON = function() {
