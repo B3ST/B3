@@ -1,8 +1,9 @@
 define([
   'models/comment-model',
   'models/user-model',
+  'models/settings-model',
   'sinon'
-], function (Comment, User) {
+], function (Comment, User, Settings) {
   describe("Comment", function() {
     beforeEach(function() {
       this.model = new Comment();
@@ -60,7 +61,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            'posts/1/comments/1',
+            Settings.get('url') + '/posts/1/comments/1',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -80,7 +81,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            'posts/1/comments/1',
+            Settings.get('url') + '/posts/1/comments/1',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -131,7 +132,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            'posts/1/comments/1',
+            Settings.get('url') + '/posts/1/comments/1',
             [ 200, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
           var parent = this.model.parent();

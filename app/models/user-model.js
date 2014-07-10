@@ -1,7 +1,8 @@
 define([
   'jquery',
-  'backbone'
-], function ($, Backbone) {
+  'backbone',
+  'models/settings-model'
+], function ($, Backbone, Settings) {
   var User = Backbone.Model.extend({
     defaults: {
       ID         : null,
@@ -18,7 +19,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: '/users',
+    urlRoot: Settings.get('url') + '/users',
   });
 
   return User;

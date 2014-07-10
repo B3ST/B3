@@ -1,7 +1,8 @@
 define([
   'jquery',
-  'backbone'
-], function ($, Backbone) {
+  'backbone',
+  'models/settings-model'
+], function ($, Backbone, Settings) {
   var PostStatus = Backbone.Model.extend({
     defaults: {
       name         : '',
@@ -15,7 +16,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: '/posts/statuses'
+    urlRoot: Settings.get('url') + '/posts/statuses'
   });
 
   return PostStatus;

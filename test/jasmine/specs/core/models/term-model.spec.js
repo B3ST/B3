@@ -1,7 +1,8 @@
 define([
   'models/term-model',
+  'models/settings-model',
   'sinon'
-], function (Term) {
+], function (Term, Settings) {
   describe("Term", function() {
     beforeEach(function() {
       this.model = new Term();
@@ -45,7 +46,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/taxonomies/category/terms/1',
+            Settings.get('url') + '/taxonomies/category/terms/1',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -63,7 +64,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/taxonomies/category/terms/1',
+            Settings.get('url') + '/taxonomies/category/terms/1',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

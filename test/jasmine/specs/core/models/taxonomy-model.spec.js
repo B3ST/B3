@@ -1,7 +1,8 @@
 define([
   'models/taxonomy-model',
+  'models/settings-model',
   'sinon'
-], function (Taxonomy) {
+], function (Taxonomy, Settings) {
   describe("Taxonomy", function() {
     beforeEach(function() {
       this.model = new Taxonomy();
@@ -45,7 +46,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/taxonomies/category',
+            Settings.get('url') + '/taxonomies/category',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -63,7 +64,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/taxonomies/category',
+            Settings.get('url') + '/taxonomies/category',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

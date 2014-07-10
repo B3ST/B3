@@ -1,7 +1,8 @@
 define([
   'models/media-model',
+  'models/settings-model',
   'sinon'
-], function (Media) {
+], function (Media, Settings) {
   describe("Media", function() {
     beforeEach(function() {
       this.model = new Media();
@@ -96,7 +97,7 @@ define([
 
         this.server.respondWith(
           'GET',
-          '/media/1',
+          Settings.get('url') + '/media/1',
           [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
         );
 
@@ -118,7 +119,7 @@ define([
 
         this.server.respondWith(
           'GET',
-          '/media/1',
+          Settings.get('url') + '/media/1',
           [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
         );
 

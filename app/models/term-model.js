@@ -1,7 +1,8 @@
 define([
   'jquery',
-  'backbone'
-], function ($, Backbone) {
+  'backbone',
+  'models/settings-model'
+], function ($, Backbone, Settings) {
   var Term = Backbone.Model.extend({
     defaults: {
       ID          : null,
@@ -18,7 +19,7 @@ define([
     url: function () {
       var tid = this.get('taxonomy') || '',
           id  = this.get('ID') || '';
-      return '/taxonomies/' + tid + '/terms/' + id;
+      return Settings.get('url') + '/taxonomies/' + tid + '/terms/' + id;
     }
   });
 
