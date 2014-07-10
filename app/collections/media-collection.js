@@ -1,10 +1,12 @@
 define([
   'jquery',
   'backbone',
-  'models/media-model'
-], function ($, Backbone, Media) {
+  'models/media-model',
+  'models/settings-model'
+], function ($, Backbone, Media, Settings) {
   var Medias = Backbone.Collection.extend({
-    model: Media
+    model: Media,
+    url: Settings.get('url') + '/media'
   });
 
   return Medias;
