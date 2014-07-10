@@ -13,14 +13,14 @@
     "Backbone.validateAll": "*",
     "bootstrap": "~3.2.0",
     "dustjs-linkedin": "~2.4.0",
+    "dustjs-linkedin-helpers": "~1.2.0",
+    "dustjs-linkedin-filters-secure": "*",
     "jquery": "~2.1.0",
     "jqueryui": "~1.11.0",
     "lodash": "~2.4.1",
     "marionette": "~2.0.1",
     "require": "*",
-    "text": "~2.0.12",
-    "dustjs-linkedin-helpers": "~1.2.0",
-    "dustjs-linkedin-filters-secure": "*"
+    "text": "~2.0.12"
   },
   "devDependencies": {
     "jasmine": "~2.0.0",
