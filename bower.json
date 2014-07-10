@@ -1,0 +1,41 @@
+{
+  "name": "b3",
+  "description": "Backbone Bootstrap Boilerplate: A JavaScript Starter Theme for WordPress",
+  "version": "0.0.1",
+  "private": true,
+  "homepage": "http://log.pt/",
+  "authors": [
+    "Luis Rodrigues <luis.rodrigues@log.pt>",
+    "Pedro Sousa <pedro.cruz@log.pt>"
+  ],
+  "dependencies": {
+    "almond": "~0.2.9",
+    "backbone": "~1.1.2",
+    "Backbone.validateAll": "*",
+    "bootstrap": "~3.2.0",
+    "dustjs-linkedin": "~2.4.0",
+    "jquery": "~2.1.0",
+    "jqueryui": "~1.11.0",
+    "lodash": "~2.4.1",
+    "marionette": "~2.0.1",
+    "require": "*",
+    "text": "~2.0.12",
+    "dustjs-linkedin-helpers": "~1.2.0",
+    "dustjs-linkedin-filters-secure": "*"
+  },
+  "devDependencies": {
+    "express": "*",
+    "jasmine": "~2.0.0",
+    "jasmine-jquery": "~2.0.5",
+    "sinon": "~1.10.2"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "resolutions": {
+    "jquery": "1.8.0 - 2.1.0"
+  }
+}
