@@ -94,6 +94,10 @@ require([
     root + 'core/collections/term-collection.spec',
     root + 'core/collections/media-collection.spec',
 
+    // views
+    root + 'core/views/header-view.spec',
+    root + 'core/views/footer-view.spec',
+
     // app
     root + 'core/app.spec'
   ];
