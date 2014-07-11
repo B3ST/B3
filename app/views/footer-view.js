@@ -1,8 +1,9 @@
 define([
   'jquery',
   'backbone',
+  'dust',
   'text!templates/views/footer-view-template.html'
-], function ($, Backbone, FooterViewTemplate) {
+], function ($, Backbone, dust, FooterViewTemplate) {
   var FooterView = Backbone.View.extend({
     render: function () {
       var compiled = dust.compile(FooterViewTemplate, "render:footer");
