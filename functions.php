@@ -5,6 +5,7 @@ function add_require() {
   $settings = array(
     'root'  => $root_url,
     'url'   => home_url(json_get_url_prefix()),
+    'name'  => bloginfo('name'),
     'nonce' => wp_create_nonce('wp_json'));
 
   wp_register_script('requirejs', $root_url . '/libs/require.js');
