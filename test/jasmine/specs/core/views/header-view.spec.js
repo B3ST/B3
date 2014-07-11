@@ -28,7 +28,7 @@ define([
 
       it("should trigger a navigation to index event", function() {
         this.view.$('.navbar-brand').click();
-        expect(this.spy).toHaveBeenCalledWith('nav:index');
+        expect(this.spy).toHaveBeenCalledWith('router:nav', {route: '', options: {trigger: true}});
       });
     });
   });

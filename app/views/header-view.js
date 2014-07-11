@@ -22,8 +22,8 @@ define([
       return this;
     },
 
-    index: function () {
-      EventBus.trigger('nav:index');
+    index: function (e) {
+      EventBus.trigger('router:nav', {route: '', options: {trigger: true}});
     }
   });
 
