@@ -3,7 +3,6 @@
 var gulp          = require('gulp');
 var $             = require('gulp-load-plugins')();
 var runSequence   = require('run-sequence');
-var jshintStylish = require('jshint-stylish');
 var browserSync   = require('browser-sync');
 var reload        = browserSync.reload;
 
@@ -39,6 +38,7 @@ gulp.task('build:styles', function () {
  */
 gulp.task('build:scripts', function () {
     return gulp.src('app/**/*.js')
+        .pipe($.changed('dist/'))
         .pipe($.uglify())
         .pipe(gulp.dest('dist/'))
         .pipe($.size({title: 'scripts'}));
@@ -49,6 +49,7 @@ gulp.task('build:scripts', function () {
  */
 gulp.task('build:templates', function () {
     return gulp.src('app/templates/**/*.html')
+        .pipe($.changed('dist/templates/'))
         .pipe(gulp.dest('dist/templates/'))
         .pipe($.size({title: 'templates'}));
 });
@@ -58,6 +59,7 @@ gulp.task('build:templates', function () {
  */
 gulp.task('build:images', function () {
     return gulp.src('app/assets/images/**/*')
+        .pipe($.changed('dist/assets/images/'))
         .pipe($.cache($.imagemin({
             progressive: true,
             interlaced: true
@@ -70,8 +72,7 @@ gulp.task('build:images', function () {
  * gulp build:fonts
  */
 gulp.task('build:fonts', function () {
-    return $.bowerFiles()
-        .pipe($.filter('app/assets/fonts/**/*.{eot,svg,ttf,woff}'))
+    return gulp.src('app/assets/fonts/**/*.{eot,svg,ttf,woff}')
         .pipe($.flatten())
         .pipe(gulp.dest('dist/assets/fonts/'))
         .pipe($.size({title: 'fonts'}));
@@ -100,8 +101,11 @@ gulp.task('jshint', function () {
  * gulp jasmine
  */
 gulp.task('jasmine', function () {
+
+    // var specRunner = require('./test/jasmine/config/test-init.js');
+
     // TODO: Jasmine + RequireJS
-    return gulp.src('test/jasmine/spec/**/*.spec.js')
+    return gulp.src('test/jasmine/config/test-init.js')
         .pipe($.coverage.instrument({
             pattern: ['**/*.spec.js'],
             debugDirectory: 'debug'

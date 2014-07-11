@@ -21,6 +21,7 @@
     "gulp-bower": "0.0.6",
     "gulp-bower-files": "^0.2.6",
     "gulp-cache": "^0.2.0",
+    "gulp-changed": "^0.4.0",
     "gulp-complexity": "^0.2.1",
     "gulp-concat": "^2.3.3",
     "gulp-coverage": "^0.1.24",
