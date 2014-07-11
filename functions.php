@@ -5,12 +5,12 @@ function add_require() {
   $settings = array(
     'root'  => $root_url,
     'url'   => home_url(json_get_url_prefix()),
-    'name'  => bloginfo('name'),
+    'name'  => get_bloginfo('name'),
     'nonce' => wp_create_nonce('wp_json'));
 
-  wp_register_script('requirejs', $root_url . '/libs/require.js');
+  wp_register_script('requirejs', $root_url . '/libs/require.js', array(), time(), false);
   wp_localize_script('requirejs', 'WP_API_SETTINGS', $settings);
-  wp_enqueue_script('requirejs', array(), time(), false);
+  wp_enqueue_script('requirejs');
 }
 add_action('wp_enqueue_scripts', 'add_require', 11);
 
