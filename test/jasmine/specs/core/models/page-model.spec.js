@@ -1,7 +1,8 @@
 define([
   'models/page-model',
+  'models/settings-model',
   'sinon'
-], function (Page) {
+], function (Page, Settings) {
   describe("Page", function() {
     beforeEach(function() {
       this.model = new Page();
@@ -91,7 +92,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/pages/1',
+            Settings.get('url') + '/pages/1',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -110,7 +111,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/pages/1',
+            Settings.get('url') + '/pages/1',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

@@ -1,7 +1,8 @@
 define([
   'models/post-model',
+  'models/settings-model',
   'sinon'
-], function (Post) {
+], function (Post, Settings) {
   describe("Post", function() {
     describe("When instantiating a Post", function() {
       beforeEach(function() {
@@ -85,7 +86,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/1',
+            Settings.get('url') + '/posts/1',
             [200, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
 
@@ -109,7 +110,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            '/posts/1',
+            Settings.get('url') + '/posts/1',
             [404, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
 

@@ -1,20 +1,21 @@
 require.config({
-  baseUrl: "../../../../app",
+  //urlArgs: "bust=" + (new Date()).getTime(),
+  baseUrl: WP_API_SETTINGS.root + "/app",
   // 3rd party script alias names (Easier to type "jquery" than "libs/jquery, etc")
   // probably a good idea to keep version numbers in the file names for updates checking
   paths: {
     // Core Libraries
-    "jquery": "../../libs/jquery",
-    "jqueryui": "../../libs/jqueryui",
-    "underscore": "../../libs/lodash",
-    "backbone": "../../libs/backbone",
-    "marionette": "../../libs/backbone.marionette",
-    "handlebars": "../../libs/handlebars",
+    "jquery": WP_API_SETTINGS.root + "/libs/jquery",
+    "jqueryui": WP_API_SETTINGS.root + "/libs/jqueryui",
+    "underscore": WP_API_SETTINGS.root + "/libs/lodash",
+    "backbone": WP_API_SETTINGS.root + "/libs/backbone",
+    "marionette": WP_API_SETTINGS.root + "/libs/backbone.marionette",
+    "dust": WP_API_SETTINGS.root + "/libs/dust",
 
     // Plugins
-    "backbone.validateAll": "../../libs/plugins/Backbone.validateAll",
-    "bootstrap": "../../libs/plugins/bootstrap",
-    "text": "../../libs/plugins/text"
+    "backbone.validateAll": WP_API_SETTINGS.root + "/libs/plugins/Backbone.validateAll",
+    "bootstrap": WP_API_SETTINGS.root + "/libs/plugins/bootstrap",
+    "text": WP_API_SETTINGS.root + "/libs/plugins/text"
   },
   // Sets the configuration for your third party scripts that are not AMD compatible
   shim: {
@@ -30,8 +31,8 @@ require.config({
       // Exports the global window.Marionette object
       "exports": "Marionette"
     },
-    "handlebars": {
-      "exports": "Handlebars"
+    "dust": {
+      "exports": "dust"
     },
     // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
     "backbone.validateAll": ["backbone"]
@@ -43,12 +44,11 @@ require([
   "jquery",
   "backbone",
   "app",
-  "routers/app-router",
-  "controllers/controller",
+  "models/user-model",
   "jqueryui",
   "bootstrap",
   "backbone.validateAll"
-], function ($, Backbone, App, AppRouter, Controller) {
+], function ($, Backbone, App, User) {
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
   Backbone.Model.prototype.toJSON = function() {
@@ -107,9 +107,20 @@ require([
     }
   };
 
-  App.appRouter = new AppRouter({
-    controller: new Controller()
-  });
+  Backbone.Model.prototype.sync = function (method, model, options) {
+    options = options || {};
+
+    var beforeSend = options.beforeSend;
+    options.beforeSend = function(xhr) {
+      xhr.setRequestHeader('X-WP-Nonce', Settings.get('nonce'));
+
+      if (beforeSend) {
+        return beforeSend.apply(this, arguments);
+      }
+    };
+
+    return Backbone.sync(method, model, options);
+  };
 
   App.start();
 });

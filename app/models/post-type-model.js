@@ -1,7 +1,8 @@
 define([
   'jquery',
-  'backbone'
-], function ($, Backbone) {
+  'backbone',
+  'models/settings-model'
+], function ($, Backbone, Settings) {
   var PostType = Backbone.Model.extend({
     defaults: {
       slug         : null,
@@ -15,7 +16,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: '/posts/types'
+    urlRoot: Settings.get('url') + '/posts/types'
   });
 
   return PostType;

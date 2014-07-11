@@ -1,16 +1,17 @@
 define([
-  'app',
   'backbone',
   'marionette',
-  'models/post-model'
-], function(App, Backbone, Marionette, Post) {
+  'views/content-view'
+], function (Backbone, Marionette, ContentView) {
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
-
+      this.app   = options.app;
+      this.posts = options.posts;
     },
 
     index: function() {
-      console.log(new Post());
+      this.posts.fetch();
+      this.app.main.show(new ContentView(this.posts));
     }
   });
 });

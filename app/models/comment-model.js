@@ -1,8 +1,9 @@
 define([
   'jquery',
   'backbone',
-  'models/user-model'
-], function ($, Backbone, User) {
+  'models/user-model',
+  'models/settings-model'
+], function ($, Backbone, User, Settings) {
   var Comment = Backbone.Model.extend({
     defaults: {
       ID       : null,
@@ -20,7 +21,7 @@ define([
     url: function () {
       var cid = (this.get('ID') || ''),
           pid = (this.get('post') || '');
-      return 'posts/' + pid + '/comments/' + cid;
+      return Settings.get('url') + '/posts/' + pid + '/comments/' + cid;
     }
   });
 
