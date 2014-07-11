@@ -92,7 +92,7 @@ require([
     root + 'core/collections/page-collection.spec',
     root + 'core/collections/taxonomy-collection.spec',
     root + 'core/collections/term-collection.spec',
-    root + 'core/collections/media-collection.spec',
+    root + 'core/collections/media-collection.spec'
 
     // views
     root + 'core/views/header-view.spec',

@@ -10,7 +10,7 @@ require.config({
     "underscore": WP_API_SETTINGS.root + "/libs/lodash",
     "backbone": WP_API_SETTINGS.root + "/libs/backbone",
     "marionette": WP_API_SETTINGS.root + "/libs/backbone.marionette",
-    "dust": WP_API_SETTINGS.root + "/libs/dust",
+    "handlebars": WP_API_SETTINGS.root + "/libs/handlebars",
 
     // Plugins
     "backbone.validateAll": WP_API_SETTINGS.root + "/libs/plugins/Backbone.validateAll",
@@ -44,11 +44,14 @@ require([
   "jquery",
   "backbone",
   "app",
+  "models/settings-model",
   "models/user-model",
+  "routers/app-router",
+  "controllers/controller",
   "jqueryui",
   "bootstrap",
   "backbone.validateAll"
-], function ($, Backbone, App, User) {
+], function ($, Backbone, App, Settings, User, AppRouter, Controller) {
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
   Backbone.Model.prototype.toJSON = function() {
@@ -121,6 +124,10 @@ require([
 
     return Backbone.sync(method, model, options);
   };
+
+  App.appRouter = new AppRouter({
+    controller: new Controller()
+  });
 
   App.start();
 });
