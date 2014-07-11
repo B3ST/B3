@@ -5,6 +5,8 @@ lib/**/*
 
 # Tests
 .coverrun
+.coverdata/
+debug/
 test/jasmine/coverage.html
 
 # JavaScript

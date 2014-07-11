@@ -144,6 +144,7 @@ gulp.task('watch', function () {
     /**
      * Rebuild on changed sources:
      */
+    gulp.watch('test/jasmine/specs/**/*.spec.js',          reload);
     gulp.watch('index.{html,php}',                         reload);
     gulp.watch('app/**/*.js',                              ['build:scripts', reload]);
     gulp.watch('app/templates/**/*.html',                  ['build:templates', reload]);
