@@ -48,8 +48,9 @@ gulp.task('build:scripts', function () {
  * gulp build:templates
  */
 gulp.task('build:templates', function () {
-    return gulp.src('app/templates/**/*.html')
+    return gulp.src('app/templates/**/*.{html,dust}')
         .pipe($.changed('dist/templates/'))
+        .pipe($.dust())
         .pipe(gulp.dest('dist/templates/'))
         .pipe($.size({title: 'templates'}));
 });
@@ -147,7 +148,7 @@ gulp.task('watch', function () {
     gulp.watch('test/jasmine/specs/**/*.spec.js',          reload);
     gulp.watch('index.{html,php}',                         reload);
     gulp.watch('app/**/*.js',                              ['build:scripts', reload]);
-    gulp.watch('app/templates/**/*.html',                  ['build:templates', reload]);
+    gulp.watch('app/templates/**/*.{html,dust}',           ['build:templates', reload]);
     gulp.watch('app/styles/**/*.{css,less,scss}',          ['build:styles', reload]);
     gulp.watch('app/assets/images/**/*',                   ['build:images', reload]);
     gulp.watch('app/assets/fonts/**/*.{eot,svg,ttf,woff}', ['build:fonts', reload]);

@@ -20,7 +20,8 @@
     "lodash": "~2.4.1",
     "marionette": "~2.0.1",
     "require": "*",
-    "text": "~2.0.12"
+    "text": "~2.0.12",
+    "marionette-dust": "~0.1.6"
   },
   "devDependencies": {
     "jasmine": "~2.0.0",
