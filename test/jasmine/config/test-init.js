@@ -97,6 +97,10 @@ require([
     // views
     root + 'core/views/header-view.spec',
     root + 'core/views/footer-view.spec',
+    root + 'core/views/content-view.spec',
+
+    // controllers
+    root + 'core/controllers/controller.spec',
 
     // app
     root + 'core/app.spec'
