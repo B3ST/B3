@@ -1,4 +1,5 @@
 require.config({
+  //urlArgs: "bust=" + (new Date()).getTime(),
   baseUrl: WP_API_SETTINGS.root + "/app",
   // 3rd party script alias names (Easier to type "jquery" than "libs/jquery, etc")
   // probably a good idea to keep version numbers in the file names for updates checking
@@ -43,14 +44,11 @@ require([
   "jquery",
   "backbone",
   "app",
-  "models/settings-model",
   "models/user-model",
-  "routers/app-router",
-  "controllers/controller",
   "jqueryui",
   "bootstrap",
   "backbone.validateAll"
-], function ($, Backbone, App, Settings, User, AppRouter, Controller) {
+], function ($, Backbone, App, User) {
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
   Backbone.Model.prototype.toJSON = function() {
@@ -123,10 +121,6 @@ require([
 
     return Backbone.sync(method, model, options);
   };
-
-  App.appRouter = new AppRouter({
-    controller: new Controller()
-  });
 
   App.start();
 });
