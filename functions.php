@@ -34,8 +34,7 @@ class B3Theme {
 
         $this->settings_uri = get_template_directory_uri() . '/settings.js';
 
-        // $this->require_uri = get_template_directory_uri() . '/lib/require/build/require.min.js';
-        $this->require_uri  = get_template_directory_uri() . '/libs/require.js';
+        $this->require_uri = get_template_directory_uri() . '/lib/requirejs/requirejs.js';
 
         $this->loader_uri   = defined( 'WP_DEBUG' ) && WP_DEBUG
                             ? get_template_directory_uri() . '/app/config/init.js'

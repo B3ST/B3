@@ -2,6 +2,7 @@
 
 var gulp          = require('gulp');
 var $             = require('gulp-load-plugins')();
+var bowerFiles    = require('main-bower-files');
 var runSequence   = require('run-sequence');
 var browserSync   = require('browser-sync');
 var reload        = browserSync.reload;
@@ -22,7 +23,7 @@ var AUTOPREFIXER_BROWSERS = [
  * gulp build:styles
  */
 gulp.task('build:styles', function () {
-    return gulp.src('app/styles/less/style.less')
+    return gulp.src(['app/styles/less/style.less','lib/vendor.css'])
         .pipe($.less())
         .on('error', console.error.bind(console))
         .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
@@ -83,7 +84,18 @@ gulp.task('build:fonts', function () {
  * gulp bower
  */
 gulp.task('bower', function () {
-    return $.bower()
+    return gulp.src(bowerFiles())
+
+        .pipe($.filter('**/*.js'))
+        .pipe($.uglify())
+        .pipe(gulp.dest('lib/'))
+        .pipe($.filter('**/*.js').restore())
+
+        .pipe($.filter('**/*.css'))
+        .pipe($.concat('vendor.css'))
+        .pipe(gulp.dest('lib/'))
+        .pipe($.filter('**/*.css').restore())
+
         .pipe(gulp.dest('lib/'));
 });
 
