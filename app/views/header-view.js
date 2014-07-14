@@ -4,18 +4,15 @@ define([
   'dust',
   'models/settings-model',
   'controllers/event-bus',
-  'text!templates/views/header-view-template.html'
-], function ($, Backbone, dust, Settings, EventBus, HeaderViewTemplate) {
+  'header-view-template',
+], function ($, Backbone, dust, Settings, EventBus) {
   var HeaderView = Backbone.View.extend({
     events: {
       'click .home': 'index'
     },
 
     render: function () {
-      var compiled = dust.compile(HeaderViewTemplate, "render:header");
-      dust.loadSource(compiled);
-
-      dust.render("render:header", Settings.attributes, function (err, out) {
+      dust.render("views/header-view-template.dust", Settings.attributes, function (err, out) {
         this.setElement(out);
       }.bind(this));
 

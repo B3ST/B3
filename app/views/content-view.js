@@ -3,8 +3,9 @@ define([
   'underscore',
   'marionette',
   'dust',
-  'text!templates/views/content-view-template.html'
-], function ($, _, Marionette, dust, ContentViewTemplate) {
+  'content-view-template',
+  'entry-meta-template'
+], function ($, _, Marionette, dust) {
   var ContentView = Backbone.Marionette.ItemView.extend({
     tagName: 'div id="posts"',
 
@@ -24,10 +25,7 @@ define([
     },
 
     template: function (posts) {
-      var compiled = dust.compile(ContentViewTemplate, 'render:content');
-      dust.loadSource(compiled);
-
-      dust.render('render:content', {posts: posts}, function (err, out) {
+      dust.render('views/entry-meta-template.dust', {posts: posts}, function (err, out) {
         this.$el.html(out);
       }.bind(this));
     },
