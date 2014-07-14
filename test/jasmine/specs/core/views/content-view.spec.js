@@ -1,8 +1,9 @@
 define([
   'views/content-view',
   'models/post-model',
-  'collections/post-collection'
-], function (ContentView, Post, Posts) {
+  'collections/post-collection',
+  'controllers/event-bus'
+], function (ContentView, Post, Posts, EventBus) {
   describe("ContentView", function() {
     beforeEach(function() {
       this.posts = new Posts([
@@ -49,6 +50,24 @@ define([
           expect(this.view.$el.children().length).toEqual(0);
         });
       });
+    });
+  });
+
+  describe("When clicking in title link", function() {
+    beforeEach(function() {
+      this.spy = spyOn(EventBus, 'trigger');
+      this.posts = new Posts([
+        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1'}),
+        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
+      ]);
+
+      this.view = new ContentView(this.posts);
+      this.view.render();
+    });
+
+    it("should trigger an event of navigation", function() {
+      this.view.$('.b3-ph').first().click();
+      expect(this.spy).wasCalledWith('router:nav', {route: 'post/1', options: {trigger: true}});
     });
   });
 });

@@ -3,11 +3,16 @@ define([
   'underscore',
   'marionette',
   'dust',
+  'controllers/event-bus',
   'content-view-template',
   'entry-meta-template'
-], function ($, _, Marionette, dust) {
+], function ($, _, Marionette, dust, EventBus) {
   var ContentView = Backbone.Marionette.ItemView.extend({
     tagName: 'div id="posts"',
+
+    events: {
+      'click .b3-ph': 'selectPost'
+    },
 
     initialize: function (posts) {
       this.posts = posts;
@@ -34,6 +39,15 @@ define([
       return $.map(this.posts.models, function (post, index) {
         return post.toJSON();
       });
+    },
+
+    selectPost: function (ev) {
+      ev.preventDefault();
+      var input   = ev.currentTarget.id,
+          regex   = /(\d+)/,
+          matches = input.match(regex);
+
+      EventBus.trigger('router:nav', {route: 'post/' + matches[1], options: {trigger: true}});
     }
   });
 

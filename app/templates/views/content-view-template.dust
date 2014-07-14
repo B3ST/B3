@@ -1,7 +1,7 @@
 {#posts}
   <article class="">
     <header>
-      <h2 class="entry-title"><a class="post-header" href="{link}">{title}</a></h2>
+      <h2 class="entry-title"><a id="post-{ID}" class="b3-ph" href="{link}">{title}</a></h2>
       {+ entry-meta /}
     </header>
     <div class="entry-summary">
