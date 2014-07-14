@@ -1,25 +1,33 @@
-require.config({
-  baseUrl: "../../../../app",
+var root = "../../../..";
+var deps = [
+  "header-view-template",
+  "footer-view-template",
+  "entry-meta-template",
+  "content-view-template"
+];
+
+var config = {
+  baseUrl: root + "/app",
   // 3rd party script alias names (Easier to type "jquery" than "libs/jquery, etc")
   // probably a good idea to keep version numbers in the file names for updates checking
   paths: {
     // Core Libraries
-    "jquery": "../../../../libs/jquery",
-    "jqueryui": "../../../../libs/jqueryui",
-    "underscore": "../../../../libs/lodash",
-    "backbone": "../../../../libs/backbone",
-    "marionette": "../../../../libs/backbone.marionette",
-    "dust": "../../../../libs/dust",
+    "jquery":               root + "/lib/jquery",
+    "jqueryui":             root + "/lib/jquery-ui",
+    "underscore":           root + "/lib/lodash.compat",
+    "backbone":             root + "/lib/backbone",
+    "marionette":           root + "/libs/backbone.marionette",
+    "dust":                 root + "/libs/dust",
 
     // Test Libraries
-    "jasmine": "../../../../libs/jasmine",
-    "jasmine-html": "../../../../libs/jasmine-html",
-    "sinon": "../../../../libs/sinon",
+    "jasmine":              root + "/libs/jasmine",
+    "jasmine-html":         root + "/libs/jasmine-html",
+    "sinon":                root + "/libs/sinon",
 
     // Plugins
-    "backbone.validateAll": "../../../../libs/plugins/Backbone.validateAll",
-    "bootstrap": "../../../../libs/plugins/bootstrap",
-    "text": "../../../../libs/plugins/text"
+    "backbone.validateAll": root + "/libs/plugins/Backbone.validateAll",
+    "bootstrap":            root + "/libs/plugins/bootstrap",
+    "text":                 root + "/libs/plugins/text",
   },
   // Sets the configuration for your third party scripts that are not AMD compatible
   shim: {
@@ -53,7 +61,16 @@ require.config({
       "exports": "jasmine"
     }
   }
+};
+
+deps.forEach(function (dep) {
+  config.paths[dep] = root + "/dist/templates/views/" + dep;
+  config.shim[dep] = {
+    "deps": ["dust"]
+  }
 });
+
+require.config(config);
 
 // Include Desktop Specific JavaScript files here (or inside of your Desktop router)
 require([
@@ -92,7 +109,7 @@ require([
     root + 'core/collections/page-collection.spec',
     root + 'core/collections/taxonomy-collection.spec',
     root + 'core/collections/term-collection.spec',
-    root + 'core/collections/media-collection.spec'
+    root + 'core/collections/media-collection.spec',
 
     // views
     root + 'core/views/header-view.spec',
