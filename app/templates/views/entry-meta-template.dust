@@ -1,4 +1,4 @@
-{> "content-view-template.dust" /}
+{> "views/content-view-template.dust" /}
 
 {< entry-meta }
 <time class="published" datetime="{date}">{date}</time>
