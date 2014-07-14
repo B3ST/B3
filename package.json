@@ -45,9 +45,9 @@
     "jasmine-runner-node": "0.0.1",
     "jshint": "^2.5.2",
     "jshint-stylish": "^0.4.0",
-    "main-bower-files": "^1.0.0",
     "requirejs": "^2.1.14",
-    "run-sequence": "^0.3.6"
+    "run-sequence": "^0.3.6",
+    "bower-files": "~1.4.0"
   },
   "main": "./server/server",
   "keywords": []

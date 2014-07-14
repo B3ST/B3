@@ -2,7 +2,7 @@
 
 var gulp          = require('gulp');
 var $             = require('gulp-load-plugins')();
-var bowerFiles    = require('main-bower-files');
+var bowerFiles    = require('bower-files')({'dev': true});
 var runSequence   = require('run-sequence');
 var browserSync   = require('browser-sync');
 var reload        = browserSync.reload;
@@ -23,7 +23,7 @@ var AUTOPREFIXER_BROWSERS = [
  * gulp build:styles
  */
 gulp.task('build:styles', function () {
-    return gulp.src(['app/styles/less/style.less','lib/vendor.css'])
+    return gulp.src(['app/styles/less/style.less'])
         .pipe($.less())
         .on('error', console.error.bind(console))
         .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
@@ -84,19 +84,17 @@ gulp.task('build:fonts', function () {
  * gulp bower
  */
 gulp.task('bower', function () {
-    return gulp.src(bowerFiles())
-
-        .pipe($.filter('**/*.js'))
+    // console.log(bowerFiles);
+    gulp.src(bowerFiles.js)
         .pipe($.uglify())
-        .pipe(gulp.dest('lib/'))
-        .pipe($.filter('**/*.js').restore())
-
-        .pipe($.filter('**/*.css'))
-        .pipe($.concat('vendor.css'))
-        .pipe(gulp.dest('lib/'))
-        .pipe($.filter('**/*.css').restore())
-
         .pipe(gulp.dest('lib/'));
+
+    gulp.src(bowerFiles.css)
+        .pipe($.minifyCss())
+        .pipe(gulp.dest('lib/css/'));
+
+    gulp.src(bowerFiles.eot + bowerFiles.svg + bowerFiles.ttf + bowerFiles.woff)
+        .pipe(gulp.dest('fonts/'));
 });
 
 /**
@@ -155,15 +153,29 @@ gulp.task('watch', function () {
     });
 
     /**
-     * Rebuild on changed sources:
+     * Rebuild on changed sources.
      */
-    gulp.watch('test/jasmine/specs/**/*.spec.js',          reload);
-    gulp.watch('index.{html,php}',                         reload);
-    gulp.watch('app/**/*.js',                              ['build:scripts', reload]);
-    gulp.watch('app/templates/**/*.{html,dust}',           ['build:templates', reload]);
-    gulp.watch('app/styles/**/*.{css,less,scss}',          ['build:styles', reload]);
-    gulp.watch('app/assets/images/**/*',                   ['build:images', reload]);
-    gulp.watch('app/assets/fonts/**/*.{eot,svg,ttf,woff}', ['build:fonts', reload]);
+
+    gulp.watch('test/jasmine/specs/**/*.spec.js',
+        reload);
+
+    gulp.watch('index.{html,php}',
+        reload);
+
+    gulp.watch(['app/**/*.js', 'lib/**/*.js'],
+        ['build:scripts', reload]);
+
+    gulp.watch('app/templates/**/*.{html,dust}',
+        ['build:templates', reload]);
+
+    gulp.watch(['app/assets/**/*.{css,less,scss}', 'lib/**/*.{css,less,scss}'],
+        ['build:styles', reload]);
+
+    gulp.watch(['app/assets/fonts/**/*.{eot,svg,ttf,woff}', 'lib/fonts/**/*.{eot,svg,ttf,woff}'],
+        ['build:fonts', reload]);
+
+    gulp.watch('app/assets/images/**/*',
+        ['build:images', reload]);
 });
 
 /**

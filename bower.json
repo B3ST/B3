@@ -34,5 +34,34 @@
     "node_modules",
     "bower_components",
     "test"
-  ]
+  ],
+  "overrides": {
+    "Backbone.validateAll": {
+      "main": "src/javascripts/Backbone.validateAll.min.js"
+    },
+    "dustjs-linkedin-helpers": {
+      "main": "dist/dust-helpers.min.js"
+    },
+    "dustjs-linkedin-filters-secure": {
+      "main": "lib/dust-filters-secure.js"
+    },
+    "text": {
+      "main": "text.js"
+    },
+    "i18n": {
+      "main": "i18n.js"
+    },
+    "jasmine": {
+      "main": [
+        "lib/jasmine-core/jasmine.js",
+        "lib/jasmine-core/jasmine-html.js",
+        "lib/jasmine-core/jasmine.css",
+        "lib/jasmine-core/boot.js",
+        "lib/jasmine-core/json2.js"
+      ]
+    },
+    "sinon": {
+      "main": "i18n.js"
+    }
+  }
 }
