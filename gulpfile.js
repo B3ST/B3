@@ -190,7 +190,7 @@ gulp.task('clean', function () {
  * gulp build
  */
 gulp.task('build', function (cb) {
-    runSequence( 'bower', ['jshint', 'build:scripts', 'build:templates', 'build:styles', 'build:images', 'build:fonts'], cb );
+    runSequence('bower', ['jshint', 'build:scripts', 'build:templates', 'build:styles', 'build:images', 'build:fonts'], cb);
 });
 
 /**
