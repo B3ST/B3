@@ -8,7 +8,7 @@ define([
 ], function ($, Backbone, dust, Settings, EventBus) {
   var HeaderView = Backbone.View.extend({
     events: {
-      'click .home': 'index'
+      'click .b3-h': 'index'
     },
 
     render: function () {

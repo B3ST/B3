@@ -6,7 +6,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand home" href="#">{name}</a>
+    <a class="navbar-brand b3-h" href="#">{name}</a>
   </div>
 
   <nav class="collapse navbar-collapse" role="navigation">

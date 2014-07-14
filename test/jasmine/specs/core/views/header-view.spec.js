@@ -16,7 +16,7 @@ define([
 
       it("should contain the name of the site", function() {
         this.view.render();
-        expect(this.view.$('.home').text()).toEqual(Settings.get('name'));
+        expect(this.view.$('.b3-h').text()).toEqual(Settings.get('name'));
       });
     });
 
@@ -27,7 +27,7 @@ define([
       });
 
       it("should trigger a navigation to index event", function() {
-        this.view.$('.home').click();
+        this.view.$('.b3-h').click();
         expect(this.spy).toHaveBeenCalledWith('router:nav', {route: '', options: {trigger: true}});
       });
     });
