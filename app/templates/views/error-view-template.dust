@@ -1,0 +1,15 @@
+<div class="alert alert-warning">
+  Sorry, but the page you were trying to view does not exist.
+  <!--<?php _e('Sorry, but the page you were trying to view does not exist.', 'roots'); ?>-->
+</div>
+
+<p>It looks like this was the result of either:</p>
+  <!-- <?php _e('It looks like this was the result of either:', 'roots'); ?> -->
+<ul>
+  <li>a mistyped address</li>
+    <!-- <?php _e('a mistyped address', 'roots'); ?> -->
+  <li>an out-of-date link</li>
+    <!-- <?php _e('an out-of-date link', 'roots'); ?> -->
+</ul>
+
+<!-- <?php get_search_form(); ?> -->
