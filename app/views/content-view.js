@@ -4,8 +4,8 @@ define([
   'marionette',
   'dust',
   'controllers/event-bus',
-  'content-view-template',
-  'entry-meta-template'
+  'views/content-view-template',
+  'views/entry-meta-template'
 ], function ($, _, Marionette, dust, EventBus) {
   var ContentView = Backbone.Marionette.ItemView.extend({
     tagName: 'div id="posts"',

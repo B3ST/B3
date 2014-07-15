@@ -4,7 +4,7 @@ define([
   'dust',
   'models/settings-model',
   'controllers/event-bus',
-  'header-view-template',
+  'views/header-view-template',
 ], function ($, Backbone, dust, Settings, EventBus) {
   var HeaderView = Backbone.View.extend({
     events: {

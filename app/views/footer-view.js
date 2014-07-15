@@ -2,7 +2,7 @@ define([
   'jquery',
   'backbone',
   'dust',
-  'footer-view-template'
+  'views/footer-view-template'
 ], function ($, Backbone, dust) {
   var FooterView = Backbone.View.extend({
     render: function () {
