@@ -31,18 +31,17 @@ define([
       });
 
       it("should show the content view", function() {
-        App.addRegions({
-          main: '#main'
-        });
+        this.app = { main: { show: function () {} }};
+        this.spy = spyOn(this.app.main, 'show');
         this.controller = new Controller({
           posts: new Posts(),
-          app:   App
+          app:   this.app
         });
 
         this.controller.index();
         this.server.respond();
 
-        expect(App.main.currentView.el).toBeDefined;
+        expect(this.spy).toHaveBeenCalled();
       });
     });
   });
