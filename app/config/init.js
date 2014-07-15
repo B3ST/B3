@@ -1,28 +1,31 @@
+var root = WP_API_SETTINGS.root;
 var deps = [
   "views/header-view-template",
   "views/footer-view-template",
-  "views/entry-meta-template",
-  "views/content-view-template"
+  "views/article-template",
+  "views/content-view-template",
+  "views/content-single-view-template",
+  "views/error-view-template"
 ];
 
 var config = {
   //urlArgs: "bust=" + (new Date()).getTime(),
-  baseUrl: WP_API_SETTINGS.root + "/app",
+  baseUrl: root + "/app",
   paths: {
-    "jquery":               WP_API_SETTINGS.root + "/lib/jquery",
-    "jqueryui":             WP_API_SETTINGS.root + "/lib/jquery-ui",
-    "underscore":           WP_API_SETTINGS.root + "/lib/lodash.compat",
-    "backbone":             WP_API_SETTINGS.root + "/lib/backbone",
-    "backbone.wreqr":       WP_API_SETTINGS.root + "/lib/backbone.wreqr",
-    "backbone.babysitter":  WP_API_SETTINGS.root + "/lib/backbone.babysitter",
-    "marionette":           WP_API_SETTINGS.root + "/lib/backbone.marionette",
-    "dust":                 WP_API_SETTINGS.root + "/lib/dust-full.min",
-    "dust.marionette":      WP_API_SETTINGS.root + "/lib/backbone.marionnette.dust",
-    "backbone.validateAll": WP_API_SETTINGS.root + "/lib/Backbone.validateAll.min",
-    "bootstrap":            WP_API_SETTINGS.root + "/lib/bootstrap",
-    "text":                 WP_API_SETTINGS.root + "/lib/text",
+    "jquery":               root + "/lib/jquery",
+    "jqueryui":             root + "/lib/jquery-ui",
+    "underscore":           root + "/lib/lodash.compat",
+    "backbone":             root + "/lib/backbone",
+    "backbone.wreqr":       root + "/lib/backbone.wreqr",
+    "backbone.babysitter":  root + "/lib/backbone.babysitter",
+    "marionette":           root + "/lib/backbone.marionette",
+    "dust":                 root + "/lib/dust-full.min",
+    "dust.marionette":      root + "/lib/backbone.marionnette.dust",
+    "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
+    "bootstrap":            root + "/lib/bootstrap",
+    "text":                 root + "/lib/text",
 
-    "templates":            WP_API_SETTINGS.root + "/dist/templates/views"
+    "templates":            root + "/dist/templates/views"
   },
 
   shim: {
@@ -50,7 +53,7 @@ var config = {
 };
 
 deps.forEach(function (dep) {
-  config.paths[dep] = WP_API_SETTINGS.root + "/dist/templates/" + dep;
+  config.paths[dep] = root + "/dist/templates/" + dep;
   config.shim[dep] = {
     "deps": ["dust"]
   }

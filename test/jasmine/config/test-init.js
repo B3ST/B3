@@ -2,9 +2,10 @@ var root = "../../../..";
 var deps = [
   "views/header-view-template",
   "views/footer-view-template",
-  "views/entry-meta-template",
+  "views/article-template",
   "views/content-view-template",
-  "layouts/page-layout-template"
+  "views/content-single-view-template",
+  "views/error-view-template"
 ];
 
 var config = {
@@ -119,6 +120,8 @@ require([
     root + 'core/views/header-view.spec',
     root + 'core/views/footer-view.spec',
     root + 'core/views/content-view.spec',
+    root + 'core/views/content-single-view.spec',
+    root + 'core/views/error-view.spec',
 
     // controllers
     root + 'core/controllers/controller.spec',
