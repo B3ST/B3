@@ -6,7 +6,9 @@ define([
     defaults: {
       url   : WP_API_SETTINGS.url,
       nonce : WP_API_SETTINGS.nonce,
-      name  : WP_API_SETTINGS.name
+      name  : WP_API_SETTINGS.name,
+      root  : WP_API_SETTINGS.root,
+      path  : WP_API_SETTINGS.path
     }
   });
 

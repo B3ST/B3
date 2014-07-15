@@ -4,10 +4,12 @@ define([
   'marionette',
   'routers/app-router',
   'controllers/controller',
+  'controllers/event-bus',
+  'models/settings-model',
   'collections/post-collection',
   'views/header-view',
   'views/footer-view'
-], function ($,  _, Marionette, AppRouter, Controller, Posts, HeaderView, FooterView) {
+], function ($,  _, Marionette, AppRouter, Controller, EventBus, Settings, Posts, HeaderView, FooterView) {
   var App = new Backbone.Marionette.Application();
 
   App.navigate = function(route, options){
@@ -23,7 +25,7 @@ define([
   App.mobile = isMobile();
 
   App.addInitializer(function(options) {
-    App.vent.on('router:nav', function (options) {
+    EventBus.bind('router:nav', function (options) {
       App.navigate(options.route, options.options);
     });
 
@@ -33,6 +35,9 @@ define([
       footer: 'footer'
     });
 
+    App.header.show(new HeaderView());
+    App.footer.show(new FooterView());
+
     App.appRouter = new AppRouter({
       controller: new Controller({
         app:   App,
@@ -41,11 +46,8 @@ define([
     });
 
     if(Backbone.history) {
-      Backbone.history.start();
+      Backbone.history.start({pushState: true, root: Settings.get('path')});
     }
-
-    App.header.show(new HeaderView());
-    App.footer.show(new FooterView());
   });
 
   return App;

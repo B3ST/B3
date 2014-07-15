@@ -7,11 +7,18 @@
     var WP_API_SETTINGS = {
       nonce: 'nonce-X',
       url:   'http://wordpress.example.org/wp-json',
-      name:  'blog-name'
+      name:  '',
+      root:  '',
+      path:  ''
     }
   </script>
   <script src="../../libs/require.js" data-main="config/test-init"></script>
 </head>
 <body>
+    <div id="page" data-role="page">
+      <header></header>
+      <div id="main"></div>
+      <footer></footer>
+    </div>
 </body>
 </html>
