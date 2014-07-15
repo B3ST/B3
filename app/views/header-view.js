@@ -20,6 +20,8 @@ define([
     },
 
     index: function (e) {
+      e.preventDefault();
+      e.stopPropagation();
       EventBus.trigger('router:nav', {route: '', options: {trigger: true}});
     }
   });
