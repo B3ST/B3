@@ -1,10 +1,10 @@
 {#posts}
-  <article class="">
+  <article class="{post_class}">
     <header>
-      <h2 class="entry-title"><a id="post-{ID}" class="b3-ph" href="{link}">{title}</a></h2>
+      <h2 class="b3-pt"><a id="post-{ID}" class="b3-ph" href="{link}">{title}</a></h2>
       {+ entry-meta /}
     </header>
-    <div class="entry-summary">
+    <div class="b3-ps">
       {excerpt}
     </div>
   </article>
