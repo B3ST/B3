@@ -5,7 +5,7 @@ define([
   'dust',
   'controllers/event-bus',
   'views/content-view-template',
-  'views/entry-meta-template'
+  'views/article-template'
 ], function ($, _, Marionette, dust, EventBus) {
   var ContentView = Backbone.Marionette.ItemView.extend({
     tagName: 'div id="posts"',
@@ -30,7 +30,7 @@ define([
     },
 
     template: function (posts) {
-      dust.render('views/entry-meta-template.dust', {posts: posts}, function (err, out) {
+      dust.render('views/article-template.dust', {b3type: 'view', posts: posts}, function (err, out) {
         this.$el.html(out);
       }.bind(this));
     },

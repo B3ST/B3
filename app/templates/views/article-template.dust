@@ -1,4 +1,4 @@
-{> "views/content-view-template.dust" /}
+{> "views/content-{b3type}-template.dust" /}
 
 {< entry-meta }
 <time class="published" datetime="{date}">{date}</time>
