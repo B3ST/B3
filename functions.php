@@ -80,6 +80,7 @@ class B3Theme {
         add_action( 'widgets_init'      , array( $this, 'setup_widgets' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'setup_scripts' ) );
         add_action( 'wp_head'           , array( $this, 'enqueue_require_script' ), 20, 0 );
+        add_action( 'wp_footer'         , array( $this, 'enqueue_browsersync_script' ), 99, 0 );
     }
 
     /**
@@ -140,6 +141,13 @@ class B3Theme {
             return;
         }
         echo '<script src="' . $this->require_uri . '" data-main="' . $this->loader_uri . '"></script>';
+    }
+
+    public function enqueue_browsersync_script () {
+        if (defined( 'WP_DEBUG' ) && WP_DEBUG) {
+            // echo '<script src="http://127.0.0.1:3000/lib/socket.js" async></script>';
+            // echo '<script src="http://127.0.0.1:3000/browser-sync-client.js" async></script>';
+        }
     }
 
 }

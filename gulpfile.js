@@ -85,6 +85,7 @@ gulp.task('build:fonts', function () {
  */
 gulp.task('bower', function () {
     // console.log(bowerFiles);
+
     gulp.src(bowerFiles.js)
         .pipe($.uglify())
         .pipe(gulp.dest('lib/'));
@@ -148,8 +149,13 @@ gulp.task('watch', function () {
     browserSync({
         notify: false,
         server: {
-            baseDir: ['.', '.tmp', 'app']
-        }
+            baseDir: './',
+            directory: true,
+        },
+        host: 'localhost',
+        port: 3000,
+        // browser: ["google chrome", "firefox"],
+        logLevel: 'debug'
     });
 
     /**
@@ -159,7 +165,7 @@ gulp.task('watch', function () {
     gulp.watch('test/jasmine/specs/**/*.spec.js',
         reload);
 
-    gulp.watch('index.{html,php}',
+    gulp.watch(['index.html', '*.php'],
         reload);
 
     gulp.watch(['app/**/*.js', 'lib/**/*.js'],

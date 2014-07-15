@@ -27,7 +27,8 @@
   "devDependencies": {
     "jasmine": "~2.0.0",
     "jasmine-jquery": "~2.0.5",
-    "sinon": "~1.10.2"
+    "sinon": "~1.10.2",
+    "socket.io": "~1.0.6"
   },
   "ignore": [
     "**/.*",
@@ -62,6 +63,14 @@
     },
     "sinon": {
       "main": "i18n.js"
+    },
+    "socket.io": {
+      "main": [
+        "lib/index.js",
+        "lib/socket.js",
+        "lib/namespace.js",
+        "lib/client.js"
+      ]
     }
   }
 }
