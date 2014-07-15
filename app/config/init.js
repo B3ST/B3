@@ -1,53 +1,56 @@
 var deps = [
-  "header-view-template",
-  "footer-view-template",
-  "entry-meta-template",
-  "content-view-template"
+  "views/header-view-template",
+  "views/footer-view-template",
+  "views/entry-meta-template",
+  "views/content-view-template"
 ];
 
 var config = {
   //urlArgs: "bust=" + (new Date()).getTime(),
   baseUrl: WP_API_SETTINGS.root + "/app",
-  // 3rd party script alias names (Easier to type "jquery" than "libs/jquery, etc")
-  // probably a good idea to keep version numbers in the file names for updates checking
   paths: {
-    // Core Libraries
-    "jquery":               WP_API_SETTINGS.root + "/libs/jquery",
-    "jqueryui":             WP_API_SETTINGS.root + "/libs/jqueryui",
-    "underscore":           WP_API_SETTINGS.root + "/libs/lodash",
-    "backbone":             WP_API_SETTINGS.root + "/libs/backbone",
-    "marionette":           WP_API_SETTINGS.root + "/libs/backbone.marionette",
-    "dust":                 WP_API_SETTINGS.root + "/libs/dust",
+    "jquery":               WP_API_SETTINGS.root + "/lib/jquery",
+    "jqueryui":             WP_API_SETTINGS.root + "/lib/jquery-ui",
+    "underscore":           WP_API_SETTINGS.root + "/lib/lodash.compat",
+    "backbone":             WP_API_SETTINGS.root + "/lib/backbone",
+    "backbone.wreqr":       WP_API_SETTINGS.root + "/lib/backbone.wreqr",
+    "backbone.babysitter":  WP_API_SETTINGS.root + "/lib/backbone.babysitter",
+    "marionette":           WP_API_SETTINGS.root + "/lib/backbone.marionette",
+    "dust":                 WP_API_SETTINGS.root + "/lib/dust-full.min",
+    "dust.marionette":      WP_API_SETTINGS.root + "/lib/backbone.marionnette.dust",
+    "backbone.validateAll": WP_API_SETTINGS.root + "/lib/Backbone.validateAll.min",
+    "bootstrap":            WP_API_SETTINGS.root + "/lib/bootstrap",
+    "text":                 WP_API_SETTINGS.root + "/lib/text",
 
-    // Plugins
-    "backbone.validateAll": WP_API_SETTINGS.root + "/libs/plugins/Backbone.validateAll",
-    "bootstrap":            WP_API_SETTINGS.root + "/libs/plugins/bootstrap",
-    "text":                 WP_API_SETTINGS.root + "/libs/plugins/text"
+    "templates":            WP_API_SETTINGS.root + "/dist/templates/views"
   },
-  // Sets the configuration for your third party scripts that are not AMD compatible
+
   shim: {
     "bootstrap": ["jquery"],
     "jqueryui": ["jquery"],
     "backbone": {
       "deps": ["underscore"],
-      // Exports the global window.Backbone object
       "exports": "Backbone"
     },
     "marionette": {
       "deps": ["underscore", "backbone", "jquery"],
-      // Exports the global window.Marionette object
       "exports": "Marionette"
     },
     "dust": {
       "exports": "dust"
     },
+    "dust.marionette": {
+      "deps": ["dust"],
+      "exports": "dustMarionette",
+    },
+    "templates": ["dust", "dust.marionette"],
     // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
     "backbone.validateAll": ["backbone"]
   }
 };
 
 deps.forEach(function (dep) {
-  config.paths[dep] = WP_API_SETTINGS.root + "/dist/templates/views/" + dep;
+  config.paths[dep] = WP_API_SETTINGS.root + "/dist/templates/" + dep;
   config.shim[dep] = {
     "deps": ["dust"]
   }

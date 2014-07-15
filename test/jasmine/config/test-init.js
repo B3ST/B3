@@ -1,61 +1,65 @@
 var root = "../../../..";
 var deps = [
-  "header-view-template",
-  "footer-view-template",
-  "entry-meta-template",
-  "content-view-template"
+  "views/header-view-template",
+  "views/footer-view-template",
+  "views/entry-meta-template",
+  "views/content-view-template",
+  "layouts/page-layout-template"
 ];
 
 var config = {
   baseUrl: root + "/app",
-  // 3rd party script alias names (Easier to type "jquery" than "libs/jquery, etc")
-  // probably a good idea to keep version numbers in the file names for updates checking
   paths: {
-    // Core Libraries
     "jquery":               root + "/lib/jquery",
     "jqueryui":             root + "/lib/jquery-ui",
     "underscore":           root + "/lib/lodash.compat",
     "backbone":             root + "/lib/backbone",
-    "marionette":           root + "/libs/backbone.marionette",
-    "dust":                 root + "/libs/dust",
+    "backbone.wreqr":       root + "/lib/backbone.wreqr",
+    "backbone.babysitter":  root + "/lib/backbone.babysitter",
+    "marionette":           root + "/lib/backbone.marionette",
+    "dust":                 root + "/lib/dust-full.min",
+    "dust.marionette":      root + "/lib/backbone.marionette.dust",
+    "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
+    "bootstrap":            root + "/lib/bootstrap",
+    "text":                 root + "/lib/text",
 
-    // Test Libraries
     "jasmine":              root + "/libs/jasmine",
     "jasmine-html":         root + "/libs/jasmine-html",
     "sinon":                root + "/libs/sinon",
 
-    // Plugins
-    "backbone.validateAll": root + "/libs/plugins/Backbone.validateAll",
-    "bootstrap":            root + "/libs/plugins/bootstrap",
-    "text":                 root + "/libs/plugins/text",
+    "templates":            root + "/dist/templates"
   },
-  // Sets the configuration for your third party scripts that are not AMD compatible
+
   shim: {
     "bootstrap": ["jquery"],
     "jqueryui": ["jquery"],
     "backbone": {
       "deps": ["underscore"],
-      // Exports the global window.Backbone object
       "exports": "Backbone"
     },
+
+    "dust.marionette": {
+      "deps": ["dust"],
+      "exports": "dustMarionette",
+    },
+
     "marionette": {
       "deps": ["underscore", "backbone", "jquery"],
-      // Exports the global window.Marionette object
       "exports": "Marionette"
     },
+
     "dust": {
       "exports": "dust"
     },
-    // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
+
+    "templates": ["dust", "dust.marionette"],
+
     "backbone.validateAll": ["backbone"],
 
-    // Jasmine Unit Testing
     "jasmine": {
-      // Exports the global 'window.jasmine' object
       "exports": "jasmine"
     },
 
-    // Jasmine Unit Testing helper
     "jasmine-html": {
       "deps": ["jasmine"],
       "exports": "jasmine"
@@ -64,7 +68,7 @@ var config = {
 };
 
 deps.forEach(function (dep) {
-  config.paths[dep] = root + "/dist/templates/views/" + dep;
+  config.paths[dep] = root + "/dist/templates/" + dep;
   config.shim[dep] = {
     "deps": ["dust"]
   }
