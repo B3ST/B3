@@ -2,27 +2,25 @@ define([
   'jquery',
   'backbone',
   'dust',
+  'dust.marionette',
   'models/settings-model',
   'controllers/event-bus',
   'views/header-view-template',
-], function ($, Backbone, dust, Settings, EventBus) {
-  var HeaderView = Backbone.View.extend({
+], function ($, Backbone, dust, dustMarionette, Settings, EventBus) {
+  var HeaderView = Backbone.Marionette.ItemView.extend({
+    template: 'views/header-view-template.dust',
+    tagName:  'div class="container"',
     events: {
       'click .b3-h': 'index'
     },
 
-    render: function () {
-      dust.render("views/header-view-template.dust", Settings.attributes, function (err, out) {
-        this.setElement(out);
-      }.bind(this));
-
-      return this;
+    serializeData: function () {
+      return Settings.attributes;
     },
 
     index: function (e) {
-      e.preventDefault();
-      e.stopPropagation();
       EventBus.trigger('router:nav', {route: '', options: {trigger: true}});
+      return false;
     }
   });
 

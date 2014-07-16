@@ -1,16 +1,13 @@
 define([
   'jquery',
   'marionette',
+  'dust',
+  'dust.marionette',
   'views/error-view-template'
-], function ($, Marionette) {
+], function ($, Marionette, dust, dustMarionette) {
   var ErrorView = Backbone.Marionette.ItemView.extend({
     tagName: 'div id="b3-error"',
-
-    render: function () {
-      dust.render('views/error-view-template.dust', {}, function (err, out) {
-        this.$el.html(out);
-      }.bind(this));
-    }
+    template: 'views/error-view-template.dust'
   });
 
   return ErrorView;

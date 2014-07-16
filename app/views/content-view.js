@@ -3,12 +3,14 @@ define([
   'underscore',
   'marionette',
   'dust',
+  'dust.marionette',
   'controllers/event-bus',
   'views/content-view-template',
   'views/article-template'
-], function ($, _, Marionette, dust, EventBus) {
+], function ($, _, Marionette, dust, dustMarionette, EventBus) {
   var ContentView = Backbone.Marionette.ItemView.extend({
-    tagName: 'div id="posts"',
+    tagName:  'div id="posts"',
+    template: 'views/article-template.dust',
 
     events: {
       'click .b3-ph': 'selectPost'
@@ -21,19 +23,8 @@ define([
       "reset":  "render"
     },
 
-    initialize: function (posts) {
-      this.collection = posts;
-    },
-
-    render: function () {
-      this.template(this.getModels());
-      return this;
-    },
-
-    template: function (posts) {
-      dust.render('views/article-template.dust', {b3type: 'view', posts: posts}, function (err, out) {
-        this.$el.html(out);
-      }.bind(this));
+    serializeData: function () {
+      return {b3type: 'view', posts: this.getModels()};
     },
 
     getModels: function () {

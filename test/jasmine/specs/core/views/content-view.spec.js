@@ -11,7 +11,7 @@ define([
         new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
       ]);
 
-      this.view = new ContentView(this.posts);
+      this.view = new ContentView({collection: this.posts});
       this.view.render();
     });
 
@@ -61,7 +61,7 @@ define([
         new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
       ]);
 
-      this.view = new ContentView(this.posts);
+      this.view = new ContentView({collection: this.posts});
       this.view.render();
     });
 

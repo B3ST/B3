@@ -2,16 +2,12 @@ define([
   'jquery',
   'backbone',
   'dust',
+  'dust.marionette',
   'views/footer-view-template'
-], function ($, Backbone, dust) {
+], function ($, Backbone, dust, dustMarionette) {
   var FooterView = Backbone.View.extend({
-    render: function () {
-      dust.render("views/footer-view-template.dust", {}, function (err, out) {
-        this.setElement(out);
-      }.bind(this));
-
-      return this;
-    },
+    template: 'views/footer-view-template.dust',
+    tagName:  'div class="container"'
   });
 
   return FooterView;

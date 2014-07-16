@@ -20,7 +20,7 @@ define([
       });
     });
 
-    describe("When clicking in brand", function() {
+    describe("When clicking in home", function() {
       beforeEach(function() {
         this.spy = spyOn(EventBus, 'trigger');
         this.view.render();
