@@ -71,7 +71,7 @@ define([
 
         var view = this.spy.mostRecentCall.args[0];
         expect(view instanceof ContentSingleView).toBeTruthy();
-        expect(view.post).toEqual(posts[0]);
+        expect(view.model).toEqual(posts[0]);
       });
     });
 
@@ -111,7 +111,7 @@ define([
 
           var view = this.spy.mostRecentCall.args[0];
           expect(view instanceof ContentSingleView).toBeTruthy();
-          expect(view.post).toBeDefined();
+          expect(view.model).toBeDefined();
         });
       });
 
