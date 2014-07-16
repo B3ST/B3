@@ -11,7 +11,6 @@ define([
 ], function (Controller, Settings, Post, Posts, ContentView, ContentSingleView, ErrorView, App) {
   describe("Controller", function() {
     beforeEach(function() {
-      //this.app = { main: { show: function () {} }};
       this.app = App;
       var response = [
         new Post({ID: 1, title: 'post-1'}).toJSON(),

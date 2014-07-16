@@ -14,14 +14,15 @@ define([
       'click .b3-ph': 'selectPost'
     },
 
-    initialize: function (posts) {
-      this.posts = posts;
+    collectionEvents: {
+      "add":    "render",
+      "change": "render",
+      "remove": "render",
+      "reset":  "render"
+    },
 
-      _.bindAll(this, 'render');
-      this.listenTo(this.posts, 'add', this.render);
-      this.listenTo(this.posts, 'change', this.render);
-      this.listenTo(this.posts, 'remove', this.render);
-      this.listenTo(this.posts, 'reset', this.render);
+    initialize: function (posts) {
+      this.collection = posts;
     },
 
     render: function () {
@@ -36,7 +37,7 @@ define([
     },
 
     getModels: function () {
-      return $.map(this.posts.models, function (post, index) {
+      return $.map(this.collection.models, function (post, index) {
         return post.toJSON();
       });
     },
