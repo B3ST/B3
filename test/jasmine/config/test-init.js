@@ -5,6 +5,7 @@ var deps = [
   "views/article-template",
   "views/content-view-template",
   "views/content-single-view-template",
+  "views/comment-view-template",
   "views/error-view-template"
 ];
 
@@ -19,6 +20,7 @@ var config = {
     "backbone.babysitter":  root + "/lib/backbone.babysitter",
     "marionette":           root + "/lib/backbone.marionette",
     "dust":                 root + "/lib/dust-full.min",
+    "dust.helpers":         root + "/lib/dust-helpers.min",
     "dust.marionette":      root + "/lib/backbone.marionette.dust",
     "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
     "bootstrap":            root + "/lib/bootstrap",
@@ -39,11 +41,6 @@ var config = {
       "exports": "Backbone"
     },
 
-    "dust.marionette": {
-      "deps": ["dust"],
-      "exports": "dustMarionette",
-    },
-
     "marionette": {
       "deps": ["underscore", "backbone", "jquery"],
       "exports": "Marionette"
@@ -53,7 +50,17 @@ var config = {
       "exports": "dust"
     },
 
-    "templates": ["dust", "dust.marionette"],
+    "dust.marionette": {
+      "deps": ["dust"],
+      "exports": "dustMarionette",
+    },
+
+    "dust.helpers": {
+      "deps": ["dust"],
+      "exports": "dustHelpers"
+    },
+
+    "templates": ["dust", "dust.helpers", "dust.marionette"],
 
     "backbone.validateAll": ["backbone"],
 
@@ -71,7 +78,7 @@ var config = {
 deps.forEach(function (dep) {
   config.paths[dep] = root + "/dist/templates/" + dep;
   config.shim[dep] = {
-    "deps": ["dust"]
+    "deps": ["dust", "dust.helpers"]
   }
 });
 
@@ -121,6 +128,7 @@ require([
     root + 'core/views/footer-view.spec',
     root + 'core/views/content-view.spec',
     root + 'core/views/content-single-view.spec',
+    root + 'core/views/comment-view.spec',
     root + 'core/views/error-view.spec',
 
     // controllers

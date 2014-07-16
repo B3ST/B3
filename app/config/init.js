@@ -5,6 +5,7 @@ var deps = [
   "views/article-template",
   "views/content-view-template",
   "views/content-single-view-template",
+  "views/comment-view-template",
   "views/error-view-template"
 ];
 
@@ -20,7 +21,8 @@ var config = {
     "backbone.babysitter":  root + "/lib/backbone.babysitter",
     "marionette":           root + "/lib/backbone.marionette",
     "dust":                 root + "/lib/dust-full.min",
-    "dust.marionette":      root + "/lib/backbone.marionnette.dust",
+    "dust.helpers":         root + "/lib/dust-helpers.min",
+    "dust.marionette":      root + "/lib/backbone.marionette.dust",
     "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
     "bootstrap":            root + "/lib/bootstrap",
     "text":                 root + "/lib/text",
@@ -42,11 +44,18 @@ var config = {
     "dust": {
       "exports": "dust"
     },
+
     "dust.marionette": {
       "deps": ["dust"],
       "exports": "dustMarionette",
     },
-    "templates": ["dust", "dust.marionette"],
+
+    "dust.helpers": {
+      "deps": ["dust"],
+      "exports": "dustHelpers"
+    },
+
+    "templates": ["dust", "dust.helpers", "dust.marionette"],
     // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
     "backbone.validateAll": ["backbone"]
   }
