@@ -1,0 +1,18 @@
+<img class="b3-avatar" src="{user.avatar}">
+<div class="media-body b3-comment-content">
+  <h4 class="media-heading b3-comment-author">
+    <a href="{user.url}">{user.name}</a>
+  </h4>
+  <time datetime="{date}">
+    <a href="{meta.links.self}">{date}</a>
+  </time>
+
+  {@neq key=status value="approved"}
+    <div class="alert alert-info">
+      Your comment is awaiting moderation.
+    </div>
+  {/neq}
+
+  {content}
+  <!-- Comment reply -->
+</div>
