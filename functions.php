@@ -125,7 +125,7 @@ class B3Theme {
         }
 
         $settings = array(
-            'path'  => parse_url(site_url())['path'],
+            'path'  => (string) parse_url(site_url())['path'],
             'root'  => get_stylesheet_directory_uri(),
             'url'   => home_url( json_get_url_prefix() ),
             'name'  => get_bloginfo( 'name' ),
