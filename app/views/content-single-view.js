@@ -1,23 +1,31 @@
 define([
   'jquery',
+  'underscore',
   'marionette',
   'dust',
+  'dust.marionette',
+  'views/comment-view',
   'views/content-single-view-template',
   'views/article-template'
-], function ($, Marionette, dust) {
-  var ContentSingleView = Backbone.Marionette.ItemView.extend({
-    initialize: function (post) {
-      this.post = post;
+], function ($, _, Marionette, dust, dustMarionette, CommentView) {
+  var ContentSingleView = Backbone.Marionette.CompositeView.extend({
+    template:          'views/article-template.dust',
+    childView:          CommentView,
+    childViewContainer: '#b3-comments',
+
+    serializeData: function () {
+      return _.extend(this.model.toJSON(), {b3type: 'single-view'});
     },
 
-    render: function () {
-      var data = this.post.toJSON();
-      data['b3type'] = 'single-view';
-      dust.render('views/article-template.dust', data, function (err, out) {
-        this.setElement(out);
-      }.bind(this));
+    initialize: function () {
+      this.model.fetchComments({
+        done: function (data) { this.collection.add(data.models); }.bind(this),
+        fail: function () { this.displayError(); }.bind(this)
+      });
+    },
 
-      return this;
+    displayError: function () {
+
     }
   });
 
