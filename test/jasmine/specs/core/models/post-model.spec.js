@@ -82,7 +82,7 @@ define([
 
       describe("When fetching is successful", function() {
         it("should set its attributes", function() {
-          var response = {"ID":1,"title":"Test Post","status":"publish","type":"page","author":{"ID":1,"username":"admin","name":"admin","first_name":"","last_name":"","nickname":"admin","slug":"admin","URL":"","avatar":"http:\/\/1.gravatar.com\/avatar\/b17c1f19d80bf8f61c3f14962153f959?s=96","description":"","email":"admin@example.com","registered":"2014-03-05T18:37:51+00:00","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"","parent":0,"link":"http:\/\/example.com\/test-post-2\/","date":"2014-05-11T19:29:15+00:00","modified":"2014-05-11T19:29:15+00:00","format":"standard","slug":"test-post-2","guid":"http:\/\/example.com\/test-post-2\/","excerpt":null,"menu_order":1,"comment_status":"closed","ping_status":"closed","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-11T19:29:15+00:00","modified_tz":"UTC","modified_gmt":"2014-05-11T19:29:15+00:00","password":"","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts","replies":"http:\/\/example.com\/wp-json\/posts\/1\/comments","version-history":"http:\/\/example.com\/wp-json\/posts\/1\/revisions"}},"featured_image":null,"terms":[]};
+          var response = {"ID":1,"title":"Test Post","status":"publish","type":"page","author":{"ID":1,"username":"admin","name":"admin","first_name":"","last_name":"","nickname":"admin","slug":"admin","URL":"","avatar":"http:\/\/1.gravatar.com\/avatar\/b17c1f19d80bf8f61c3f14962153f959?s=96","description":"","email":"admin@example.com","registered":"2014-03-05T18:37:51.000Z","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"","parent":0,"link":"http:\/\/example.com\/test-post-2\/","date":"2014-05-11T19:29:15.000Z","modified":"2014-05-11T19:29:15.000Z","format":"standard","slug":"test-post-2","guid":"http:\/\/example.com\/test-post-2\/","excerpt":null,"menu_order":1,"comment_status":"closed","ping_status":"closed","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-11T19:29:15.000Z","modified_tz":"UTC","modified_gmt":"2014-05-11T19:29:15.000Z","password":"","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts","replies":"http:\/\/example.com\/wp-json\/posts\/1\/comments","version-history":"http:\/\/example.com\/wp-json\/posts\/1\/revisions"}},"featured_image":null,"terms":[]};
 
           this.server.respondWith(
             'GET',
@@ -99,8 +99,8 @@ define([
           expect(this.post.get('author').get('username')).toBe('admin');
           expect(this.post.get('author').get('ID')).toBe(1);
 
-          expect(this.post.get('date')).toEqual(new Date('2014-05-11T19:29:15+00:00'));
-          expect(this.post.get('modified')).toEqual(new Date('2014-05-11T19:29:15+00:00'));
+          expect(this.post.get('date')).toEqual(new Date('2014-05-11T19:29:15.000Z'));
+          expect(this.post.get('modified')).toEqual(new Date('2014-05-11T19:29:15.000Z'));
         });
       });
 
@@ -126,7 +126,7 @@ define([
     describe("When fetching post revisions", function() {
       beforeEach(function() {
         this.server = sinon.fakeServer.create();
-        this.post   = new Post({"ID":1,"title":"Test Post","status":"publish","type":"page","author":{"ID":1,"username":"admin","name":"admin","first_name":"","last_name":"","nickname":"admin","slug":"admin","URL":"","avatar":"http:\/\/1.gravatar.com\/avatar\/b17c1f19d80bf8f61c3f14962153f959?s=96","description":"","email":"admin@example.com","registered":"2014-03-05T18:37:51+00:00","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"","parent":0,"link":"http:\/\/example.com\/test-post-2\/","date":"2014-05-11T19:29:15+00:00","modified":"2014-05-11T19:29:15+00:00","format":"standard","slug":"test-post-2","guid":"http:\/\/example.com\/test-post-2\/","excerpt":null,"menu_order":1,"comment_status":"closed","ping_status":"closed","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-11T19:29:15+00:00","modified_tz":"UTC","modified_gmt":"2014-05-11T19:29:15+00:00","password":"","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts","replies":"http:\/\/example.com\/wp-json\/posts\/1\/comments","version-history":"http:\/\/example.com\/wp-json\/posts\/1\/revisions"}},"featured_image":null,"terms":[]});
+        this.post   = new Post({"ID":1,"title":"Test Post","status":"publish","type":"page","author":{"ID":1,"username":"admin","name":"admin","first_name":"","last_name":"","nickname":"admin","slug":"admin","URL":"","avatar":"http:\/\/1.gravatar.com\/avatar\/b17c1f19d80bf8f61c3f14962153f959?s=96","description":"","email":"admin@example.com","registered":"2014-03-05T18:37:51.000Z","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"","parent":0,"link":"http:\/\/example.com\/test-post-2\/","date":"2014-05-11T19:29:15.000Z","modified":"2014-05-11T19:29:15.000Z","format":"standard","slug":"test-post-2","guid":"http:\/\/example.com\/test-post-2\/","excerpt":null,"menu_order":1,"comment_status":"closed","ping_status":"closed","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-11T19:29:15.000Z","modified_tz":"UTC","modified_gmt":"2014-05-11T19:29:15.000Z","password":"","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts","replies":"http:\/\/example.com\/wp-json\/posts\/1\/comments","version-history":"http:\/\/example.com\/wp-json\/posts\/1\/revisions"}},"featured_image":null,"terms":[]});
       });
 
       afterEach(function() {
@@ -136,7 +136,7 @@ define([
       describe("When fetching post revisions is successful", function() {
         it("should return the revision collection", function() {
           var response = [
-            {"ID":2,"post": 1,"title":"test","status":"inherit","type":"revision","author":{"ID":1,"username":"admin","name":"admin","first_name":"word","last_name":"press","nickname":"admin","slug":"admin","URL":"","avatar":"","description":"","registered":"2013-04-04T16:58:14+00:00","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"Revision content","parent":0,"link":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","date":"2014-05-28T00:55:04+00:00","modified":"2014-05-28T00:55:04+00:00","format":"standard","slug":"1-revision-v1","guid":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","excerpt":"This is the excerpt","menu_order":0,"comment_status":"closed","ping_status":"open","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-28T00:55:04+00:00","modified_tz":"UTC","modified_gmt":"2014-05-28T00:55:04+00:00","password":"","title_raw":"test","content_raw":"sdfsdfsf sdfsfdsf","excerpt_raw":"","guid_raw":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","post_meta":[],"meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1/revisions/2","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts/1/revisions","up":"http:\/\/example.com\/wp-json\/posts\/1"}},"terms":[]}
+            {"ID":2,"post": 1,"title":"test","status":"inherit","type":"revision","author":{"ID":1,"username":"admin","name":"admin","first_name":"word","last_name":"press","nickname":"admin","slug":"admin","URL":"","avatar":"","description":"","registered":"2013-04-04T16:58:14.000Z","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}, "email":"", "password":""},"content":"Revision content","parent":0,"link":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","date":"2014-05-28T00:55:04.000Z","modified":"2014-05-28T00:55:04.000Z","format":"standard","slug":"1-revision-v1","guid":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","excerpt":"This is the excerpt","menu_order":0,"comment_status":"closed","ping_status":"open","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-28T00:55:04.000Z","modified_tz":"UTC","modified_gmt":"2014-05-28T00:55:04.000Z","password":"","title_raw":"test","content_raw":"sdfsdfsf sdfsfdsf","excerpt_raw":"","guid_raw":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","post_meta":[],"meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1/revisions/2","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts/1/revisions","up":"http:\/\/example.com\/wp-json\/posts\/1"}},"terms":[]}
           ];
 
           this.server.respondWith(
@@ -146,7 +146,7 @@ define([
           );
 
           this.post.fetchRevisions({
-            done: function (data) { expect(data.models[0].attributes).toEqual(response[0]); }
+            done: function (data) { expect(data.models[0].toJSON()).toEqual(response[0]); }
           });
 
           this.server.respond();
@@ -155,7 +155,7 @@ define([
 
       describe("When fetching a single post revision is successful", function() {
         it("should return the revision collection", function() {
-          var response = {"ID":2, "post": 1, "title":"test","status":"inherit","type":"revision","author":{"ID":1,"username":"admin","name":"admin","first_name":"word","last_name":"press","nickname":"admin","slug":"admin","URL":"","avatar":"","description":"","registered":"2013-04-04T16:58:14+00:00","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"Revision content","parent":0,"link":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","date":"2014-05-28T00:55:04+00:00","modified":"2014-05-28T00:55:04+00:00","format":"standard","slug":"1-revision-v1","guid":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","excerpt":"This is the excerpt","menu_order":0,"comment_status":"closed","ping_status":"open","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-28T00:55:04+00:00","modified_tz":"UTC","modified_gmt":"2014-05-28T00:55:04+00:00","password":"","title_raw":"test","content_raw":"sdfsdfsf sdfsfdsf","excerpt_raw":"","guid_raw":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","post_meta":[],"meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1/revisions/2","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts/1/revisions","up":"http:\/\/example.com\/wp-json\/posts\/1"}},"terms":[]};
+          var response = {"ID":2, "post": 1, "title":"test","status":"inherit","type":"revision","author":{"ID":1,"username":"admin","name":"admin","first_name":"word","last_name":"press","nickname":"admin","slug":"admin","URL":"","avatar":"","description":"","registered":"2013-04-04T16:58:14.000Z","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}, "email": "", "password": ""},"content":"Revision content","parent":0,"link":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","date":"2014-05-28T00:55:04.000Z","modified":"2014-05-28T00:55:04.000Z","format":"standard","slug":"1-revision-v1","guid":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","excerpt":"This is the excerpt","menu_order":0,"comment_status":"closed","ping_status":"open","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-28T00:55:04.000Z","modified_tz":"UTC","modified_gmt":"2014-05-28T00:55:04.000Z","password":"","title_raw":"test","content_raw":"sdfsdfsf sdfsfdsf","excerpt_raw":"","guid_raw":"http:\/\/example.com\/2014\/05\/1-revision-v1\/","post_meta":[],"meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1/revisions/2","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts/1/revisions","up":"http:\/\/example.com\/wp-json\/posts\/1"}},"terms":[]};
           this.server.respondWith(
             'GET',
             'http://example.com/wp-json/posts/1/revisions/1',
@@ -163,7 +163,9 @@ define([
           );
 
           this.post.fetchRevisions({
-            done: function (data) { expect(data.attributes).toEqual(response); }
+            done: function (data) {
+              expect(data.toJSON()).toEqual(response);
+            }
           }, 1);
 
           this.server.respond();
@@ -199,7 +201,7 @@ define([
     describe("When fetching post comments", function() {
       beforeEach(function() {
         this.server = sinon.fakeServer.create();
-        this.post   = new Post({"ID":1,"title":"Test Post","status":"publish","type":"page","author":{"ID":1,"username":"admin","name":"admin","first_name":"","last_name":"","nickname":"admin","slug":"admin","URL":"","avatar":"http:\/\/1.gravatar.com\/avatar\/b17c1f19d80bf8f61c3f14962153f959?s=96","description":"","email":"admin@example.com","registered":"2014-03-05T18:37:51+00:00","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"","parent":0,"link":"http:\/\/example.com\/test-post-2\/","date":"2014-05-11T19:29:15+00:00","modified":"2014-05-11T19:29:15+00:00","format":"standard","slug":"test-post-2","guid":"http:\/\/example.com\/test-post-2\/","excerpt":null,"menu_order":1,"comment_status":"closed","ping_status":"closed","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-11T19:29:15+00:00","modified_tz":"UTC","modified_gmt":"2014-05-11T19:29:15+00:00","password":"","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts","replies":"http:\/\/example.com\/wp-json\/posts\/1\/comments","version-history":"http:\/\/example.com\/wp-json\/posts\/1\/revisions"}},"featured_image":null,"terms":[]});
+        this.post   = new Post({"ID":1,"title":"Test Post","status":"publish","type":"page","author":{"ID":1,"username":"admin","name":"admin","first_name":"","last_name":"","nickname":"admin","slug":"admin","URL":"","avatar":"http:\/\/1.gravatar.com\/avatar\/b17c1f19d80bf8f61c3f14962153f959?s=96","description":"","email":"admin@example.com","registered":"2014-03-05T18:37:51.000Z","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/users\/1","archives":"http:\/\/example.com\/wp-json\/users\/1\/posts"}}},"content":"","parent":0,"link":"http:\/\/example.com\/test-post-2\/","date":"2014-05-11T19:29:15.000Z","modified":"2014-05-11T19:29:15.000Z","format":"standard","slug":"test-post-2","guid":"http:\/\/example.com\/test-post-2\/","excerpt":null,"menu_order":1,"comment_status":"closed","ping_status":"closed","sticky":false,"date_tz":"UTC","date_gmt":"2014-05-11T19:29:15.000Z","modified_tz":"UTC","modified_gmt":"2014-05-11T19:29:15.000Z","password":"","meta":{"links":{"self":"http:\/\/example.com\/wp-json\/posts\/1","author":"http:\/\/example.com\/wp-json\/users\/1","collection":"http:\/\/example.com\/wp-json\/posts","replies":"http:\/\/example.com\/wp-json\/posts\/1\/comments","version-history":"http:\/\/example.com\/wp-json\/posts\/1\/revisions"}},"featured_image":null,"terms":[]});
       });
 
       afterEach(function() {
@@ -209,7 +211,7 @@ define([
       describe("When fetching post comments is successful", function() {
         it("should return the comment collection", function() {
           var response = [
-            {"ID":1,"post":1,"content":"Here is a test comment","status":"approved","type":"comment","parent":0,"author":{"ID":1,"username":"wordpress","email":"generic@wordpress.org","password":"","name":"WordPress","first_name":"Word","last_name":"Press","nickname":"The WordPresser","slug":"wordpress","URL":"http://wordpress.org","avatar":"http://s.w.org/style/images/wp-header-logo-2x.png?1","meta":{"links":{"self":"http://example.com/wp-json/users/1","archives":"http://example.com/wp-json/users/1/posts"}}},"date":"2014-05-22T04:57:25+00:00","date_tz":"UTC","date_gmt":"2014-05-22T04:57:25+00:00","meta":{"links":{"up":"http://example.com/wp-json/posts/1","self":"http://example.com/wp-json/posts/1/comments/2"}}}
+            {"ID":1,"post":1,"content":"Here is a test comment","status":"approved", "type":"comment","parent":0,"author":{"ID":1,"username":"wordpress","email":"generic@wordpress.org","password":"","name":"WordPress","first_name":"Word","last_name":"Press","nickname":"The WordPresser","slug":"wordpress","URL":"http://wordpress.org","avatar":"http://s.w.org/style/images/wp-header-logo-2x.png?1","meta":{"links":{"self":"http://example.com/wp-json/users/1","archives":"http://example.com/wp-json/users/1/posts"}}},"date":"2014-05-22T04:57:25.000Z","date_tz":"UTC","date_gmt":"2014-05-22T04:57:25.000Z","meta":{"links":{"up":"http://example.com/wp-json/posts/1","self":"http://example.com/wp-json/posts/1/comments/2"}}}
           ];
 
           this.server.respondWith(
@@ -219,7 +221,7 @@ define([
           );
 
           this.post.fetchComments({
-            done: function (data) { expect(data.models[0].attributes).toEqual(response[0]) }
+            done: function (data) { expect(data.models[0].toJSON()).toEqual(response[0]) }
           });
 
           this.server.respond();
@@ -228,7 +230,7 @@ define([
 
       describe("When fetching a single post comment is successful", function() {
         it("should return the single comment", function() {
-          var response = {"ID":1,"post":1,"content":"Here is a test comment","status":"approved","type":"comment","parent":0,"author":{"ID":1,"username":"wordpress","email":"generic@wordpress.org","password":"","name":"WordPress","first_name":"Word","last_name":"Press","nickname":"The WordPresser","slug":"wordpress","URL":"http://wordpress.org","avatar":"http://s.w.org/style/images/wp-header-logo-2x.png?1","meta":{"links":{"self":"http://example.com/wp-json/users/1","archives":"http://example.com/wp-json/users/1/posts"}}},"date":"2014-05-22T04:57:25+00:00","date_tz":"UTC","date_gmt":"2014-05-22T04:57:25+00:00","meta":{"links":{"up":"http://example.com/wp-json/posts/1","self":"http://example.com/wp-json/posts/1/comments/2"}}}
+          var response = {"ID":1,"post":1,"content":"Here is a test comment","status":"approved","type":"comment","parent":0,"author":{"ID":1,"username":"wordpress","email":"generic@wordpress.org","password":"","name":"WordPress","first_name":"Word","last_name":"Press","nickname":"The WordPresser","slug":"wordpress","URL":"http://wordpress.org","avatar":"http://s.w.org/style/images/wp-header-logo-2x.png?1","meta":{"links":{"self":"http://example.com/wp-json/users/1","archives":"http://example.com/wp-json/users/1/posts"}}},"date":"2014-05-22T04:57:25.000Z","date_tz":"UTC","date_gmt":"2014-05-22T04:57:25.000Z","meta":{"links":{"up":"http://example.com/wp-json/posts/1","self":"http://example.com/wp-json/posts/1/comments/2"}}}
 
           this.server.respondWith(
             'GET',
@@ -237,7 +239,7 @@ define([
           );
 
           this.post.fetchComments({
-            done: function (data) { expect(data.attributes).toEqual(response); }
+            done: function (data) { expect(data.toJSON()).toEqual(response); }
           }, 1);
 
           this.server.respond();

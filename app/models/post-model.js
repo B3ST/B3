@@ -52,15 +52,27 @@ define([
         return false;
       } else {
         $.get(this.getMetaUrl(link) + '/' + id).done(function (data) {
-            var init = (id == '' ? collection : new collection().model);
+            data = this.getData(data, id, collection);
             if (callbacks.done) {
-              callbacks.done(new init(data));
+              callbacks.done(data);
             }
-          }).fail(function (data) {
+          }.bind(this)).fail(function (data) {
             if (callbacks.fail) {
               callbacks.fail(data);
             }
           });
+      }
+    },
+
+    getData: function (data, id, obj) {
+      var model = new obj().model;
+      if (id == '') {
+        data = $.map(data, function(item, index) {
+          return model.prototype.parse(item);
+        });
+        return new obj(data);
+      } else {
+        return new model(model.prototype.parse(data));
       }
     },
 
