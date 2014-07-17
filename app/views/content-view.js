@@ -13,7 +13,7 @@ define([
     template: 'views/article-template.dust',
 
     events: {
-      'click .b3-ph': 'selectPost'
+      'click .b3-post-title > a': 'selectPost'
     },
 
     collectionEvents: {
@@ -34,12 +34,12 @@ define([
     },
 
     selectPost: function (ev) {
-      ev.preventDefault();
       var input   = ev.currentTarget.id,
           regex   = /(\d+)/,
           matches = input.match(regex);
 
       EventBus.trigger('router:nav', {route: 'post/' + matches[1], options: {trigger: true}});
+      return false;
     }
   });
 

@@ -1,5 +1,5 @@
 <div class="navbar-header">
-  <a class="navbar-brand b3-h" href="#">{name}</a>
+  <a class="navbar-brand" id="b3-header" href="#">{name}</a>
 </div>
 <nav class="collapse navbar-collapse" role="navigation">
 <!--       <?php

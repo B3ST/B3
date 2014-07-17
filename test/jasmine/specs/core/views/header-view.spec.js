@@ -13,11 +13,6 @@ define([
         this.view.render();
         expect(this.view.el).toBeDefined();
       });
-
-      it("should contain the name of the site", function() {
-        this.view.render();
-        expect(this.view.$('.b3-h').text()).toEqual(Settings.get('name'));
-      });
     });
 
     describe("When clicking in home", function() {
@@ -27,7 +22,7 @@ define([
       });
 
       it("should trigger a navigation to index event", function() {
-        this.view.$('.b3-h').click();
+        this.view.$('#b3-header').click();
         expect(this.spy).toHaveBeenCalledWith('router:nav', {route: '', options: {trigger: true}});
       });
     });

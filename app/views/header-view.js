@@ -11,7 +11,7 @@ define([
     template: 'views/header-view-template.dust',
     tagName:  'div class="container"',
     events: {
-      'click .b3-h': 'index'
+      'click #b3-header': 'index'
     },
 
     serializeData: function () {
