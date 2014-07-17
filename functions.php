@@ -31,15 +31,9 @@ class B3Theme {
      * [__construct description]
      */
     public function __construct () {
-
         $this->settings_uri = get_template_directory_uri() . '/settings.js';
-
-        $this->require_uri = get_template_directory_uri() . '/lib/require.js';
-
-        $this->loader_uri   = defined( 'WP_DEBUG' ) && WP_DEBUG
-                            ? get_template_directory_uri() . '/app/config/init.js'
-                            : get_template_directory_uri() . '/dist/config/init.js'
-                            ;
+        $this->require_uri  = get_template_directory_uri() . '/lib/require.js';
+        $this->loader_uri   = get_template_directory_uri() . '/dist/config/init.js';
 
         $this->setup();
     }
@@ -125,7 +119,7 @@ class B3Theme {
         }
 
         $settings = array(
-            'path'  => parse_url(site_url())["path"],
+            'path'  => parse_url(site_url())['path'],
             'root'  => get_stylesheet_directory_uri(),
             'url'   => home_url( json_get_url_prefix() ),
             'name'  => get_bloginfo( 'name' ),
