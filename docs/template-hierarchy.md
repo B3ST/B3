@@ -1,6 +1,7 @@
 # B3 Template Hierarchy
 
 * [_archive/_](#archive)
+    - _author-template.dust_
     - _category-template.dust_
     - _date-template.dust_
     - _format-template.dust_
@@ -32,7 +33,7 @@
     - _search-template.dust_
 * [_navigation/_](#navigation)
     - [_menus/_](#menus)
-        + _primary-template.dust_
+        + _primary-menu-template.dust_
     - _pager-template.dust_
 * [_widget-areas/_](#widget-areas)
     - _sidebar-template.dust_
