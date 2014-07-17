@@ -3,10 +3,11 @@ define([
   'backbone',
   'marionette',
   'models/post-model',
+  'collections/post-collection',
   'views/content-view',
   'views/content-single-view',
   'views/error-view'
-], function (_, Backbone, Marionette, Post, ContentView, ContentSingleView, ErrorView) {
+], function (_, Backbone, Marionette, Post, Posts, ContentView, ContentSingleView, ErrorView) {
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
       this.app   = options.app;
@@ -43,7 +44,7 @@ define([
     },
 
     singleContentView: function (post) {
-      return new ContentSingleView({model: post});
+      return new ContentSingleView({model: post, collection: new Posts()});
     }
   });
 });
