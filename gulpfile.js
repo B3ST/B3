@@ -174,10 +174,22 @@ gulp.task('watch', function () {
     gulp.watch('app/templates/**/*.{html,dust}',
         ['build:templates', reload]);
 
-    gulp.watch(['app/assets/**/*.{css,less,scss}', 'lib/**/*.{css,less,scss}'],
+    gulp.watch(['app/assets/**/*.css',
+                'app/assets/**/*.less',
+                'app/assets/**/*.scss',
+                'lib/**/*.css',
+                'lib/**/*.less',
+                'lib/**/*.scss'],
         ['build:styles', reload]);
 
-    gulp.watch(['app/assets/fonts/**/*.{eot,svg,ttf,woff}', 'lib/fonts/**/*.{eot,svg,ttf,woff}'],
+    gulp.watch(['app/assets/fonts/**/*.eot',
+                'app/assets/fonts/**/*.svg',
+                'app/assets/fonts/**/*.ttf',
+                'app/assets/fonts/**/*.woff',
+                'lib/fonts/**/*.eot',
+                'lib/fonts/**/*.svg',
+                'lib/fonts/**/*.ttf',
+                'lib/fonts/**/*.woff'],
         ['build:fonts', reload]);
 
     gulp.watch('app/assets/images/**/*',

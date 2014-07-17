@@ -16,6 +16,12 @@ class B3Theme {
     protected $slug = 'b3';
 
     /**
+     * [$version description]
+     * @var string
+     */
+    protected $version = '0.1.0';
+
+    /**
      * [$require description]
      * @var string
      */
@@ -129,6 +135,8 @@ class B3Theme {
         wp_register_script( $this->slug . '-settings', $this->settings_uri );
         wp_localize_script( $this->slug . '-settings', 'WP_API_SETTINGS', $settings );
         wp_enqueue_script( $this->slug . '-settings' );
+
+        wp_enqueue_style( $this->slug . '-style', get_stylesheet_uri(), NULL, $this->version, 'screen' );
     }
 
     public function enqueue_require_script () {
