@@ -2,12 +2,12 @@
   <article class="b3-post {post_class}">
     <header>
       <h2 class="b3-post-title">
-        <a id="post-{ID}" href="{link}">{title}</a>
+        <a id="post-{ID}" href="{link}">{title|s}</a>
       </h2>
       {+ entry-meta /}
     </header>
     <div class="b3-post-excerpt">
-      {excerpt}
+      {excerpt|s}
     </div>
   </article>
 {/posts}

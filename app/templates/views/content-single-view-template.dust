@@ -1,10 +1,10 @@
 <article class="{post_class}">
   <header>
-    <h1 class="b3-post-title">{title}</h1>
+    <h1 class="b3-post-title">{title|s}</h1>
     {+ entry-meta /}
   </header>
   <div class="b3-post-content">
-    {content}
+    {content|s}
   </div>
   <footer>
     <!--<?php wp_link_pages(array('before' => '<nav class="page-nav"><p>' . __('Pages:', 'roots'), 'after' => '</p></nav>')); ?>-->

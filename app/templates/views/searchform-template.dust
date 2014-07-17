@@ -1,0 +1,9 @@
+{!
+{> "views/error-view-template.dust" /}
+{> "views/content-single-view-template.dust" /}
+!}
+
+{< search-form }
+<input id="s" class="search" name="s">
+<button>Submit</button>
+{/ search-form }

@@ -12,4 +12,4 @@
     <!-- <?php _e('an out-of-date link', 'roots'); ?> -->
 </ul>
 
-<!-- <?php get_search_form(); ?> -->
+{! {+ search-form /} !}
