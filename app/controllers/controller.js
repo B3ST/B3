@@ -37,15 +37,15 @@ define([
     },
 
     fetchPostBy: function (field, value) {
-        var query = {};
-        var post;
+      var query = {};
+      var post;
 
-        query[field] = value;
-        post         = new Post(query);
+      query[field] = value;
+      post         = new Post(query);
 
-        post.fetch()
-          .done(function () { this.show(this.singleContentView(post)); }.bind(this))
-          .fail(function () { this.show(this.error()) }.bind(this));
+      post.fetch()
+        .done(function () { this.show(this.singleContentView(post)); }.bind(this))
+        .fail(function () { this.show(this.error()) }.bind(this));
     },
 
     show: function (view) {
