@@ -1,3 +1,5 @@
+'use strict';
+
 define([
   'jquery',
   'marionette',
@@ -8,8 +10,8 @@ define([
 ], function ($, Marionette, dust, dustHelpers, dustMarionette) {
   var CommentView = Backbone.Marionette.ItemView.extend({
     template: 'content/comments/comment-template.dust',
-    tagName: function () {
-      return 'li id="comment-' +  this.model.get('ID') + '"';
+    tagName:  function () {
+      return 'li id="comment-' + this.model.get('ID') + '"';
     }
   });
 
