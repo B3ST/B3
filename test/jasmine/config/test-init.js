@@ -1,12 +1,13 @@
 var root = "../../../..";
 var deps = [
-  "views/header-view-template",
-  "views/footer-view-template",
-  "views/article-template",
-  "views/content-view-template",
-  "views/content-single-view-template",
-  "views/comment-view-template",
-  "views/error-view-template"
+  "header-template",
+  "footer-template",
+  "content/post-template",
+  "content/content-multi-template",
+  "content/content-single-template",
+  "content/comments/comment-template",
+  "error/not-found-template",
+  "forms/searchform-template"
 ];
 
 var config = {
@@ -26,11 +27,9 @@ var config = {
     "bootstrap":            root + "/lib/bootstrap",
     "text":                 root + "/lib/text",
 
-    "jasmine":              root + "/libs/jasmine",
-    "jasmine-html":         root + "/libs/jasmine-html",
-    "sinon":                root + "/libs/sinon",
-
-    "templates":            root + "/dist/templates"
+    "jasmine": root + "/libs/jasmine",
+    "jasmine-html": root + "/libs/jasmine-html",
+    "sinon": root + "/libs/sinon",
   },
 
   shim: {
@@ -60,8 +59,6 @@ var config = {
       "exports": "dustHelpers"
     },
 
-    "templates": ["dust", "dust.helpers", "dust.marionette"],
-
     "backbone.validateAll": ["backbone"],
 
     "jasmine": {
@@ -75,7 +72,7 @@ var config = {
   }
 };
 
-deps.forEach(function (dep) {
+deps.forEach(function(dep) {
   config.paths[dep] = root + "/dist/templates/" + dep;
   config.shim[dep] = {
     "deps": ["dust", "dust.helpers"]
@@ -93,7 +90,7 @@ require([
   "models/user-model",
   "bootstrap",
   "backbone.validateAll"
-], function ($, Backbone, Marionette, jasmine, User) {
+], function($, Backbone, Marionette, jasmine, User) {
   var root = '../../../../test/jasmine/specs/';
   var specs = [
     // models
@@ -129,7 +126,7 @@ require([
     root + 'core/views/content-view.spec',
     root + 'core/views/content-single-view.spec',
     root + 'core/views/comment-view.spec',
-    root + 'core/views/error-view.spec',
+    root + 'core/views/not-found-view.spec',
 
     // controllers
     root + 'core/controllers/controller.spec',
@@ -157,7 +154,7 @@ require([
   };
 
   Backbone.Model.prototype.parse = function(response) {
-    _.each(parseable_dates, function (key) {
+    _.each(parseable_dates, function(key) {
       if (response.hasOwnProperty(key)) {
         response[key] = new Date(response[key]);
       }

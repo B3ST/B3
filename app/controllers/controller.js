@@ -6,8 +6,8 @@ define([
   'collections/post-collection',
   'views/content-view',
   'views/content-single-view',
-  'views/error-view'
-], function (_, Backbone, Marionette, Post, Posts, ContentView, ContentSingleView, ErrorView) {
+  'views/not-found-view'
+], function (_, Backbone, Marionette, Post, Posts, ContentView, ContentSingleView, NotFoundView) {
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
       this.app   = options.app;
@@ -36,7 +36,7 @@ define([
     },
 
     error: function () {
-      return new ErrorView();
+      return new NotFoundView();
     },
 
     contentView: function (posts) {

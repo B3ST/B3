@@ -5,10 +5,10 @@ define([
   'collections/post-collection',
   'views/content-view',
   'views/content-single-view',
-  'views/error-view',
+  'views/not-found-view',
   'app',
   'sinon'
-], function (Controller, Settings, Post, Posts, ContentView, ContentSingleView, ErrorView, App) {
+], function (Controller, Settings, Post, Posts, ContentView, ContentSingleView, NotFoundView, App) {
   describe("Controller", function() {
     beforeEach(function() {
       this.app = App;
@@ -133,7 +133,7 @@ define([
           this.server.respond();
 
           var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof ErrorView).toBeTruthy();
+          expect(view instanceof NotFoundView).toBeTruthy();
         });
       });
     });

@@ -5,16 +5,16 @@ define([
   'dust',
   'dust.marionette',
   'views/comment-view',
-  'views/content-single-view-template',
-  'views/article-template'
+  'content/content-single-template',
+  'content/post-template'
 ], function ($, _, Marionette, dust, dustMarionette, CommentView) {
   var ContentSingleView = Backbone.Marionette.CompositeView.extend({
-    template:          'views/article-template.dust',
+    template:          'content/post-template.dust',
     childView:          CommentView,
     childViewContainer: '#b3-comments',
 
     serializeData: function () {
-      return _.extend(this.model.toJSON(), {b3type: 'single-view'});
+      return _.extend(this.model.toJSON(), {b3type: 'single'});
     },
 
     initialize: function () {

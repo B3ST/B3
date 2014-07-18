@@ -5,10 +5,10 @@ define([
   'dust.marionette',
   'models/settings-model',
   'controllers/event-bus',
-  'views/header-view-template',
+  'header-template',
 ], function ($, Backbone, dust, dustMarionette, Settings, EventBus) {
   var HeaderView = Backbone.Marionette.ItemView.extend({
-    template: 'views/header-view-template.dust',
+    template: 'header-template.dust',
     tagName:  'div class="container"',
     events: {
       'click #b3-header': 'index'
