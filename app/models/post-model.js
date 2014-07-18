@@ -1,3 +1,5 @@
+'use strict';
+
 define([
   'jquery',
   'backbone',
@@ -37,6 +39,18 @@ define([
 
     idAttribute: 'ID',
     urlRoot: Settings.get('url') + '/posts',
+
+    url: function () {
+        var query = '';
+
+        if (this.get('ID')) {
+            query = '/' + this.get('ID');
+        } else {
+            query = '/b3/slug/' + this.get('slug');
+        }
+        
+        return this.urlRoot + query;
+    },
 
     fetchRevisions: function (callbacks, id) {
       return this.fetchMeta(id, 'version-history', Revisions, callbacks);
