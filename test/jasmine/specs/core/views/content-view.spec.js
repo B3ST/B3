@@ -57,8 +57,8 @@ define([
     beforeEach(function() {
       this.spy = spyOn(EventBus, 'trigger');
       this.posts = new Posts([
-        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1'}),
-        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
+        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1', slug: 'post-1'}),
+        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
       ]);
 
       this.view = new ContentView({collection: this.posts});
@@ -67,7 +67,7 @@ define([
 
     it("should trigger an event of navigation", function() {
       this.view.$('.b3-post-title > a').first().click();
-      expect(this.spy).wasCalledWith('router:nav', {route: 'post/1', options: {trigger: true}});
+      expect(this.spy).wasCalledWith('router:nav', {route: 'post/post-1', options: {trigger: true}});
     });
   });
 });

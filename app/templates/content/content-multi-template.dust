@@ -2,7 +2,7 @@
   <article class="b3-post {post_class}">
     <header>
       <h2 class="b3-post-title">
-        <a id="post-{ID}" href="{link}">{title|s}</a>
+        <a id="{slug}" href="#">{title|s}</a>
       </h2>
       {+ entry-meta /}
     </header>
