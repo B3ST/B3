@@ -47,7 +47,7 @@ var config = {
     },
 
     "dust.marionette": {
-      "deps": ["dust"],
+      "deps": ["marionette", "dust"],
       "exports": "dustMarionette",
     },
 
