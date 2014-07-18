@@ -64,13 +64,13 @@ define([
       }
     },
 
-    getData: function (data, id, obj) {
-      var model = new obj().model;
+    getData: function (data, id, collection) {
+      var model = new collection().model;
       if (id == '') {
         data = $.map(data, function(item, index) {
           return model.prototype.parse(item);
         });
-        return new obj(data);
+        return new collection(data);
       } else {
         return new model(model.prototype.parse(data));
       }
