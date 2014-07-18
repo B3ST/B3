@@ -84,7 +84,7 @@ define([
         data = $.map(data, function(item, index) {
           return model.prototype.parse(item);
         });
-        return new collection(data);
+        return new collection(data).sort();
       } else {
         return new model(model.prototype.parse(data));
       }
