@@ -3,12 +3,12 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
-  'views/error-view-template'
+  'error/not-found-template'
 ], function ($, Marionette, dust, dustMarionette) {
-  var ErrorView = Backbone.Marionette.ItemView.extend({
+  var NotFoundView = Backbone.Marionette.ItemView.extend({
     tagName: 'div id="b3-error"',
-    template: 'views/error-view-template.dust'
+    template: 'error/not-found-template.dust'
   });
 
-  return ErrorView;
+  return NotFoundView;
 });
