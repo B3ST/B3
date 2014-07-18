@@ -14,5 +14,6 @@
   {/neq}
 
   {content|s}
-  <!-- Comment reply -->
 </div>
+<ul class="b3-comments">
+</ul>
