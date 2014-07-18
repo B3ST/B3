@@ -7,6 +7,11 @@ if (!defined( 'WPINC' )) {
     die;
 }
 
+/**
+ * FIXME: Eventually move this to its own plugin.
+ */
+require_once get_template_directory() . '/b3-rest-api/b3-rest-api.php';
+
 class B3Theme {
 
     /**

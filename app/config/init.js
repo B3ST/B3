@@ -14,7 +14,7 @@ var deps = [
 
 var config = {
   //urlArgs: "bust=" + (new Date()).getTime(),
-  baseUrl: root + "/app",
+  baseUrl: root + "/dist",
   paths: {
     "jquery":               root + "/lib/jquery",
     "jqueryui":             root + "/lib/jquery-ui",

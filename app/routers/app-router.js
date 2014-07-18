@@ -5,6 +5,8 @@ define([
   return Marionette.AppRouter.extend({
     appRoutes: {
       "": "index",
+      "post/:slug/page/:page": "showPostBySlug",
+      "post/:slug": "showPostBySlug",
       "post/:id": "showPost"
     }
   });
