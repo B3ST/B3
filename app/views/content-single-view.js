@@ -50,7 +50,7 @@ define([
         return;
       }
 
-      this.replyBox = new ReplyFormView({model: this.model, parentView: this});
+      this.replyBox = new ReplyFormView({model: this.model, parentView: this, parentId: 0});
       this.replyBox.render();
       this.$('.b3-comment-section').html(this.replyBox.el);
     },

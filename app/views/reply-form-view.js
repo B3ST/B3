@@ -19,6 +19,7 @@ define([
 
     initialize: function (options) {
       this.parentView = options.parentView;
+      this.parentId   = options.parentId;
     },
 
     onRender: function () {
@@ -42,7 +43,7 @@ define([
       return new Comment({
         content: this.$('#b3-replybox').val(),
         post:    this.model.get('ID'),
-        parent:  this.model.get('ID')
+        parent:  this.parentId
       });
     }
   });
