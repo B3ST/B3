@@ -1,3 +1,5 @@
+'use strict';
+
 define([
   'jquery',
   'underscore',
@@ -5,12 +7,12 @@ define([
   'dust',
   'dust.marionette',
   'controllers/event-bus',
-  'content/content-multi-template',
-  'content/post-template'
+  'archive/posts-template',
+  'content/content-template'
 ], function ($, _, Marionette, dust, dustMarionette, EventBus) {
   var ContentView = Backbone.Marionette.ItemView.extend({
     tagName:  'div id="posts"',
-    template: 'content/post-template.dust',
+    template: 'content/content-template.dust',
 
     events: {
       'click .b3-post-title > a': 'selectPost'
@@ -24,7 +26,7 @@ define([
     },
 
     serializeData: function () {
-      return {b3type: 'multi', posts: this.getModels()};
+      return {b3type: 'posts', b3folder: 'archive', posts: this.getModels()};
     },
 
     getModels: function () {

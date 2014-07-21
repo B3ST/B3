@@ -3,9 +3,9 @@ var deps = [
   "header-template",
   "footer-template",
   "content/post-template",
-  "content/content-multi-template",
-  "content/content-single-template",
+  "content/content-template",
   "content/comments/comment-template",
+  "archive/posts-template",
   "error/not-found-template",
   "forms/searchform-template"
 ];

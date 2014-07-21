@@ -1,0 +1,6 @@
+{> "{b3folder}/{b3type}-template.dust" /}
+
+{< entry-meta }
+<time class="published" datetime="{date}">{date}</time>
+<p class="byline author vcard">By <a href="{author.URL}" rel="author" class="fn">{author.name}</a></p>
+{/ entry-meta }
