@@ -14,6 +14,11 @@
   {/neq}
 
   {content|s}
+
+  <div>
+    <a class="b3-reply-comment" href="#reply">Reply to comment</a>
+    <div class="b3-reply-section"></div>
+  </div>
 </div>
 <ul class="b3-comments">
 </ul>
