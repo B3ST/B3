@@ -1,0 +1,6 @@
+<textarea id="b3-replybox" rows="4" cols="50">
+</textarea>
+<div id="b3-replyactions">
+  <a href="#" id="b3-cancel">Cancel</a>
+  <button id="b3-replybutton">Reply</button>
+</div>
