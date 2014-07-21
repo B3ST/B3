@@ -91,31 +91,16 @@ class B3_Comment {
 
         $post = get_post( $id, ARRAY_A );
 
-        if (empty( $post['ID'] )) {
-            return new WP_Error( 'json_post_invalid_id', __( 'Invalid post ID.' ), array( 'status' => 404 ) );
+        $new_comment = $this->prepare_new_comment( $data, $post );
+
+        if (is_wp_error( $new_comment )) {
+            return $new_comment;
         }
 
-        if (!$this->check_read_permission( $post )) {
-            return new WP_Error( 'json_user_cannot_read', __( 'Sorry, you cannot read replies to this post.' ), array( 'status' => 401 ) );
-        }
+        $comment_ID  = wp_new_comment( $new_comment );
 
-        if (!$this->check_reply_permission( $post )) {
-            return new WP_Error( 'json_user_cannot_reply', __( 'Sorry, you cannot reply to this post.' ), array( 'status' => 401 ) );
-        }
-
-        $data['comment_post_ID'] = (int) $id;
-
-        $user = wp_get_current_user();
-
-        if ($user) {
-            $data['user_ID'] = $user->ID;
-            $data['user_id'] = $user->ID;
-        }
-
-        $comment_ID = wp_new_comment( $data );
-
-        if (is_wp_error( $comment_ID )) {
-            return $comment_ID;
+        if (!$comment_ID) {
+            return new WP_Error( 'json_insert_error', __( 'There was an error processing your comment.' ), array( 'status' => 500 ) );
         }
 
         return $this->get_comment( $comment_ID );
@@ -139,7 +124,7 @@ class B3_Comment {
         $post = get_post( $comment->comment_post_ID, ARRAY_A );
 
         if (!$this->check_read_permission( $post )) {
-            return new WP_Error( 'json_user_cannot_read', __( 'Sorry, you cannot read replies to this post.' ), array( 'status' => 401 ) );
+            return new WP_Error( 'json_user_cannot_read', __( 'Sorry, you cannot read replies to this post.' ), array( 'status' => 403 ) );
         }
 
         return $this->prepare_comment( $comment, array( 'comment', 'meta' ), 'single' );
@@ -225,32 +210,16 @@ class B3_Comment {
 
         $post = get_post( $comment->comment_post_ID, ARRAY_A );
 
-        if (empty( $post['ID'] )) {
-            return new WP_Error( 'json_post_invalid_id', __( 'Invalid post ID.' ), array( 'status' => 404 ) );
+        $new_comment = $this->prepare_new_comment( $data, $post, (array) $comment );
+
+        if (is_wp_error( $new_comment )) {
+            return $new_comment;
         }
 
-        if (!$this->check_read_permission( $post )) {
-            return new WP_Error( 'json_user_cannot_read', __( 'Sorry, you cannot read replies to this post.' ), array( 'status' => 401 ) );
-        }
+        $comment_ID  = wp_new_comment( $new_comment );
 
-        if (!$this->check_reply_permission( $post )) {
-            return new WP_Error( 'json_user_cannot_reply', __( 'Sorry, you cannot reply to this post.' ), array( 'status' => 401 ) );
-        }
-
-        $data['comment_parent']  = (int) $id;
-        $data['comment_post_ID'] = (int) $comment->comment_post_ID;
-
-        $user = wp_get_current_user();
-
-        if ($user) {
-            $data['user_ID'] = $user->ID;
-            $data['user_id'] = $user->ID;
-        }
-
-        $comment_ID = wp_new_comment( $data );
-
-        if (is_wp_error( $comment_ID )) {
-            return $comment_ID;
+        if (!$comment_ID) {
+            return new WP_Error( 'json_insert_error', __( 'There was an error processing your comment.' ), array( 'status' => 500 ) );
         }
 
         return $this->get_comment( $comment_ID );
@@ -266,7 +235,7 @@ class B3_Comment {
         $post_type = get_post_type_object( $post['post_type'] );
 
         // Ensure the post type can be read
-        if ( ! $post_type->show_in_json ) {
+        if (!$post_type->show_in_json) {
             return false;
         }
 
@@ -415,6 +384,78 @@ class B3_Comment {
         }
 
         return apply_filters( 'b3_prepare_comment', $data, $comment, $context );
+    }
+
+    /**
+     * Prepares a new comment for insertion.
+     *
+     * The resulting array should still be passed to `wp_new_comment()` for
+     * sanitization.
+     *
+     * @param  array $data    Comment data.
+     * @param  array $post    Data for the post being replied to.
+     * @param  array $comment Data for the comment being replied to.
+     * @return array          Prepared comment data.
+     */
+    protected function prepare_new_comment ($data, $post, $comment = NULL) {
+
+        if (empty( $post['ID'] )) {
+            return new WP_Error( 'json_post_invalid_id', __( 'Invalid post ID.' ), array( 'status' => 404 ) );
+        }
+
+        if (!$this->check_read_permission( $post )) {
+            return new WP_Error( 'json_user_cannot_read', __( 'Sorry, you cannot read replies to this post.' ), array( 'status' => 403 ) );
+        }
+
+        if (!$this->check_reply_permission( $post )) {
+            return new WP_Error( 'json_user_cannot_reply', __( 'Sorry, you cannot reply to this post.' ), array( 'status' => 403 ) );
+        }
+
+        $new_comment = array();
+
+        $allowed_fields = array(
+            'comment_author',
+            'comment_author_email',
+            'comment_author_url',
+            'comment_content',
+            'comment_parent'
+        );
+
+        foreach ($allowed_fields as $key) {
+            $new_comment[$key] = $data[$key];
+        }
+
+        $new_comment['comment_post_ID'] = $post['ID'];
+
+        if (!empty( $comment )) {
+            $new_comment['comment_parent'] = $comment['comment_ID'];
+        }
+
+        $user = wp_get_current_user();
+
+        if ($user) {
+            $new_comment['user_ID']              = $user->ID;
+            $new_comment['user_id']              = $user->ID;
+            $new_comment['comment_author']       = $user->display_name;
+            $new_comment['comment_author_email'] = $user->user_email;
+            $new_comment['comment_author_url']   = $user->user_url;
+        }
+
+        if (get_option( 'require_name_email' )) {
+            if (6 > strlen($comment['comment_author_email']) || '' == $comment['comment_author']) {
+                return new WP_Error( 'json_bad_comment', __( 'Comment author name and email are required.' ), array( 'status' => 400 ) );
+            }
+
+            if (!is_email( $comment['comment_author_email'] )) {
+                return new WP_Error( 'json_bad_comment', __( 'A valid email address is required.' ), array( 'status' => 400 ) );
+            }
+        }
+
+        if (empty( $new_comment['comment_content'] )) {
+            return new WP_Error( 'json_bad_comment', __( 'Your comment must not be empty.' ), array( 'status' => 400 ) );
+        }
+
+        return $new_comment;
     }
 
 }
