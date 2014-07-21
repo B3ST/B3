@@ -1,12 +1,20 @@
 define([
   'views/content-single-view',
+  'controllers/event-bus',
+  'views/reply-form-view',
   'models/post-model',
   'models/comment-model',
   'collections/comment-collection',
   'sinon'
-], function (ContentSingleView, Post, Comment, Comments) {
+], function (ContentSingleView, EventBus, ReplyFormView, Post, Comment, Comments) {
   describe("ContentSingleView", function() {
     describe(".initialize", function() {
+      it("should bind to a given set of events", function() {
+        this.spy = spyOn(EventBus, 'bind');
+        this.post = new Post({ID: 1});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+      });
+
       it("should fetch the corresponding post comments", function() {
         this.spy  = spyOn(Post.prototype, 'fetchComments');
         this.post = new Post({
@@ -106,7 +114,7 @@ define([
             this.view.render();
 
             this.server.respond();
-            expect(this.view.$('#b3-error')).not.toBeNull();
+            expect(this.view.$('#b3-error').length).toEqual(1);
           });
         });
       });
@@ -124,6 +132,20 @@ define([
 
         expect(this.view.el).toBeDefined();
       });
+    });
+  });
+
+  describe("When replying to the post", function() {
+    it("should display a comment box", function() {
+      this.post = new Post({ID: 1});
+      this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+      this.view.render();
+
+      this.view.$('.b3-reply-post').click();
+
+      var template = new ReplyFormView({parentView: this.view}).render().el;
+      var box      = this.view.$('.b3-comment-section').children()[0];
+      expect(box.isEqualNode(template)).toBeTruthy();
     });
   });
 });

@@ -7,6 +7,8 @@
     {content|s}
   </div>
   <footer>
+    <a href="#reply" class="b3-reply-post">Reply to post</a>
+    <div class="b3-comment-section"></div>
     <!--<?php wp_link_pages(array('before' => '<nav class="page-nav"><p>' . __('Pages:', 'roots'), 'after' => '</p></nav>')); ?>-->
   </footer>
   <ul class="b3-comments">
