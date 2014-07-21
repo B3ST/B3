@@ -9,12 +9,14 @@ define([
   'controllers/event-bus',
   'views/comment-view',
   'views/reply-form-view',
+  'views/replyable-view',
   'content/content-template',
   'content/post-template'
-], function ($, _, Marionette, dust, dustMarionette, EventBus, CommentView, ReplyFormView) {
-  var ContentSingleView = Backbone.Marionette.CompositeView.extend({
+], function ($, _, Marionette, dust, dustMarionette, EventBus, CommentView, ReplyFormView, ReplyableView) {
+  var view = _.extend(ReplyableView, {
     template:  'content/post-template.dust',
     childView: CommentView,
+    tagName: 'div id="post"',
     events: {
       'click .b3-reply-post': 'renderReplyBox',
     },
@@ -24,6 +26,11 @@ define([
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
       });
+      this.post = this.model;
+    },
+
+    parentId: function () {
+      return 0;
     },
 
     serializeData: function () {
@@ -37,6 +44,8 @@ define([
     },
 
     attachHtml: function (collectionView, itemView, index) {
+      this.collection.models[index].post = this.post;
+
       if (itemView.model.get('parent') > 0) {
         collectionView.$('#comment-' + itemView.model.get('parent') + ' > ul.b3-comments').append(itemView.el);
       } else {
@@ -45,29 +54,11 @@ define([
       }
     },
 
-    renderReplyBox: function () {
-      if (this.replyBoxRendered) {
-        return;
-      }
-
-      this.replyBox = new ReplyFormView({model: this.model, parentView: this, parentId: 0});
-      this.replyBox.render();
-      this.$('.b3-comment-section').html(this.replyBox.el);
-    },
-
-    replyRendered: function () {
-      this.replyBoxRendered = true;
-    },
-
-    replyDestroyed: function () {
-      this.replyBox = null;
-      this.replyBoxRendered = false;
-    },
-
     displayError: function () {
 
     }
   });
 
+  var ContentSingleView = Backbone.Marionette.CompositeView.extend(view);
   return ContentSingleView;
 });
