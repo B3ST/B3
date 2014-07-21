@@ -7,7 +7,8 @@ var deps = [
   "content/comments/comment-template",
   "archive/posts-template",
   "error/not-found-template",
-  "forms/searchform-template"
+  "forms/searchform-template",
+  "forms/replyform-template",
 ];
 
 var config = {
@@ -127,6 +128,7 @@ require([
     root + 'core/views/content-single-view.spec',
     root + 'core/views/comment-view.spec',
     root + 'core/views/not-found-view.spec',
+    root + 'core/views/reply-form-view.spec',
 
     // controllers
     root + 'core/controllers/controller.spec',

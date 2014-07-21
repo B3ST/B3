@@ -9,7 +9,8 @@ var deps = [
   "content/comments/comment-template",
   "archive/posts-template",
   "error/not-found-template",
-  "forms/searchform-template"
+  "forms/searchform-template",
+  "forms/replyform-template",
 ];
 
 var config = {
