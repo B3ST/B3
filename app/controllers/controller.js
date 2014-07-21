@@ -19,21 +19,14 @@ define([
       this.show(this.contentView(this.posts));
     },
 
-    showPost: function (id, page) {
+    showPostById: function (id, page) {
       var post = this.posts.get(id);
       post ? this.show(this.singleContentView(post, page)) : this.fetchPostBy('ID', id);
     },
 
     showPostBySlug: function (slug, page) {
-      var post = this.posts.get(slug);
-      post ? this.show(this.singleContentView(post, page)) : this.fetchPostBy('slug', slug);
-    },
-
-    fetchPost: function (id) {
-      var post = new Post({ID: id});
-      post.fetch()
-          .done(function () { this.show(this.singleContentView(post)); }.bind(this))
-          .fail(function () { this.show(this.error()) }.bind(this));
+      var post = this.posts.where({slug: slug});
+      post.length > 0 ? this.show(this.singleContentView(post[0], page)) : this.fetchPostBy('slug', slug);
     },
 
     fetchPostBy: function (field, value) {
