@@ -82,12 +82,18 @@ define([
       var model = new collection().model;
       if (id == '') {
         data = $.map(data, function(item, index) {
-          return model.prototype.parse(item);
-        });
+          return this.createModel(model, item);
+        }.bind(this));
         return new collection(data).sort();
       } else {
-        return new model(model.prototype.parse(data));
+        return this.createModel(model, data);
       }
+    },
+
+    createModel: function (model, item) {
+      var m = model.prototype.parse(item);
+      m['post'] = this;
+      return m;
     },
 
     getMetaUrl: function (link) {
