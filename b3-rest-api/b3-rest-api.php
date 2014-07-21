@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package B3
+ * @subpackage B3/API
+ */
 
 include_once( dirname( __FILE__ ) . '/resources/class-b3-posts.php' );
 include_once( dirname( __FILE__ ) . '/resources/class-b3-comments.php' );

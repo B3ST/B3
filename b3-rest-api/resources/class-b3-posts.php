@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package B3
+ * @subpackage B3/API
+ */
 
 /**
  * Extends the default Post resource API.

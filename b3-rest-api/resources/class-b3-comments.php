@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package B3
+ * @subpackage B3/API
+ */
 
 /**
  * Implements a Comment resource API.
