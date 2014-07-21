@@ -13,9 +13,11 @@
   "devDependencies": {
     "almond": "^0.2.9",
     "bower": "^1.3.7",
+    "bower-files": "~1.4.0",
     "bower-requirejs": "^0.11.0",
     "browser-sync": "^1.2.1",
     "express": "^4.5.1",
+    "glob": "^4.0.4",
     "gulp": "^3.8.6",
     "gulp-autoprefixer": "0.0.8",
     "gulp-cache": "^0.2.0",
@@ -42,12 +44,12 @@
     "gulp-uglify": "^0.3.1",
     "gulp-uncss": "^0.4.5",
     "gulp-useref": "^0.5.0",
+    "gulp-util": "^3.0.0",
     "jasmine-runner-node": "0.0.1",
     "jshint": "^2.5.2",
     "jshint-stylish": "^0.4.0",
     "requirejs": "^2.1.14",
-    "run-sequence": "^0.3.6",
-    "bower-files": "~1.4.0"
+    "run-sequence": "^0.3.6"
   },
   "main": "./server/server",
   "keywords": []

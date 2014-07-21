@@ -1,6 +1,7 @@
 <?php
 
 include_once( dirname( __FILE__ ) . '/resources/class-b3-posts.php' );
+include_once( dirname( __FILE__ ) . '/resources/class-b3-comments.php' );
 
 class B3_JSON_REST_API {
 
@@ -29,10 +30,14 @@ class B3_JSON_REST_API {
      * @return [type]                          [description]
      */
     function default_filters ( WP_JSON_ResponseHandler $server ) {
-        $this->server = $server;
-        $this->posts  = new B3_Post( $server );
+        $this->server   = $server;
 
-        add_filter( 'json_endpoints', array( $this->posts, 'register_routes' ), 10, 1 );
+        $this->posts    = new B3_Post( $server );
+        $this->comments = new B3_Comment( $server );
+
+        add_filter( 'json_endpoints'    , array( $this->posts   , 'register_routes'     ), 10, 1 );
+        add_filter( 'json_endpoints'    , array( $this->comments, 'register_routes'     ), 10, 1 );
+        add_filter( 'json_prepare_post' , array( $this->posts   , 'filter_prepare_post' ), 10, 3 );
     }
 
 }

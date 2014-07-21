@@ -46,7 +46,7 @@ define([
       if (this.get('ID')) {
         query = '/' + this.get('ID');
       } else {
-        query = '/b3/slug/' + this.get('slug');
+        query = '/b3:slug:' + this.get('slug');
       }
 
       return this.urlRoot + query;

@@ -182,7 +182,7 @@ define([
           this.server = sinon.fakeServer.create();
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/posts/b3/slug/post-slug-2',
+            Settings.get('url') + '/posts/b3:slug:post-slug-2',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
           );
 
@@ -205,7 +205,7 @@ define([
           this.server = sinon.fakeServer.create();
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/posts/b3/slug/post-slug-2',
+            Settings.get('url') + '/posts/b3:slug:post-slug-2',
             [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
           );
 
