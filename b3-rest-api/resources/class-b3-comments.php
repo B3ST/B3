@@ -415,23 +415,15 @@ class B3_Comment {
             return new WP_Error( 'json_user_cannot_reply', __( 'Sorry, you cannot reply to this post.' ), array( 'status' => 403 ) );
         }
 
-        $new_comment = array();
+        $new_comment = array(
+            'comment_post_ID'      => $post['ID'],
+            'comment_parent'       => isset( $data['parent_comment'] )  ? $data['parent_comment']  : null,
+            'comment_content'      => isset( $data['content'] )         ? $data['content']         : null,
+            'comment_author'       => isset( $data['author']['name'] )  ? $data['author']['name']  : null,
+            'comment_author_email' => isset( $data['author']['email'] ) ? $data['author']['email'] : null,
+            'comment_author_url'   => isset( $data['author']['URL'] )   ? $data['author']['URL']   : null,
 
-        $allowed_fields = array(
-            'comment_author',
-            'comment_author_email',
-            'comment_author_url',
-            'comment_content',
-            'comment_parent'
         );
-
-        foreach ($allowed_fields as $key) {
-            if (isset( $data[$key] )) {
-                $new_comment[$key] = $data[$key];
-            }
-        }
-
-        $new_comment['comment_post_ID'] = $post['ID'];
 
         if (!empty( $comment )) {
             $new_comment['comment_parent'] = $comment['comment_ID'];
@@ -448,11 +440,11 @@ class B3_Comment {
         }
 
         if (get_option( 'require_name_email' )) {
-            if (6 > strlen($comment['comment_author_email']) || '' == $comment['comment_author']) {
+            if (6 > strlen($new_comment['comment_author_email']) || '' == $new_comment['comment_author']) {
                 return new WP_Error( 'json_bad_comment', __( 'Comment author name and email are required.' ), array( 'status' => 400 ) );
             }
 
-            if (!is_email( $comment['comment_author_email'] )) {
+            if (!is_email( $new_comment['comment_author_email'] )) {
                 return new WP_Error( 'json_bad_comment', __( 'A valid email address is required.' ), array( 'status' => 400 ) );
             }
         }
