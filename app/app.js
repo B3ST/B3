@@ -6,11 +6,13 @@ define([
   'controllers/controller',
   'controllers/event-bus',
   'models/settings-model',
+  'models/user-model',
   'collections/post-collection',
   'views/header-view',
   'views/footer-view'
-], function ($,  _, Marionette, AppRouter, Controller, EventBus, Settings, Posts, HeaderView, FooterView) {
+], function ($,  _, Marionette, AppRouter, Controller, EventBus, Settings, User, Posts, HeaderView, FooterView) {
   var App = new Backbone.Marionette.Application();
+  var user = new User({ID: 'me'});
 
   App.navigate = function(route, options){
     options = options || {};
@@ -25,6 +27,8 @@ define([
   App.mobile = isMobile();
 
   App.addInitializer(function(options) {
+    user.fetch();
+
     EventBus.bind('router:nav', function (options) {
       App.navigate(options.route, options.options);
     });
@@ -41,7 +45,8 @@ define([
     App.appRouter = new AppRouter({
       controller: new Controller({
         app:   App,
-        posts: new Posts()
+        posts: new Posts(),
+        user:  user
       })
     });
 
