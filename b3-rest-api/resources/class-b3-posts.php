@@ -31,7 +31,7 @@ class B3_Post {
     public function register_routes ( $routes ) {
 
         $post_routes = array(
-            '/posts/b3\:slug\:(?P<slug>.+)' => array(
+            '/posts/b3:slug:(?P<slug>.+)' => array(
                 array( array( $this, 'get_post' ), WP_JSON_Server::READABLE ),
             ),
         );

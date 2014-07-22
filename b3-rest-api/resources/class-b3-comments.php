@@ -31,18 +31,18 @@ class B3_Comment {
     public function register_routes ( $routes ) {
 
         $post_routes = array(
-            '/posts/(?P<id>\d+)/b3\:replies' => array(
+            '/posts/(?P<id>\d+)/b3:replies' => array(
                 array( array( $this, 'get_post_replies' ),    WP_JSON_Server::READABLE ),
                 array( array( $this, 'new_post_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
             ),
 
-            '/b3\:comments/(?P<id>\d+)' => array(
+            '/b3:comments/(?P<id>\d+)' => array(
                 array( array( $this, 'get_comment' ),         WP_JSON_Server::READABLE ),
                 array( array( $this, 'update_comment' ),      WP_JSON_Server::EDITABLE | WP_JSON_Server::ACCEPT_JSON ),
                 array( array( $this, 'delete_comment' ),      WP_JSON_Server::DELETABLE ),
             ),
 
-            '/b3\:comments/(?P<id>\d+)/b3\:replies' => array(
+            '/b3:comments/(?P<id>\d+)/b3:replies' => array(
                 array( array( $this, 'get_comment_replies' ), WP_JSON_Server::READABLE ),
                 array( array( $this, 'new_comment_reply' ),   WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
             ),

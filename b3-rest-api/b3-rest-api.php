@@ -6,6 +6,7 @@
 
 include_once( dirname( __FILE__ ) . '/resources/class-b3-posts.php' );
 include_once( dirname( __FILE__ ) . '/resources/class-b3-comments.php' );
+include_once( dirname( __FILE__ ) . '/resources/class-b3-sidebars.php' );
 
 class B3_JSON_REST_API {
 
@@ -38,9 +39,11 @@ class B3_JSON_REST_API {
 
         $this->posts    = new B3_Post( $server );
         $this->comments = new B3_Comment( $server );
+        $this->sidebars = new B3_Sidebar( $server );
 
         add_filter( 'json_endpoints'    , array( $this->posts   , 'register_routes'     ), 10, 1 );
         add_filter( 'json_endpoints'    , array( $this->comments, 'register_routes'     ), 10, 1 );
+        add_filter( 'json_endpoints'    , array( $this->sidebars, 'register_routes'     ), 10, 1 );
         add_filter( 'json_prepare_post' , array( $this->posts   , 'filter_prepare_post' ), 10, 3 );
     }
 

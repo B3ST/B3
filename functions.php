@@ -105,8 +105,15 @@ class B3Theme {
         register_sidebar( array(
             'name'          => __( 'Sidebar', 'b3' ),
             'id'            => 'sidebar',
-            'description'   => '',
+            'description'   => 'Default sidebar.',
         ) );
+
+        register_sidebar( array(
+            'name'          => __( 'Footer', 'b3' ),
+            'id'            => 'footer',
+            'description'   => 'Footer widget area.',
+        ) );
+
     }
 
     /**
