@@ -134,7 +134,7 @@ class B3_Sidebar {
      * @param  string $context  The context for the prepared post. (view|view-revision|edit|embed)
      * @return array            Changed post entity data.
      */
-    public function prepare_sidebar ( $_sidebars, $context = 'single' ) {
+    protected function prepare_sidebar ( $_sidebars, $context = 'single' ) {
 
         $keys = array( 'name', 'id', 'description', 'class', 'meta' );
 

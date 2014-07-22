@@ -426,7 +426,9 @@ class B3_Comment {
         );
 
         foreach ($allowed_fields as $key) {
-            $new_comment[$key] = $data[$key];
+            if (isset( $data[$key] )) {
+                $new_comment[$key] = $data[$key];
+            }
         }
 
         $new_comment['comment_post_ID'] = $post['ID'];
