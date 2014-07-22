@@ -1,20 +1,13 @@
 define([
   'views/content-single-view',
-  'controllers/event-bus',
   'views/reply-form-view',
   'models/post-model',
   'models/comment-model',
   'collections/comment-collection',
   'sinon'
-], function (ContentSingleView, EventBus, ReplyFormView, Post, Comment, Comments) {
+], function (ContentSingleView, ReplyFormView, Post, Comment, Comments) {
   describe("ContentSingleView", function() {
     describe(".initialize", function() {
-      it("should bind to a given set of events", function() {
-        this.spy = spyOn(EventBus, 'bind');
-        this.post = new Post({ID: 1});
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
-      });
-
       it("should fetch the corresponding post comments", function() {
         this.spy  = spyOn(Post.prototype, 'fetchComments');
         this.post = new Post({
@@ -100,23 +93,23 @@ define([
           });
         });
 
-        // describe("When fetching fails", function() {
-        //   it("should display an error", function() {
-        //     var response = '';
-        //     this.server = sinon.fakeServer.create();
-        //     this.server.respondWith(
-        //       'GET',
-        //       this.url,
-        //       [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
-        //     );
+        describe("When fetching fails", function() {
+          it("should display an error", function() {
+            var response = '';
+            this.server = sinon.fakeServer.create();
+            this.server.respondWith(
+              'GET',
+              this.url,
+              [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
+            );
 
-        //     this.view = new ContentSingleView({model: this.post, collection: new Comments()});
-        //     this.view.render();
+            this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+            this.view.render();
 
-        //     this.server.respond();
-        //     expect(this.view.$('#b3-error').length).toEqual(1);
-        //   });
-        // });
+            this.server.respond();
+            expect(this.view.$('.b3-comments').text()).not.toEqual('');
+          });
+        });
       });
     });
 
@@ -145,6 +138,45 @@ define([
         var template = new ReplyFormView({parentView: this.view}).render().el;
         var box      = this.view.$('.b3-reply-section').children()[0];
         expect(box.isEqualNode(template)).toBeTruthy();
+      });
+    });
+
+    describe("When post content has multiple pages", function() {
+      beforeEach(function() {
+        this.post = new Post({
+          ID:      1,
+          title:   'Title',
+          content: 'Page 1<!--nextpage-->Page 2<!--nextpage-->Page 3'
+        });
+        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view.render();
+      });
+
+      it("should split the post into multiple pages", function() {
+        expect(this.view.$('.b3-post-content').text()).toEqual('Page 1');
+      });
+
+      it("should display next page control and hide previous page control", function() {
+        expect(this.view.$('.b3-page-control-next').length).toEqual(1);
+        expect(this.view.$('.b3-page-control-previous').length).toEqual(0);
+      });
+
+      describe("When clicking in the next page", function() {
+        it("should display the next page", function() {
+          this.view.$('.b3-page-control-next').click();
+          expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
+        });
+      });
+
+      describe("When clicking in the previous page", function() {
+        it("should display the previous page", function() {
+          this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+          this.view.page = 2;
+          this.view.render();
+
+          this.view.$('.b3-page-control-previous').click();
+          expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
+        });
       });
     });
   });
