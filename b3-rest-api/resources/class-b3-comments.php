@@ -422,7 +422,6 @@ class B3_Comment {
             'comment_author'       => isset( $data['author']['name'] )  ? $data['author']['name']  : null,
             'comment_author_email' => isset( $data['author']['email'] ) ? $data['author']['email'] : null,
             'comment_author_url'   => isset( $data['author']['URL'] )   ? $data['author']['URL']   : null,
-
         );
 
         if (!empty( $comment )) {
