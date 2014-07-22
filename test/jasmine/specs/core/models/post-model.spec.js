@@ -146,7 +146,10 @@ define([
           );
 
           this.post.fetchRevisions({
-            done: function (data) { expect(data.models[0].toJSON()).toEqual(response[0]); }
+            done: function (data) {
+              expect(data.models[0].get('title')).toEqual(response[0].title);
+              expect(data.models[0].get('author').attributes).toEqual(response[0].author);
+            }
           });
 
           this.server.respond();
@@ -221,7 +224,10 @@ define([
           );
 
           this.post.fetchComments({
-            done: function (data) { expect(data.models[0].toJSON()).toEqual(response[0]) }
+            done: function (data) {
+              expect(data.models[0].get('title')).toEqual(response[0].title);
+              expect(data.models[0].get('author').attributes).toEqual(response[0].author);
+            }
           });
 
           this.server.respond();
