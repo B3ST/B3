@@ -214,7 +214,7 @@ class B3_Comment {
 
         $post = get_post( $comment->comment_post_ID, ARRAY_A );
 
-        $new_comment = $this->prepare_new_comment( $data, $post, (array) $comment );
+        $new_comment = $this->prepare_new_comment( $data, $post, $comment );
 
         if (is_wp_error( $new_comment )) {
             return $new_comment;
@@ -417,29 +417,31 @@ class B3_Comment {
 
         $new_comment = array(
             'comment_post_ID'      => $post['ID'],
-            'comment_parent'       => isset( $data['parent_comment'] )  ? $data['parent_comment']  : null,
-            'comment_content'      => isset( $data['content'] )         ? $data['content']         : null,
-            'comment_author'       => isset( $data['author']['name'] )  ? $data['author']['name']  : null,
+            'comment_parent'       => isset( $data['parent_comment']  ) ? $data['parent_comment']  : null,
+            'comment_content'      => isset( $data['content']         ) ? $data['content']         : null,
+            'comment_author'       => isset( $data['author']['name']  ) ? $data['author']['name']  : null,
             'comment_author_email' => isset( $data['author']['email'] ) ? $data['author']['email'] : null,
-            'comment_author_url'   => isset( $data['author']['URL'] )   ? $data['author']['URL']   : null,
+            'comment_author_url'   => isset( $data['author']['URL']   ) ? $data['author']['URL']   : null,
         );
 
         if (!empty( $comment )) {
-            $new_comment['comment_parent'] = $comment['comment_ID'];
+            $new_comment['comment_parent'] = $comment->comment_ID;
         }
 
-        $user = wp_get_current_user();
+        if (is_user_logged_in()) {
+            $user = wp_get_current_user();
 
-        if ($user) {
-            $new_comment['user_ID']              = $user->ID;
-            $new_comment['user_id']              = $user->ID;
-            $new_comment['comment_author']       = $user->display_name;
-            $new_comment['comment_author_email'] = $user->user_email;
-            $new_comment['comment_author_url']   = $user->user_url;
+            if ($user && $user->ID) {
+                $new_comment['user_ID']              = $user->ID;
+                $new_comment['user_id']              = $user->ID;
+                $new_comment['comment_author']       = $user->display_name;
+                $new_comment['comment_author_email'] = $user->user_email;
+                $new_comment['comment_author_url']   = $user->user_url;
+            }
         }
 
         if (get_option( 'require_name_email' )) {
-            if (6 > strlen($new_comment['comment_author_email']) || '' == $new_comment['comment_author']) {
+            if (empty( $new_comment['comment_author_email'] ) || '' == $new_comment['comment_author']) {
                 return new WP_Error( 'json_bad_comment', __( 'Comment author name and email are required.' ), array( 'status' => 400 ) );
             }
 
