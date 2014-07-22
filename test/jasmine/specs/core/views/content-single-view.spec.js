@@ -2,17 +2,22 @@ define([
   'views/content-single-view',
   'controllers/event-bus',
   'views/reply-form-view',
+  'models/user-model',
   'models/post-model',
   'models/comment-model',
   'collections/comment-collection',
   'sinon'
-], function (ContentSingleView, EventBus, ReplyFormView, Post, Comment, Comments) {
+], function (ContentSingleView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
   describe("ContentSingleView", function() {
+    beforeEach(function() {
+      this.user = new User();
+    });
+
     describe(".initialize", function() {
       it("should bind to a given set of events", function() {
         this.spy = spyOn(EventBus, 'bind');
         this.post = new Post({ID: 1});
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
       });
 
       it("should fetch the corresponding post comments", function() {
@@ -22,7 +27,7 @@ define([
           title:   'Title',
           content: 'Some Content'
         });
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         expect(this.spy).toHaveBeenCalled();
@@ -56,7 +61,7 @@ define([
               [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
             );
 
-            this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+            this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
             this.view.render();
 
             this.server.respond();
@@ -84,7 +89,7 @@ define([
                 [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
               );
 
-              this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+              this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
               this.view.render();
 
               this.server.respond();
@@ -100,23 +105,23 @@ define([
           });
         });
 
-        // describe("When fetching fails", function() {
-        //   it("should display an error", function() {
-        //     var response = '';
-        //     this.server = sinon.fakeServer.create();
-        //     this.server.respondWith(
-        //       'GET',
-        //       this.url,
-        //       [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
-        //     );
+        xdescribe("When fetching fails", function() {
+          it("should display an error", function() {
+            var response = '';
+            this.server = sinon.fakeServer.create();
+            this.server.respondWith(
+              'GET',
+              this.url,
+              [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
+            );
 
-        //     this.view = new ContentSingleView({model: this.post, collection: new Comments()});
-        //     this.view.render();
+            this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+            this.view.render();
 
-        //     this.server.respond();
-        //     expect(this.view.$('#b3-error').length).toEqual(1);
-        //   });
-        // });
+            this.server.respond();
+            expect(this.view.$('#b3-error').length).toEqual(1);
+          });
+        });
       });
     });
 
@@ -127,7 +132,7 @@ define([
           title:   'Title',
           content: 'Some Content'
         });
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         expect(this.view.el).toBeDefined();
@@ -137,12 +142,12 @@ define([
     describe("When replying to the post", function() {
       it("should display a comment box", function() {
         this.post = new Post({ID: 1});
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         this.view.$('.b3-reply-post').click();
 
-        var template = new ReplyFormView({parentView: this.view}).render().el;
+        var template = new ReplyFormView({parentView: this.view, user: this.user}).render().el;
         var box      = this.view.$('.b3-reply-section').children()[0];
         expect(box.isEqualNode(template)).toBeTruthy();
       });

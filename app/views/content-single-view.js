@@ -21,12 +21,13 @@ define([
       'click .b3-reply-post': 'renderReplyBox',
     },
 
-    initialize: function () {
+    initialize: function (options) {
       this.model.fetchComments({
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
       });
       this.post = this.model;
+      this.user = options.user;
     },
 
     parentId: function () {
@@ -44,7 +45,8 @@ define([
     },
 
     attachHtml: function (collectionView, itemView, index) {
-      this.collection.models[index].post = this.post;
+      itemView.post = this.post;
+      itemView.user = this.user;
 
       if (itemView.model.get('parent') > 0) {
         collectionView.$('#comment-' + itemView.model.get('parent') + ' > ul.b3-comments').append(itemView.el);

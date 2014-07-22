@@ -7,17 +7,16 @@ define([
 ], function (CommentView, Comment, Post, User, ReplyFormView) {
   describe("CommentView", function() {
     beforeEach(function() {
+      this.user = new User({ URL: 'user-url', name: 'some name' });
       this.post = new Post({ID: 1});
       this.comment = new Comment({
         ID:      1,
         post:    this.post,
         content: 'Some Content',
-        author:  new User({
-          URL:  'user-url',
-          name: 'some name'
-        })
+        author:  this.user
       });
-      this.view = new CommentView({model: this.comment});
+      this.view      = new CommentView({model: this.comment});
+      this.view.user = this.user;
     });
 
     describe(".render", function() {
@@ -29,12 +28,13 @@ define([
 
     describe("When clicking in reply", function() {
       it("should display a comment box", function() {
-        this.view = new CommentView({model: this.comment});
+        this.view      = new CommentView({model: this.comment});
+        this.view.user = this.user;
         this.view.render();
 
         this.view.$('a.b3-reply-comment').click();
 
-        var template = new ReplyFormView({parentView: this.view, parentId: this.comment.get('ID')}).render().el;
+        var template = new ReplyFormView({user: this.user, parentView: this.view, parentId: this.comment.get('ID')}).render().el;
         var box      = this.view.$('.b3-reply-section').children()[0];
         expect(box.isEqualNode(template)).toBeTruthy();
       });
