@@ -167,7 +167,8 @@ define([
 
           this.post.fetchRevisions({
             done: function (data) {
-              expect(data.toJSON()).toEqual(response);
+              expect(data.get('title')).toEqual(response.title);
+              expect(data.get('author').attributes).toEqual(response.author);
             }
           }, 1);
 
@@ -245,7 +246,10 @@ define([
           );
 
           this.post.fetchComments({
-            done: function (data) { expect(data.toJSON()).toEqual(response); }
+            done: function (data) {
+              expect(data.get('title')).toEqual(response.title);
+              expect(data.get('author').attributes).toEqual(response.author);
+            }
           }, 1);
 
           this.server.respond();

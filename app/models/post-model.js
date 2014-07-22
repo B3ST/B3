@@ -93,7 +93,7 @@ define([
     createModel: function (model, item) {
       var m = model.prototype.parse(item);
       m['post'] = this;
-      return m;
+      return new model(m);
     },
 
     getMetaUrl: function (link) {
