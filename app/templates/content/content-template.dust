@@ -7,7 +7,7 @@
 
 {< pagination }
 <ul class="pager">
-  <li><a href="#" class="{^has_previous}disabled {/has_previous}pagination-prev">&larr; Previous</a></li>
-  <li><a href="#" class="{^has_next}disabled {/has_next}pagination-next">Next &rarr;</a></li>
+  <li class="{^has_previous}disabled{/has_previous}"><a href="#" class="pagination-prev">&larr; Previous</a></li>
+  <li class="{^has_next}disabled{/has_next}"><a href="#" class="pagination-next">Next &rarr;</a></li>
 </ul>
 {/ pagination }

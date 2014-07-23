@@ -158,7 +158,7 @@ define([
 
       it("should display next page control and hide previous page control", function() {
         expect(this.view.$('.pagination-next').length).toEqual(1);
-        expect(this.view.$('.pagination-prev').attr('class')).toContain('disabled');
+        expect(this.view.$('.pagination-prev').parent().attr('class')).toContain('disabled');
       });
 
       describe("When clicking in the next page", function() {

@@ -59,17 +59,13 @@ define([
     },
 
     renderNextPage: function () {
-      if (this.page < this.content.length -1) {
-        this.page++;
-        this.render();
-      }
+      this.page++;
+      this.render();
     },
 
     renderPrevPage: function () {
-      if (this.page > 0) {
-        this.page--;
-        this.render();
-      }
+      this.page--;
+      this.render();
     },
 
     displayError: function () {
