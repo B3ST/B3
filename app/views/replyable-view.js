@@ -13,7 +13,7 @@ define([
     },
 
     renderIt: function (ev) {
-      var placeholder = $(ev.currentTarget).siblings();
+      var placeholder = $(ev.currentTarget).siblings('.b3-reply-section');
       this.replyBox = new ReplyFormView({model: this.post, user: this.user, parentView: this, parentId: this.parentId()});
       this.replyBox.render();
       this.$(placeholder).html(this.replyBox.el);
