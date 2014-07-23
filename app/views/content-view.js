@@ -15,18 +15,22 @@ define([
     template: 'content/content-template.dust',
 
     events: {
-      'click .b3-post-title > a': 'selectPost'
+      'click .b3-post-title > a': 'selectPost',
+      'click .pagination-next':   'renderNextPage',
+      'click .pagination-prev':   'renderPrevPage'
     },
 
     collectionEvents: {
-      "add":    "render",
-      "change": "render",
-      "remove": "render",
       "reset":  "render"
     },
 
+    initialize: function (options) {
+      this.page  = 1;
+      this.limit = options.limit || 11;
+    },
+
     serializeData: function () {
-      return {b3type: 'posts', b3folder: 'archive', posts: this.getModels()};
+      return _.extend(this.getDustTemplate(), {posts: this.getModels()});
     },
 
     getModels: function () {
@@ -39,6 +43,46 @@ define([
       var input = $(ev.currentTarget).attr('id');
       EventBus.trigger('router:nav', {route: 'post/' + input, options: {trigger: true}});
       return false;
+    },
+
+    renderNextPage: function () {
+      if (!this.isLastPage()) {
+        this.page++;
+        this.collection.fetch(this.getParams());
+      }
+
+      return false;
+    },
+
+    renderPrevPage: function () {
+      if (!this.isFirstPage()) {
+        this.page--;
+        this.collection.fetch(this.getParams());
+      }
+
+      return false;
+    },
+
+    getDustTemplate: function () {
+      return _.extend({b3type: 'posts', b3folder: 'archive'}, this.getPagination());
+    },
+
+    getPagination: function () {
+      var has_next = !this.isLastPage(),
+          has_prev = !this.isFirstPage();
+      return {has_next: has_next, has_previous: has_prev};
+    },
+
+    isLastPage: function () {
+      return this.collection.models.length === 0;
+    },
+
+    isFirstPage: function () {
+      return this.page === 1;
+    },
+
+    getParams: function () {
+      return {data: $.param({page: this.page}), reset: true};
     }
   });
 

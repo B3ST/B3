@@ -11,3 +11,5 @@
     </div>
   </article>
 {/posts}
+
+{+ pagination /}
