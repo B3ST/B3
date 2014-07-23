@@ -1,10 +1,12 @@
 define([
   'jquery',
+  'underscore',
   'backbone',
   'models/user-model',
-  'models/settings-model'
-], function ($, Backbone, User, Settings) {
-  var Page = Backbone.Model.extend({
+  'models/settings-model',
+  'models/commentable-model'
+], function ($, _, Backbone, User, Settings, Commentable) {
+  var view = _.extend({
     defaults: {
       ID             : null,
       title          : '',
@@ -34,7 +36,13 @@ define([
 
     idAttribute: 'ID',
     urlRoot: Settings.get('url') + '/pages',
-  });
 
+    url: function () {
+      return this.get('ID') ? (this.urlRoot + '/' + this.get('ID'))
+                            : (this.urlRoot + '/' + this.get('slug'));
+    }
+  }, Commentable);
+
+  var Page = Backbone.Model.extend(view);
   return Page;
 });
