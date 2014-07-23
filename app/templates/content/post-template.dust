@@ -7,7 +7,7 @@
     {content|s}
   </div>
   <footer>
-    <a href="#reply" class="b3-reply-post">Reply to post</a>
+    <a href="#reply" class="b3-reply-post">Reply</a>
     <div class="b3-reply-section"></div>
     <!--<?php wp_link_pages(array('before' => '<nav class="page-nav"><p>' . __('Pages:', 'roots'), 'after' => '</p></nav>')); ?>-->
   </footer>
