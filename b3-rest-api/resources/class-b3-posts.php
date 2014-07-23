@@ -63,10 +63,12 @@ class B3_Post {
      * @param  string $context The context for the prepared post. (view|view-revision|edit|embed)
      * @return array           Changed post entity data.
      */
-    public function filter_prepare_post ( $_post, $post, $context ) {
+    public function json_prepare_post ( $_post, $post, $context ) {
 
         if ('view-revision' !== $context) {
-            $_post['meta']['links']['replies'] = json_url( '/posts/' . $post['ID'] . '/b3:replies' );
+            $replies = $_post['meta']['links']['replies'];
+            $replies = preg_replace( '/\/comments$/', '/b3:replies', $replies );
+            $_post['meta']['links']['replies'] = $replies;
         }
 
         return $_post;

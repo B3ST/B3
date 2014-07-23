@@ -31,14 +31,9 @@ class B3_Comment {
     public function register_routes ( $routes ) {
 
         $comment_routes = array(
-            '/posts/(?P<id>\d+)/b3:replies' => array(
+            '/(posts|pages)/(?P<id>\d+)/b3:replies' => array(
                 array( array( $this, 'get_post_replies' ),    WP_JSON_Server::READABLE ),
                 array( array( $this, 'new_post_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
-            ),
-
-            '/pages/(?P<id>\d+)/b3:replies' => array(
-                array( array( $this, 'get_page_replies' ),    WP_JSON_Server::READABLE ),
-                array( array( $this, 'new_page_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
             ),
 
             '/b3:comments/(?P<id>\d+)' => array(
@@ -53,7 +48,7 @@ class B3_Comment {
             ),
         );
 
-        return array_merge( $routes, $comment_routes );
+        return array_merge( $comment_routes, $routes );
     }
 
     /**
@@ -111,27 +106,6 @@ class B3_Comment {
         }
 
         return $this->get_comment( $comment_ID );
-    }
-
-    /**
-     * Retrieve all responses to a post.
-     *
-     * @param  int    $id Page ID to retrieve comments for.
-     * @return array      List of Comment entities.
-     */
-    public function get_page_replies ( $id ) {
-        return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
-    }
-
-    /**
-     * Add a reply to a post.
-     *
-     * @param  int   $id   Page ID to comment on.
-     * @param  array $data New comment data.
-     * @return mixed       Comment entity for the new comment.
-     */
-    public function new_page_reply ( $id, $data ) {
-        return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
     }
 
     /**

@@ -5,6 +5,7 @@
  */
 
 include_once( dirname( __FILE__ ) . '/resources/class-b3-posts.php' );
+include_once( dirname( __FILE__ ) . '/resources/class-b3-pages.php' );
 include_once( dirname( __FILE__ ) . '/resources/class-b3-comments.php' );
 include_once( dirname( __FILE__ ) . '/resources/class-b3-sidebars.php' );
 include_once( dirname( __FILE__ ) . '/resources/class-b3-menus.php' );
@@ -22,6 +23,12 @@ class B3_JSON_REST_API {
      * @var [type]
      */
     protected $posts;
+
+    protected $comments;
+
+    protected $sidebars;
+
+    protected $menus;
 
     /**
      * [__construct description]
@@ -47,7 +54,9 @@ class B3_JSON_REST_API {
         add_filter( 'json_endpoints'    , array( $this->comments, 'register_routes'     ), 10, 1 );
         add_filter( 'json_endpoints'    , array( $this->sidebars, 'register_routes'     ), 10, 1 );
         add_filter( 'json_endpoints'    , array( $this->menus   , 'register_routes'     ), 10, 1 );
-        add_filter( 'json_prepare_post' , array( $this->posts   , 'filter_prepare_post' ), 10, 3 );
+
+        add_filter( 'json_prepare_post' , array( $this->posts   , 'json_prepare_post' ), 10, 3 );
+        add_filter( 'json_prepare_page' , array( $this->posts   , 'json_prepare_post' ), 10, 3 );
     }
 
 }
