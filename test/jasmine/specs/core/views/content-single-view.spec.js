@@ -157,13 +157,13 @@ define([
       });
 
       it("should display next page control and hide previous page control", function() {
-        expect(this.view.$('.b3-page-control-next').length).toEqual(1);
-        expect(this.view.$('.b3-page-control-previous').length).toEqual(0);
+        expect(this.view.$('.pagination-next').length).toEqual(1);
+        expect(this.view.$('.pagination-prev').attr('class')).toContain('disabled');
       });
 
       describe("When clicking in the next page", function() {
         it("should display the next page", function() {
-          this.view.$('.b3-page-control-next').click();
+          this.view.$('.pagination-next').click();
           expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
         });
       });
@@ -174,7 +174,7 @@ define([
           this.view.page = 2;
           this.view.render();
 
-          this.view.$('.b3-page-control-previous').click();
+          this.view.$('.pagination-prev').click();
           expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
         });
       });

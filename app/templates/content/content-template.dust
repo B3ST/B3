@@ -5,14 +5,9 @@
 <p class="byline author vcard">By <a href="{author.URL}" rel="author" class="fn">{author.name}</a></p>
 {/ entry-meta }
 
-{< page-controls }
-<div class="b3-page-controls">
-  {?has_previous}
-  <a href="#" class="b3-page-control-previous">Previous</a>
-  {/has_previous}
-
-  {?has_next}
-  <a style="margin-left: 10px;" href="#" class="b3-page-control-next">Next</a>
-  {/has_next}
-</div>
-{/ page-controls }
+{< pagination }
+<ul class="pager">
+  <li><a href="#" class="{^has_previous}disabled {/has_previous}pagination-prev">&larr; Previous</a></li>
+  <li><a href="#" class="{^has_next}disabled {/has_next}pagination-next">Next &rarr;</a></li>
+</ul>
+{/ pagination }

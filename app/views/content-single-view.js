@@ -18,9 +18,9 @@ define([
     childView: CommentView,
     tagName: 'div id="post"',
     events: {
-      'click .b3-reply-post':            'renderReplyBox', // from ReplyableView
-      'click .b3-page-control-next':     'renderNextPage',
-      'click .b3-page-control-previous': 'renderPrevPage'
+      'click .b3-reply-post':   'renderReplyBox', // from ReplyableView
+      'click .pagination-next': 'renderNextPage',
+      'click .pagination-prev': 'renderPrevPage'
     },
 
     initialize: function () {
@@ -59,13 +59,17 @@ define([
     },
 
     renderNextPage: function () {
-      this.page++;
-      this.render();
+      if (this.page < this.content.length -1) {
+        this.page++;
+        this.render();
+      }
     },
 
     renderPrevPage: function () {
-      this.page--;
-      this.render();
+      if (this.page > 0) {
+        this.page--;
+        this.render();
+      }
     },
 
     displayError: function () {

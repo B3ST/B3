@@ -14,4 +14,4 @@
   </ul>
 </article>
 
-{+ page-controls /}
+{+ pagination /}
