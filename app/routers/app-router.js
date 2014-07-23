@@ -7,7 +7,8 @@ define([
       "": "index",
       "post/:slug/page/:page": "showPostBySlug",
       "post/:slug": "showPostBySlug",
-      "post/:id": "showPostById"
+      "post/:id": "showPostById",
+      "*slug": "showPageBySlug"
     }
   });
 });
