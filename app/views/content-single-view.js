@@ -28,6 +28,15 @@ define([
       });
       this.post = this.model;
       this.user = options.user;
+
+      _.bindAll(this, 'addComment');
+      EventBus.bind('comment:created', this.addComment);
+    },
+
+    addComment: function (comment) {
+      this.collection.add(comment);
+      this.collection.sort();
+      this.render();
     },
 
     parentId: function () {
@@ -42,6 +51,8 @@ define([
       if (this.replyBoxRendered) {
         this.replyBox.destroy();
       }
+
+      EventBus.unbind('comment:created', this.addComment);
     },
 
     attachHtml: function (collectionView, itemView, index) {

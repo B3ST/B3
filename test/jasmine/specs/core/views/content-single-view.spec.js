@@ -18,6 +18,8 @@ define([
         this.spy = spyOn(EventBus, 'bind');
         this.post = new Post({ID: 1});
         this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+
+        expect(this.spy).toHaveBeenCalledWith('comment:created', this.view.addComment);
       });
 
       it("should fetch the corresponding post comments", function() {
@@ -122,6 +124,25 @@ define([
             expect(this.view.$('#b3-error').length).toEqual(1);
           });
         });
+      });
+    });
+
+    describe(".addComment", function() {
+      beforeEach(function() {
+        this.comment = new Comment({"ID":59,"post":1,"content":"<p>reply to the post<\/p>\n","status":"approved","type":"comment","parent":0,"author":1,"date": new Date(),"date_tz":"UTC","date_gmt": new Date(),"meta":{"links":{"up":"http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/16","self":"http:\/\/localhost:8888\/wordpress\/wp-json\/b3:comments\/59"}}});
+        this.spy     = spyOn(ContentSingleView.prototype, 'render').andCallThrough();
+        this.post    = new Post({ID: 1});
+        this.view    = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+      });
+
+      it("should add to its collection", function() {
+        this.view.addComment(this.comment);
+        expect(this.view.collection.length).toEqual(1);
+      });
+
+      it("should re-render the view", function() {
+        this.view.addComment(this.comment);
+        expect(this.spy).toHaveBeenCalled();
       });
     });
 
