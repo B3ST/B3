@@ -30,7 +30,7 @@ class B3_Comment {
      */
     public function register_routes ( $routes ) {
 
-        $post_routes = array(
+        $comment_routes = array(
             '/posts/(?P<id>\d+)/b3:replies' => array(
                 array( array( $this, 'get_post_replies' ),    WP_JSON_Server::READABLE ),
                 array( array( $this, 'new_post_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
@@ -48,7 +48,7 @@ class B3_Comment {
             ),
         );
 
-        return array_merge( $routes, $post_routes );
+        return array_merge( $routes, $comment_routes );
     }
 
     /**
