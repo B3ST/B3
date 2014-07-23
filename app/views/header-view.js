@@ -9,7 +9,7 @@ define([
 ], function ($, Backbone, dust, dustMarionette, Settings, EventBus) {
   var HeaderView = Backbone.Marionette.ItemView.extend({
     template: 'header-template.dust',
-    tagName:  'div class="container"',
+    tagName:  'div',
     events: {
       'click #b3-header': 'index'
     },

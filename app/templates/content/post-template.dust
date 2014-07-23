@@ -1,17 +1,24 @@
 <article class="{post_class}">
-  <header>
-    <h1 class="b3-post-title">{title|s}</h1>
+
+  <header class="jumbotron">
+    <div class="container">
+      <h1 class="b3-post-title">{title|s}</h1>
+      <p>{excerpt|s}</p>
+    </div>
   </header>
-  <div class="b3-post-content">
+
+  <div class="b3-post-content container">
     {content|s}
   </div>
-  <footer>
+
+  <footer class="container">
     {+ entry-meta /}
     <a href="#reply" class="b3-reply-post">Reply</a>
     <div class="b3-reply-section"></div>
   </footer>
-  <ul class="b3-comments">
-  </ul>
+
+  <ul class="b3-comments"></ul>
+
 </article>
 
 {+ pagination /}

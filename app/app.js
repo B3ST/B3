@@ -34,9 +34,9 @@ define([
     });
 
     App.addRegions({
-      header: 'header',
+      header: '#header',
       main:   '#main',
-      footer: 'footer'
+      footer: '#footer'
     });
 
     App.header.show(new HeaderView());
