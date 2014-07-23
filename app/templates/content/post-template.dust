@@ -1,16 +1,17 @@
 <article class="{post_class}">
   <header>
     <h1 class="b3-post-title">{title|s}</h1>
-    {+ entry-meta /}
   </header>
   <div class="b3-post-content">
     {content|s}
   </div>
   <footer>
+    {+ entry-meta /}
     <a href="#reply" class="b3-reply-post">Reply to post</a>
     <div class="b3-reply-section"></div>
-    <!--<?php wp_link_pages(array('before' => '<nav class="page-nav"><p>' . __('Pages:', 'roots'), 'after' => '</p></nav>')); ?>-->
   </footer>
   <ul class="b3-comments">
   </ul>
 </article>
+
+{+ pagination /}

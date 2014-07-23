@@ -1,5 +1,16 @@
 <textarea id="b3-replybox" rows="4" cols="50">
 </textarea>
+{?display}
+<div id="b3-author">
+  <label for="b3-author-name" id="b3-author-name-label">Name:</label>
+  <input type="text" id="b3-author-name" /><br/>
+
+  <label for="b3-author-email" id="b3-author-email-label">Email:</label>
+  <input type="text" id="b3-author-email" />
+</div>
+{/display}
+<div id="b3-warning">
+</div>
 <div id="b3-replyactions">
   <a href="#" id="b3-cancel">Cancel</a>
   <button id="b3-replybutton">Reply</button>

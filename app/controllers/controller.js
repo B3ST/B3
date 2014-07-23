@@ -12,6 +12,7 @@ define([
     initialize: function(options) {
       this.app   = options.app;
       this.posts = options.posts;
+      this.user  = options.user;
     },
 
     index: function() {
@@ -54,7 +55,7 @@ define([
     },
 
     singleContentView: function (post, page) {
-      return new ContentSingleView({model: post, page: page, collection: new Posts()});
+      return new ContentSingleView({model: post, page: page, collection: new Posts(), user: this.user});
     }
   });
 });

@@ -1,6 +1,7 @@
 define([
   'controllers/controller',
   'models/settings-model',
+  'models/user-model',
   'models/post-model',
   'collections/post-collection',
   'views/content-view',
@@ -8,10 +9,11 @@ define([
   'views/not-found-view',
   'app',
   'sinon'
-], function (Controller, Settings, Post, Posts, ContentView, ContentSingleView, NotFoundView, App) {
+], function (Controller, Settings, User, Post, Posts, ContentView, ContentSingleView, NotFoundView, App) {
   describe("Controller", function() {
     beforeEach(function() {
-      this.app = App;
+      this.app  = App;
+      this.user = new User({ID: 1, email: 'email', name: 'name'});
       var response = [
         new Post({ID: 1, title: 'post-1'}).toJSON(),
         new Post({ID: 2, title: 'post-2'}).toJSON()
@@ -31,7 +33,8 @@ define([
         this.spy = spyOn(Posts.prototype, 'fetch');
         this.controller = new Controller({
           posts: new Posts(),
-          app:   this.app
+          app:   this.app,
+          user:  this.user
         });
 
         this.controller.index();
@@ -44,7 +47,8 @@ define([
         this.spy = spyOn(this.app.main, 'show');
         this.controller = new Controller({
           posts: new Posts(),
-          app:   this.app
+          app:   this.app,
+          user:  this.user
         });
 
         this.controller.index();
@@ -64,7 +68,8 @@ define([
 
         this.controller = new Controller({
           posts: new Posts(posts),
-          app:   App
+          app:   App,
+          user:  this.user
         });
 
         this.controller.showPostById(1);
@@ -85,7 +90,8 @@ define([
       it("should fetch the selected post", function() {
         this.controller = new Controller({
           posts: new Posts(),
-          app:   App
+          app:   App,
+          user:  this.user
         });
 
         this.controller.showPostById(2);
@@ -104,7 +110,8 @@ define([
 
           this.controller = new Controller({
             posts: new Posts(posts),
-            app:   App
+            app:   App,
+            user:  this.user
           });
           this.controller.showPostById(2);
           this.server.respond();
@@ -127,7 +134,8 @@ define([
 
           this.controller = new Controller({
             posts: new Posts(posts),
-            app:   App
+            app:   App,
+            user:  this.user
           });
           this.controller.showPostById(2);
           this.server.respond();
@@ -148,7 +156,8 @@ define([
 
         this.controller = new Controller({
           posts: new Posts(posts),
-          app:   App
+          app:   App,
+          user:  this.user
         });
 
         this.controller.showPostBySlug('post-slug-1');
@@ -169,7 +178,8 @@ define([
       it("should fetch the selected post", function() {
         this.controller = new Controller({
           posts: new Posts(posts),
-          app:   App
+          app:   App,
+          user:  this.user
         });
 
         this.controller.showPostBySlug('post-slug-2');
@@ -188,7 +198,8 @@ define([
 
           this.controller = new Controller({
             posts: new Posts(posts),
-            app:   App
+            app:   App,
+            user:  this.user
           });
           this.controller.showPostBySlug('post-slug-2');
           this.server.respond();
@@ -211,7 +222,8 @@ define([
 
           this.controller = new Controller({
             posts: new Posts(posts),
-            app:   App
+            app:   App,
+            user:  this.user
           });
           this.controller.showPostBySlug('post-slug-2');
           this.server.respond();

@@ -14,19 +14,33 @@ define([
   'content/post-template'
 ], function ($, _, Marionette, dust, dustMarionette, EventBus, CommentView, ReplyFormView, ReplyableView) {
   var view = _.extend(ReplyableView, {
-    template:  'content/post-template.dust',
+    template:  'content/content-template.dust',
     childView: CommentView,
     tagName: 'div id="post"',
     events: {
-      'click .b3-reply-post': 'renderReplyBox',
+      'click .b3-reply-post':   'renderReplyBox', // from ReplyableView
+      'click .pagination-next': 'renderNextPage',
+      'click .pagination-prev': 'renderPrevPage'
     },
 
-    initialize: function () {
+    initialize: function (options) {
       this.model.fetchComments({
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
       });
-      this.post = this.model;
+      this.page    = 0;
+      this.content = this.model.get('content').split(/<!--nextpage-->/);
+      this.post    = this.model;
+      this.user    = options.user;
+
+      _.bindAll(this, 'addComment');
+      EventBus.bind('comment:created', this.addComment);
+    },
+
+    addComment: function (comment) {
+      this.collection.add(comment);
+      this.collection.sort();
+      this.render();
     },
 
     parentId: function () {
@@ -34,17 +48,20 @@ define([
     },
 
     serializeData: function () {
-      return _.extend(this.model.toJSON(), {b3type: 'post', b3folder: 'content'});
+      return _.extend(this.parseModel(), this.getDustTemplate());
     },
 
     onDestroy: function () {
       if (this.replyBoxRendered) {
         this.replyBox.destroy();
       }
+
+      EventBus.unbind('comment:created', this.addComment);
     },
 
     attachHtml: function (collectionView, itemView, index) {
-      this.collection.models[index].post = this.post;
+      itemView.post = this.post;
+      itemView.user = this.user;
 
       if (itemView.model.get('parent') > 0) {
         collectionView.$('#comment-' + itemView.model.get('parent') + ' > ul.b3-comments').append(itemView.el);
@@ -54,8 +71,36 @@ define([
       }
     },
 
-    displayError: function () {
+    renderNextPage: function () {
+      this.page++;
+      this.render();
+    },
 
+    renderPrevPage: function () {
+      this.page--;
+      this.render();
+    },
+
+    displayError: function () {
+      this.$('.b3-comments').text('Could not retrieve comments');
+    },
+
+    parseModel: function () {
+      var model = this.model.toJSON();
+      model.content = this.content[this.page];
+      return _.extend(model, this.getPagination());
+    },
+
+    getPagination: function () {
+      var total = this.content.length,
+          next = (total > 1 && this.page < total - 1),
+          prev = (this.page > 0);
+
+      return {has_next: next, has_previous: prev};
+    },
+
+    getDustTemplate: function () {
+      return {b3type: 'post', b3folder: 'content'};
     }
   });
 
