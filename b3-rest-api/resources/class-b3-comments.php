@@ -36,6 +36,11 @@ class B3_Comment {
                 array( array( $this, 'new_post_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
             ),
 
+            '/pages/(?P<id>\d+)/b3:replies' => array(
+                array( array( $this, 'get_page_replies' ),    WP_JSON_Server::READABLE ),
+                array( array( $this, 'new_page_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
+            ),
+
             '/b3:comments/(?P<id>\d+)' => array(
                 array( array( $this, 'get_comment' ),         WP_JSON_Server::READABLE ),
                 array( array( $this, 'update_comment' ),      WP_JSON_Server::EDITABLE | WP_JSON_Server::ACCEPT_JSON ),
@@ -54,8 +59,8 @@ class B3_Comment {
     /**
      * Retrieve all responses to a post.
      *
-     * @param  int    $post_id Post ID to retrieve comments for.
-     * @return array           List of Comment entities.
+     * @param  int   $post_id Post ID to retrieve comments for.
+     * @return array          List of Comment entities.
      */
     public function get_post_replies ( $id ) {
         global $wp_json_posts;
@@ -84,11 +89,9 @@ class B3_Comment {
     /**
      * Add a reply to a post.
      *
-     * @param  int    $post_id [description]
-     * @param  array  $data    Data array, containing the following fields:
-     *                         - comment_post_ID
-     *
-     * @return mixed           [description]
+     * @param  int    $id   Post ID to comment on.
+     * @param  array  $data New comment data.
+     * @return mixed        Comment entity for the new comment.
      */
     public function new_post_reply ( $id, $data ) {
         global $wp_json_posts;
@@ -108,6 +111,27 @@ class B3_Comment {
         }
 
         return $this->get_comment( $comment_ID );
+    }
+
+    /**
+     * Retrieve all responses to a post.
+     *
+     * @param  int    $id Page ID to retrieve comments for.
+     * @return array      List of Comment entities.
+     */
+    public function get_page_replies ( $id ) {
+        return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
+    }
+
+    /**
+     * Add a reply to a post.
+     *
+     * @param  int   $id   Page ID to comment on.
+     * @param  array $data New comment data.
+     * @return mixed       Comment entity for the new comment.
+     */
+    public function new_page_reply ( $id, $data ) {
+        return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
     }
 
     /**
@@ -144,8 +168,6 @@ class B3_Comment {
      * @todo
      */
     public function update_comment ( $id, $data ) {
-        global $wp_json_posts;
-
         return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
     }
 
@@ -158,8 +180,6 @@ class B3_Comment {
      * @todo
      */
     public function delete_comment ( $id ) {
-        global $wp_json_posts;
-
         return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
     }
 
