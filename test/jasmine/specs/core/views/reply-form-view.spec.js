@@ -10,7 +10,7 @@ define([
   describe("ReplyFormView", function() {
     beforeEach(function() {
       this.parentView = jasmine.createSpyObj('parentView', ['replyRendered', 'replyDestroyed']);
-      this.user       = new User({ID: 1, email: 'email', name: 'name'});
+      this.user       = new User({ID: 1, name: 'name'});
       this.post       = new Post({ID: 1});
     });
 
@@ -78,10 +78,10 @@ define([
         this.requests = [];
         this.xhr = sinon.useFakeXMLHttpRequest();
         this.xhr.onCreate = $.proxy(function(xhr) {
-            this.requests.push(xhr);
+          this.requests.push(xhr);
         }, this);
 
-
+        this.eventBus = spyOn(EventBus, 'trigger');
         this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user, parentId: 0});
         this.view.render();
 
@@ -107,6 +107,23 @@ define([
           });
           this.view.$('#b3-replybutton').click();
           expect(JSON.parse(this.requests[0].requestBody)).toEqual(comment.toJSON());
+        });
+
+        it("should trigger an event with the newly created comment", function() {
+          this.xhr.restore();
+
+          var response = {"ID":59,"post":1,"content":"<p>reply to the post<\/p>\n","status":"approved","type":"comment","parent":0,"author":1,"date":"2014-07-23T09:10:51+00:00","date_tz":"UTC","date_gmt":"2014-07-23T09:10:51+00:00","meta":{"links":{"up":"http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/16","self":"http:\/\/localhost:8888\/wordpress\/wp-json\/b3:comments\/59"}}};
+          this.server = sinon.fakeServer.create();
+          this.server.respondWith(
+            'POST',
+            Settings.get('url') + '/posts/1/b3:replies/',
+            [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
+          );
+
+          this.view.$('#b3-replybutton').click();
+          this.server.respond();
+
+          expect(this.eventBus).toHaveBeenCalledWith('comment:created', jasmine.any(Comment));
         });
 
         describe("When there is no reply", function() {

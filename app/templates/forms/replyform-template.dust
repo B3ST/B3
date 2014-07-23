@@ -1,6 +1,6 @@
 <textarea id="b3-replybox" rows="4" cols="50">
 </textarea>
-{@eq key=display value="true"}
+{?display}
 <div id="b3-author">
   <label for="b3-author-name" id="b3-author-name-label">Name:</label>
   <input type="text" id="b3-author-name" /><br/>
@@ -8,7 +8,7 @@
   <label for="b3-author-email" id="b3-author-email-label">Email:</label>
   <input type="text" id="b3-author-email" />
 </div>
-{/eq}
+{/display}
 <div id="b3-warning">
 </div>
 <div id="b3-replyactions">

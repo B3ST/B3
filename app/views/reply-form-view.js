@@ -10,6 +10,10 @@ define([
   'models/user-model',
   'forms/replyform-template'
 ], function ($, Marionette, dust, dustMarionette, EventBus, Comment, User) {
+  function isNumeric (num) {
+    return !isNaN(num);
+  };
+
   var ReplyFormView = Backbone.Marionette.ItemView.extend({
     template: "forms/replyform-template.dust",
     tagName:  "div id='b3-replyform'",
@@ -25,7 +29,7 @@ define([
     },
 
     serializeData: function () {
-      return (this.userIsLogged() ? {display: "false"} : {display: "true"});
+      return (this.userIsLogged() ? {display: false} : {display: true});
     },
 
     onRender: function () {
@@ -43,7 +47,9 @@ define([
     sendReply: function () {
       var fields = this.getFields();
       if (fields.isFilled) {
-        this.getComment().save();
+        this.getComment().save().done(function (response) {
+          EventBus.trigger('comment:created', new Comment(response));
+        });
         this.destroy();
       } else {
         this.displayWarning(fields.unfilled);
@@ -85,7 +91,7 @@ define([
     },
 
     userIsLogged: function () {
-      return this.user.get('name') != '' && this.user.get('email') != '';
+      return isNumeric(this.user.get('ID')) && this.user.get('name') != '';
     },
 
     displayWarning: function (unfilled) {
