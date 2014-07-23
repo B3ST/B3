@@ -17,7 +17,7 @@ define([
     },
 
     index: function() {
-      this.posts.fetch();
+      this.posts.fetch({reset: true});
       this.show(this.contentView(this.posts));
     },
 
