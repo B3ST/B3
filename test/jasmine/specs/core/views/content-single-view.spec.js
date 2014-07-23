@@ -1,13 +1,27 @@
 define([
   'views/content-single-view',
+  'controllers/event-bus',
   'views/reply-form-view',
+  'models/user-model',
   'models/post-model',
   'models/comment-model',
   'collections/comment-collection',
   'sinon'
-], function (ContentSingleView, ReplyFormView, Post, Comment, Comments) {
+], function (ContentSingleView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
   describe("ContentSingleView", function() {
+    beforeEach(function() {
+      this.user = new User();
+    });
+
     describe(".initialize", function() {
+      it("should bind to a given set of events", function() {
+        this.spy = spyOn(EventBus, 'bind');
+        this.post = new Post({ID: 1});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+
+        expect(this.spy).toHaveBeenCalledWith('comment:created', this.view.addComment);
+      });
+
       it("should fetch the corresponding post comments", function() {
         this.spy  = spyOn(Post.prototype, 'fetchComments');
         this.post = new Post({
@@ -15,7 +29,7 @@ define([
           title:   'Title',
           content: 'Some Content'
         });
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         expect(this.spy).toHaveBeenCalled();
@@ -49,7 +63,7 @@ define([
               [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
             );
 
-            this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+            this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
             this.view.render();
 
             this.server.respond();
@@ -77,7 +91,7 @@ define([
                 [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
               );
 
-              this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+              this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
               this.view.render();
 
               this.server.respond();
@@ -102,14 +116,32 @@ define([
               this.url,
               [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
             );
-
-            this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+            this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
             this.view.render();
 
             this.server.respond();
             expect(this.view.$('.b3-comments').text()).not.toEqual('');
           });
         });
+      });
+    });
+
+    describe(".addComment", function() {
+      beforeEach(function() {
+        this.comment = new Comment({"ID":59,"post":1,"content":"<p>reply to the post<\/p>\n","status":"approved","type":"comment","parent":0,"author":1,"date": new Date(),"date_tz":"UTC","date_gmt": new Date(),"meta":{"links":{"up":"http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/16","self":"http:\/\/localhost:8888\/wordpress\/wp-json\/b3:comments\/59"}}});
+        this.spy     = spyOn(ContentSingleView.prototype, 'render').andCallThrough();
+        this.post    = new Post({ID: 1});
+        this.view    = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+      });
+
+      it("should add to its collection", function() {
+        this.view.addComment(this.comment);
+        expect(this.view.collection.length).toEqual(1);
+      });
+
+      it("should re-render the view", function() {
+        this.view.addComment(this.comment);
+        expect(this.spy).toHaveBeenCalled();
       });
     });
 
@@ -120,7 +152,7 @@ define([
           title:   'Title',
           content: 'Some Content'
         });
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         expect(this.view.el).toBeDefined();
@@ -130,12 +162,12 @@ define([
     describe("When replying to the post", function() {
       it("should display a comment box", function() {
         this.post = new Post({ID: 1});
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         this.view.$('.b3-reply-post').click();
 
-        var template = new ReplyFormView({parentView: this.view}).render().el;
+        var template = new ReplyFormView({parentView: this.view, user: this.user}).render().el;
         var box      = this.view.$('.b3-reply-section').children()[0];
         expect(box.isEqualNode(template)).toBeTruthy();
       });

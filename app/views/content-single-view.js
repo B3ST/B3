@@ -23,7 +23,7 @@ define([
       'click .pagination-prev': 'renderPrevPage'
     },
 
-    initialize: function () {
+    initialize: function (options) {
       this.model.fetchComments({
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
@@ -31,6 +31,16 @@ define([
       this.page    = 0;
       this.content = this.model.get('content').split(/<!--nextpage-->/);
       this.post    = this.model;
+      this.user    = options.user;
+
+      _.bindAll(this, 'addComment');
+      EventBus.bind('comment:created', this.addComment);
+    },
+
+    addComment: function (comment) {
+      this.collection.add(comment);
+      this.collection.sort();
+      this.render();
     },
 
     parentId: function () {
@@ -45,10 +55,13 @@ define([
       if (this.replyBoxRendered) {
         this.replyBox.destroy();
       }
+
+      EventBus.unbind('comment:created', this.addComment);
     },
 
     attachHtml: function (collectionView, itemView, index) {
-      this.collection.models[index].post = this.post;
+      itemView.post = this.post;
+      itemView.user = this.user;
 
       if (itemView.model.get('parent') > 0) {
         collectionView.$('#comment-' + itemView.model.get('parent') + ' > ul.b3-comments').append(itemView.el);

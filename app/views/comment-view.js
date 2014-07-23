@@ -17,6 +17,7 @@ define([
 
     initialize: function (options) {
       this.post = null;
+      this.user = null;
     },
 
     events: {

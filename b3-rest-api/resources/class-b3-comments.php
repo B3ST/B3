@@ -30,10 +30,15 @@ class B3_Comment {
      */
     public function register_routes ( $routes ) {
 
-        $post_routes = array(
+        $comment_routes = array(
             '/posts/(?P<id>\d+)/b3:replies' => array(
                 array( array( $this, 'get_post_replies' ),    WP_JSON_Server::READABLE ),
                 array( array( $this, 'new_post_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
+            ),
+
+            '/pages/(?P<id>\d+)/b3:replies' => array(
+                array( array( $this, 'get_page_replies' ),    WP_JSON_Server::READABLE ),
+                array( array( $this, 'new_page_reply' ),      WP_JSON_Server::CREATABLE | WP_JSON_Server::ACCEPT_JSON ),
             ),
 
             '/b3:comments/(?P<id>\d+)' => array(
@@ -48,14 +53,14 @@ class B3_Comment {
             ),
         );
 
-        return array_merge( $routes, $post_routes );
+        return array_merge( $routes, $comment_routes );
     }
 
     /**
      * Retrieve all responses to a post.
      *
-     * @param  int    $post_id Post ID to retrieve comments for.
-     * @return array           List of Comment entities.
+     * @param  int   $post_id Post ID to retrieve comments for.
+     * @return array          List of Comment entities.
      */
     public function get_post_replies ( $id ) {
         global $wp_json_posts;
@@ -84,11 +89,9 @@ class B3_Comment {
     /**
      * Add a reply to a post.
      *
-     * @param  int    $post_id [description]
-     * @param  array  $data    Data array, containing the following fields:
-     *                         - comment_post_ID
-     *
-     * @return mixed           [description]
+     * @param  int    $id   Post ID to comment on.
+     * @param  array  $data New comment data.
+     * @return mixed        Comment entity for the new comment.
      */
     public function new_post_reply ( $id, $data ) {
         global $wp_json_posts;
@@ -108,6 +111,27 @@ class B3_Comment {
         }
 
         return $this->get_comment( $comment_ID );
+    }
+
+    /**
+     * Retrieve all responses to a post.
+     *
+     * @param  int    $id Page ID to retrieve comments for.
+     * @return array      List of Comment entities.
+     */
+    public function get_page_replies ( $id ) {
+        return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
+    }
+
+    /**
+     * Add a reply to a post.
+     *
+     * @param  int   $id   Page ID to comment on.
+     * @param  array $data New comment data.
+     * @return mixed       Comment entity for the new comment.
+     */
+    public function new_page_reply ( $id, $data ) {
+        return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
     }
 
     /**
@@ -144,8 +168,6 @@ class B3_Comment {
      * @todo
      */
     public function update_comment ( $id, $data ) {
-        global $wp_json_posts;
-
         return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
     }
 
@@ -158,8 +180,6 @@ class B3_Comment {
      * @todo
      */
     public function delete_comment ( $id ) {
-        global $wp_json_posts;
-
         return new WP_Error( 'json_not_implemented', __( 'Not yet implemented.' ), array( 'status' => 501 ) );
     }
 
@@ -214,7 +234,7 @@ class B3_Comment {
 
         $post = get_post( $comment->comment_post_ID, ARRAY_A );
 
-        $new_comment = $this->prepare_new_comment( $data, $post, (array) $comment );
+        $new_comment = $this->prepare_new_comment( $data, $post, $comment );
 
         if (is_wp_error( $new_comment )) {
             return $new_comment;
@@ -415,42 +435,37 @@ class B3_Comment {
             return new WP_Error( 'json_user_cannot_reply', __( 'Sorry, you cannot reply to this post.' ), array( 'status' => 403 ) );
         }
 
-        $new_comment = array();
-
-        $allowed_fields = array(
-            'comment_author',
-            'comment_author_email',
-            'comment_author_url',
-            'comment_content',
-            'comment_parent'
+        $new_comment = array(
+            'comment_post_ID'      => $post['ID'],
+            'comment_parent'       => isset( $data['parent_comment']  ) ? $data['parent_comment']  : null,
+            'comment_content'      => isset( $data['content']         ) ? $data['content']         : null,
+            'comment_author'       => isset( $data['author']['name']  ) ? $data['author']['name']  : null,
+            'comment_author_email' => isset( $data['author']['email'] ) ? $data['author']['email'] : null,
+            'comment_author_url'   => isset( $data['author']['URL']   ) ? $data['author']['URL']   : null,
         );
 
-        foreach ($allowed_fields as $key) {
-            $new_comment[$key] = $data[$key];
-        }
-
-        $new_comment['comment_post_ID'] = $post['ID'];
-
         if (!empty( $comment )) {
-            $new_comment['comment_parent'] = $comment['comment_ID'];
+            $new_comment['comment_parent'] = $comment->comment_ID;
         }
 
-        $user = wp_get_current_user();
+        if (is_user_logged_in()) {
+            $user = wp_get_current_user();
 
-        if ($user) {
-            $new_comment['user_ID']              = $user->ID;
-            $new_comment['user_id']              = $user->ID;
-            $new_comment['comment_author']       = $user->display_name;
-            $new_comment['comment_author_email'] = $user->user_email;
-            $new_comment['comment_author_url']   = $user->user_url;
+            if ($user && $user->ID) {
+                $new_comment['user_ID']              = $user->ID;
+                $new_comment['user_id']              = $user->ID;
+                $new_comment['comment_author']       = $user->display_name;
+                $new_comment['comment_author_email'] = $user->user_email;
+                $new_comment['comment_author_url']   = $user->user_url;
+            }
         }
 
         if (get_option( 'require_name_email' )) {
-            if (6 > strlen($comment['comment_author_email']) || '' == $comment['comment_author']) {
+            if (empty( $new_comment['comment_author_email'] ) || '' == $new_comment['comment_author']) {
                 return new WP_Error( 'json_bad_comment', __( 'Comment author name and email are required.' ), array( 'status' => 400 ) );
             }
 
-            if (!is_email( $comment['comment_author_email'] )) {
+            if (!is_email( $new_comment['comment_author_email'] )) {
                 return new WP_Error( 'json_bad_comment', __( 'A valid email address is required.' ), array( 'status' => 400 ) );
             }
         }

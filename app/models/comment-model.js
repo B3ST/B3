@@ -21,7 +21,7 @@ define([
     url: function () {
       var cid = (this.get('ID') || ''),
           pid = (this.get('post') || '');
-      return Settings.get('url') + '/posts/' + pid + '/comments/' + cid;
+      return Settings.get('url') + '/posts/' + pid + '/b3:replies/' + cid;
     }
   });
 
