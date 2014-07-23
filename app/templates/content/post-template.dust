@@ -7,7 +7,7 @@
   </div>
   <footer>
     {+ entry-meta /}
-    <a href="#reply" class="b3-reply-post">Reply to post</a>
+    <a href="#reply" class="b3-reply-post">Reply</a>
     <div class="b3-reply-section"></div>
   </footer>
   <ul class="b3-comments">

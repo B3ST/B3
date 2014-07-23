@@ -3,13 +3,14 @@ define([
   'models/settings-model',
   'models/user-model',
   'models/post-model',
+  'models/page-model',
   'collections/post-collection',
   'views/content-view',
   'views/content-single-view',
   'views/not-found-view',
   'app',
   'sinon'
-], function (Controller, Settings, User, Post, Posts, ContentView, ContentSingleView, NotFoundView, App) {
+], function (Controller, Settings, User, Post, Page, Posts, ContentView, ContentSingleView, NotFoundView, App) {
   describe("Controller", function() {
     beforeEach(function() {
       this.app  = App;
@@ -226,6 +227,65 @@ define([
             user:  this.user
           });
           this.controller.showPostBySlug('post-slug-2');
+          this.server.respond();
+
+          var view = this.spy.mostRecentCall.args[0];
+          expect(view instanceof NotFoundView).toBeTruthy();
+        });
+      });
+    });
+
+    describe(".showPageBySlug", function() {
+      it("should fetch the corresponding page", function() {
+        this.spy = spyOn(Page.prototype, 'fetch').andCallThrough();
+        this.controller = new Controller({
+          posts: new Posts(),
+          app:   this.app
+        });
+        this.controller.showPageBySlug('page-slug');
+
+        expect(this.spy).toHaveBeenCalled();
+      });
+
+      describe("When fetching is successful", function() {
+        it("should display the corresponding view", function() {
+          var response = {"ID":1150,"title":"Parent Page","status":"publish","type":"page","author":{"ID":2,"username":"manovotny","name":"Michael Novotny","first_name":"Michael","last_name":"Novotny","nickname":"manovotny","slug":"manovotny","URL":"","avatar":"http:\/\/0.gravatar.com\/avatar\/60cb31e323d15f1c0fc1a59ac17ba484?s=96","description":"","registered":"2014-07-21T13:51:25+00:00","meta":{"links":{"self":"http:\/\/localhost:8888\/wordpress\/wp-json\/users\/2","archives":"http:\/\/localhost:8888\/wordpress\/wp-json\/users\/2\/posts"}}},"content":"<p>This page the a parent page.<\/p>\n<p>It contains child pages.<\/p>\n","parent":0,"link":"http:\/\/localhost:8888\/wordpress\/parent-page","date":"2013-03-15T18:24:09+00:00","modified":"2013-03-15T18:24:09+00:00","format":"standard","slug":"parent-page","guid":"http:\/\/wptest.io\/demo\/?page_id=1088","excerpt":"<p>This page the a parent page. It contains child pages.<\/p>\n","menu_order":0,"comment_status":"open","ping_status":"open","sticky":false,"date_tz":"UTC","date_gmt":"2013-03-15T23:24:09+00:00","modified_tz":"UTC","modified_gmt":"2013-03-15T23:24:09+00:00","meta":{"links":{"self":"http:\/\/localhost:8888\/wordpress\/wp-json\/pages\/parent-page","author":"http:\/\/localhost:8888\/wordpress\/wp-json\/users\/2","collection":"http:\/\/localhost:8888\/wordpress\/wp-json\/pages","replies":"http:\/\/localhost:8888\/wordpress\/wp-json\/pages\/1150\/comments","version-history":"http:\/\/localhost:8888\/wordpress\/wp-json\/pages\/1150\/revisions"}},"featured_image":null,"terms":[]};
+          this.spy    = spyOn(this.app.main, 'show');
+          this.server = sinon.fakeServer.create();
+          this.server.respondWith(
+            'GET',
+            Settings.get('url') + '/pages/page-slug',
+            [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
+          );
+
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   this.app
+          });
+          this.controller.showPageBySlug('page-slug');
+          this.server.respond();
+
+          var view = this.spy.mostRecentCall.args[0];
+          expect(view instanceof ContentSingleView).toBeTruthy();
+          expect(view.model).toBeDefined();
+        });
+      });
+
+      describe("When fetching fails", function() {
+        it("should display an error view", function() {
+          this.spy = spyOn(this.app.main, 'show');
+          this.server = sinon.fakeServer.create();
+          this.server.respondWith(
+            'GET',
+            Settings.get('url') + '/pages/page-slug',
+            [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
+          );
+
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   this.app
+          });
+          this.controller.showPageBySlug('page-slug');
           this.server.respond();
 
           var view = this.spy.mostRecentCall.args[0];
