@@ -30,7 +30,7 @@ class B3_Sidebar {
      */
     public function register_routes ( $routes ) {
 
-        $post_routes = array(
+        $sidebar_routes = array(
             '/b3:sidebars' => array(
                 array( array( $this, 'get_sidebars' ), WP_JSON_Server::READABLE ),
             ),
@@ -40,7 +40,7 @@ class B3_Sidebar {
             ),
         );
 
-        return array_merge( $routes, $post_routes );
+        return array_merge( $routes, $sidebar_routes );
     }
 
     /**
@@ -131,7 +131,7 @@ class B3_Sidebar {
      * - Changes the reply link to use the `/posts/{id}/b3:replies` endpoint.
      *
      * @param  array  $_sidebar Sidebar entity data.
-     * @param  string $context  The context for the prepared post. (view|view-revision|edit|embed)
+     * @param  string $context  The context for the prepared sidebar. (single|collection)
      * @return array            Changed post entity data.
      */
     protected function prepare_sidebar ( $_sidebars, $context = 'single' ) {
