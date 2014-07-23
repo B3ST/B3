@@ -29,6 +29,10 @@ define([
       this.app.start();
     });
 
+    afterEach(function() {
+      this.app.main.$el.html('');
+    });
+
     describe(".index", function() {
       it("should fetch the collection of posts", function() {
         this.spy = spyOn(Posts.prototype, 'fetch');
@@ -79,70 +83,69 @@ define([
         expect(view instanceof ContentSingleView).toBeTruthy();
         expect(view.model).toEqual(posts[0]);
       });
-    });
-
-    describe("When post is not defined", function() {
-      beforeEach(function() {
-        this.response = new Post({ID: 2, title: 'title'});
-        this.spy = spyOn(Post.prototype, 'fetch').andCallThrough();
-        var posts = [this.response];
-      });
-
-      it("should fetch the selected post", function() {
-        this.controller = new Controller({
-          posts: new Posts(),
-          app:   App,
-          user:  this.user
+      describe("When post is not defined", function() {
+        beforeEach(function() {
+          this.response = new Post({ID: 2, title: 'title'});
+          this.spy = spyOn(Post.prototype, 'fetch').andCallThrough();
+          var posts = [this.response];
         });
 
-        this.controller.showPostById(2);
-        expect(this.spy).toHaveBeenCalled();
-      });
-
-      describe("When fetching is successful", function() {
-        it("should display the corresponding view", function() {
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('url') + '/posts/2',
-            [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
-          );
-
+        it("should fetch the selected post", function() {
           this.controller = new Controller({
-            posts: new Posts(posts),
+            posts: new Posts(),
             app:   App,
             user:  this.user
           });
-          this.controller.showPostById(2);
-          this.server.respond();
 
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof ContentSingleView).toBeTruthy();
-          expect(view.model).toBeDefined();
+          this.controller.showPostById(2);
+          expect(this.spy).toHaveBeenCalled();
         });
-      });
 
-      describe("When fetching fails", function() {
-        it("should display an error view", function() {
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('url') + '/posts/2',
-            [404, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
-          );
+        describe("When fetching is successful", function() {
+          it("should display the corresponding view", function() {
+            this.spy = spyOn(this.app.main, 'show');
+            this.server = sinon.fakeServer.create();
+            this.server.respondWith(
+              'GET',
+              Settings.get('url') + '/posts/2',
+              [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
+            );
 
-          this.controller = new Controller({
-            posts: new Posts(posts),
-            app:   App,
-            user:  this.user
+            this.controller = new Controller({
+              posts: new Posts(),
+              app:   App,
+              user:  this.user
+            });
+            this.controller.showPostById(2);
+            this.server.respond();
+
+            var view = this.spy.mostRecentCall.args[0];
+            expect(view instanceof ContentSingleView).toBeTruthy();
+            expect(view.model).toBeDefined();
           });
-          this.controller.showPostById(2);
-          this.server.respond();
+        });
 
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
+        describe("When fetching fails", function() {
+          it("should display an error view", function() {
+            this.spy = spyOn(this.app.main, 'show');
+            this.server = sinon.fakeServer.create();
+            this.server.respondWith(
+              'GET',
+              Settings.get('url') + '/posts/2',
+              [404, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
+            );
+
+            this.controller = new Controller({
+              posts: new Posts(),
+              app:   App,
+              user:  this.user
+            });
+            this.controller.showPostById(2);
+            this.server.respond();
+
+            var view = this.spy.mostRecentCall.args[0];
+            expect(view instanceof NotFoundView).toBeTruthy();
+          });
         });
       });
     });
@@ -167,70 +170,70 @@ define([
         expect(view instanceof ContentSingleView).toBeTruthy();
         expect(view.model).toEqual(posts[0]);
       });
-    });
 
-    describe("When post is not defined", function() {
-      beforeEach(function() {
-        this.response = new Post({title: 'title', slug: 'post-slug-2'});
-        this.spy = spyOn(Post.prototype, 'fetch').andCallThrough();
-        var posts = [this.response];
-      });
-
-      it("should fetch the selected post", function() {
-        this.controller = new Controller({
-          posts: new Posts(posts),
-          app:   App,
-          user:  this.user
+      describe("When post is not defined", function() {
+        beforeEach(function() {
+          this.response = new Post({title: 'title', slug: 'post-slug-2'});
+          this.spy = spyOn(Post.prototype, 'fetch').andCallThrough();
+          var posts = [this.response];
         });
 
-        this.controller.showPostBySlug('post-slug-2');
-        expect(this.spy).toHaveBeenCalled();
-      });
-
-      describe("When fetching is successful", function() {
-        it("should display the corresponding view", function() {
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('url') + '/posts/b3:slug:post-slug-2',
-            [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
-          );
-
+        it("should fetch the selected post", function() {
           this.controller = new Controller({
-            posts: new Posts(posts),
+            posts: new Posts(),
             app:   App,
             user:  this.user
           });
-          this.controller.showPostBySlug('post-slug-2');
-          this.server.respond();
 
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof ContentSingleView).toBeTruthy();
-          expect(view.model).toBeDefined();
+          this.controller.showPostBySlug('post-slug-2');
+          expect(this.spy).toHaveBeenCalled();
         });
-      });
 
-      describe("When fetching fails", function() {
-        it("should display an error view", function() {
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('url') + '/posts/b3:slug:post-slug-2',
-            [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
-          );
+        describe("When fetching is successful", function() {
+          it("should display the corresponding view", function() {
+            this.spy = spyOn(this.app.main, 'show');
+            this.server = sinon.fakeServer.create();
+            this.server.respondWith(
+              'GET',
+              Settings.get('url') + '/posts/b3:slug:post-slug-2',
+              [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
+            );
 
-          this.controller = new Controller({
-            posts: new Posts(posts),
-            app:   App,
-            user:  this.user
+            this.controller = new Controller({
+              posts: new Posts(),
+              app:   App,
+              user:  this.user
+            });
+            this.controller.showPostBySlug('post-slug-2');
+            this.server.respond();
+
+            var view = this.spy.mostRecentCall.args[0];
+            expect(view instanceof ContentSingleView).toBeTruthy();
+            expect(view.model).toBeDefined();
           });
-          this.controller.showPostBySlug('post-slug-2');
-          this.server.respond();
+        });
 
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
+        describe("When fetching fails", function() {
+          it("should display an error view", function() {
+            this.spy = spyOn(this.app.main, 'show');
+            this.server = sinon.fakeServer.create();
+            this.server.respondWith(
+              'GET',
+              Settings.get('url') + '/posts/b3:slug:post-slug-2',
+              [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
+            );
+
+            this.controller = new Controller({
+              posts: new Posts(),
+              app:   App,
+              user:  this.user
+            });
+            this.controller.showPostBySlug('post-slug-2');
+            this.server.respond();
+
+            var view = this.spy.mostRecentCall.args[0];
+            expect(view instanceof NotFoundView).toBeTruthy();
+          });
         });
       });
     });

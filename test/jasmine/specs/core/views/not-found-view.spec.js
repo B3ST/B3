@@ -8,6 +8,7 @@ define([
 
     describe(".render", function() {
       it("should render the template", function() {
+        this.view.render();
         expect(this.view.el).toBeDefined();
       });
     });
