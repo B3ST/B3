@@ -72,13 +72,17 @@ define([
     },
 
     renderNextPage: function () {
-      this.page++;
-      this.render();
+      if (this.hasNext()) {
+        this.page++;
+        this.render();
+      }
     },
 
     renderPrevPage: function () {
-      this.page--;
-      this.render();
+      if (this.hasPrevious()) {
+        this.page--;
+        this.render();
+      }
     },
 
     displayError: function () {
@@ -92,15 +96,23 @@ define([
     },
 
     getPagination: function () {
-      var total = this.content.length,
-          next = (total > 1 && this.page < total - 1),
-          prev = (this.page > 0);
+      var next = this.hasNext(),
+          prev = this.hasPrevious();
 
       return {has_next: next, has_previous: prev};
     },
 
     getDustTemplate: function () {
       return {b3type: 'post', b3folder: 'content'};
+    },
+
+    hasNext: function () {
+      var total = this.content.length;
+      return (total > 1 && this.page < total - 1);
+    },
+
+    hasPrevious: function () {
+      return this.page > 0;
     }
   });
 
