@@ -1,4 +1,4 @@
-{> "{b3folder}/{b3type}-template.dust" /}
+{> "{parent-template}" /}
 
 {! Entry metadata !}
 {< entry-meta }
