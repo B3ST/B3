@@ -7,9 +7,10 @@ define([
   'dust',
   'dust.marionette',
   'controllers/event-bus',
+  'controllers/navigator',
   'archive/posts-template',
   'content/content-template'
-], function ($, _, Marionette, dust, dustMarionette, EventBus) {
+], function ($, _, Marionette, dust, dustMarionette, EventBus, Navigator) {
   var ContentView = Backbone.Marionette.ItemView.extend({
     tagName:  'div id="posts"',
     template: 'content/content-template.dust',
@@ -25,7 +26,7 @@ define([
     },
 
     initialize: function (options) {
-      this.page  = 1;
+      this.page  = options.page || 1;
       this.limit = options.limit || 11;
     },
 
@@ -41,7 +42,7 @@ define([
 
     selectPost: function (ev) {
       var input = $(ev.currentTarget).attr('id');
-      EventBus.trigger('router:nav', {route: 'post/' + input, options: {trigger: true}});
+      Navigator.navigate('post/' + input, true);
       return false;
     },
 
@@ -49,6 +50,7 @@ define([
       if (!this.isLastPage()) {
         this.page++;
         this.collection.fetch(this.getParams());
+        this.navigate();
       }
     },
 
@@ -56,6 +58,7 @@ define([
       if (!this.isFirstPage()) {
         this.page--;
         this.collection.fetch(this.getParams());
+        this.navigate();
       }
     },
 
@@ -79,6 +82,10 @@ define([
 
     getParams: function () {
       return {data: $.param({page: this.page}), reset: true};
+    },
+
+    navigate: function () {
+      Navigator.navigate('page/' + this.page, false);
     }
   });
 
