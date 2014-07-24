@@ -65,7 +65,7 @@ define([
       itemView.user = this.user;
 
       if (itemView.model.get('parent') > 0) {
-        collectionView.$('#comment-' + itemView.model.get('parent') + ' > ul.b3-comments').append(itemView.el);
+        collectionView.$('#comment-' + itemView.model.get('parent') + ' > .comment-body > ul.b3-comments').append(itemView.el);
       } else {
         var commentSection = collectionView.$('.b3-comments');
         $(commentSection[0]).append(itemView.el);
@@ -99,10 +99,15 @@ define([
     },
 
     getPagination: function () {
-      var next = this.hasNext(),
-          prev = this.hasPrevious();
+      var next  = this.hasNext();
+      var prev  = this.hasPrevious();
+      var pages = this.content.length;
 
-      return {has_next: next, has_previous: prev};
+      return {
+        'has_next':     next,
+        'has_previous': prev,
+        'pages':        pages
+      };
     },
 
     getDustTemplate: function () {

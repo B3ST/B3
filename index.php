@@ -15,12 +15,10 @@
     <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
     <?php wp_head(); ?>
 </head>
-<body <?php body_class(); ?>>
-    <div id="page" data-role="page">
-        <header></header>
-        <div id="main"></div>
-        <footer></footer>
-    </div>
+<body <?php body_class(); ?> role="document">
+    <div id="header"></div>
+    <div id="main" role="main"></div>
+    <div id="footer"></div>
     <?php wp_footer(); ?>
 </body>
 </html>

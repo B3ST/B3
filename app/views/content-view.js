@@ -12,7 +12,7 @@ define([
   'content/content-template'
 ], function ($, _, Marionette, dust, dustMarionette, EventBus, Navigator) {
   var ContentView = Backbone.Marionette.ItemView.extend({
-    tagName:  'div id="posts"',
+    tagName:  'div id="posts" class="container"',
     template: 'content/content-template.dust',
 
     events: {
@@ -67,9 +67,15 @@ define([
     },
 
     getPagination: function () {
-      var has_next = !this.isLastPage(),
-          has_prev = !this.isFirstPage();
-      return {has_next: has_next, has_previous: has_prev};
+      var has_next = !this.isLastPage();
+      var has_prev = !this.isFirstPage();
+      var pages    = 999; // TODO: Try to get number of results
+
+      return {
+        'has_next':     has_next,
+        'has_previous': has_prev,
+        'pages':        pages
+      };
     },
 
     isLastPage: function () {

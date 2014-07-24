@@ -31,6 +31,8 @@ define([
 
     afterEach(function() {
       this.app.main.$el.html('');
+      this.app.header.$el.html('');
+      this.app.footer.$el.html('');
     });
 
     describe(".showPostPage", function() {

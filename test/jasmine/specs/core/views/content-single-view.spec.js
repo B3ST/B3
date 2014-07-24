@@ -98,11 +98,11 @@ define([
               expect(this.view.$('.b3-comments').children().length).toEqual(8);
               expect(this.view.$('.b3-comment-content').length).toEqual(8);
 
-              expect(this.view.$('#comment-1 > ul.b3-comments').children().length).toEqual(2);
-              expect(this.view.$('#comment-2 > ul.b3-comments').children().length).toEqual(1);
+              expect(this.view.$('#comment-1 > div.b3-comment-content > ul.b3-comments').children().length).toEqual(2);
+              expect(this.view.$('#comment-2 > div.b3-comment-content > ul.b3-comments').children().length).toEqual(1);
 
-              expect(this.view.$('#comment-3 > ul.b3-comments').children().length).toEqual(2);
-              expect(this.view.$('#comment-5 > ul.b3-comments').children().length).toEqual(1);
+              expect(this.view.$('#comment-3 > div.b3-comment-content > ul.b3-comments').children().length).toEqual(2);
+              expect(this.view.$('#comment-5 > div.b3-comment-content > ul.b3-comments').children().length).toEqual(1);
             });
           });
         });

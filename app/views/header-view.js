@@ -8,9 +8,11 @@ define([
   'controllers/navigator',
   'header-template',
 ], function ($, Backbone, dust, dustMarionette, Settings, EventBus, Navigator) {
+  'use strict';
+
   var HeaderView = Backbone.Marionette.ItemView.extend({
     template: 'header-template.dust',
-    tagName:  'div class="container"',
+    tagName:  'div',
     events: {
       'click #b3-header': 'index'
     },

@@ -1,11 +1,13 @@
-<img class="b3-avatar" src="{author.avatar}">
-<div class="media-body b3-comment-content">
-  <h4 class="media-heading b3-comment-author">
-    <a href="{author.url}">{author.name}</a>
+<div class="avatar pull-left">
+  <img class="b3-avatar" src="{author.avatar}">
+</div>
+
+<div class="comment-body media-body b3-comment-content">
+  <h4 class="comment-meta media-heading">
+    <a href="{author.url}" class="b3-comment-author">{author.name}</a> on <a href="{meta.links.self}">
+      <time datetime="{date}">{date}</time>
+    </a>:
   </h4>
-  <time datetime="{date}">
-    <a href="{meta.links.self}">{date}</a>
-  </time>
 
   {@neq key=status value="approved"}
     <div class="alert alert-info">
@@ -15,10 +17,14 @@
 
   {content|s}
 
-  <div>
-    <a class="b3-reply-comment" href="#reply">Reply to comment</a>
-    <div class="b3-reply-section"></div>
-  </div>
+  {!@eq key=comment_status value="open"!}
+    <div>
+      <a href="#reply" class="b3-reply-comment button reply" role="button">
+        <span class="glyphicon glyphicon-comment"></span> Reply
+      </a>
+      <div class="b3-reply-section"></div>
+    </div>
+  {!/eq!}
+
+  <ul class="comments b3-comments"></ul>
 </div>
-<ul class="b3-comments">
-</ul>

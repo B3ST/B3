@@ -5,9 +5,11 @@ define([
   'dust.marionette',
   'footer-template'
 ], function ($, Backbone, dust, dustMarionette) {
-  var FooterView = Backbone.View.extend({
+  'use strict';
+
+  var FooterView = Backbone.Marionette.ItemView.extend({
     template: 'footer-template.dust',
-    tagName:  'div class="container"'
+    tagName:  'div'
   });
 
   return FooterView;

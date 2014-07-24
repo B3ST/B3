@@ -337,7 +337,14 @@ class B3_Comment {
 
         // Author
         if ((int) $comment->user_id !== 0) {
-            $fields['author'] = (int) $comment->user_id;
+            $user = get_user_by( 'id', $comment->user_id );
+
+            $fields['author'] = array(
+                'ID'     => (int) $user->ID,
+                'name'   => $user->display_name,
+                'URL'    => $user->user_url,
+                'avatar' => json_get_avatar_url( $user->user_email ),
+            );
         } else {
             $fields['author'] = array(
                 'ID'     => 0,

@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp          = require('gulp');
+var gutil         = require('gulp-util');
 var $             = require('gulp-load-plugins')();
 var bowerFiles    = require('bower-files')({'dev': true});
 var runSequence   = require('run-sequence');
@@ -19,18 +20,23 @@ var AUTOPREFIXER_BROWSERS = [
     'bb >= 10'
 ];
 
+function _onError (error) {
+  gutil.log(gutil.colors.red(error.message));
+}
+
 /**
  * gulp build:styles
  */
 gulp.task('build:styles', function () {
     return gulp.src(['app/styles/less/style.less'])
         .pipe($.less())
-        .on('error', console.error.bind(console))
+        .on('error', _onError)
         .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
         .pipe($.csslint())
+        .on('error', _onError)
         .pipe($.minifyCss())
         .pipe($.concat('style.css'))
-        .pipe(gulp.dest('./'))
+        .pipe(gulp.dest('dist/assets/styles/'))
         .pipe($.size({title: 'styles'}));
 });
 
@@ -41,6 +47,7 @@ gulp.task('build:scripts', function () {
     return gulp.src('app/**/*.js')
         .pipe($.changed('dist/'))
         .pipe($.uglify())
+        .on('error', _onError)
         .pipe(gulp.dest('dist/'))
         .pipe($.size({title: 'scripts'}));
 });
@@ -52,6 +59,7 @@ gulp.task('build:templates', function () {
     return gulp.src('app/templates/**/*.{html,dust}')
         .pipe($.changed('dist/templates/'))
         .pipe($.dust())
+        .on('error', _onError)
         .pipe(gulp.dest('dist/templates/'))
         .pipe($.size({title: 'templates'}));
 });
@@ -94,8 +102,8 @@ gulp.task('bower', function () {
         .pipe($.minifyCss())
         .pipe(gulp.dest('lib/css/'));
 
-    gulp.src(bowerFiles.eot + bowerFiles.svg + bowerFiles.ttf + bowerFiles.woff)
-        .pipe(gulp.dest('fonts/'));
+    gulp.src(bowerFiles.eot.concat(bowerFiles.svg).concat(bowerFiles.ttf).concat(bowerFiles.woff))
+        .pipe(gulp.dest('lib/fonts/'));
 });
 
 /**

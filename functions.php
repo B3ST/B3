@@ -42,9 +42,10 @@ class B3Theme {
      * [__construct description]
      */
     public function __construct () {
-        $this->settings_uri = get_template_directory_uri() . '/settings.js';
-        $this->require_uri  = get_template_directory_uri() . '/lib/require.js';
-        $this->loader_uri   = get_template_directory_uri() . '/dist/config/init.js';
+        $this->settings_uri   = get_template_directory_uri() . '/settings.js';
+        $this->require_uri    = get_template_directory_uri() . '/lib/require.js';
+        $this->loader_uri     = get_template_directory_uri() . '/dist/config/init.js';
+        $this->stylesheet_uri = get_template_directory_uri() . '/dist/assets/styles/style.css';
 
         $this->setup();
     }
@@ -149,7 +150,7 @@ class B3Theme {
         wp_localize_script( $this->slug . '-settings', 'WP_API_SETTINGS', $settings );
         wp_enqueue_script( $this->slug . '-settings' );
 
-        wp_enqueue_style( $this->slug . '-style', get_stylesheet_uri(), NULL, $this->version, 'screen' );
+        wp_enqueue_style( $this->slug . '-style', $this->stylesheet_uri, NULL, $this->version, 'screen' );
     }
 
     protected function _get_permastructs () {
