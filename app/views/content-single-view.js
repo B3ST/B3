@@ -7,12 +7,13 @@ define([
   'dust',
   'dust.marionette',
   'controllers/event-bus',
+  'controllers/navigator',
   'views/comment-view',
   'views/reply-form-view',
   'views/replyable-view',
   'content/content-template',
   'content/post-template'
-], function ($, _, Marionette, dust, dustMarionette, EventBus, CommentView, ReplyFormView, ReplyableView) {
+], function ($, _, Marionette, dust, dustMarionette, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   var view = _.extend(ReplyableView, {
     template:  'content/content-template.dust',
     childView: CommentView,
@@ -28,7 +29,7 @@ define([
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
       });
-      this.page    = 0;
+      this.page    = (options.page - 1) || 0;
       this.content = this.model.get('content').split(/<!--nextpage-->/);
       this.post    = this.model;
       this.user    = options.user;
@@ -75,6 +76,7 @@ define([
       if (this.hasNext()) {
         this.page++;
         this.render();
+        this.navigate();
       }
     },
 
@@ -82,6 +84,7 @@ define([
       if (this.hasPrevious()) {
         this.page--;
         this.render();
+        this.navigate();
       }
     },
 
@@ -113,6 +116,11 @@ define([
 
     hasPrevious: function () {
       return this.page > 0;
+    },
+
+    navigate: function () {
+      var route = '/post/' + this.model.get('slug') + '/page/' + (this.page + 1);
+      Navigator.navigate(route, false);
     }
   });
 

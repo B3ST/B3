@@ -175,8 +175,10 @@ define([
 
     describe("When post content has multiple pages", function() {
       beforeEach(function() {
+        this.eventbus = spyOn(EventBus, 'trigger');
         this.post = new Post({
           ID:      1,
+          slug:    'slug',
           title:   'Title',
           content: 'Page 1<!--nextpage-->Page 2<!--nextpage-->Page 3'
         });
@@ -198,16 +200,27 @@ define([
           this.view.$('.pagination-next').click();
           expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
         });
+
+        it("should trigger an event to navigate to the page", function() {
+          this.view.$('.pagination-next').click();
+          expect(this.eventbus).toHaveBeenCalledWith('router:nav', {route: '/post/' + this.post.get('slug') + '/page/2', options: {trigger: false}});
+        });
       });
 
       describe("When clicking in the previous page", function() {
-        it("should display the previous page", function() {
-          this.view = new ContentSingleView({model: this.post, collection: new Comments()});
-          this.view.page = 2;
+        beforeEach(function() {
+          this.view = new ContentSingleView({model: this.post, page: 3, collection: new Comments()});
           this.view.render();
+        });
 
+        it("should display the previous page", function() {
           this.view.$('.pagination-prev').click();
           expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
+        });
+
+        it("should trigger an event to navigate to the page", function() {
+          this.view.$('.pagination-prev').click();
+          expect(this.eventbus).toHaveBeenCalledWith('router:nav', {route: '/post/' + this.post.get('slug') + '/page/2', options: {trigger: false}});
         });
       });
     });
