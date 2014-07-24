@@ -16,26 +16,27 @@ define([
       this.user  = options.user;
     },
 
-    index: function() {
-      this.posts.fetch({reset: true});
-      this.show(this.contentView(this.posts));
+    showPostPage: function (page) {
+      page = page || 1;
+      this.posts.fetch({reset: true, data: $.param({ page: page })});
+      this.show(this.contentView(this.posts, page));
     },
 
     showPostById: function (id, page) {
       var post = this.posts.get(id);
-      post ? this.show(this.singleContentView(post, page)) : this.fetchModelBy(Post, 'ID', id);
+      post ? this.show(this.singleContentView(post, page)) : this.fetchModelBy(Post, 'ID', id, page);
     },
 
     showPostBySlug: function (slug, page) {
       var post = this.posts.where({slug: slug});
-      post.length > 0 ? this.show(this.singleContentView(post[0], page)) : this.fetchModelBy(Post, 'slug', slug);
+      post.length > 0 ? this.show(this.singleContentView(post[0], page)) : this.fetchModelBy(Post, 'slug', slug, page);
     },
 
-    showPageBySlug: function (slug) {
+    showPageBySlug: function (slug, page) {
       this.fetchModelBy(Page, 'slug', slug);
     },
 
-    fetchModelBy: function (model, field, value) {
+    fetchModelBy: function (model, field, value, page) {
       var query = {};
       var post;
 
@@ -43,7 +44,7 @@ define([
       post         = new model(query);
 
       post.fetch()
-        .done(function () { this.show(this.singleContentView(post)); }.bind(this))
+        .done(function () { this.show(this.singleContentView(post, page)); }.bind(this))
         .fail(function () { this.show(this.error()) }.bind(this));
     },
 
@@ -55,8 +56,8 @@ define([
       return new NotFoundView();
     },
 
-    contentView: function (posts) {
-      return new ContentView({collection: posts});
+    contentView: function (posts, page) {
+      return new ContentView({collection: posts, page: page});
     },
 
     singleContentView: function (model, page) {

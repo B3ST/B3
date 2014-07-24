@@ -33,8 +33,8 @@ define([
       this.app.main.$el.html('');
     });
 
-    describe(".index", function() {
-      it("should fetch the collection of posts", function() {
+    describe(".showPostPage", function() {
+      it("should fetch the collection of posts of a given page", function() {
         this.spy = spyOn(Posts.prototype, 'fetch');
         this.controller = new Controller({
           posts: new Posts(),
@@ -42,10 +42,10 @@ define([
           user:  this.user
         });
 
-        this.controller.index();
+        this.controller.showPostPage(2);
         this.server.respond();
 
-        expect(this.spy).toHaveBeenCalled();
+        expect(this.spy).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
       });
 
       it("should show the content view", function() {
@@ -56,7 +56,7 @@ define([
           user:  this.user
         });
 
-        this.controller.index();
+        this.controller.showPostPage(2);
         this.server.respond();
 
         expect(this.spy.mostRecentCall.args[0] instanceof ContentView).toBeTruthy();
@@ -83,6 +83,7 @@ define([
         expect(view instanceof ContentSingleView).toBeTruthy();
         expect(view.model).toEqual(posts[0]);
       });
+
       describe("When post is not defined", function() {
         beforeEach(function() {
           this.response = new Post({ID: 2, title: 'title'});
