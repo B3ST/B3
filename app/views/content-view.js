@@ -11,7 +11,7 @@ define([
   'content/content-template'
 ], function ($, _, Marionette, dust, dustMarionette, EventBus) {
   var ContentView = Backbone.Marionette.ItemView.extend({
-    tagName:  'div id="posts"',
+    tagName:  'div id="posts" class="container"',
     template: 'content/content-template.dust',
 
     events: {

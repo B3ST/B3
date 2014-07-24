@@ -5,8 +5,10 @@ define([
   'dust.marionette',
   'models/settings-model',
   'controllers/event-bus',
-  'header-template',
+  'header-template'
 ], function ($, Backbone, dust, dustMarionette, Settings, EventBus) {
+  'use strict';
+
   var HeaderView = Backbone.Marionette.ItemView.extend({
     template: 'header-template.dust',
     tagName:  'div',

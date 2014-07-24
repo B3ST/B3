@@ -64,7 +64,7 @@ define([
       itemView.user = this.user;
 
       if (itemView.model.get('parent') > 0) {
-        collectionView.$('#comment-' + itemView.model.get('parent') + ' > ul.b3-comments').append(itemView.el);
+        collectionView.$('#comment-' + itemView.model.get('parent') + ' > .comment-body > ul.b3-comments').append(itemView.el);
       } else {
         var commentSection = collectionView.$('.b3-comments');
         $(commentSection[0]).append(itemView.el);

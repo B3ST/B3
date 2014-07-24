@@ -2,7 +2,7 @@
 
   <header class="jumbotron">
     <div class="container">
-      <h1 class="b3-post-title">
+      <h1 class="b3-post-title post-title entry-title">
         {title|s}
       </h1>
       <h2 class="byline author vcard">
@@ -14,10 +14,9 @@
     </div>
   </header>
 
-  <div class="container page-header">
+  <div class="container">
 
-
-    <div class="b3-post-content">
+    <div class="b3-post-content entry-content post-content">
       {content|s}
     </div>
 
@@ -25,16 +24,16 @@
       {+ entry-meta /}
     </footer>
 
-    <aside class="comments">
+    <aside class="post-comments">
       {@eq key=comment_status value="open"}
-        <button type="button" class="b3-reply-post button reply">
+        <a href="#reply" class="b3-reply-post button reply" role="button">
           <span class="glyphicon glyphicon-comment"></span> Reply
-        </button>
+        </a>
 
         <div class="b3-reply-section"></div>
       {/eq}
 
-      <ul class="b3-comments"></ul>
+      <ul class="comments b3-comments"></ul>
     </aside>
   </div>
 

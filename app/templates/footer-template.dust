@@ -1,0 +1,30 @@
+<div class="b3-credits">
+  <div class="container">
+
+    <ul class="social-buttons">
+      <li>
+        <iframe class="github" src="http://ghbtns.com/github-btn.html?user=b3st&amp;repo=b3&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
+      </li>
+      <li>
+        <iframe class="github" src="http://ghbtns.com/github-btn.html?user=b3st&amp;repo=b3&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
+      </li>
+      <li class="tweet">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://b3st.io/" data-count="horizontal">Tweet</a>
+      </li>
+    </ul>
+
+    <p>B3 is a <a href="#">WordPress</a> starter theme based on <a href="#">Backbone.js</a> and <a href="#">Bootstrap</a>.</p>
+
+    <p>Built in Portugal by <a href="https://twitter.com/goblindegook">@goblindegook</a>, <a href="https://twitter.com/">@</a>, and <a href="https://twitter.com/log_oscon">@log_oscon</a>.</p>
+
+    <p>Licensed under <a href="https://github.com/b3st/b3/blob/master/LICENSE">MIT</a>.</p>
+
+    <ul class="footer-links muted">
+      <li>Alpha</li>
+      <li><a href="https://github.com/b3st/b3">GitHub</a></li>
+      <li><a href="https://bitbucket.com/goblindegook/b3">Bitbucket</a></li>
+      <li><a href="https://trello.com/b/0gQpYCnv/b3-starter-theme">Trello</a></li>
+    </ul>
+
+  </div>
+</div>

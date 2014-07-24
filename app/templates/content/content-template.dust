@@ -8,7 +8,7 @@
 {/ entry-meta }
 
 {< pagination }
-  {?pages}
+  {@gt key=pages value=1}
     <ul class="pager">
       <li class="{^has_previous}disabled{/has_previous}">
         <a href="#" class="pagination-prev">&larr; Previous</a>
@@ -17,5 +17,12 @@
         <a href="#" class="pagination-next">Next &rarr;</a>
       </li>
     </ul>
-  {/pages}
+  {/gt}
 {/ pagination }
+
+{< search }
+  <form role="search" method="get" action="#" class="">
+    <label class="screen-reader-text" for="search-site">Search for:</label>
+    <input type="search" placeholder="Enter search terms" class="form-control" name="s" id="search-site" value=""> <button class="search form-control" role="search"><span class="glyphicon glyphicon-search"></span> Search</button>
+  </form>
+{/ search }
