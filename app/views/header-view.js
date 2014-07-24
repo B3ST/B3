@@ -5,8 +5,9 @@ define([
   'dust.marionette',
   'models/settings-model',
   'controllers/event-bus',
+  'controllers/navigator',
   'header-template',
-], function ($, Backbone, dust, dustMarionette, Settings, EventBus) {
+], function ($, Backbone, dust, dustMarionette, Settings, EventBus, Navigator) {
   var HeaderView = Backbone.Marionette.ItemView.extend({
     template: 'header-template.dust',
     tagName:  'div class="container"',
@@ -19,7 +20,7 @@ define([
     },
 
     index: function (e) {
-      EventBus.trigger('router:nav', {route: '', options: {trigger: true}});
+      Navigator.navigate('', true);
       return false;
     }
   });
