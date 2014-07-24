@@ -28,9 +28,9 @@ var config = {
     "bootstrap":            root + "/lib/bootstrap",
     "text":                 root + "/lib/text",
 
-    "jasmine": root + "/libs/jasmine",
+    "jasmine":      root + "/libs/jasmine",
     "jasmine-html": root + "/libs/jasmine-html",
-    "sinon": root + "/libs/sinon",
+    "sinon":        root + "/libs/sinon",
   },
 
   shim: {
@@ -108,6 +108,8 @@ require([
     root + 'core/models/media-model.spec',
 
     root + 'core/models/settings-model.spec',
+    root + 'core/models/menu-model.spec',
+    root + 'core/models/item-model.spec',
 
     // collections
     root + 'core/collections/user-collection.spec',
@@ -120,6 +122,8 @@ require([
     root + 'core/collections/taxonomy-collection.spec',
     root + 'core/collections/term-collection.spec',
     root + 'core/collections/media-collection.spec',
+
+    root + 'core/collections/item-collection.spec',
 
     // views
     root + 'core/views/header-view.spec',
