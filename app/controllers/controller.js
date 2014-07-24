@@ -9,6 +9,8 @@ define([
   'views/content-single-view',
   'views/not-found-view'
 ], function (_, Backbone, Marionette, Post, Page, Posts, ContentView, ContentSingleView, NotFoundView) {
+  'use strict';
+
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
       this.app   = options.app;
