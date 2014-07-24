@@ -60,7 +60,7 @@ define([
     },
 
     singleContentView: function (model, page) {
-      return new ContentSingleView({model: model, page: page, collection: new Posts()});
+      return new ContentSingleView({model: model, page: page, collection: new Posts(), user: this.user});
     }
   });
 });
