@@ -108,7 +108,7 @@ define([
     },
 
     getDustTemplate: function () {
-      return {b3type: 'post', b3folder: 'content'};
+      return {'parent-template': 'content/post-template.dust'};
     },
 
     hasNext: function () {

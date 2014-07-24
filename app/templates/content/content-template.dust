@@ -1,4 +1,4 @@
-{> "{b3folder}/{b3type}-template.dust" /}
+{> "{parent-template}" /}
 
 {< entry-meta }
   Published on <time class="published" datetime="{date}">{date}</time> by <span
