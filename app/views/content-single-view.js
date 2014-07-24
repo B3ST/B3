@@ -1,8 +1,7 @@
-'use strict';
-
 define([
   'jquery',
   'underscore',
+  'backbone',
   'marionette',
   'dust',
   'dust.marionette',
@@ -13,7 +12,9 @@ define([
   'views/replyable-view',
   'content/content-template',
   'content/post-template'
-], function ($, _, Marionette, dust, dustMarionette, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
+  'use strict';
+
   var view = _.extend(ReplyableView, {
     template:  'content/content-template.dust',
     childView: CommentView,
@@ -72,7 +73,9 @@ define([
       }
     },
 
-    renderNextPage: function () {
+    renderNextPage: function (event) {
+      event.preventDefault();
+
       if (this.hasNext()) {
         this.page++;
         this.render();
@@ -80,7 +83,9 @@ define([
       }
     },
 
-    renderPrevPage: function () {
+    renderPrevPage: function (event) {
+      event.preventDefault();
+
       if (this.hasPrevious()) {
         this.page--;
         this.render();

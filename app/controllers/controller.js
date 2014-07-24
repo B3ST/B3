@@ -1,4 +1,5 @@
 define([
+  'jquery',
   'underscore',
   'backbone',
   'marionette',
@@ -8,7 +9,9 @@ define([
   'views/content-view',
   'views/content-single-view',
   'views/not-found-view'
-], function (_, Backbone, Marionette, Post, Page, Posts, ContentView, ContentSingleView, NotFoundView) {
+], function ($, _, Backbone, Marionette, Post, Page, Posts, ContentView, ContentSingleView, NotFoundView) {
+  'use strict';
+
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
       this.app   = options.app;
@@ -45,11 +48,11 @@ define([
 
       post.fetch()
         .done(function () { this.show(this.singleContentView(post, page)); }.bind(this))
-        .fail(function () { this.show(this.error()) }.bind(this));
+        .fail(function () { this.show(this.error()); }.bind(this));
     },
 
     show: function (view) {
-      this.app.main.show(view)
+      this.app.main.show(view);
     },
 
     error: function () {

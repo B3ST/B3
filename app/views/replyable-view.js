@@ -1,13 +1,15 @@
-'use strict';
-
 define([
   'jquery',
   'views/reply-form-view'
 ], function ($, ReplyFormView) {
+  'use strict';
+
   var ReplyableView = {
-    renderReplyBox: function (ev) {
+    renderReplyBox: function (event) {
+      event.preventDefault();
+
       if (!this.replyBoxRendered) {
-        this.renderIt(ev);
+        this.renderIt(event);
       }
       return false;
     },

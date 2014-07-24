@@ -1,7 +1,8 @@
 define([
   'backbone',
   'marionette'
-], function (Marionette) {
+], function (Backbone, Marionette) {
+  'use strict';
   var EventBus = new Backbone.Wreqr.EventAggregator();
   return EventBus;
 });

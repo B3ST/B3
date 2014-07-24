@@ -1,14 +1,16 @@
-'use strict';
-
 define([
   'jquery',
+  'underscore',
+  'backbone',
   'marionette',
   'dust',
   'dust.helpers',
   'dust.marionette',
   'views/replyable-view',
   'content/comments/comment-template'
-], function ($, Marionette, dust, dustHelpers, dustMarionette, ReplyableView) {
+], function ($, _, Backbone, Marionette, dust, dustHelpers, dustMarionette, ReplyableView) {
+  'use strict';
+
   var view = _.extend(ReplyableView, {
     template: 'content/comments/comment-template.dust',
     tagName:  function () {

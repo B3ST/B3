@@ -1,8 +1,7 @@
-'use strict';
-
 define([
   'jquery',
   'underscore',
+  'backbone',
   'marionette',
   'dust',
   'dust.marionette',
@@ -10,7 +9,9 @@ define([
   'controllers/navigator',
   'archive/posts-template',
   'content/content-template'
-], function ($, _, Marionette, dust, dustMarionette, EventBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator) {
+  'use strict';
+
   var ContentView = Backbone.Marionette.ItemView.extend({
     tagName:  'div id="posts" class="container"',
     template: 'content/content-template.dust',
@@ -46,7 +47,9 @@ define([
       return false;
     },
 
-    renderNextPage: function () {
+    renderNextPage: function (event) {
+      event.preventDefault();
+
       if (!this.isLastPage()) {
         this.page++;
         this.collection.fetch(this.getParams());
@@ -54,7 +57,9 @@ define([
       }
     },
 
-    renderPrevPage: function () {
+    renderPrevPage: function (event) {
+      event.preventDefault();
+
       if (!this.isFirstPage()) {
         this.page--;
         this.collection.fetch(this.getParams());
