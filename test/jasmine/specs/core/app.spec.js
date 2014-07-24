@@ -1,27 +1,35 @@
 define([
   'app',
-  'controllers/event-bus',
+  'models/settings-model',
   'views/header-view',
-  'views/footer-view'
-], function (App, EventBus, HeaderView, FooterView) {
-  describe("App", function() {
+  'views/footer-view',
+  'sinon'
+], function (App, Settings, HeaderView, FooterView) {
+  xdescribe("App", function() {
     beforeEach(function() {
-      this.app = App;
-      this.app.start();
+      var server = sinon.fakeServer.create();
+      var response = { primary: { location: "primary", name: "Primary Menu", meta: { links: { self: "http://localhost:8888/wordpress/wp-json/b3:menus/primary", collection: "http://localhost:8888/wordpress/wp-json/b3:menus"}}}};
+      server.respondWith(
+        'GET',
+        Settings.get('url') + '/b3:menus',
+        [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
+      );
+      App.start();
+      server.respond();
     });
 
     it("should have an header region defined", function() {
-      expect(this.app.header).toBeDefined();
-      expect(this.app.header.currentView.el.isEqualNode(new HeaderView().render().el)).toBeTruthy();
+      expect(App.header).toBeDefined();
+      expect(App.header.currentView.el.isEqualNode(new HeaderView({}).render().el)).toBeTruthy();
     });
 
     it("should have a main region defined", function() {
-      expect(this.app.main).toBeDefined();
+      expect(App.main).toBeDefined();
     });
 
     it("should have a footer region defined", function() {
-      expect(this.app.footer).toBeDefined();
-      expect(this.app.footer.currentView.el.isEqualNode(new FooterView().render().el)).toBeTruthy();
+      expect(App.footer).toBeDefined();
+      expect(App.footer.currentView.el.isEqualNode(new FooterView().render().el)).toBeTruthy();
     });
   });
 });
