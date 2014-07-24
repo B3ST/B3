@@ -50,8 +50,6 @@ define([
         this.page++;
         this.collection.fetch(this.getParams());
       }
-
-      return false;
     },
 
     renderPrevPage: function () {
@@ -59,8 +57,6 @@ define([
         this.page--;
         this.collection.fetch(this.getParams());
       }
-
-      return false;
     },
 
     getDustTemplate: function () {
