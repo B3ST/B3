@@ -96,10 +96,15 @@ define([
     },
 
     getPagination: function () {
-      var next = this.hasNext(),
-          prev = this.hasPrevious();
+      var next  = this.hasNext();
+      var prev  = this.hasPrevious();
+      var pages = this.content.length;
 
-      return {has_next: next, has_previous: prev};
+      return {
+        'has_next':     next,
+        'has_previous': prev,
+        'pages':        pages
+      };
     },
 
     getDustTemplate: function () {

@@ -1,9 +1,9 @@
 {#posts}
   <article class="b3-post {post_class}">
     <header>
-      <h2 class="b3-post-title">
+      <h1 class="b3-post-title page-header">
         <a id="{slug}" href="#">{title|s}</a>
-      </h2>
+      </h1>
       {+ entry-meta /}
     </header>
     <div class="b3-post-excerpt">

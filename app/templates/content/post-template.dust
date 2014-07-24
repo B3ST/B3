@@ -2,22 +2,41 @@
 
   <header class="jumbotron">
     <div class="container">
-      <h1 class="b3-post-title">{title|s}</h1>
-      <p>{excerpt|s}</p>
+      <h1 class="b3-post-title">
+        {title|s}
+      </h1>
+      <h2 class="byline author vcard">
+        By <a href="{author.URL}" rel="author" class="fn">{author.name}</a></small>
+      </h2>
+      <p class="lead">
+        {excerpt|s}
+      </p>
     </div>
   </header>
 
-  <div class="b3-post-content container">
-    {content|s}
+  <div class="container page-header">
+
+
+    <div class="b3-post-content">
+      {content|s}
+    </div>
+
+    <footer>
+      {+ entry-meta /}
+    </footer>
+
+    <aside class="comments">
+      {@eq key=comment_status value="open"}
+        <button type="button" class="b3-reply-post button reply">
+          <span class="glyphicon glyphicon-comment"></span> Reply
+        </button>
+
+        <div class="b3-reply-section"></div>
+      {/eq}
+
+      <ul class="b3-comments"></ul>
+    </aside>
   </div>
-
-  <footer class="container">
-    {+ entry-meta /}
-    <a href="#reply" class="b3-reply-post">Reply</a>
-    <div class="b3-reply-section"></div>
-  </footer>
-
-  <ul class="b3-comments"></ul>
 
 </article>
 
