@@ -2,9 +2,9 @@ define([
   'views/header-view',
   'models/settings-model',
   'models/menu-model',
-  'collections/item-collection',
+  'collections/menu-item-collection',
   'controllers/event-bus'
-], function (HeaderView, Settings, Menu, Items, EventBus) {
+], function (HeaderView, Settings, Menu, MenuItems, EventBus) {
   describe("HeaderView", function() {
     beforeEach(function() {
       var response = {"location":"primary","name":"Primary Menu","meta":{"links":{"self":"http:\/\/localhost:8888\/wordpress\/wp-json\/b3:menus\/primary","collection":"http:\/\/localhost:8888\/wordpress\/wp-json\/b3:menus"}},"menu":{"ID":61,"name":"Empty Menu","slug":"empty-menu","description":"","count":2,"items":[{"ID":1266,"parent":0,"order":1,"type":"nav_menu_item","guid":"http:\/\/localhost:8888\/wordpress\/?p=1266","object":1149,"object_parent":0,"object_type":"page","link":"http:\/\/localhost:8888\/wordpress\/about","title":"About","attr_title":"","description":"","classes":[""],"target":"","xfn":"","meta":{"links":{"object":"http:\/\/localhost:8888\/wordpress\/wp-json\/pages\/about"}}},{"ID":1265,"parent":0,"order":2,"type":"nav_menu_item","guid":"http:\/\/localhost:8888\/wordpress\/?p=1265","object":18,"object_parent":0,"object_type":"page","link":"http:\/\/localhost:8888\/wordpress\/a-page","title":"A Page","attr_title":"","description":"","classes":[""],"target":"","xfn":"","meta":{"links":{"object":"http:\/\/localhost:8888\/wordpress\/wp-json\/pages\/a-page"}}}]}};
@@ -26,14 +26,14 @@ define([
           }
         }
       };
-      this.view = new HeaderView({ collection: new Items(), menus: this.menus });
+      this.view = new HeaderView({ collection: new MenuItems(), menus: this.menus });
       this.server.respond();
     });
 
     describe(".initialize", function() {
       it("should fetch the primary menu", function() {
         this.spy = spyOn(Menu.prototype, 'fetch');
-        this.view = new HeaderView({ collection: new Items(), menus: this.menus });
+        this.view = new HeaderView({ collection: new MenuItems(), menus: this.menus });
         expect(this.spy).toHaveBeenCalled();
       });
     });
@@ -62,24 +62,10 @@ define([
         this.view.$('#b3-home').click();
         expect(this.spy).toHaveBeenCalledWith('router:nav', { route: '', options: { trigger: true }});
       });
-    });
 
-    describe("When clicking in menu link", function() {
-      beforeEach(function() {
-        this.spy = spyOn(EventBus, 'trigger');
-        this.view.render();
-      });
-
-      it("should trigger a navigation to the clicked item", function() {
-        var menu = this.view.$('.b3-menu')[0];
-        $(menu).click();
-        expect(this.spy).toHaveBeenCalledWith('router:nav', { route: 'about', options: { trigger: true }});
-      });
-
-      it("should activate the clicked item", function() {
-        var menu = this.view.$('.b3-menu')[0];
-        $(menu).click();
-        expect($(menu).parent().attr('class')).toContain('active');
+      it("should trigger an event that home was selected", function() {
+        this.view.$('#b3-home').click();
+        expect(this.spy).toHaveBeenCalledWith('menu:item-selected', {id: -1});
       });
     });
   });

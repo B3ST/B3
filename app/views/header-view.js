@@ -6,19 +6,19 @@ define([
   'dust.marionette',
   'models/settings-model',
   'models/menu-model',
+  'views/menu-view',
   'controllers/event-bus',
   'controllers/navigator',
   'content/content-template',
   'header-template'
-], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, EventBus, Navigator) {
-  'use strict';
+], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, EventBus, Navigator) {
+  'use strict;'
 
   var HeaderView = Backbone.Marionette.ItemView.extend({
     template: 'content/content-template.dust',
     tagName:  'div',
     events: {
       'click #b3-home': 'index',
-      'click .b3-menu': 'menu'
     },
 
     modelEvents: {
@@ -30,40 +30,41 @@ define([
       this.model.fetch();
     },
 
+    onRender: function () {
+      if (this.menuView) {
+        this.menuView.destroy();
+      }
+
+      this.menuView = new MenuView({collection: this.model.getItems()});
+      this.menuView.render();
+
+      this.$('#b3-header-nav').append(this.menuView.el);
+    },
+
+    onDestroy: function () {
+      this.menuView.destroy();
+    },
+
     serializeData: function () {
       var items = {items: this.getItems()};
       return _.extend(this.getDustTemplate(), items);
     },
 
     index: function (ev) {
-      this.toggleActive(ev.currentTarget);
       this.navigate('');
-      ev.preventDefault();
-    },
-
-    menu: function (ev) {
-      var link  = ev.currentTarget.href,
-          route = link.split(Settings.get('path') + '/')[1];
-
-      this.toggleActive(ev.currentTarget);
-      Navigator.navigate(route, true);
+      EventBus.trigger('menu:item-selected', {id: -1});
       ev.preventDefault();
     },
 
     getItems: function () {
       var menus = this.model.getItems();
-      return _.map(menus.models, function (menu) {
+      return menus.map(function (menu) {
         return menu.attributes;
       });
     },
 
     getDustTemplate: function () {
       return _.extend(Settings.attributes, {'parent-template': 'header-template.dust'});
-    },
-
-    toggleActive: function (link) {
-      this.$('.active').removeClass('active');
-      $(link).parent().addClass('active');
     },
 
     navigate: function (route) {
