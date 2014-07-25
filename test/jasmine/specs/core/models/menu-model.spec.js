@@ -1,8 +1,8 @@
 define([
   'models/menu-model',
-  'models/item-model',
+  'models/menu-item-model',
   'sinon'
-], function (Menu, Item) {
+], function (Menu, MenuItem) {
   describe("Menu", function() {
     describe(".initialize", function() {
       beforeEach(function() {
@@ -71,7 +71,7 @@ define([
         var items = this.menu.getItems();
 
         expect(items.models.length).toEqual(2);
-        expect(items.models[0] instanceof Item).toBeTruthy();
+        expect(items.models[0] instanceof MenuItem).toBeTruthy();
         expect(items.models[0].get('title')).toEqual(this.model.menu.items[0].title);
       });
     });

@@ -11,6 +11,7 @@ var deps = [
   "error/not-found-template",
   "forms/searchform-template",
   "forms/replyform-template",
+  "navigation/menus/menu-item-template"
 ];
 
 var config = {
