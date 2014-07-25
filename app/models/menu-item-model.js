@@ -1,10 +1,10 @@
-'use strict';
-
 define([
   'jquery',
   'backbone'
 ], function ($, Backbone) {
-  var Item = Backbone.Model.extend({
+  'use strict;'
+
+  var MenuItem = Backbone.Model.extend({
     defaults: {
       ID:            null,
       object:        null,
@@ -22,8 +22,10 @@ define([
       xfn:           '',
       classes:       [],
       meta:          {}
-    }
+    },
+
+    idAttribute: 'ID'
   });
 
-  return Item;
+  return MenuItem;
 });

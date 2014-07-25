@@ -1,10 +1,10 @@
 define([
-  'models/item-model'
-], function (Item) {
-  describe("Item", function() {
+  'models/menu-item-model'
+], function (MenuItem) {
+  describe("MenuItem", function() {
     describe(".initialize", function() {
       beforeEach(function() {
-        this.item = new Item();
+        this.item = new MenuItem();
       });
 
       using('model fields', ['ID', 'object'], function (field) {
