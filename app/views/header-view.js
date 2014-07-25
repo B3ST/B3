@@ -9,13 +9,12 @@ define([
   'views/menu-view',
   'controllers/event-bus',
   'controllers/navigator',
-  'content/content-template',
   'header-template'
 ], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, EventBus, Navigator) {
   'use strict;'
 
   var HeaderView = Backbone.Marionette.ItemView.extend({
-    template: 'content/content-template.dust',
+    template: 'header-template.dust',
     tagName:  'div',
     events: {
       'click #b3-home': 'index',
@@ -46,8 +45,7 @@ define([
     },
 
     serializeData: function () {
-      var items = {items: this.getItems()};
-      return _.extend(this.getDustTemplate(), items);
+      return Settings.attributes;
     },
 
     index: function (ev) {
@@ -61,10 +59,6 @@ define([
       return menus.map(function (menu) {
         return menu.attributes;
       });
-    },
-
-    getDustTemplate: function () {
-      return _.extend(Settings.attributes, {'parent-template': 'header-template.dust'});
     },
 
     navigate: function (route) {
