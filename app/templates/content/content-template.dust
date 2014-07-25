@@ -1,5 +1,6 @@
 {> "{b3folder}/{b3type}-template.dust" /}
 
+{! Entry metadata !}
 {< entry-meta }
   Published on <time class="published" datetime="{date}">{date}</time>
   {~n}
@@ -8,6 +9,7 @@
   {! TODO: Tags !}
 {/ entry-meta }
 
+{! Previous/next pager !}
 {< pager }
   {@gt key=pages value=1}
     <ul class="b3-pager pager">
@@ -22,6 +24,7 @@
   {/gt}
 {/ pager }
 
+{! Numeric paginator !}
 {< pagination }
   {@gt key=pages value=1}
     <ul class="b3-pagination pagination">
@@ -46,6 +49,7 @@
   {/gt}
 {/ pagination }
 
+{! Search form !}
 {< search }
   <form role="search" method="get" action="#" class="">
     <label class="screen-reader-text" for="search-site">Search for:</label>

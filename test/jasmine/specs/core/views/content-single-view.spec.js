@@ -8,6 +8,8 @@ define([
   'collections/comment-collection',
   'sinon'
 ], function (ContentSingleView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
+  'use strict';
+
   describe("ContentSingleView", function() {
     beforeEach(function() {
       this.user = new User();
@@ -191,35 +193,47 @@ define([
       });
 
       it("should display next page control and hide previous page control", function() {
-        expect(this.view.$('.pagination-next').length).toEqual(1);
-        expect(this.view.$('.pagination-prev').parent().attr('class')).toContain('disabled');
+        expect(this.view.$('.pagination .next a').length).toEqual(1);
+        expect(this.view.$('.pagination .previous a').parent().attr('class')).toContain('disabled');
       });
 
-      describe("When clicking in the next page", function() {
+      describe("clicking the next page link", function() {
         it("should display the next page", function() {
-          this.view.$('.pagination-next').click();
+          this.view.$('.pagination .next a').click();
           expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
         });
 
         it("should trigger an event to navigate to the page", function() {
-          this.view.$('.pagination-next').click();
+          this.view.$('.pagination .next a').click();
           expect(this.eventbus).toHaveBeenCalledWith('router:nav', {route: '/post/' + this.post.get('slug') + '/page/2', options: {trigger: false}});
         });
       });
 
-      describe("When clicking in the previous page", function() {
+      describe("clicking on a page number", function() {
+        it("should display the requested page", function() {
+          this.view.$('.pagination .number:eq(2) a').click();
+          expect(this.view.$('.b3-post-content').text()).toEqual('Page 3');
+        });
+
+        it("should trigger an event to navigate to the page", function() {
+          this.view.$('.pagination .number:eq(2) a').click();
+          expect(this.eventbus).toHaveBeenCalledWith('router:nav', {route: '/post/' + this.post.get('slug') + '/page/3', options: {trigger: false}});
+        });
+      });
+
+      describe("clicking the previous page link", function() {
         beforeEach(function() {
           this.view = new ContentSingleView({model: this.post, page: 3, collection: new Comments()});
           this.view.render();
         });
 
         it("should display the previous page", function() {
-          this.view.$('.pagination-prev').click();
+          this.view.$('.pagination .previous a').click();
           expect(this.view.$('.b3-post-content').text()).toEqual('Page 2');
         });
 
         it("should trigger an event to navigate to the page", function() {
-          this.view.$('.pagination-prev').click();
+          this.view.$('.pagination .previous a').click();
           expect(this.eventbus).toHaveBeenCalledWith('router:nav', {route: '/post/' + this.post.get('slug') + '/page/2', options: {trigger: false}});
         });
       });

@@ -21,10 +21,10 @@ define([
     tagName: 'div id="post"',
     events: {
       'click .b3-reply-post':             'renderReplyBox', // from ReplyableView
-      'click .b3-pagination .next a':     'renderNextPage',
-      'click .b3-pagination .previous a': 'renderPrevPage',
       'click .b3-pager-next':             'renderNextPage',
       'click .b3-pager-previous':         'renderPrevPage',
+      'click .b3-pagination .next a':     'renderNextPage',
+      'click .b3-pagination .previous a': 'renderPrevPage',
       'click .b3-pagination .number a':   'renderPageNumber'
     },
 
