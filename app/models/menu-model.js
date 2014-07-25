@@ -3,8 +3,8 @@
 define([
   'jquery',
   'backbone',
-  'collections/item-collection'
-], function ($, Backbone, Items) {
+  'collections/menu-item-collection'
+], function ($, Backbone, MenuItems) {
   var Menu = Backbone.Model.extend({
     defaults: {
       location: '',
@@ -19,7 +19,7 @@ define([
     },
 
     getItems: function () {
-      return new Items(this.get('menu').items);
+      return new MenuItems(this.get('menu').items);
     }
   });
 
