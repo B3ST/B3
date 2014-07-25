@@ -1,20 +1,46 @@
 {> "{b3folder}/{b3type}-template.dust" /}
 
 {< entry-meta }
-  Published on <time class="published" datetime="{date}">{date}</time> by <span
-    class="byline author vcard"><a href="{author.URL}" rel="author" class="fn">{author.name}</a></span>
+  Published on <time class="published" datetime="{date}">{date}</time>
+  {~n}
+  by <span class="byline author vcard"><a href="{author.URL}" rel="author" class="fn">{author.name}</a></span>
   {! TODO: Categories !}
   {! TODO: Tags !}
 {/ entry-meta }
 
+{< pager }
+  {@gt key=pages value=1}
+    <ul class="b3-pager pager">
+      <li class="previous {^has_previous}disabled{/has_previous}">
+        <a href="#" class="b3-pager-previous">&larr; Previous</a>
+      </li>
+      {~s}
+      <li class="next {^has_next}disabled{/has_next}">
+        <a href="#" class="b3-pager-next">Next &rarr;</a>
+      </li>
+    </ul>
+  {/gt}
+{/ pager }
+
 {< pagination }
   {@gt key=pages value=1}
-    <ul class="pager">
-      <li class="{^has_previous}disabled{/has_previous}">
-        <a href="#" class="pagination-prev">&larr; Previous</a>
+    <ul class="b3-pagination pagination">
+      <li class="previous {^has_previous}disabled{/has_previous}">
+        <a class="b3-pagination-previous" href="#">&laquo;</a>
       </li>
-      <li class="{^has_next}disabled{/has_next}">
-        <a href="#" class="pagination-next">Next &rarr;</a>
+      {#pageIterator:pages}
+        <li class="number {?current}active{/current}">
+          <a href="{url}" data-page="{page}">
+            {page}
+            {?current}
+              {~s}
+              <span class="screen-reader-text">(current)</span>
+            {/current}
+          </a>
+        </li>
+      {/pageIterator}
+      <li class="next {^has_next}disabled{/has_next}">
+        <a class="b3-pagination-next" href="#">&raquo;</a>
       </li>
     </ul>
   {/gt}
@@ -23,6 +49,8 @@
 {< search }
   <form role="search" method="get" action="#" class="">
     <label class="screen-reader-text" for="search-site">Search for:</label>
-    <input type="search" placeholder="Enter search terms" class="form-control" name="s" id="search-site" value=""> <button class="search form-control" role="search"><span class="glyphicon glyphicon-search"></span> Search</button>
+    <input type="search" placeholder="Enter search terms" class="form-control" name="s" id="search-site" value="">
+    {~s}
+    <button class="search form-control" role="search"><span class="glyphicon glyphicon-search"></span> Search</button>
   </form>
 {/ search }

@@ -27,12 +27,22 @@ define([
 
     showPostById: function (id, page) {
       var post = this.posts.get(id);
-      post ? this.show(this.singleContentView(post, page)) : this.fetchModelBy(Post, 'ID', id, page);
+
+      if (post) {
+        this.show(this.singleContentView(post, page));
+      } else {
+        this.fetchModelBy(Post, 'ID', id, page);
+      }
     },
 
     showPostBySlug: function (slug, page) {
       var post = this.posts.where({slug: slug});
-      post.length > 0 ? this.show(this.singleContentView(post[0], page)) : this.fetchModelBy(Post, 'slug', slug, page);
+
+      if (post.length > 0) {
+        this.show(this.singleContentView(post[0], page));
+      } else {
+        this.fetchModelBy(Post, 'slug', slug, page);
+      }
     },
 
     showPageBySlug: function (slug, page) {

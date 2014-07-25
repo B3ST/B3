@@ -18,8 +18,8 @@ define([
 
     events: {
       'click .b3-post-title > a': 'selectPost',
-      'click .pagination-next':   'renderNextPage',
-      'click .pagination-prev':   'renderPrevPage'
+      'click .b3-pager-next':     'renderNextPage',
+      'click .b3-pager-previous': 'renderPrevPage'
     },
 
     collectionEvents: {

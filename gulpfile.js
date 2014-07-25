@@ -46,8 +46,8 @@ gulp.task('build:styles', function () {
 gulp.task('build:scripts', function () {
     return gulp.src('app/**/*.js')
         .pipe($.changed('dist/'))
-        .pipe($.uglify())
-        .on('error', _onError)
+        //.pipe($.uglify())
+        //.on('error', _onError)
         .pipe(gulp.dest('dist/'))
         .pipe($.size({title: 'scripts'}));
 });
@@ -153,6 +153,26 @@ gulp.task('test', ['jasmine', 'phpunit']);
  * gulp watch
  */
 gulp.task('watch', function () {
+    gulp.watch(['app/**/*.js', 'lib/**/*.js'],
+        ['build:scripts']);
+
+    gulp.watch('app/templates/**/*.{html,dust}',
+        ['build:templates']);
+
+    gulp.watch(['app/styles/**/*.{css,less,scss}', 'lib/**/*.{css,less,scss}'],
+        ['build:styles']);
+
+    gulp.watch(['app/assets/fonts/**/*.{eot,svg,ttf,woff}', 'lib/fonts/**/*.{eot,svg,ttf,woff}'],
+        ['build:fonts']);
+
+    gulp.watch('app/assets/images/**/*',
+        ['build:images']);
+});
+
+/**
+ * gulp watch:server
+ */
+gulp.task('watch:server', function () {
 
     browserSync({
         notify: false,

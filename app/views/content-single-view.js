@@ -20,9 +20,12 @@ define([
     childView: CommentView,
     tagName: 'div id="post"',
     events: {
-      'click .b3-reply-post':   'renderReplyBox', // from ReplyableView
-      'click .pagination-next': 'renderNextPage',
-      'click .pagination-prev': 'renderPrevPage'
+      'click .b3-reply-post':             'renderReplyBox', // from ReplyableView
+      'click .b3-pagination .next a':     'renderNextPage',
+      'click .b3-pagination .previous a': 'renderPrevPage',
+      'click .b3-pager-next':             'renderNextPage',
+      'click .b3-pager-previous':         'renderPrevPage',
+      'click .b3-pagination .number a':   'renderPageNumber'
     },
 
     initialize: function (options) {
@@ -30,7 +33,8 @@ define([
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
       });
-      this.page    = (options.page - 1) || 0;
+
+      this.page    = parseInt(options.page) || 1;
       this.content = this.model.get('content').split(/<!--nextpage-->/);
       this.post    = this.model;
       this.user    = options.user;
@@ -93,25 +97,47 @@ define([
       }
     },
 
+    renderPageNumber: function (event) {
+      event.preventDefault();
+
+      if (this.page !== event.target.dataset.page) {
+        this.page = event.target.dataset.page;
+        this.render();
+        this.navigate();
+      }
+    },
+
     displayError: function () {
       this.$('.b3-comments').text('Could not retrieve comments');
     },
 
     parseModel: function () {
       var model = this.model.toJSON();
-      model.content = this.content[this.page];
+      model.content = this.content[this.page - 1];
       return _.extend(model, this.getPagination());
     },
 
     getPagination: function () {
-      var next  = this.hasNext();
-      var prev  = this.hasPrevious();
-      var pages = this.content.length;
+      var vm = this;
 
       return {
-        'has_next':     next,
-        'has_previous': prev,
-        'pages':        pages
+        'has_next':     this.hasNext(),
+        'has_previous': this.hasPrevious(),
+        'pages':        this.content.length,
+
+        'pageIterator': function (chunk, context, bodies) {
+          var pages = context.current();
+
+          for (var page = 1; page <= pages; page++) {
+            chunk = chunk.render(bodies.block, context.push({
+              'page':    page,
+              'url':     vm.getRoute(page),
+              'current': parseInt(page) === parseInt(vm.page)
+            }));
+          }
+
+          return chunk;
+        }
       };
     },
 
@@ -121,15 +147,23 @@ define([
 
     hasNext: function () {
       var total = this.content.length;
-      return (total > 1 && this.page < total - 1);
+      return (total > 1 && this.page < total);
     },
 
     hasPrevious: function () {
-      return this.page > 0;
+      return this.page > 1;
+    },
+
+    getRoute: function (page) {
+      var route = '/post/' + this.model.get('slug');
+      if (page > 1) {
+        route += '/page/' +  page;
+      }
+      return route;
     },
 
     navigate: function () {
-      var route = '/post/' + this.model.get('slug') + '/page/' + (this.page + 1);
+      var route = this.getRoute(this.page);
       Navigator.navigate(route, false);
     }
   });
