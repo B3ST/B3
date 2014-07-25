@@ -137,6 +137,9 @@ require([
     root + 'core/views/menu-view.spec',
     root + 'core/views/menu-item-view.spec',
 
+    // helpers
+    root + 'core/helpers/post-filter.spec',
+
     // controllers
     root + 'core/controllers/controller.spec',
 
