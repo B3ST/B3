@@ -1,3 +1,5 @@
+'use strict';
+
 define([
   'jquery',
   'underscore',
@@ -11,8 +13,8 @@ define([
   'views/header-view',
   'views/footer-view'
 ], function ($,  _, Marionette, AppRouter, Controller, EventBus, Settings, User, Posts, HeaderView, FooterView) {
-  var App = new Backbone.Marionette.Application();
-  var user = new User({ID: 'me'});
+  var App   = new Backbone.Marionette.Application(),
+      user  = new User({ID: 'me'});
 
   App.navigate = function(route, options){
     options = options || {};
@@ -24,9 +26,28 @@ define([
     return (/iPhone|iPod|iPad|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
   };
 
+  function initializeLayout (menus) {
+    App.header.show(new HeaderView({menus: menus}));
+    App.footer.show(new FooterView());
+
+    App.appRouter = new AppRouter({
+      controller: new Controller({
+        app:   App,
+        posts: new Posts(),
+        user:  user,
+        menus: menus
+      })
+    });
+
+    if(Backbone.history) {
+      Backbone.history.start({pushState: true, root: Settings.get('path')});
+    }
+  };
+
   App.mobile = isMobile();
 
   App.addInitializer(function(options) {
+    $.get(Settings.get('url') + '/b3:menus').done(initializeLayout);
     user.fetch();
 
     EventBus.bind('router:nav', function (options) {
@@ -38,21 +59,6 @@ define([
       main:   '#main',
       footer: '#footer'
     });
-
-    App.header.show(new HeaderView());
-    App.footer.show(new FooterView());
-
-    App.appRouter = new AppRouter({
-      controller: new Controller({
-        app:   App,
-        posts: new Posts(),
-        user:  user
-      })
-    });
-
-    if(Backbone.history) {
-      Backbone.history.start({pushState: true, root: Settings.get('path')});
-    }
   });
 
   return App;

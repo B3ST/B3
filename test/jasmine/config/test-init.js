@@ -9,6 +9,7 @@ var deps = [
   "error/not-found-template",
   "forms/searchform-template",
   "forms/replyform-template",
+  "navigation/menus/menu-item-template"
 ];
 
 var config = {
@@ -28,9 +29,9 @@ var config = {
     "bootstrap":            root + "/lib/bootstrap",
     "text":                 root + "/lib/text",
 
-    "jasmine": root + "/libs/jasmine",
+    "jasmine":      root + "/libs/jasmine",
     "jasmine-html": root + "/libs/jasmine-html",
-    "sinon": root + "/libs/sinon",
+    "sinon":        root + "/libs/sinon",
   },
 
   shim: {
@@ -108,6 +109,8 @@ require([
     root + 'core/models/media-model.spec',
 
     root + 'core/models/settings-model.spec',
+    root + 'core/models/menu-model.spec',
+    root + 'core/models/menu-item-model.spec',
 
     // collections
     root + 'core/collections/user-collection.spec',
@@ -121,6 +124,8 @@ require([
     root + 'core/collections/term-collection.spec',
     root + 'core/collections/media-collection.spec',
 
+    root + 'core/collections/menu-item-collection.spec',
+
     // views
     root + 'core/views/header-view.spec',
     root + 'core/views/footer-view.spec',
@@ -129,6 +134,8 @@ require([
     root + 'core/views/comment-view.spec',
     root + 'core/views/not-found-view.spec',
     root + 'core/views/reply-form-view.spec',
+    root + 'core/views/menu-view.spec',
+    root + 'core/views/menu-item-view.spec',
 
     // controllers
     root + 'core/controllers/controller.spec',

@@ -11,6 +11,7 @@ var deps = [
   "error/not-found-template",
   "forms/searchform-template",
   "forms/replyform-template",
+  "navigation/menus/menu-item-template"
 ];
 
 var config = {
@@ -80,11 +81,10 @@ require([
   "models/settings-model",
   "models/user-model",
   "routers/app-router",
-  "controllers/controller",
   "jqueryui",
   "bootstrap",
   "backbone.validateAll"
-], function(_, $, Backbone, App, Settings, User, AppRouter, Controller) {
+], function(_, $, Backbone, App, Settings, User, AppRouter) {
   var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
   Backbone.Model.prototype.toJSON = function() {
@@ -161,10 +161,6 @@ require([
 
     return Backbone.sync(method, model, options);
   };
-
-  App.appRouter = new AppRouter({
-    controller: new Controller()
-  });
 
   App.start();
 });

@@ -8,12 +8,10 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a class="navbar-brand" id="b3-header" href="#">{name}</a>
+      <a class="navbar-brand" id="b3-home" href="#">{name}</a>
     </div>
 
-    <nav class="navbar-collapse collapse">
-      <ul id="#menu-primary" class="nav navbar-nav">{! TODO: GET /b3:menus/primary !}</ul>
-
+    <nav id="b3-header-nav" class="navbar-collapse collapse">
       <form role="search" method="get" action="#" class="navbar-form navbar-right">
         <label class="screen-reader-text" for="search-site">Search for:</label>
         <input type="search" placeholder="Enter search terms" class="form-control" name="s" id="search-site" value="">

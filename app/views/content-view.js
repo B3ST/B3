@@ -68,7 +68,7 @@ define([
     },
 
     getDustTemplate: function () {
-      return _.extend({b3type: 'posts', b3folder: 'archive'}, this.getPagination());
+      return _.extend({'parent-template': 'archive/posts-template.dust'}, this.getPagination());
     },
 
     getPagination: function () {
