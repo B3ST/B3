@@ -2,7 +2,8 @@ var root = "../../../..";
 var deps = [
   "header-template",
   "footer-template",
-  "content/post-template",
+  "content/type-post-template",
+  "content/type-page-template",
   "content/content-template",
   "content/comments/comment-template",
   "archive/posts-template",
@@ -28,10 +29,9 @@ var config = {
     "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
     "bootstrap":            root + "/lib/bootstrap",
     "text":                 root + "/lib/text",
-
-    "jasmine":      root + "/libs/jasmine",
-    "jasmine-html": root + "/libs/jasmine-html",
-    "sinon":        root + "/libs/sinon",
+    "jasmine":              root + "/libs/jasmine",
+    "jasmine-html":         root + "/libs/jasmine-html",
+    "sinon":                root + "/libs/sinon",
   },
 
   shim: {

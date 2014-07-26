@@ -61,7 +61,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/posts/1/b3:replies/1',
+            Settings.get('apiUrl') + '/posts/1/b3:replies/1',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -81,7 +81,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/posts/1/b3:replies/1',
+            Settings.get('apiUrl') + '/posts/1/b3:replies/1',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -132,7 +132,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/posts/1/b3:replies/1',
+            Settings.get('apiUrl') + '/posts/1/b3:replies/1',
             [ 200, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
           var parent = this.model.parent();

@@ -11,6 +11,8 @@ define([
   'app',
   'sinon'
 ], function (Controller, Settings, User, Post, Page, Posts, ContentView, ContentSingleView, NotFoundView, App) {
+  'use strict';
+
   describe("Controller", function() {
     beforeEach(function() {
       this.app  = App;
@@ -22,7 +24,7 @@ define([
       this.server = sinon.fakeServer.create();
       this.server.respondWith(
         'GET',
-        Settings.get('url') + '/posts',
+        Settings.get('apiUrl') + '/posts',
         [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
       );
 
@@ -35,7 +37,7 @@ define([
       this.app.footer.$el.html('');
     });
 
-    describe(".showPostPage", function() {
+    describe(".showArchive", function() {
       it("should fetch the collection of posts of a given page", function() {
         this.spy = spyOn(Posts.prototype, 'fetch');
         this.controller = new Controller({
@@ -44,7 +46,7 @@ define([
           user:  this.user
         });
 
-        this.controller.showPostPage(2);
+        this.controller.showArchive(2);
         this.server.respond();
 
         expect(this.spy).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
@@ -58,7 +60,7 @@ define([
           user:  this.user
         });
 
-        this.controller.showPostPage(2);
+        this.controller.showArchive(2);
         this.server.respond();
 
         expect(this.spy.mostRecentCall.args[0] instanceof ContentView).toBeTruthy();
@@ -110,7 +112,7 @@ define([
             this.server = sinon.fakeServer.create();
             this.server.respondWith(
               'GET',
-              Settings.get('url') + '/posts/2',
+              Settings.get('apiUrl') + '/posts/2',
               [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
             );
 
@@ -134,7 +136,7 @@ define([
             this.server = sinon.fakeServer.create();
             this.server.respondWith(
               'GET',
-              Settings.get('url') + '/posts/2',
+              Settings.get('apiUrl') + '/posts/2',
               [404, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
             );
 
@@ -198,7 +200,7 @@ define([
             this.server = sinon.fakeServer.create();
             this.server.respondWith(
               'GET',
-              Settings.get('url') + '/posts/b3:slug:post-slug-2',
+              Settings.get('apiUrl') + '/posts/b3:slug:post-slug-2',
               [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response.toJSON())]
             );
 
@@ -222,7 +224,7 @@ define([
             this.server = sinon.fakeServer.create();
             this.server.respondWith(
               'GET',
-              Settings.get('url') + '/posts/b3:slug:post-slug-2',
+              Settings.get('apiUrl') + '/posts/b3:slug:post-slug-2',
               [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
             );
 
@@ -260,7 +262,7 @@ define([
           this.server = sinon.fakeServer.create();
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/pages/page-slug',
+            Settings.get('apiUrl') + '/pages/page-slug',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -283,7 +285,7 @@ define([
           this.server = sinon.fakeServer.create();
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/pages/page-slug',
+            Settings.get('apiUrl') + '/pages/page-slug',
             [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
           );
 

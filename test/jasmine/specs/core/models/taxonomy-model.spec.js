@@ -46,7 +46,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/taxonomies/category',
+            Settings.get('apiUrl') + '/taxonomies/category',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
@@ -64,7 +64,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            Settings.get('url') + '/taxonomies/category',
+            Settings.get('apiUrl') + '/taxonomies/category',
             [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

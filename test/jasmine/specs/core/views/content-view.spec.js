@@ -62,7 +62,7 @@ define([
         this.server = sinon.fakeServer.create();
         this.server.respondWith(
           'GET',
-          Settings.get('url') + '/posts?page=2',
+          Settings.get('apiUrl') + '/posts?page=2',
           [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response)]
         );
 

@@ -45,10 +45,11 @@ define([
      */
     selectMenu: function (ev) {
       var link     = ev.currentTarget.href;
-      var siteUrl  = Settings.get('url');
-      var resource = link.replace(siteUrl, '');
+      var baseUrl  = Settings.get('url');
+      var resource = link.replace(baseUrl, '');
 
-      if (link.indexOf(siteUrl) < 0) {
+      // Do not handle external links:
+      if (link.indexOf(baseUrl) !== 0) {
         return;
       }
 

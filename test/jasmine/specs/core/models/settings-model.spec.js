@@ -3,7 +3,7 @@ define([
 ], function (Settings) {
   describe("Settings", function() {
     it("should indicate the WP URL Root", function() {
-      expect(Settings.get('url')).toBeDefined();
+      expect(Settings.get('apiUrl')).toBeDefined();
     });
 
     it("should carry the WP Nonce", function() {

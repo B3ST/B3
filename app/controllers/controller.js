@@ -19,7 +19,20 @@ define([
       this.user  = options.user;
     },
 
-    showPostPage: function (page) {
+    /**
+     * Display home.
+     * @return {[type]} [description]
+     */
+    showHome: function () {
+      // TODO: Display either a post list or a page according to WordPress'
+      // home page settings (full post list vs page ID):
+      //
+      //    this.fetchModelBy(Page, 'id', id);
+
+      this.showArchive();
+    },
+
+    showArchive: function (page) {
       page = page || 1;
       this.posts.fetch({reset: true, data: $.param({ page: page })});
       this.show(this.contentView(this.posts, page));
