@@ -3,6 +3,7 @@ define([
   'backbone',
   'models/revision-model'
 ], function ($, Backbone, Revision) {
+  'use strict';
   var Revisions = Backbone.Collection.extend({
     model: Revision,
     comparator: function (revision) {

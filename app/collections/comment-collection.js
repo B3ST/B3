@@ -3,6 +3,7 @@ define([
   'backbone',
   'models/comment-model'
 ], function ($, Backbone, Comment) {
+  'use strict';
   var Comments = Backbone.Collection.extend({
     model:      Comment,
     comparator: function (comment) {

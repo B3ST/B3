@@ -11,7 +11,7 @@ define([
   'controllers/navigator',
   'header-template'
 ], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, EventBus, Navigator) {
-  'use strict;'
+  'use strict';
 
   var HeaderView = Backbone.Marionette.ItemView.extend({
     template: 'header-template.dust',

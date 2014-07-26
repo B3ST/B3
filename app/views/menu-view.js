@@ -6,7 +6,7 @@ define([
   'models/menu-item-model',
   'views/menu-item-view'
 ], function ($, Marionette, dust, dustMarionette, MenuItem, MenuItemView) {
-  'use strict;'
+  'use strict';
 
   var MenuView = Backbone.Marionette.CollectionView.extend({
     childView: MenuItemView,
