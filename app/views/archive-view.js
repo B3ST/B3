@@ -8,13 +8,13 @@ define([
   'controllers/event-bus',
   'controllers/navigator',
   'archive/posts-template',
-  'content/content-template'
+  'main-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator) {
   'use strict';
 
-  var ContentView = Backbone.Marionette.ItemView.extend({
+  var ArchiveView = Backbone.Marionette.ItemView.extend({
     tagName:  'div id="posts" class="container"',
-    template: 'content/content-template.dust',
+    template: 'main-template.dust',
 
     events: {
       'click .b3-post-title > a': 'selectPost',
@@ -100,5 +100,5 @@ define([
     }
   });
 
-  return ContentView;
+  return ArchiveView;
 });

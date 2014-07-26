@@ -1,6 +1,6 @@
 {!
 {> "views/error-view-template.dust" /}
-{> "views/content-single-view-template.dust" /}
+{> "views/single-post-view-template.dust" /}
 !}
 
 {< search-form }

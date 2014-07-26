@@ -5,12 +5,12 @@ define([
   'models/post-model',
   'models/page-model',
   'collections/post-collection',
-  'views/content-view',
-  'views/content-single-view',
+  'views/archive-view',
+  'views/single-post-view',
   'views/not-found-view',
   'app',
   'sinon'
-], function (Controller, Settings, User, Post, Page, Posts, ContentView, ContentSingleView, NotFoundView, App) {
+], function (Controller, Settings, User, Post, Page, Posts, ArchiveView, SinglePostView, NotFoundView, App) {
   'use strict';
 
   describe("Controller", function() {
@@ -63,7 +63,7 @@ define([
         this.controller.showArchive(2);
         this.server.respond();
 
-        expect(this.spy.mostRecentCall.args[0] instanceof ContentView).toBeTruthy();
+        expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
       });
     });
 
@@ -84,7 +84,7 @@ define([
         this.controller.showPostById(1);
 
         var view = this.spy.mostRecentCall.args[0];
-        expect(view instanceof ContentSingleView).toBeTruthy();
+        expect(view instanceof SinglePostView).toBeTruthy();
         expect(view.model).toEqual(posts[0]);
       });
 
@@ -125,7 +125,7 @@ define([
             this.server.respond();
 
             var view = this.spy.mostRecentCall.args[0];
-            expect(view instanceof ContentSingleView).toBeTruthy();
+            expect(view instanceof SinglePostView).toBeTruthy();
             expect(view.model).toBeDefined();
           });
         });
@@ -172,7 +172,7 @@ define([
         this.controller.showPostBySlug('post-slug-1');
 
         var view = this.spy.mostRecentCall.args[0];
-        expect(view instanceof ContentSingleView).toBeTruthy();
+        expect(view instanceof SinglePostView).toBeTruthy();
         expect(view.model).toEqual(posts[0]);
       });
 
@@ -213,7 +213,7 @@ define([
             this.server.respond();
 
             var view = this.spy.mostRecentCall.args[0];
-            expect(view instanceof ContentSingleView).toBeTruthy();
+            expect(view instanceof SinglePostView).toBeTruthy();
             expect(view.model).toBeDefined();
           });
         });
@@ -274,7 +274,7 @@ define([
           this.server.respond();
 
           var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof ContentSingleView).toBeTruthy();
+          expect(view instanceof SinglePostView).toBeTruthy();
           expect(view.model).toBeDefined();
         });
       });

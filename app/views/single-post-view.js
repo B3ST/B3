@@ -12,14 +12,14 @@ define([
   'views/reply-form-view',
   'views/replyable-view',
   // Shims:
-  'content/content-template',
+  'main-template',
   'content/type-post-template',
   'content/type-page-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, Settings, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   'use strict';
 
   var view = _.extend(ReplyableView, {
-    template:  'content/content-template.dust',
+    template:  'main-template.dust',
     childView: CommentView,
     tagName: 'div id="post"',
     events: {
@@ -199,6 +199,7 @@ define([
     }
   });
 
-  var ContentSingleView = Backbone.Marionette.CompositeView.extend(view);
-  return ContentSingleView;
+  var SinglePostView = Backbone.Marionette.CompositeView.extend(view);
+
+  return SinglePostView;
 });
