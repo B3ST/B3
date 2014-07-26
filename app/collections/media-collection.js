@@ -6,7 +6,7 @@ define([
 ], function ($, Backbone, Media, Settings) {
   var Medias = Backbone.Collection.extend({
     model: Media,
-    url: Settings.get('url') + '/media'
+    url: Settings.get('apiUrl') + '/media'
   });
 
   return Medias;

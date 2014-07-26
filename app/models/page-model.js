@@ -6,6 +6,7 @@ define([
   'models/settings-model',
   'models/commentable-model'
 ], function ($, _, Backbone, User, Settings, Commentable) {
+  'use strict';
   var view = _.extend({
     defaults: {
       ID             : null,
@@ -35,7 +36,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: Settings.get('url') + '/pages',
+    urlRoot: Settings.get('apiUrl') + '/pages',
 
     url: function () {
       return this.get('ID') ? (this.urlRoot + '/' + this.get('ID'))

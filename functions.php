@@ -135,15 +135,16 @@ class B3Theme {
 
         $site_url_components = parse_url( site_url() );
 
-        $permastructs = $this->_get_permastructs();
+        $routes = $this->_get_permastructs();
 
         $settings = array(
-            'path'         => (string) $site_url_components['path'],
-            'root'         => get_stylesheet_directory_uri(),
-            'url'          => home_url( json_get_url_prefix() ),
-            'name'         => get_bloginfo( 'name' ),
-            'nonce'        => wp_create_nonce( 'wp_json' ),
-            'permastructs' => $permastructs,
+            'url'    => site_url(),
+            'path'   => (string) $site_url_components['path'],
+            'apiUrl' => home_url( json_get_url_prefix() ),
+            'root'   => get_stylesheet_directory_uri(),
+            'name'   => get_bloginfo( 'name' ),
+            'nonce'  => wp_create_nonce( 'wp_json' ),
+            'routes' => $routes,
             );
 
         wp_register_script( $this->slug . '-settings', $this->settings_uri );

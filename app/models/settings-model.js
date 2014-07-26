@@ -6,14 +6,15 @@ define([
 ], function ($, Backbone) {
   var Settings = Backbone.Model.extend({
     defaults: {
-      url:          WP_API_SETTINGS.url,
-      nonce:        WP_API_SETTINGS.nonce,
-      name:         WP_API_SETTINGS.name,
-      root:         WP_API_SETTINGS.root,
-      path:         WP_API_SETTINGS.path,
-      permastructs: WP_API_SETTINGS.permastructs
+      name:     WP_API_SETTINGS.name,
+      url:      WP_API_SETTINGS.url,
+      path:     WP_API_SETTINGS.path,
+      apiUrl:   WP_API_SETTINGS.apiUrl,
+      themeUrl: WP_API_SETTINGS.themeUrl,
+      nonce:    WP_API_SETTINGS.nonce,
+      routes:   WP_API_SETTINGS.routes
     }
   });
-  
+
   return new Settings();
 });

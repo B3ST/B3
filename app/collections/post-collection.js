@@ -6,7 +6,7 @@ define([
 ], function ($, Backbone, Post, Settings) {
   var Posts = Backbone.Collection.extend({
     model: Post,
-    url: Settings.get('url') + '/posts'
+    url: Settings.get('apiUrl') + '/posts'
   });
 
   return Posts;

@@ -4,6 +4,7 @@ define([
   'models/settings-model',
   'collections/term-collection',
 ], function ($, Backbone, Settings, Terms) {
+  'use strict';
   var Taxonomy = Backbone.Model.extend({
     defaults: {
       name         : '',
@@ -16,7 +17,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: Settings.get('url') + '/taxonomies',
+    urlRoot: Settings.get('apiUrl') + '/taxonomies',
 
     fetchTerms: function (callbacks, id) {
       id = id || '';

@@ -4,6 +4,7 @@ define([
   'models/user-model',
   'models/settings-model'
 ], function ($, Backbone, User, Settings) {
+  'use strict';
   var Comment = Backbone.Model.extend({
     defaults: {
       ID       : null,
@@ -19,9 +20,9 @@ define([
     },
 
     url: function () {
-      var cid = (this.get('ID') || ''),
-          pid = (this.get('post') || '');
-      return Settings.get('url') + '/posts/' + pid + '/b3:replies/' + cid;
+      var cid = (this.get('ID') || '');
+      var pid = (this.get('post') || '');
+      return Settings.get('apiUrl') + '/posts/' + pid + '/b3:replies/' + cid;
     }
   });
 

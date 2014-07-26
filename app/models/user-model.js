@@ -3,6 +3,7 @@ define([
   'backbone',
   'models/settings-model'
 ], function ($, Backbone, Settings) {
+  'use strict';
   var User = Backbone.Model.extend({
     defaults: {
       ID         : null,
@@ -19,7 +20,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: Settings.get('url') + '/users',
+    urlRoot: Settings.get('apiUrl') + '/users',
   });
 
   return User;

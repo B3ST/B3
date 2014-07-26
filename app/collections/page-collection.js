@@ -6,7 +6,7 @@ define([
 ], function ($, Backbone, Page, Settings) {
   var Pages = Backbone.Collection.extend({
     model: Page,
-    url: Settings.get('url') + '/pages'
+    url: Settings.get('apiUrl') + '/pages'
   });
 
   return Pages;

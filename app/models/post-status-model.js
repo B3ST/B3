@@ -3,6 +3,7 @@ define([
   'backbone',
   'models/settings-model'
 ], function ($, Backbone, Settings) {
+  'use strict';
   var PostStatus = Backbone.Model.extend({
     defaults: {
       name         : '',
@@ -16,7 +17,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: Settings.get('url') + '/posts/statuses'
+    urlRoot: Settings.get('apiUrl') + '/posts/statuses'
   });
 
   return PostStatus;

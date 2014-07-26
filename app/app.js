@@ -47,7 +47,7 @@ define([
   App.mobile = isMobile();
 
   App.addInitializer(function(options) {
-    $.get(Settings.get('url') + '/b3:menus').done(initializeLayout);
+    $.get(Settings.get('apiUrl') + '/b3:menus').done(initializeLayout);
     user.fetch();
 
     EventBus.bind('router:nav', function (options) {

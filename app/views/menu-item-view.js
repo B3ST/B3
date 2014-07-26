@@ -38,14 +38,24 @@ define([
       return _.extend(this.model.attributes, {dropdown: this.dropdown});
     },
 
+    /**
+     * Handle menu selection (click) events.
+     *
+     * @param {Event} ev Click event.
+     */
     selectMenu: function (ev) {
-      ev.preventDefault();
-      if (!this.dropdown) {
-        var link     = ev.currentTarget.href,
-            resource = link.split(Settings.get('path'))[1],
-            route    = this.model.get('object_type').replace('page', '') + resource;
+      var link     = ev.currentTarget.href;
+      var siteUrl  = Settings.get('url');
+      var resource = link.replace(siteUrl, '');
 
-        Navigator.navigate(route, true);
+      if (link.indexOf(siteUrl) < 0) {
+        return;
+      }
+
+      ev.preventDefault();
+
+      if (!this.dropdown) {
+        Navigator.navigate(resource, true);
         this.activateMenu();
         this.triggerMenuSelected(this.model.get('ID'), this.model.get('parent'));
       }
@@ -66,8 +76,7 @@ define([
     },
 
     deactivateMenu: function (id) {
-      if (this.itemId !== id
-                  && this.model.get('ID') !== id) {
+      if (this.itemId !== id && this.model.get('ID') !== id) {
         this.$el.removeClass('active');
       }
     },

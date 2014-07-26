@@ -4,6 +4,7 @@ define([
   'models/user-model',
   'models/settings-model'
 ], function ($, Backbone, User, Settings) {
+  'use strict';
   var Revision = Backbone.Model.extend({
     defaults: {
       ID           : null,
@@ -28,9 +29,9 @@ define([
     },
 
     url: function () {
-      var pid = this.get('post') || '',
-          rid = this.get('ID') || '';
-      return Settings.get('url') + '/posts/' + pid + '/revisions/' + rid;
+      var pid = this.get('post') || '';
+      var rid = this.get('ID') || '';
+      return Settings.get('apiUrl') + '/posts/' + pid + '/revisions/' + rid;
     }
   });
 
