@@ -2,7 +2,7 @@ define([
   'jquery',
   'backbone'
 ], function ($, Backbone) {
-  'use strict;'
+  'use strict';
 
   var MenuItem = Backbone.Model.extend({
     defaults: {

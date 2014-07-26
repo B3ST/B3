@@ -35,5 +35,5 @@ define([
     }
   });
 
-  return Revision
+  return Revision;
 });

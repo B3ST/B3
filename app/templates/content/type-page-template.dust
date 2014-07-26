@@ -1,0 +1,36 @@
+<article class="{post_class}">
+
+  <header class="jumbotron">
+    <div class="container">
+      <h1 class="b3-post-title post-title entry-title">
+        {title|s}
+      </h1>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="b3-post-content entry-content post-content">
+      {content|s}
+    </div>
+
+    <footer>
+      {+ entry-meta /}
+    </footer>
+
+    <aside class="post-comments">
+      {@eq key=comment_status value="open"}
+        <a href="#reply" class="b3-reply-post button reply" role="button">
+          <span class="glyphicon glyphicon-comment"></span> Reply
+        </a>
+
+        <div class="b3-reply-section"></div>
+      {/eq}
+
+      <ul class="comments b3-comments"></ul>
+    </aside>
+  </div>
+
+</article>
+
+{+ pagination /}

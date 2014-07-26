@@ -1,9 +1,8 @@
-'use strict';
-
 define([
   'jquery',
   'backbone'
 ], function ($, Backbone) {
+  'use strict';
   var Item = Backbone.Model.extend({
     defaults: {
       ID:            null,

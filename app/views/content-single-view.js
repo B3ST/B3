@@ -10,8 +10,10 @@ define([
   'views/comment-view',
   'views/reply-form-view',
   'views/replyable-view',
+  // Shims:
   'content/content-template',
-  'content/post-template'
+  'content/type-post-template',
+  'content/type-page-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   'use strict';
 
@@ -141,8 +143,19 @@ define([
       };
     },
 
+    /**
+     * [getDustTemplate description]
+     * @return {[type]} [description]
+     */
     getDustTemplate: function () {
-      return {'parent-template': 'content/post-template.dust'};
+      var template = 'content/type-post-template.dust';
+      var type     = this.post.get('type');
+
+      if (config.paths['content/type-' + type + '-template']) {
+        template = 'content/type-' + type + '-template.dust';
+      }
+
+      return { 'parent-template': template };
     },
 
     hasNext: function () {

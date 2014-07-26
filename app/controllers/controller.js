@@ -46,7 +46,7 @@ define([
     },
 
     showPageBySlug: function (slug, page) {
-      this.fetchModelBy(Page, 'slug', slug);
+      this.fetchModelBy(Page, 'slug', slug, page);
     },
 
     fetchModelBy: function (model, field, value, page) {

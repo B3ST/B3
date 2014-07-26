@@ -4,7 +4,8 @@ var root = WP_API_SETTINGS.root;
 var deps = [
   "header-template",
   "footer-template",
-  "content/post-template",
+  "content/type-post-template",
+  "content/type-page-template",
   "content/content-template",
   "content/comments/comment-template",
   "archive/posts-template",

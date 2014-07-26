@@ -26,7 +26,7 @@ define([
       } else {
         $.get(this.get('meta').links.archives)
           .done(function (data) {
-            var init = (id == '' ? Terms : new Terms().model);
+            var init = (id === '' ? Terms : new Terms().model);
             if (callbacks.done) {
               callbacks.done(new init(data));
             }

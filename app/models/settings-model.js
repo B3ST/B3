@@ -1,9 +1,9 @@
-'use strict';
-
 define([
   'jquery',
   'backbone'
 ], function ($, Backbone) {
+  'use strict';
+
   var Settings = Backbone.Model.extend({
     defaults: {
       name:     WP_API_SETTINGS.name,
