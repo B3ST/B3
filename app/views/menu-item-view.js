@@ -10,7 +10,7 @@ define([
   'controllers/navigator',
   'navigation/menus/menu-item-template'
 ], function ($, _, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {
-  'use strict;'
+  'use strict';
 
   var ItemView = Backbone.Marionette.ItemView.extend({
     template: "navigation/menus/menu-item-template.dust",
