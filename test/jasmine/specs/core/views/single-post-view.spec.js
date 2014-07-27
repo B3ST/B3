@@ -171,17 +171,38 @@ define([
       });
     });
 
-    describe("When replying to the post", function() {
+    describe("Replying to the post", function() {
       it("should display a comment box", function() {
-        this.post = new Post({ID: 1});
+        var that = this;
+
+        this.post = new Post({ID: 1, comment_status: 'open'});
         this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
-        this.view.$('.b3-reply-post').click();
+        var template = new ReplyFormView({
+          parentView: that.view,
+          user: that.user,
+          model: that.post,
+          parentId: 0
+        }).render().el;
 
-        var template = new ReplyFormView({parentView: this.view, user: this.user}).render().el;
-        var box      = this.view.$('.b3-reply-section').children()[0];
-        expect(box.isEqualNode(template)).toBeTruthy();
+        $(template).slideDown();
+
+        var button = this.view.$('.b3-reply-post');
+        var box;
+
+        runs(function() {
+          button.click();
+        });
+
+        waitsFor(function() {
+          box = $(button).next('#b3-replyform');
+          return box.length > 0;
+        }, "the comment form to appear.", 750);
+
+        runs(function() {
+          expect(box[0].isEqualNode(template)).toBeTruthy();
+        });
       });
     });
 

@@ -26,7 +26,7 @@ define([
     },
 
     events: {
-      'click .b3-reply-comment': 'renderReplyBox',
+      'click .b3-reply-comment': 'renderReplyBox', // from ReplyableView
     },
 
     parentId: function () {

@@ -12,48 +12,47 @@ define([
 
       this.clickedReplyButton = $(event.currentTarget);
 
-      if (!this.replyBoxRendered) {
-        this.renderIt();
+      if (!this.replyForm || !this.replyForm.el || this.$(this.replyForm.el).empty) {
+        this.renderReplyForm();
       }
 
       return false;
     },
 
-    renderIt: function () {
+    renderReplyForm: function () {
       /**
        * TODO:
        * - Rename "model" to "post"
        * - model should be either:
-       *   - A new Comment model
-       *   - A saved Comment model (see https://trello.com/c/MliJUQ6n)
+       *   - A new, empty Comment model
+       *   - A locally stored Comment model (see https://trello.com/c/MliJUQ6n)
        */
-      this.replyBox = new ReplyFormView({
+      this.replyForm = new ReplyFormView({
         model:      this.post,
         user:       this.user,
         parentView: this,
         parentId:   this.parentId()
       });
 
-      this.replyBox.render();
-
-      $(this.clickedReplyButton).after(this.replyBox.el);
-      $(this.clickedReplyButton).hide();
-      this.replyBoxRendered = true;
+        this.replyForm.render();
+        $(this.clickedReplyButton).after(this.replyForm.el);
     },
 
     parentId: function () {
       return 0;
     },
 
-    replyRendered: function () {
-
+    replyFormRendered: function () {
+      var that = this;
+      $(this.clickedReplyButton).fadeOut('fast', function () {
+        $(that.replyForm.el).slideDown('slow');
+      });
     },
 
-    replyDestroyed: function () {
-      $(this.clickedReplyButton).show();
-      $(this.replyBox.el).remove();
-      this.replyBoxRendered = false;
-      this.replyBox = null;
+    replyFormDestroyed: function () {
+      $(this.clickedReplyButton).fadeIn('fast');
+      $(this.replyForm.el).remove();
+      this.replyForm = null;
     },
   };
 

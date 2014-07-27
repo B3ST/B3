@@ -15,7 +15,7 @@ define([
 
   describe("ReplyFormView", function() {
     beforeEach(function() {
-      this.parentView = jasmine.createSpyObj('parentView', ['replyRendered', 'replyDestroyed']);
+      this.parentView = jasmine.createSpyObj('parentView', ['replyFormRendered', 'replyFormDestroyed']);
       this.user       = new User({ID: 1, name: 'name'});
       this.post       = new Post({ID: 1});
     });
@@ -37,8 +37,8 @@ define([
         expect(this.view.el).toBeDefined();
       });
 
-      it("should warn the parent view that the view was rendered", function() {
-        expect(this.parentView.replyRendered).toHaveBeenCalled();
+      it("should tell the parent view that the view was rendered", function() {
+        expect(this.parentView.replyFormRendered).toHaveBeenCalled();
       });
 
       describe("while the user is logged in", function() {
@@ -74,8 +74,8 @@ define([
         expect(this.spy).toHaveBeenCalled();
       });
 
-      it("should warn the parent view that the view was destroyed", function() {
-        expect(this.parentView.replyDestroyed).toHaveBeenCalled();
+      it("should tell the parent view that the view was destroyed", function() {
+        expect(this.parentView.replyFormDestroyed).toHaveBeenCalled();
       });
     });
 
@@ -91,16 +91,16 @@ define([
         this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user, parentId: 0});
         this.view.render();
 
-        this.view.$('#b3-replybox').val('Some reply');
+        this.view.$('[name="comment_content"]').val('Some reply');
       });
 
       afterEach(function() {
         this.xhr.restore();
       });
 
-      it("should warn the parent view that the view was destroyed", function() {
+      xit("should tell the parent view that the view was destroyed", function() {
         this.view.$('#b3-replybutton').click();
-        expect(this.parentView.replyDestroyed).toHaveBeenCalled();
+        expect(this.parentView.replyFormDestroyed).toHaveBeenCalled();
       });
 
       describe("while the user is logged in", function() {
@@ -115,7 +115,7 @@ define([
           expect(JSON.parse(this.requests[0].requestBody)).toEqual(comment.toJSON());
         });
 
-        it("should trigger an event with the newly created comment", function() {
+        it("should trigger an event for the newly created comment", function() {
           this.xhr.restore();
 
           var response = {"ID":59,"post":1,"content":"<p>reply to the post<\/p>\n","status":"approved","type":"comment","parent":0,"author":1,"date":"2014-07-23T09:10:51+00:00","date_tz":"UTC","date_gmt":"2014-07-23T09:10:51+00:00","meta":{"links":{"up":"http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/16","self":"http:\/\/localhost:8888\/wordpress\/wp-json\/b3:comments\/59"}}};
@@ -132,9 +132,9 @@ define([
           expect(this.eventBus).toHaveBeenCalledWith('comment:create', jasmine.any(Comment));
         });
 
-        describe("when there is no reply", function() {
+        describe("and there is no comment text", function() {
           beforeEach(function() {
-            this.view.$('#b3-replybox').val('');
+            this.view.$('[name="comment_content"]').val('');
             this.view.$('#b3-replybutton').click();
           });
 
@@ -143,24 +143,27 @@ define([
           });
 
           it("should display a warning", function() {
+            console.log(this.view);
+            console.log(this.view.$('#b3-warning'));
             expect(this.view.$('#b3-warning').text()).not.toEqual('');
           });
         });
       });
 
-      describe("When user is not logged in", function() {
+      describe("when user is not logged in", function() {
         beforeEach(function() {
           this.user = new User();
           this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user, parentId: 0});
           this.view.render();
 
-          this.view.$('#b3-replybox').val('Some reply');
-          this.view.$('#b3-author-name').val('Author Name');
-          this.view.$('#b3-author-email').val('author@email.com');
+          this.view.$('[name="comment_content"]').val('Some reply');
+          this.view.$('[name="author_name"]').val('Author Name');
+          this.view.$('[name="author_email"]').val('author@email.com');
+          this.view.$('[name="author_url"]').val('http://log.pt/');
         });
 
         it("should create a comment with the given name and email", function() {
-          var user = new User({name: 'Author Name', email: 'author@email.com'});
+          var user = new User({name: 'Author Name', email: 'author@email.com', URL: 'http://log.pt/'});
           var comment = new Comment({
             content:        'Some reply',
             post:           this.post.get('ID'),
@@ -172,12 +175,12 @@ define([
           expect(JSON.parse(this.requests[0].requestBody)).toEqual(comment.toJSON());
         });
 
-        using('view fields', ['#b3-author-name', '#b3-author-email'], function (field) {
-          describe("When " + field + " is missing", function() {
+        using('view fields', ['author_name', 'author_email'], function (field) {
+          describe("and " + field + " is missing", function() {
             beforeEach(function() {
-              this.view.$('#b3-replybox').val('Some reply');
+              this.view.$('[name="comment_content"]').val('Some reply');
 
-              this.view.$(field).val('');
+              this.view.$('[name="' + field + '"]').val('');
               this.view.$('#b3-replybutton').click();
             });
 

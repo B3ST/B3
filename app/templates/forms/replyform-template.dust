@@ -4,40 +4,48 @@
     {?guest}
       <div id="b3-author">
         <div class="form-group" id="b3-author-name-group">
-          <label for="b3-author-name" class="control-label">Your Name:</label>
-          <input type="text" class="form-control" id="b3-author-name" value="{name}">
+          <label for="b3-author-name" class="control-label">Your name:</label>
+          <input type="text" class="form-control required" name="author_name" value="{author.name}" required>
         </div>
 
         <div class="form-group" id="b3-author-email-group">
-          <label for="b3-author-email" class="control-label">Your Email:</label>
-          <input type="email" class="form-control" id="b3-author-email" value="{email}">
+          <label for="b3-author-email" class="control-label">Your email:</label>
+          <input type="email" class="form-control required" name="author_email" value="{author.email}" required>
+
+          <p class="form-help">
+            Your email address will not be published.
+          </p>
         </div>
 
         <div class="form-group" id="b3-author-url-group">
-          <label for="b3-author-url" class="control-label">Your Site:</label>
-          <input type="url" class="form-control" id="b3-author-url" value="{URL}">
+          <label for="b3-author-url" class="control-label">Your site:</label>
+          <input type="url" class="form-control" name="author_url" value="{author.URL}">
         </div>
       </div>
     {:else}
       <div class="alert alert-info" role="alert">
-        <button type="button" class="close" data-dismiss="alert">
-          <span aria-hidden="true">&times;</span>
-          <span class="screen-reader-text">Close</span>
-        </button>
-        You are commenting as {name}. <a href="#" class="logout">Not {name}?</a>
+        <span class="icon-info"></span>
+        {~s} You are commenting as <strong>{author.name}</strong>. (<a href="#" class="logout">Not {author.name}?</a>)
       </div>
     {/guest}
 
-    <div class="form-group" id="b3-replybox-group">
-      <label for="b3-replybox" class="control-label">Your Comment:</label>
-      <textarea class="form-control" rows="5" id="b3-replybox"></textarea>
+    <div class="form-group" id="b3-comment-content-group">
+      <label for="b3-comment-content" class="control-label">Your comment:</label>
+      <textarea class="form-control required" rows="5" name="comment_content" required>{comment}</textarea>
+
+      <p class="form-help">
+        You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:
+        {~s} <code>&lt;a href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt;
+        {~s} &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt;
+        {~s} &lt;i&gt; &lt;q cite=""&gt; &lt;strike&gt; &lt;strong&gt;</code>.
+      </p>
     </div>
 
     <div id="b3-warning" role="alert"></div>
 
     <div id="b3-replyactions">
-      <button class="reply" id="b3-replybutton"><span class="icon-send"></span>{~s}Reply</button>
-      <a href="#" class="cancel pull-right" id="b3-cancel"><span class="icon-cancel"></span>{~s}Dismiss</a>
+      <button class="reply" id="b3-replybutton"><span class="icon-send"></span>{~s}Publish Comment</button>
+      <a href="#" class="cancel" id="b3-cancel"><span class="icon-cancel"></span>{~s}Dismiss</a>
     </div>
 
   </div>
