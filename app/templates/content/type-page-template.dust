@@ -23,8 +23,6 @@
         <a href="#reply" class="b3-reply-post button reply" role="button">
           <span class="glyphicon glyphicon-comment"></span> Reply
         </a>
-
-        <div class="b3-reply-section"></div>
       {/eq}
 
       <ul class="comments b3-comments"></ul>

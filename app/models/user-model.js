@@ -2,9 +2,10 @@
 
 define([
   'jquery',
+  'underscore',
   'backbone',
   'models/settings-model'
-], function ($, Backbone, Settings) {
+], function ($, _, Backbone, Settings) {
   'use strict';
   var User = Backbone.Model.extend({
     defaults: {
@@ -22,7 +23,12 @@ define([
     },
 
     idAttribute: 'ID',
+
     urlRoot: Settings.get('apiUrl') + '/users',
+
+    isLoggedIn: function () {
+      return !isNaN(this.get('ID')) && !_.isEmpty(this.get('name'));
+    }
   });
 
   return User;

@@ -15,6 +15,7 @@ define([
 
   var view = _.extend(ReplyableView, {
     template: 'content/comments/comment-template.dust',
+    
     tagName:  function () {
       return 'li id="comment-' + this.model.get('ID') + '" class="media comment"';
     },

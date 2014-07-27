@@ -10,17 +10,33 @@ define([
     renderReplyBox: function (event) {
       event.preventDefault();
 
+      this.clickedReplyButton = $(event.currentTarget);
+
       if (!this.replyBoxRendered) {
-        this.renderIt(event);
+        this.renderIt();
       }
-      return false;
     },
 
-    renderIt: function (ev) {
-      var placeholder = $(ev.currentTarget).siblings('.b3-reply-section');
-      this.replyBox = new ReplyFormView({model: this.post, user: this.user, parentView: this, parentId: this.parentId()});
+    renderIt: function () {
+      /**
+       * TODO:
+       * - Rename "model" to "post"
+       * - model should be either:
+       *   - A new Comment model
+       *   - A saved Comment model (see https://trello.com/c/MliJUQ6n)
+       */
+      this.replyBox = new ReplyFormView({
+        model:      this.post,
+        user:       this.user,
+        parentView: this,
+        parentId:   this.parentId()
+      });
+
       this.replyBox.render();
-      this.$(placeholder).html(this.replyBox.el);
+
+      $(this.clickedReplyButton).after(this.replyBox.el);
+      $(this.clickedReplyButton).hide();
+      this.replyBoxRendered = true;
     },
 
     parentId: function () {
@@ -28,12 +44,14 @@ define([
     },
 
     replyRendered: function () {
-      this.replyBoxRendered = true;
+
     },
 
     replyDestroyed: function () {
-      this.replyBox = null;
+      $(this.clickedReplyButton).show();
+      $(this.replyBox.el).remove();
       this.replyBoxRendered = false;
+      this.replyBox = null;
     },
   };
 

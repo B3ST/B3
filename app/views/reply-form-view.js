@@ -26,16 +26,23 @@ define([
       this.user       = options.user;
       this.parentView = options.parentView;
       this.parentId   = options.parentId;
+      this.model      = options.model;
     },
 
     serializeData: function () {
-      return (this.userIsLogged() ? {display: false} : {display: true});
+      return {
+        name:           this.user.get('name'),
+        email:          this.user.get('email'),
+        URL:            this.user.get('url'),
+        guest:          !this.user.isLoggedIn(),
+        comment_status: this.model.get('comment_status')
+      };
     },
 
     onRender: function () {
       this.parentView.replyRendered();
       this.mandatory = ['#b3-replybox'];
-      if (!this.userIsLogged()) {
+      if (!this.user.isLoggedIn()) {
         this.mandatory = this.mandatory.concat(['#b3-author-name', '#b3-author-email']);
       }
     },
@@ -44,7 +51,7 @@ define([
       this.parentView.replyDestroyed();
     },
 
-    sendReply: function () {
+    sendReply: function (event) {
       var fields = this.getFields();
       if (fields.isFilled) {
         this.getComment().save().done(function (response) {
@@ -53,6 +60,7 @@ define([
         this.destroy();
       } else {
         this.displayWarning(fields.unfilled);
+        event.preventDefault();
       }
     },
 
@@ -62,7 +70,9 @@ define([
     },
 
     getFields: function () {
-      var filled = true, unfilled = [];
+      var filled   = true;
+      var unfilled = [];
+
       this.mandatory.forEach(function (field) {
         var hasText = !_.isEmpty(this.$(field).val());
         if (!hasText) {
@@ -84,25 +94,24 @@ define([
     },
 
     getUser: function () {
-      if (this.userIsLogged()) {
+      if (this.user.isLoggedIn()) {
         return this.user;
       }
 
       return new User({
         name:  this.$('#b3-author-name').val(),
-        email: this.$('#b3-author-email').val()
+        email: this.$('#b3-author-email').val(),
+        URL:   this.$('#b3-author-url').val()
       });
     },
 
-    userIsLogged: function () {
-      return !isNaN(this.user.get('ID')) && !_.isEmpty(this.user.get('name'));
-    },
-
     displayWarning: function (unfilled) {
-      this.$('#b3-warning').text('Please fill all mandatory fields.');
+      $('#b3-warning')
+        .addClass('alert alert-danger')
+        .text('Please fill all required fields.');
+
       unfilled.forEach(function (field) {
-        this.$(field + '-label').removeClass('red');
-        this.$(field + '-label').addClass('red');
+        $(field + '-group').addClass('has-error');
       }.bind(this));
     }
   });

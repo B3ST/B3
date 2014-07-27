@@ -1,17 +1,44 @@
-<textarea id="b3-replybox" rows="4" cols="50">
-</textarea>
-{?display}
-<div id="b3-author">
-  <label for="b3-author-name" id="b3-author-name-label">Name:</label>
-  <input type="text" id="b3-author-name" /><br/>
+<form role="form" class="comment panel panel-default">
+  <div class="panel-body">
 
-  <label for="b3-author-email" id="b3-author-email-label">Email:</label>
-  <input type="text" id="b3-author-email" />
-</div>
-{/display}
-<div id="b3-warning">
-</div>
-<div id="b3-replyactions">
-  <a href="#" id="b3-cancel">Cancel</a>
-  <button id="b3-replybutton">Reply</button>
-</div>
+    {?guest}
+      <div id="b3-author">
+        <div class="form-group" id="b3-author-name-group">
+          <label for="b3-author-name" class="control-label">Your Name:</label>
+          <input type="text" class="form-control" id="b3-author-name" value="{name}">
+        </div>
+
+        <div class="form-group" id="b3-author-email-group">
+          <label for="b3-author-email" class="control-label">Your Email:</label>
+          <input type="email" class="form-control" id="b3-author-email" value="{email}">
+        </div>
+
+        <div class="form-group" id="b3-author-url-group">
+          <label for="b3-author-url" class="control-label">Your Site:</label>
+          <input type="url" class="form-control" id="b3-author-url" value="{URL}">
+        </div>
+      </div>
+    {:else}
+      <div class="alert alert-info" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+          <span class="screen-reader-text">Close</span>
+        </button>
+        You are commenting as {name}. <a href="#" class="logout">Not {name}?</a>
+      </div>
+    {/guest}
+
+    <div class="form-group" id="b3-replybox-group">
+      <label for="b3-replybox" class="control-label">Your Comment:</label>
+      <textarea class="form-control" rows="5" id="b3-replybox"></textarea>
+    </div>
+
+    <div id="b3-warning" role="alert"></div>
+
+    <div id="b3-replyactions">
+      <button class="reply" id="b3-replybutton"><span class="icon-send"></span>{~s}Reply</button>
+      <a href="#" class="cancel pull-right" id="b3-cancel"><span class="icon-cancel"></span>{~s}Dismiss</a>
+    </div>
+
+  </div>
+</form>
