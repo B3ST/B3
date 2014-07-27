@@ -62,7 +62,7 @@ define([
       it("should trigger a navigation to index event", function() {
         this.view.$('#b3-home').click();
         expect(this.spy).toHaveBeenCalledWith('router:nav', { route: '', options: { trigger: true }});
-        expect(this.spy).toHaveBeenCalledWith('menu:item-selected', {id: -1});
+        expect(this.spy).toHaveBeenCalledWith('menu-item:select', {id: -1});
       });
     });
   });

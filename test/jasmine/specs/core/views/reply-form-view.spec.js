@@ -1,4 +1,8 @@
+/* global define, jasmine, sinon, describe, beforeEach, afterEach, expect, it, using, spyOn */
+
 define([
+  'jquery',
+  'backbone',
   'views/reply-form-view',
   'controllers/event-bus',
   'models/settings-model',
@@ -6,7 +10,9 @@ define([
   'models/comment-model',
   'models/post-model',
   'sinon'
-], function (ReplyFormView, EventBus, Settings, User, Comment, Post) {
+], function ($, Backbone, ReplyFormView, EventBus, Settings, User, Comment, Post) {
+  'use strict';
+
   describe("ReplyFormView", function() {
     beforeEach(function() {
       this.parentView = jasmine.createSpyObj('parentView', ['replyRendered', 'replyDestroyed']);
@@ -73,7 +79,7 @@ define([
       });
     });
 
-    describe("When clicking in reply button", function() {
+    describe("When clicking the reply button", function() {
       beforeEach(function() {
         this.requests = [];
         this.xhr = sinon.useFakeXMLHttpRequest();
@@ -97,7 +103,7 @@ define([
         expect(this.parentView.replyDestroyed).toHaveBeenCalled();
       });
 
-      describe("When user is logged in", function() {
+      describe("while the user is logged in", function() {
         it("should create a comment for the given post associated with that user", function() {
           var comment = new Comment({
             content:        'Some reply',
@@ -123,7 +129,7 @@ define([
           this.view.$('#b3-replybutton').click();
           this.server.respond();
 
-          expect(this.eventBus).toHaveBeenCalledWith('comment:created', jasmine.any(Comment));
+          expect(this.eventBus).toHaveBeenCalledWith('comment:create', jasmine.any(Comment));
         });
 
         describe("When there is no reply", function() {

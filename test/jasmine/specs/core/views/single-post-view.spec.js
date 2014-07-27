@@ -1,3 +1,5 @@
+/* global define, sinon, describe, beforeEach, expect, it, spyOn */
+
 define([
   'views/single-post-view',
   'controllers/event-bus',
@@ -21,7 +23,15 @@ define([
         this.post = new Post({ID: 1});
         this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
 
-        expect(this.spy).toHaveBeenCalledWith('comment:created', this.view.addComment);
+        expect(this.spy).toHaveBeenCalledWith('comment:create', this.view.addComment);
+      });
+
+      it("should set the document title", function () {
+        this.spy = spyOn(EventBus, 'trigger');
+        this.post = new Post({ID: 1, title: 'Title'});
+        this.view = new SinglePostView({model: this.post, user: this.user});
+
+        expect(this.spy).toHaveBeenCalledWith('title:change', 'Title');
       });
 
       it("should fetch the corresponding post comments", function() {

@@ -48,7 +48,7 @@ define([
       var fields = this.getFields();
       if (fields.isFilled) {
         this.getComment().save().done(function (response) {
-          EventBus.trigger('comment:created', new Comment(response));
+          EventBus.trigger('comment:create', new Comment(response));
         });
         this.destroy();
       } else {
@@ -56,7 +56,8 @@ define([
       }
     },
 
-    cancelReply: function () {
+    cancelReply: function (ev) {
+      ev.preventDefault();
       this.destroy();
     },
 

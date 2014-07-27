@@ -7,8 +7,9 @@ define([
   'dust.marionette',
   'controllers/event-bus',
   'controllers/navigator',
-  'archive/posts-template',
-  'main-template'
+  // Shims
+  'main-template',
+  'archive/posts-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator) {
   'use strict';
 
@@ -29,6 +30,8 @@ define([
     initialize: function (options) {
       this.page  = options.page || 1;
       this.limit = options.limit || 11;
+
+      EventBus.trigger('title:change');
     },
 
     serializeData: function () {

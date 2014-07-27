@@ -1,3 +1,5 @@
+/* global require */
+
 define([
   'jquery',
   'underscore',
@@ -11,7 +13,7 @@ define([
   'views/comment-view',
   'views/reply-form-view',
   'views/replyable-view',
-  // Shims:
+  // Shims
   'main-template',
   'content/type-post-template',
   'content/type-page-template'
@@ -32,6 +34,8 @@ define([
     },
 
     initialize: function (options) {
+      EventBus.trigger('title:change', this.model.get('title'));
+
       this.model.fetchComments({
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
@@ -43,7 +47,7 @@ define([
       this.user    = options.user;
 
       _.bindAll(this, 'addComment');
-      EventBus.bind('comment:created', this.addComment);
+      EventBus.bind('comment:create', this.addComment);
     },
 
     addComment: function (comment) {
@@ -65,7 +69,7 @@ define([
         this.replyBox.destroy();
       }
 
-      EventBus.unbind('comment:created', this.addComment);
+      EventBus.unbind('comment:create', this.addComment);
     },
 
     attachHtml: function (collectionView, itemView, index) {
@@ -152,6 +156,7 @@ define([
     getDustTemplate: function () {
       var template = 'content/type-post-template.dust';
       var type     = this.post.get('type');
+      var config   = Settings.get('require.config');
 
       if (config.paths['content/type-' + type + '-template']) {
         template = 'content/type-' + type + '-template.dust';

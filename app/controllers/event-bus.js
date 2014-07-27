@@ -1,3 +1,5 @@
+/* globals define */
+
 define([
   'backbone',
   'marionette'

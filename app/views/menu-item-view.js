@@ -1,6 +1,9 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
+  'backbone',
   'marionette',
   'dust',
   'dust.marionette',
@@ -9,7 +12,7 @@ define([
   'controllers/event-bus',
   'controllers/navigator',
   'navigation/menus/menu-item-template'
-], function ($, _, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {
   'use strict';
 
   var ItemView = Backbone.Marionette.ItemView.extend({
@@ -27,11 +30,11 @@ define([
       this.dropdown = false;
 
       _.bindAll(this, 'itemSelected');
-      EventBus.bind('menu:item-selected', this.itemSelected);
+      EventBus.bind('menu-item:select', this.itemSelected);
     },
 
     onDestroy: function () {
-      EventBus.unbind('menu:item-selected', this.itemSelected);
+      EventBus.unbind('menu-item:select', this.itemSelected);
     },
 
     serializeData: function () {
@@ -83,7 +86,7 @@ define([
     },
 
     triggerMenuSelected: function (id, parent) {
-      EventBus.trigger('menu:item-selected', {id: id, parent: parent});
+      EventBus.trigger('menu-item:select', {id: id, parent: parent});
     },
 
     toggleDropdown: function () {

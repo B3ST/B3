@@ -1,15 +1,18 @@
+/* globals define */
+
 define([
   'jquery',
   'underscore',
   'backbone',
   'marionette',
+  'models/settings-model',
   'models/post-model',
   'models/page-model',
   'collections/post-collection',
   'views/archive-view',
   'views/single-post-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, Post, Page, Posts, ArchiveView, SinglePostView, NotFoundView) {
+], function ($, _, Backbone, Marionette, Settings, Post, Page, Posts, ArchiveView, SinglePostView, NotFoundView) {
   'use strict';
 
   return Backbone.Marionette.Controller.extend({
@@ -150,5 +153,6 @@ define([
         user:       this.user
       });
     }
+
   });
 });

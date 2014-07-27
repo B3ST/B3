@@ -1,3 +1,5 @@
+/* globals define */
+
 define([
   'marionette',
   'controllers/controller'

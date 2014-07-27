@@ -1,3 +1,5 @@
+/* global define, xdescribe, sinon, beforeEach, expect, it */
+
 define([
   'app',
   'models/settings-model',
@@ -5,6 +7,7 @@ define([
   'views/footer-view',
   'sinon'
 ], function (App, Settings, HeaderView, FooterView) {
+  'use strict';
   xdescribe("App", function() {
     beforeEach(function() {
       var server = sinon.fakeServer.create();

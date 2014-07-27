@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
@@ -50,7 +52,7 @@ define([
 
     index: function (ev) {
       this.navigate('');
-      EventBus.trigger('menu:item-selected', {id: -1});
+      EventBus.trigger('menu-item:select', {id: -1});
       ev.preventDefault();
     },
 
