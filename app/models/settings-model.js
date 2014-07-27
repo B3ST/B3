@@ -1,3 +1,5 @@
+/* global define, WP_API_SETTINGS */
+
 define([
   'jquery',
   'backbone'

@@ -1,11 +1,14 @@
+/* global define */
+
 define([
   'jquery',
+  'backbone',
   'marionette',
   'dust',
   'dust.marionette',
   'models/menu-item-model',
   'views/menu-item-view'
-], function ($, Marionette, dust, dustMarionette, MenuItem, MenuItemView) {
+], function ($, Backbone, Marionette, dust, dustMarionette, MenuItem, MenuItemView) {
   'use strict';
 
   var MenuView = Backbone.Marionette.CollectionView.extend({
@@ -23,7 +26,7 @@ define([
       this.$el.attr('id', this.menuId);
     },
 
-    attachHtml: function (collectionView, itemView, index) {
+    attachHtml: function (collectionView, itemView) {
       var parentMenu = itemView.model.get('parent');
       if (parentMenu > 0) {
         var placeholder  = '#menu-item-' + parentMenu + ' > ul.dropdown-menu',

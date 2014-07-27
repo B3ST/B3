@@ -41,7 +41,7 @@ define([
         expect(this.parentView.replyRendered).toHaveBeenCalled();
       });
 
-      describe("When user is logged in", function() {
+      describe("while the user is logged in", function() {
         it("should hide the form for name and user email", function() {
           this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user});
           this.view.render();
@@ -50,7 +50,7 @@ define([
         });
       });
 
-      describe("When user is not logged in", function() {
+      describe("while the user is not logged in", function() {
         it("should display a form for name and user email", function() {
           this.user = new User();
           this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user});
@@ -61,7 +61,7 @@ define([
       });
     });
 
-    describe("When clicking in cancel button", function() {
+    describe("Clicking the cancel button", function() {
       beforeEach(function() {
         this.spy = spyOn(Backbone.Marionette.ItemView.prototype, 'destroy').andCallThrough();
         this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user:this.user});
@@ -79,7 +79,7 @@ define([
       });
     });
 
-    describe("When clicking the reply button", function() {
+    describe("Clicking the reply button", function() {
       beforeEach(function() {
         this.requests = [];
         this.xhr = sinon.useFakeXMLHttpRequest();
@@ -132,7 +132,7 @@ define([
           expect(this.eventBus).toHaveBeenCalledWith('comment:create', jasmine.any(Comment));
         });
 
-        describe("When there is no reply", function() {
+        describe("when there is no reply", function() {
           beforeEach(function() {
             this.view.$('#b3-replybox').val('');
             this.view.$('#b3-replybutton').click();

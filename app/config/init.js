@@ -84,11 +84,10 @@
     "app",
     "models/settings-model",
     "models/user-model",
-    "routers/app-router",
     "jqueryui",
     "bootstrap",
     "backbone.validateAll"
-  ], function(_, $, Backbone, App, Settings, User, AppRouter) {
+  ], function(_, $, Backbone, App, Settings, User) {
     var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
     Settings.set('require.config', config);

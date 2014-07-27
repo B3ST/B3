@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'collections/revision-collection',
@@ -35,7 +37,7 @@ define([
     getData: function (data, id, collection) {
       var model = new collection().model;
       if (id === '') {
-        data = $.map(data, function(item, index) {
+        data = $.map(data, function(item) {
           return this.createModel(model, item);
         }.bind(this));
         return new collection(data).sort();

@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
@@ -39,7 +41,7 @@ define([
     },
 
     getModels: function () {
-      return $.map(this.collection.models, function (post, index) {
+      return $.map(this.collection.models, function (post) {
         return post.toJSON();
       });
     },

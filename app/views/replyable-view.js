@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'views/reply-form-view'

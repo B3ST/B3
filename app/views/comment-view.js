@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
@@ -17,7 +19,7 @@ define([
       return 'li id="comment-' + this.model.get('ID') + '" class="media comment"';
     },
 
-    initialize: function (options) {
+    initialize: function () {
       this.post = null;
       this.user = null;
     },

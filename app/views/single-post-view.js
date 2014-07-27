@@ -1,4 +1,4 @@
-/* global require */
+/* global define */
 
 define([
   'jquery',
@@ -72,7 +72,7 @@ define([
       EventBus.unbind('comment:create', this.addComment);
     },
 
-    attachHtml: function (collectionView, itemView, index) {
+    attachHtml: function (collectionView, itemView) {
       itemView.post = this.post;
       itemView.user = this.user;
 

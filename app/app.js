@@ -65,7 +65,7 @@
 
     App.mobile = isMobile();
 
-    App.addInitializer(function(options) {
+    App.addInitializer(function() {
       $.get(Settings.get('apiUrl') + '/b3:menus').done(initializeLayout);
       user.fetch();
 

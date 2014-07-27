@@ -1,7 +1,9 @@
-'use strict';
+/* global define */
 
 define([
   'jquery',
+  'underscore',
+  'backbone',
   'marionette',
   'dust',
   'dust.marionette',
@@ -9,10 +11,8 @@ define([
   'models/comment-model',
   'models/user-model',
   'forms/replyform-template'
-], function ($, Marionette, dust, dustMarionette, EventBus, Comment, User) {
-  function isNumeric (num) {
-    return !isNaN(num);
-  };
+], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Comment, User) {
+  'use strict';
 
   var ReplyFormView = Backbone.Marionette.ItemView.extend({
     template: "forms/replyform-template.dust",
@@ -64,7 +64,7 @@ define([
     getFields: function () {
       var filled = true, unfilled = [];
       this.mandatory.forEach(function (field) {
-        var hasText = (this.$(field).val() != '');
+        var hasText = !_.isEmpty(this.$(field).val());
         if (!hasText) {
           unfilled.push(field);
         }
@@ -88,15 +88,18 @@ define([
         return this.user;
       }
 
-      return new User({name: this.$('#b3-author-name').val(), email: this.$('#b3-author-email').val()});
+      return new User({
+        name:  this.$('#b3-author-name').val(),
+        email: this.$('#b3-author-email').val()
+      });
     },
 
     userIsLogged: function () {
-      return isNumeric(this.user.get('ID')) && this.user.get('name') != '';
+      return !isNaN(this.user.get('ID')) && !_.isEmpty(this.user.get('name'));
     },
 
     displayWarning: function (unfilled) {
-      this.$('#b3-warning').text('Please fill mandatory fields');
+      this.$('#b3-warning').text('Please fill all mandatory fields.');
       unfilled.forEach(function (field) {
         this.$(field + '-label').removeClass('red');
         this.$(field + '-label').addClass('red');
