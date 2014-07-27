@@ -15,6 +15,8 @@ define([
       if (!this.replyBoxRendered) {
         this.renderIt();
       }
+
+      return false;
     },
 
     renderIt: function () {

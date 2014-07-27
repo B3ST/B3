@@ -26,7 +26,7 @@ define([
     },
 
     events: {
-      'click a.b3-reply-comment': 'renderReplyBox',
+      'click .b3-reply-comment': 'renderReplyBox',
     },
 
     parentId: function () {
