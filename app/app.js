@@ -13,10 +13,12 @@
     'controllers/event-bus',
     'models/settings-model',
     'models/user-model',
+    'models/sidebar-model',
     'collections/post-collection',
     'views/header-view',
+    'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, Controller, EventBus, Settings, User, Posts, HeaderView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, Controller, EventBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
 
     var App   = new Backbone.Marionette.Application(),
         user  = new User({ID: 'me'});
@@ -27,26 +29,31 @@
     };
 
     App.titleChange = function(title) {
-        var separator = ' | ';
-        var newTitle  = '';
+      var separator = ' | ';
+      var newTitle  = '';
 
-        if (_.isFunction(title)) {
-          newTitle = title.apply(this, arguments) + separator;
+      if (_.isFunction(title)) {
+        newTitle = title.apply(this, arguments) + separator;
 
-        } else if (_.isString(title)) {
-          newTitle = title + separator;
-        }
+      } else if (_.isString(title)) {
+        newTitle = title + separator;
+      }
 
-        document.title = newTitle + Settings.get('name');
-      };
+      document.title = newTitle + Settings.get('name');
+    };
 
     function isMobile() {
       var ua = (navigator.userAgent || navigator.vendor || window.opera, window, window.document);
       return (/iPhone|iPod|iPad|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
     }
 
-    function initializeLayout (menus) {
+    function initializeLayout (menus, sidebars) {
       App.header.show(new HeaderView({menus: menus}));
+
+      if (sidebars && sidebars.sidebar) {
+        App.widgets.show(new SidebarView({model: new Sidebar(sidebars.sidebar)}));
+      }
+
       App.footer.show(new FooterView());
 
       App.appRouter = new AppRouter({
@@ -63,13 +70,23 @@
       }
     }
 
+    function getMenus () {
+      return $.get(Settings.get('apiUrl') + '/b3:menus');
+    }
+
+    function getSidebars () {
+      return $.get(Settings.get('apiUrl') + '/b3:sidebars');
+    }
+
     App.mobile = isMobile();
 
     App.addInitializer(function() {
-      $.get(Settings.get('apiUrl') + '/b3:menus')
-        .done(initializeLayout);
-        
-      user.fetch();
+      getMenus().then(function (menus) {
+        getSidebars().done(function (sidebars) {
+          user.fetch();
+          initializeLayout(menus, sidebars);
+        });
+      }); /* TODO: need a fail view .fail(); */
 
       EventBus.bind('router:nav', function (options) {
         App.navigate(options.route, options.options);
@@ -80,9 +97,10 @@
       });
 
       App.addRegions({
-        header: '#header',
-        main:   '#main',
-        footer: '#footer'
+        header:  '#header',
+        main:    '#main',
+        widgets: '#widgets',
+        footer:  '#footer'
       });
     });
 

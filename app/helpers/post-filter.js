@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'backbone'
@@ -5,18 +7,18 @@ define([
   'use strict';
 
   function checkStringType (input) {
-    if (!(typeof(input) === 'string')
+    if (typeof(input) !== 'string'
           /*&& !(input typeof Array)*/) {
       throw 'Type of input should be either String or Array';
     }
-  };
+  }
 
   function checkIntType (input) {
     if (isNaN(input)
           /*&& !(input typeof Array)*/) {
       throw 'Type of input should be either int or Array';
     }
-  };
+  }
 
   var PostFilter = Backbone.Model.extend({
     initialize: function () {
