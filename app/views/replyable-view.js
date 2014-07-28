@@ -12,7 +12,7 @@ define([
 
       this.clickedReplyButton = $(event.currentTarget);
 
-      if (!this.replyForm || !this.replyForm.el || this.$(this.replyForm.el).empty) {
+      if (!this.$(this.replyForm).length) {
         this.renderReplyForm();
       }
 

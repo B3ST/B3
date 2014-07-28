@@ -1,5 +1,5 @@
 {
-  "name": "b3",
+  "name": "B3",
   "description": "Backbone Bootstrap Boilerplate: A JavaScript Starter Theme for WordPress",
   "version": "0.0.1",
   "private": true,
@@ -40,6 +40,9 @@
   "overrides": {
     "Backbone.validateAll": {
       "main": "src/javascripts/Backbone.validateAll.min.js"
+    },
+    "browser-sync-client": {
+      "main": "dist/index.min.js"
     },
     "dustjs-linkedin-helpers": {
       "main": "dist/dust-helpers.min.js"
