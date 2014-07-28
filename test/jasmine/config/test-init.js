@@ -154,12 +154,12 @@
       root + 'core/app.spec'
     ];
 
-    var parseable_dates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
+    var parseableDates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
     Backbone.Model.prototype.toJSON = function() {
       var attributes = _.clone(this.attributes);
 
-      _.each(parseable_dates, function(key) {
+      _.each(parseableDates, function(key) {
         if (key in attributes) {
           attributes[key] = attributes[key].toISOString();
         }
@@ -173,7 +173,7 @@
     };
 
     Backbone.Model.prototype.parse = function(response) {
-      _.each(parseable_dates, function(key) {
+      _.each(parseableDates, function(key) {
         if (response.hasOwnProperty(key)) {
           response[key] = new Date(response[key]);
         }
