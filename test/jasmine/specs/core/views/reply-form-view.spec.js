@@ -142,7 +142,7 @@ define([
             expect(this.requests.length).toEqual(0);
           });
 
-          xit("should display a warning", function() {
+          it("should display a warning", function() {
             expect(this.view.$('#b3-warning').text()).not.toEqual('');
           });
         });
@@ -186,7 +186,7 @@ define([
               expect(this.requests.length).toEqual(0);
             });
 
-            xit("should display a warning", function() {
+            it("should display a warning", function() {
               expect(this.view.$('#b3-warning').text()).not.toEqual('');
             });
           });

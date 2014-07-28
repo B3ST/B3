@@ -50,27 +50,24 @@ define([
     },
 
     sendReply: function (event) {
-      var that  = this;
-      
       event.preventDefault();
 
       if (this.validateForm()) {
         this.getComment().save()
           .done(function (response) {
-            that.slideUpAndDestroy();
+            this.slideUpAndDestroy();
             EventBus.trigger('comment:create', new Comment(response));
-          })
-          .error(function (response) {
-            that.displayWarning(response.responseJSON[0].message);
-          });
+          }.bind(this))
+          .fail(function (response) {
+            this.displayWarning(response.responseJSON[0].message);
+          }.bind(this));
       }
     },
 
     slideUpAndDestroy: function () {
-      var that = this;
       $(this.el).slideUp('slow', function() {
-        that.destroy();
-      });
+        this.destroy();
+      }.bind(this));
     },
 
     cancelReply: function (ev) {
@@ -102,11 +99,11 @@ define([
     },
 
     resetWarning: function () {
-        $('#b3-warning').removeClass('alert alert-danger').text('');
+      this.$('#b3-warning').removeClass('alert alert-danger').text('');
     },
 
     displayWarning: function (message) {
-      $('#b3-warning').addClass('alert alert-danger').text(message);
+      this.$('#b3-warning').addClass('alert alert-danger').text(message);
 
       if (_.isEmpty(message)) {
         this.resetWarning();
