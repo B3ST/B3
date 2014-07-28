@@ -5,6 +5,7 @@ define([
   'underscore',
   'backbone',
   'marionette',
+  'helpers/post-filter',
   'models/settings-model',
   'models/post-model',
   'models/page-model',
@@ -12,7 +13,7 @@ define([
   'views/archive-view',
   'views/single-post-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, Settings, Post, Page, Posts, ArchiveView, SinglePostView, NotFoundView) {
+], function ($, _, Backbone, Marionette, PostFilter, Settings, Post, Page, Posts, ArchiveView, SinglePostView, NotFoundView) {
   'use strict';
 
   return Backbone.Marionette.Controller.extend({
@@ -39,7 +40,11 @@ define([
      */
     showArchive: function (page) {
       page = page || 1;
-      this.posts.fetch({reset: true, data: $.param({ page: page })});
+
+      var filter = new PostFilter();
+      filter.onPage(page);
+
+      this.posts.fetch({reset: true, data: filter.serialize()});
       this.show(this.contentView(this.posts, page));
     },
 

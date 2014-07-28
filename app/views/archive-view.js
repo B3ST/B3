@@ -7,12 +7,13 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
+  'helpers/post-filter',
   'controllers/event-bus',
   'controllers/navigator',
   // Shims
   'main-template',
   'archive/posts-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, Navigator) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.ItemView.extend({
@@ -97,7 +98,9 @@ define([
     },
 
     getParams: function () {
-      return {data: $.param({page: this.page}), reset: true};
+      var filter = new PostFilter();
+      filter.onPage(this.page);
+      return {data: filter.serialize(), reset: true};
     },
 
     navigate: function () {
