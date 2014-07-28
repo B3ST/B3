@@ -1,6 +1,7 @@
 /* global define, sinon, describe, beforeEach, expect, it, spyOn */
 
 define([
+  'jquery',
   'views/single-post-view',
   'controllers/event-bus',
   'views/reply-form-view',
@@ -9,7 +10,7 @@ define([
   'models/comment-model',
   'collections/comment-collection',
   'sinon'
-], function (SinglePostView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
+], function ($, SinglePostView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
   'use strict';
 
   describe("SinglePostView", function() {
