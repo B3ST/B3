@@ -34,8 +34,8 @@ define([
         parentId:   this.parentId()
       });
 
-        this.replyForm.render();
-        $(this.clickedReplyButton).after(this.replyForm.el);
+      this.replyForm.render();
+      $(this.clickedReplyButton).after(this.replyForm.el);
     },
 
     parentId: function () {
