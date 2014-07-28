@@ -1,10 +1,12 @@
-'use strict';
+/* global define */
 
 define([
   'jquery',
   'backbone',
   'collections/menu-item-collection'
 ], function ($, Backbone, MenuItems) {
+  'use strict';
+
   var Menu = Backbone.Model.extend({
     defaults: {
       location: '',

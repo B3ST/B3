@@ -1,3 +1,5 @@
+/* global define, xdescribe, sinon, beforeEach, expect, it */
+
 define([
   'app',
   'models/settings-model',
@@ -5,13 +7,14 @@ define([
   'views/footer-view',
   'sinon'
 ], function (App, Settings, HeaderView, FooterView) {
+  'use strict';
   xdescribe("App", function() {
     beforeEach(function() {
       var server = sinon.fakeServer.create();
       var response = { primary: { location: "primary", name: "Primary Menu", meta: { links: { self: "http://localhost:8888/wordpress/wp-json/b3:menus/primary", collection: "http://localhost:8888/wordpress/wp-json/b3:menus"}}}};
       server.respondWith(
         'GET',
-        Settings.get('url') + '/b3:menus',
+        Settings.get('apiUrl') + '/b3:menus',
         [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
       );
       App.start();

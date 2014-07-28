@@ -1,8 +1,12 @@
+/* global define */
+
 define([
   'jquery',
   'collections/revision-collection',
   'collections/comment-collection'
 ], function ($, Revisions, Comments) {
+  'use strict';
+
   var Commentable = {
     fetchRevisions: function (callbacks, id) {
       return this.fetchMeta(id, 'version-history', Revisions, callbacks);
@@ -32,8 +36,8 @@ define([
 
     getData: function (data, id, collection) {
       var model = new collection().model;
-      if (id == '') {
-        data = $.map(data, function(item, index) {
+      if (id === '') {
+        data = $.map(data, function(item) {
           return this.createModel(model, item);
         }.bind(this));
         return new collection(data).sort();
@@ -43,9 +47,9 @@ define([
     },
 
     createModel: function (model, item) {
-      var m = model.prototype.parse(item);
-      m['post'] = this;
-      return new model(m);
+      var itemModel = model.prototype.parse(item);
+      itemModel.post = this;
+      return new model(itemModel);
     },
 
     getMetaUrl: function (link) {

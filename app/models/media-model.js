@@ -1,9 +1,12 @@
+/* global define */
+
 define([
   'jquery',
   'backbone',
   'models/user-model',
   'models/settings-model'
 ], function ($, Backbone, User, Settings) {
+  'use strict';
   var Media = Backbone.Model.extend({
     defaults: {
       ID             : null,
@@ -36,7 +39,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: Settings.get('url') + '/media'
+    urlRoot: Settings.get('apiUrl') + '/media'
   });
 
   return Media;

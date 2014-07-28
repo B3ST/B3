@@ -1,6 +1,12 @@
-{?dropdown}
-  <a href="#" class="b3-menu-item dropdown-toggle" data-toggle="dropdown">{title} <span class="caret"></span></a>
-  <ul class="dropdown-menu" role="menu"></ul>
-{:else}
-  <a class="b3-menu-item" href="{link}">{title}</a>
-{/dropdown}
+<a href="{link}" {?dropdown}data-toggle="dropdown"{/dropdown}
+  {~s}class="b3-menu-item
+    {?dropdown} dropdown-toggle{/dropdown}
+    {#classes} {.}{/classes}"
+  {?attr_title} title="{attr_title}"{/attr_title}
+  {?target} target="{target}"{/target}
+  {?xfn} rel="{xfn}"{/xfn}>
+    {title}
+    {?dropdown} <span class="caret"></span>{/dropdown}
+</a>
+
+{?dropdown}<ul class="dropdown-menu" role="menu"></ul>{/dropdown}

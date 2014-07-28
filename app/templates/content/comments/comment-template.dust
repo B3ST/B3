@@ -17,12 +17,12 @@
 
   {content|s}
 
+  {! TODO: Don't show reply button if comments closed. !}
   {!@eq key=comment_status value="open"!}
     <div>
       <a href="#reply" class="b3-reply-comment button reply" role="button">
-        <span class="glyphicon glyphicon-comment"></span> Reply
+        <span class="icon-comment"></span> Reply
       </a>
-      <div class="b3-reply-section"></div>
     </div>
   {!/eq!}
 

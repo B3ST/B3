@@ -10,6 +10,10 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+[*.dust]
+trim_trailing_whitespace = true
+indent_size = 2
+
 [*.php]
 trim_trailing_whitespace = true
 indent_size = 4

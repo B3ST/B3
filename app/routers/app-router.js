@@ -1,15 +1,17 @@
+/* globals define */
+
 define([
-  'marionette',
-  'controllers/controller'
-], function(Marionette, Controller) {
+  'marionette'
+], function(Marionette) {
+  'use strict';
   return Marionette.AppRouter.extend({
     appRoutes: {
-      "": "showPostPage",
-      "page/:page": "showPostPage",
+      ""                     : "showHome",
+      "page/:page"           : "showArchive",
       "post/:slug/page/:page": "showPostBySlug",
-      "post/:slug": "showPostBySlug",
-      "post/:id": "showPostById",
-      "*slug": "showPageBySlug"
+      "post/:slug"           : "showPostBySlug",
+      "post/:id"             : "showPostById",
+      "*slug"                : "showPageBySlug"
     }
   });
 });

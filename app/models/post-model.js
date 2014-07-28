@@ -1,4 +1,4 @@
-'use strict';
+/* global define */
 
 define([
   'jquery',
@@ -8,6 +8,7 @@ define([
   'models/settings-model',
   'models/commentable-model'
 ], function ($, _, Backbone, User, Settings, Commentable) {
+  'use strict';
   var view = _.extend({
     defaults: {
       ID             : null,
@@ -38,7 +39,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: Settings.get('url') + '/posts',
+    urlRoot: Settings.get('apiUrl') + '/posts',
 
     url: function () {
       var query = '';

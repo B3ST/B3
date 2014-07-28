@@ -1,8 +1,11 @@
+/* global define */
+
 define([
   'jquery',
   'backbone',
   'models/settings-model'
 ], function ($, Backbone, Settings) {
+  'use strict';
   var PostType = Backbone.Model.extend({
     defaults: {
       slug         : null,
@@ -16,7 +19,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: Settings.get('url') + '/posts/types'
+    urlRoot: Settings.get('apiUrl') + '/posts/types'
   });
 
   return PostType;

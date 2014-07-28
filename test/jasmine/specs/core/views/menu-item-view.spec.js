@@ -1,8 +1,12 @@
+/* global define, describe, beforeEach, expect, it, using, spyOn */
+
 define([
   'views/menu-item-view',
   'models/menu-item-model',
   'controllers/event-bus'
 ], function (MenuItemView, MenuItem, EventBus) {
+  'use strict';
+
   describe("MenuItemView", function() {
     beforeEach(function() {
       this.item = new MenuItem({
@@ -14,7 +18,7 @@ define([
         object: 1149,
         object_parent: 0,
         object_type: 'page',
-        link: "http://localhost:8888/wordpress/about",
+        link: "http://wordpress.example.org/about",
         title: "About",
         attr_title: "",
         description: "",
@@ -36,7 +40,7 @@ define([
         this.spy  = spyOn(EventBus, 'bind');
         this.view = new MenuItemView({model: this.item});
 
-        expect(this.spy).toHaveBeenCalledWith('menu:item-selected', this.view.itemSelected);
+        expect(this.spy).toHaveBeenCalledWith('menu-item:select', this.view.itemSelected);
       });
     });
 
@@ -47,7 +51,7 @@ define([
         expect(this.view.$el.children().length).toEqual(1);
         expect(this.view.$el.attr('id')).toEqual('menu-item-1257');
         expect(this.view.$('.b3-menu-item').text()).toEqual('About');
-        expect(this.view.$('.b3-menu-item').attr('href')).toEqual('http://localhost:8888/wordpress/about');
+        expect(this.view.$('.b3-menu-item').attr('href')).toEqual('http://wordpress.example.org/about');
       });
     });
 
@@ -72,7 +76,7 @@ define([
         it("should trigger the same event setting its own parent", function() {
           this.spy = spyOn(EventBus, 'trigger');
           this.view.itemSelected({id: 1130, parent: 1257});
-          expect(this.spy).toHaveBeenCalledWith('menu:item-selected', {id: 1130, parent: 0});
+          expect(this.spy).toHaveBeenCalledWith('menu-item:select', {id: 1130, parent: 0});
         });
       });
     });
@@ -85,29 +89,34 @@ define([
 
         expect(this.view.$el.attr('class')).toEqual('dropdown');
         expect(this.view.$('.b3-menu-item').attr('class')).toContain('dropdown-toggle');
-        expect(this.view.$('.b3-menu-item').attr('href')).toEqual('#');
         expect(this.view.$('.b3-menu-item').attr('data-toggle')).toEqual('dropdown');
-        expect(this.view.$('.b3-menu-item').html()).toEqual('About <span class="caret"></span>');
+        expect(this.view.$('.b3-menu-item').html()).toContain('<span class="caret"></span>');
         expect(this.view.$('ul').attr('class')).toEqual('dropdown-menu');
         expect(this.view.$('ul').attr('role')).toEqual('menu');
       });
     });
 
     using('menu types', ['page', 'post', 'category', 'tag'], function (type) {
-      describe("When clicking in an item", function() {
+      describe("Clicking an item", function() {
+
         beforeEach(function() {
-          this.item.set({'object_type': type});
+          type = type + '/';
+          type = type.replace('page/', '');
+
+          this.item.set({
+            'object_type': type,
+            'link': 'http://wordpress.example.org/' + type + 'about'
+          });
           this.spy  = spyOn(EventBus, 'trigger');
           this.view = new MenuItemView({model: this.item});
 
           this.view.render();
         });
 
-        it("should trigger events that a menu was selected", function() {
+        it("should trigger menu selection events", function() {
           this.view.$('.b3-menu-item').click();
-          type = type.replace('page', '');
-          expect(this.spy).toHaveBeenCalledWith('router:nav', {route: type + "/about", options: {trigger: true}});
-          expect(this.spy).toHaveBeenCalledWith('menu:item-selected', {id: 1257, parent: 0});
+          expect(this.spy).toHaveBeenCalledWith('router:nav', {route: type + "about", options: {trigger: true}});
+          expect(this.spy).toHaveBeenCalledWith('menu-item:select', {id: 1257, parent: 0});
         });
 
         it("should activate the menu item", function() {
@@ -115,12 +124,28 @@ define([
           expect(this.view.$el.attr('class')).toContain('active');
         });
 
-        describe("When menu is a dropdown", function() {
+        describe("when the link is for an external resource", function () {
+
+          beforeEach(function() {
+            this.item.set({'link': 'http://log.pt/'});
+            this.view = new MenuItemView({model: this.item});
+            this.view.render();
+          });
+
+          it("should not trigger menu selection events", function() {
+            this.view.$('.b3-menu-item').click();
+            type = type.replace('page', '');
+            expect(this.spy).not.toHaveBeenCalledWith('router:nav', {route: type + "/about", options: {trigger: true}});
+          });
+
+        });
+
+        describe("when the menu is a dropdown", function() {
           beforeEach(function() {
             this.view.toggleDropdown();
           });
 
-          it("should not trigger any event", function() {
+          it("should not trigger any events", function() {
             this.view.$('.b3-menu-item').click();
             expect(this.spy).not.toHaveBeenCalled();
           });

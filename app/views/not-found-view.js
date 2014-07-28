@@ -1,10 +1,11 @@
+/* global define */
+
 define([
-  'jquery',
-  'marionette',
-  'dust',
-  'dust.marionette',
+  'backbone',
   'error/not-found-template'
-], function ($, Marionette, dust, dustMarionette) {
+], function (Backbone) {
+  'use strict';
+
   var NotFoundView = Backbone.Marionette.ItemView.extend({
     tagName: 'div id="b3-error"',
     template: 'error/not-found-template.dust'

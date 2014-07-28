@@ -86,7 +86,6 @@ class B3Theme {
         add_action( 'widgets_init'      , array( $this, 'setup_widgets' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'setup_scripts' ) );
         add_action( 'wp_head'           , array( $this, 'enqueue_require_script' ), 20, 0 );
-        add_action( 'wp_footer'         , array( $this, 'enqueue_browsersync_script' ), 99, 0 );
     }
 
     /**
@@ -135,15 +134,16 @@ class B3Theme {
 
         $site_url_components = parse_url( site_url() );
 
-        $permastructs = $this->_get_permastructs();
+        $routes = $this->_get_permastructs();
 
         $settings = array(
-            'path'         => (string) $site_url_components['path'],
-            'root'         => get_stylesheet_directory_uri(),
-            'url'          => home_url( json_get_url_prefix() ),
-            'name'         => get_bloginfo( 'name' ),
-            'nonce'        => wp_create_nonce( 'wp_json' ),
-            'permastructs' => $permastructs,
+            'url'    => site_url(),
+            'path'   => (string) $site_url_components['path'],
+            'apiUrl' => home_url( json_get_url_prefix() ),
+            'root'   => get_stylesheet_directory_uri(),
+            'name'   => get_bloginfo( 'name' ),
+            'nonce'  => wp_create_nonce( 'wp_json' ),
+            'routes' => $routes,
             );
 
         wp_register_script( $this->slug . '-settings', $this->settings_uri );
@@ -184,13 +184,6 @@ class B3Theme {
             return;
         }
         echo '<script src="' . $this->require_uri . '" data-main="' . $this->loader_uri . '"></script>';
-    }
-
-    public function enqueue_browsersync_script () {
-        if (defined( 'WP_DEBUG' ) && WP_DEBUG) {
-            // echo '<script src="http://127.0.0.1:3000/lib/socket.js" async></script>';
-            // echo '<script src="http://127.0.0.1:3000/browser-sync-client.js" async></script>';
-        }
     }
 
 }

@@ -40,6 +40,24 @@ button,
   }
 }
 
+form.comment {
+  a.cancel {
+    .btn;
+    .text-danger;
+    .pull-right;
+  }
+
+  button.reply {
+    .btn;
+    .btn-primary;
+    .pull-right;
+  }
+
+  .form-help {
+    .help-block;
+  }
+}
+
 .gallery {
   .container;
 
@@ -112,7 +130,7 @@ button,
 .alignleft,
 .alignright,
 .aligncenter {
-  margin: @pull-alignment-margin;
+  margin: @padding-base-vertical @padding-base-horizontal;
 }
 
 .alignleft {
@@ -236,4 +254,29 @@ img {
   p {
     margin-bottom: 0;
   }
+}
+
+.icon-cancel {
+  .glyphicon;
+  .glyphicon-remove;
+}
+
+.icon-comment {
+  .glyphicon;
+  .glyphicon-comment;
+}
+
+.icon-info {
+  .glyphicon;
+  .glyphicon-info-sign;    
+}
+
+.icon-search {
+  .glyphicon;
+  .glyphicon-search;
+}
+
+.icon-send {
+  .glyphicon;
+  .glyphicon-send;
 }

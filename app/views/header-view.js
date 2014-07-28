@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
@@ -11,7 +13,7 @@ define([
   'controllers/navigator',
   'header-template'
 ], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, EventBus, Navigator) {
-  'use strict;'
+  'use strict';
 
   var HeaderView = Backbone.Marionette.ItemView.extend({
     template: 'header-template.dust',
@@ -50,7 +52,7 @@ define([
 
     index: function (ev) {
       this.navigate('');
-      EventBus.trigger('menu:item-selected', {id: -1});
+      EventBus.trigger('menu-item:select', {id: -1});
       ev.preventDefault();
     },
 

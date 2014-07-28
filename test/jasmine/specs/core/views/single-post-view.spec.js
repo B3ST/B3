@@ -1,5 +1,7 @@
+/* global define, sinon, describe, beforeEach, expect, it, spyOn */
+
 define([
-  'views/content-single-view',
+  'views/single-post-view',
   'controllers/event-bus',
   'views/reply-form-view',
   'models/user-model',
@@ -7,10 +9,10 @@ define([
   'models/comment-model',
   'collections/comment-collection',
   'sinon'
-], function (ContentSingleView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
+], function (SinglePostView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
   'use strict';
 
-  describe("ContentSingleView", function() {
+  describe("SinglePostView", function() {
     beforeEach(function() {
       this.user = new User();
     });
@@ -19,9 +21,17 @@ define([
       it("should bind to a given set of events", function() {
         this.spy = spyOn(EventBus, 'bind');
         this.post = new Post({ID: 1});
-        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+        this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
 
-        expect(this.spy).toHaveBeenCalledWith('comment:created', this.view.addComment);
+        expect(this.spy).toHaveBeenCalledWith('comment:create', this.view.addComment);
+      });
+
+      it("should set the document title", function () {
+        this.spy = spyOn(EventBus, 'trigger');
+        this.post = new Post({ID: 1, title: 'Title'});
+        this.view = new SinglePostView({model: this.post, user: this.user});
+
+        expect(this.spy).toHaveBeenCalledWith('title:change', 'Title');
       });
 
       it("should fetch the corresponding post comments", function() {
@@ -31,7 +41,7 @@ define([
           title:   'Title',
           content: 'Some Content'
         });
-        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+        this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         expect(this.spy).toHaveBeenCalled();
@@ -65,7 +75,7 @@ define([
               [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
             );
 
-            this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+            this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
             this.view.render();
 
             this.server.respond();
@@ -93,7 +103,7 @@ define([
                 [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
               );
 
-              this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+              this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
               this.view.render();
 
               this.server.respond();
@@ -118,7 +128,7 @@ define([
               this.url,
               [404, {'Content-Type': 'application/json'}, JSON.stringify(response)]
             );
-            this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+            this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
             this.view.render();
 
             this.server.respond();
@@ -131,9 +141,9 @@ define([
     describe(".addComment", function() {
       beforeEach(function() {
         this.comment = new Comment({"ID":59,"post":1,"content":"<p>reply to the post<\/p>\n","status":"approved","type":"comment","parent":0,"author":1,"date": new Date(),"date_tz":"UTC","date_gmt": new Date(),"meta":{"links":{"up":"http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/16","self":"http:\/\/localhost:8888\/wordpress\/wp-json\/b3:comments\/59"}}});
-        this.spy     = spyOn(ContentSingleView.prototype, 'render').andCallThrough();
+        this.spy     = spyOn(SinglePostView.prototype, 'render').andCallThrough();
         this.post    = new Post({ID: 1});
-        this.view    = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+        this.view    = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
       });
 
       it("should add to its collection", function() {
@@ -154,24 +164,45 @@ define([
           title:   'Title',
           content: 'Some Content'
         });
-        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+        this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
         expect(this.view.el).toBeDefined();
       });
     });
 
-    describe("When replying to the post", function() {
+    describe("Replying to the post", function() {
       it("should display a comment box", function() {
-        this.post = new Post({ID: 1});
-        this.view = new ContentSingleView({model: this.post, collection: new Comments(), user: this.user});
+        var that = this;
+
+        this.post = new Post({ID: 1, comment_status: 'open'});
+        this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
-        this.view.$('.b3-reply-post').click();
+        var template = new ReplyFormView({
+          parentView: that.view,
+          user: that.user,
+          model: that.post,
+          parentId: 0
+        }).render().el;
 
-        var template = new ReplyFormView({parentView: this.view, user: this.user}).render().el;
-        var box      = this.view.$('.b3-reply-section').children()[0];
-        expect(box.isEqualNode(template)).toBeTruthy();
+        $(template).slideDown();
+
+        var button = this.view.$('.b3-reply-post');
+        var box;
+
+        runs(function() {
+          button.click();
+        });
+
+        waitsFor(function() {
+          box = $(button).next('#b3-replyform');
+          return box.length > 0;
+        }, "the comment form to appear.", 750);
+
+        runs(function() {
+          expect(box[0].isEqualNode(template)).toBeTruthy();
+        });
       });
     });
 
@@ -184,7 +215,7 @@ define([
           title:   'Title',
           content: 'Page 1<!--nextpage-->Page 2<!--nextpage-->Page 3'
         });
-        this.view = new ContentSingleView({model: this.post, collection: new Comments()});
+        this.view = new SinglePostView({model: this.post, collection: new Comments()});
         this.view.render();
       });
 
@@ -223,7 +254,7 @@ define([
 
       describe("clicking the previous page link", function() {
         beforeEach(function() {
-          this.view = new ContentSingleView({model: this.post, page: 3, collection: new Comments()});
+          this.view = new SinglePostView({model: this.post, page: 3, collection: new Comments()});
           this.view.render();
         });
 

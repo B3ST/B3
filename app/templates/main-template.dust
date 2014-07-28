@@ -55,6 +55,6 @@
     <label class="screen-reader-text" for="search-site">Search for:</label>
     <input type="search" placeholder="Enter search terms" class="form-control" name="s" id="search-site" value="">
     {~s}
-    <button class="search form-control" role="search"><span class="glyphicon glyphicon-search"></span> Search</button>
+    <button class="search form-control" role="search"><span class="icon-search"></span> Search</button>
   </form>
 {/ search }

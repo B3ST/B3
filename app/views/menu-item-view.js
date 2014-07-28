@@ -1,6 +1,9 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
+  'backbone',
   'marionette',
   'dust',
   'dust.marionette',
@@ -9,8 +12,8 @@ define([
   'controllers/event-bus',
   'controllers/navigator',
   'navigation/menus/menu-item-template'
-], function ($, _, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {
-  'use strict;'
+], function ($, _, Backbone, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {
+  'use strict';
 
   var ItemView = Backbone.Marionette.ItemView.extend({
     template: "navigation/menus/menu-item-template.dust",
@@ -27,25 +30,36 @@ define([
       this.dropdown = false;
 
       _.bindAll(this, 'itemSelected');
-      EventBus.bind('menu:item-selected', this.itemSelected);
+      EventBus.bind('menu-item:select', this.itemSelected);
     },
 
     onDestroy: function () {
-      EventBus.unbind('menu:item-selected', this.itemSelected);
+      EventBus.unbind('menu-item:select', this.itemSelected);
     },
 
     serializeData: function () {
       return _.extend(this.model.attributes, {dropdown: this.dropdown});
     },
 
+    /**
+     * Handle menu selection (click) events.
+     *
+     * @param {Event} ev Click event.
+     */
     selectMenu: function (ev) {
-      ev.preventDefault();
-      if (!this.dropdown) {
-        var link     = ev.currentTarget.href,
-            resource = link.split(Settings.get('path'))[1],
-            route    = this.model.get('object_type').replace('page', '') + resource;
+      var link     = ev.currentTarget.href;
+      var baseUrl  = Settings.get('url');
+      var resource = link.replace(baseUrl, '');
 
-        Navigator.navigate(route, true);
+      // Do not handle external links:
+      if (link.indexOf(baseUrl) !== 0) {
+        return;
+      }
+
+      ev.preventDefault();
+
+      if (!this.dropdown) {
+        Navigator.navigate(resource, true);
         this.activateMenu();
         this.triggerMenuSelected(this.model.get('ID'), this.model.get('parent'));
       }
@@ -66,14 +80,13 @@ define([
     },
 
     deactivateMenu: function (id) {
-      if (this.itemId !== id
-                  && this.model.get('ID') !== id) {
+      if (this.itemId !== id && this.model.get('ID') !== id) {
         this.$el.removeClass('active');
       }
     },
 
     triggerMenuSelected: function (id, parent) {
-      EventBus.trigger('menu:item-selected', {id: id, parent: parent});
+      EventBus.trigger('menu-item:select', {id: id, parent: parent});
     },
 
     toggleDropdown: function () {

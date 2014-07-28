@@ -64,7 +64,11 @@ class B3_Sidebar {
         global $wp_registered_sidebars, $wp_registered_widgets;
 
         if (!is_active_sidebar( $index )) {
-            return new WP_Error( 'json_sidebar_invalid_id', __( 'Invalid sidebar index.' ), array( 'status' => 404 ) );
+            return new WP_Error( 'json_sidebar_invalid_id', __( 'Sidebar is not active.' ), array( 'status' => 404 ) );
+        }
+
+        if (!is_dynamic_sidebar( $index )) {
+            return new WP_Error( 'json_sidebar_invalid_id', __( 'Sidebar has no active widgets.' ), array( 'status' => 404 ) );
         }
 
         $sidebar = $wp_registered_sidebars[$index];
@@ -148,7 +152,9 @@ class B3_Sidebar {
 
         foreach ($_sidebars as $index => $sidebar) {
             foreach ($keys as $key) {
-                $sidebars[$index][$key] = $sidebar[$key];
+                if (isset( $sidebar[$key] )) {
+                    $sidebars[$index][$key] = $sidebar[$key];
+                }
             }
 
             $sidebars[$index]['meta'] = array(

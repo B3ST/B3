@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
@@ -7,14 +9,15 @@ define([
   'dust.marionette',
   'controllers/event-bus',
   'controllers/navigator',
-  'archive/posts-template',
-  'content/content-template'
+  // Shims
+  'main-template',
+  'archive/posts-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator) {
   'use strict';
 
-  var ContentView = Backbone.Marionette.ItemView.extend({
+  var ArchiveView = Backbone.Marionette.ItemView.extend({
     tagName:  'div id="posts" class="container"',
-    template: 'content/content-template.dust',
+    template: 'main-template.dust',
 
     events: {
       'click .b3-post-title > a': 'selectPost',
@@ -29,6 +32,8 @@ define([
     initialize: function (options) {
       this.page  = options.page || 1;
       this.limit = options.limit || 11;
+
+      EventBus.trigger('title:change');
     },
 
     serializeData: function () {
@@ -36,7 +41,7 @@ define([
     },
 
     getModels: function () {
-      return $.map(this.collection.models, function (post, index) {
+      return $.map(this.collection.models, function (post) {
         return post.toJSON();
       });
     },
@@ -100,5 +105,5 @@ define([
     }
   });
 
-  return ContentView;
+  return ArchiveView;
 });

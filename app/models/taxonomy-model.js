@@ -1,9 +1,12 @@
+/* global define */
+
 define([
   'jquery',
   'backbone',
   'models/settings-model',
   'collections/term-collection',
 ], function ($, Backbone, Settings, Terms) {
+  'use strict';
   var Taxonomy = Backbone.Model.extend({
     defaults: {
       name         : '',
@@ -16,7 +19,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: Settings.get('url') + '/taxonomies',
+    urlRoot: Settings.get('apiUrl') + '/taxonomies',
 
     fetchTerms: function (callbacks, id) {
       id = id || '';
@@ -25,7 +28,7 @@ define([
       } else {
         $.get(this.get('meta').links.archives)
           .done(function (data) {
-            var init = (id == '' ? Terms : new Terms().model);
+            var init = (id === '' ? Terms : new Terms().model);
             if (callbacks.done) {
               callbacks.done(new init(data));
             }

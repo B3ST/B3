@@ -1,10 +1,11 @@
+/* global define */
+
 define([
   'jquery',
   'backbone',
-  'dust',
-  'dust.marionette',
+  // Shims
   'footer-template'
-], function ($, Backbone, dust, dustMarionette) {
+], function ($, Backbone) {
   'use strict';
 
   var FooterView = Backbone.Marionette.ItemView.extend({

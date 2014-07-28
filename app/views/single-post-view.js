@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
@@ -5,18 +7,21 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
+  'models/settings-model',
   'controllers/event-bus',
   'controllers/navigator',
   'views/comment-view',
   'views/reply-form-view',
   'views/replyable-view',
-  'content/content-template',
-  'content/post-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
+  // Shims
+  'main-template',
+  'content/type-post-template',
+  'content/type-page-template'
+], function ($, _, Backbone, Marionette, dust, dustMarionette, Settings, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   'use strict';
 
   var view = _.extend(ReplyableView, {
-    template:  'content/content-template.dust',
+    template:  'main-template.dust',
     childView: CommentView,
     tagName: 'div id="post"',
     events: {
@@ -29,6 +34,8 @@ define([
     },
 
     initialize: function (options) {
+      EventBus.trigger('title:change', this.model.get('title'));
+
       this.model.fetchComments({
         done: function (data) { this.collection.add(data.models); }.bind(this),
         fail: function () { this.displayError(); }.bind(this)
@@ -40,7 +47,7 @@ define([
       this.user    = options.user;
 
       _.bindAll(this, 'addComment');
-      EventBus.bind('comment:created', this.addComment);
+      EventBus.bind('comment:create', this.addComment);
     },
 
     addComment: function (comment) {
@@ -62,10 +69,10 @@ define([
         this.replyBox.destroy();
       }
 
-      EventBus.unbind('comment:created', this.addComment);
+      EventBus.unbind('comment:create', this.addComment);
     },
 
-    attachHtml: function (collectionView, itemView, index) {
+    attachHtml: function (collectionView, itemView) {
       itemView.post = this.post;
       itemView.user = this.user;
 
@@ -108,7 +115,7 @@ define([
     },
 
     displayError: function () {
-      this.$('.b3-comments').text('Could not retrieve comments');
+      this.$('.b3-comments').text('Could not retrieve comments.');
     },
 
     parseModel: function () {
@@ -118,7 +125,7 @@ define([
     },
 
     getPagination: function () {
-      var vm = this;
+      var view = this;
 
       return {
         'has_next':     this.hasNext(),
@@ -128,21 +135,34 @@ define([
         'pageIterator': function (chunk, context, bodies) {
           var pages = context.current();
 
-          for (var page = 1; page <= pages; page++) {
+          _(pages).times(function (n) {
+            var page = n + 1;
             chunk = chunk.render(bodies.block, context.push({
               'page':    page,
-              'url':     vm.getRoute(page),
-              'current': parseInt(page) === parseInt(vm.page)
+              'url':     view.getRoute(page),
+              'current': page === parseInt(view.page)
             }));
-          }
+          });
 
           return chunk;
         }
       };
     },
 
+    /**
+     * [getDustTemplate description]
+     * @return {[type]} [description]
+     */
     getDustTemplate: function () {
-      return {'parent-template': 'content/post-template.dust'};
+      var template = 'content/type-post-template.dust';
+      var type     = this.post.get('type');
+      var config   = Settings.get('require.config');
+
+      if (config.paths['content/type-' + type + '-template']) {
+        template = 'content/type-' + type + '-template.dust';
+      }
+
+      return { 'parent-template': template };
     },
 
     hasNext: function () {
@@ -154,10 +174,26 @@ define([
       return this.page > 1;
     },
 
+    /**
+     * Get route for this view instance.
+     *
+     * @param  {int}   page Page number.
+     * @return {route}      Route.
+     *
+     * @todo: Build route from Settings.routes.
+     */
     getRoute: function (page) {
-      var route = '/post/' + this.model.get('slug');
+      var type  = this.model.get('type');
+      var route = '/' + type + '/' + this.model.get('slug');
+
+      // Pages have a different permalink structure:
+      if (type === 'page') {
+        route = '/' + this.model.get('slug');
+      }
+
+      // Do not append /page/ to the URL on the first page:
       if (page > 1) {
-        route += '/page/' +  page;
+        route += '/page/' + page;
       }
       return route;
     },
@@ -168,6 +204,7 @@ define([
     }
   });
 
-  var ContentSingleView = Backbone.Marionette.CompositeView.extend(view);
-  return ContentSingleView;
+  var SinglePostView = Backbone.Marionette.CompositeView.extend(view);
+
+  return SinglePostView;
 });

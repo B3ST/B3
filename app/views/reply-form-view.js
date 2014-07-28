@@ -1,81 +1,118 @@
-'use strict';
+/* global define */
 
 define([
   'jquery',
+  'underscore',
+  'backbone',
   'marionette',
   'dust',
   'dust.marionette',
   'controllers/event-bus',
   'models/comment-model',
   'models/user-model',
+  'models/post-model',
   'forms/replyform-template'
-], function ($, Marionette, dust, dustMarionette, EventBus, Comment, User) {
-  function isNumeric (num) {
-    return !isNaN(num);
-  };
+], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Comment, User, Post) {
+  'use strict';
 
   var ReplyFormView = Backbone.Marionette.ItemView.extend({
     template: "forms/replyform-template.dust",
-    tagName:  "div id='b3-replyform'",
+    tagName:  'div id="b3-replyform"',
     events: {
-      'click #b3-cancel':      'cancelReply',
-      'click #b3-replybutton': 'sendReply'
+      'click #b3-cancel':          'cancelReply',
+      'click #b3-replybutton':     'sendReply',
+      'submit #b3-replyform form': 'sendReply'
     },
 
     initialize: function (options) {
       this.user       = options.user;
       this.parentView = options.parentView;
       this.parentId   = options.parentId;
+      this.model      = options.model || new Post();
     },
 
     serializeData: function () {
-      return (this.userIsLogged() ? {display: false} : {display: true});
+      return {
+        author:  this.user.attributes,
+        guest:   !this.user.isLoggedIn(),
+        post:    this.model.attributes,
+        comment: ''
+      };
     },
 
     onRender: function () {
-      this.parentView.replyRendered();
-      this.mandatory = ['#b3-replybox'];
-      if (!this.userIsLogged()) {
-        this.mandatory = this.mandatory.concat(['#b3-author-name', '#b3-author-email']);
-      }
+      $(this.el).hide();
+      this.parentView.replyFormRendered();
     },
 
     onDestroy: function () {
-      this.parentView.replyDestroyed();
+      this.parentView.replyFormDestroyed();
     },
 
-    sendReply: function () {
-      var fields = this.getFields();
-      if (fields.isFilled) {
-        this.getComment().save().done(function (response) {
-          EventBus.trigger('comment:created', new Comment(response));
-        });
-        this.destroy();
-      } else {
-        this.displayWarning(fields.unfilled);
+    sendReply: function (event) {
+      event.preventDefault();
+
+      if (this.validateForm()) {
+        this.getComment().save()
+          .done(function (response) {
+            this.slideUpAndDestroy();
+            EventBus.trigger('comment:create', new Comment(response));
+          }.bind(this))
+          .fail(function (response) {
+            this.displayWarning(response.responseJSON[0].message);
+          }.bind(this));
       }
     },
 
-    cancelReply: function () {
-      this.destroy();
+    slideUpAndDestroy: function () {
+      $(this.el).slideUp('slow', function() {
+        this.destroy();
+      }.bind(this));
     },
 
-    getFields: function () {
-      var filled = true, unfilled = [];
-      this.mandatory.forEach(function (field) {
-        var hasText = (this.$(field).val() != '');
-        if (!hasText) {
-          unfilled.push(field);
-        }
-        filled = (filled && hasText);
+    cancelReply: function (ev) {
+      ev.preventDefault();
+      this.slideUpAndDestroy();
+    },
+
+    validateForm: function () {
+      var valid = true;
+
+      this.$('.form-group').each(function (index, group) {
+        $(group).removeClass('has-error');
+
+        $(group).find('.required').each(function(index, input) {
+          if (_.isEmpty($(input).val())) {
+            $(group).addClass('has-error');
+            valid = false;
+          }
+        });
       }.bind(this));
 
-      return {isFilled: filled, unfilled: unfilled};
+      if (!valid) {
+        this.displayWarning('Please fill all required fields.');
+      } else {
+        this.resetWarning();
+      }
+
+      return valid;
+    },
+
+    resetWarning: function () {
+      this.$('#b3-warning').removeClass('alert alert-danger').text('');
+    },
+
+    displayWarning: function (message) {
+      this.$('#b3-warning').addClass('alert alert-danger').text(message);
+
+      if (_.isEmpty(message)) {
+        this.resetWarning();
+      }
     },
 
     getComment: function () {
       return new Comment({
-        content:        this.$('#b3-replybox').val(),
+        content:        this.$('[name="comment_content"]').val(),
         post:           this.model.get('ID'),
         parent_comment: this.parentId,
         author:         this.getUser()
@@ -83,24 +120,17 @@ define([
     },
 
     getUser: function () {
-      if (this.userIsLogged()) {
+      if (this.user.isLoggedIn()) {
         return this.user;
       }
 
-      return new User({name: this.$('#b3-author-name').val(), email: this.$('#b3-author-email').val()});
-    },
-
-    userIsLogged: function () {
-      return isNumeric(this.user.get('ID')) && this.user.get('name') != '';
-    },
-
-    displayWarning: function (unfilled) {
-      this.$('#b3-warning').text('Please fill mandatory fields');
-      unfilled.forEach(function (field) {
-        this.$(field + '-label').removeClass('red');
-        this.$(field + '-label').addClass('red');
-      }.bind(this));
+      return new User({
+        name:  this.$('[name="author_name"]').val(),
+        email: this.$('[name="author_email"]').val(),
+        URL:   this.$('[name="author_url"]').val()
+      });
     }
+
   });
 
   return ReplyFormView;

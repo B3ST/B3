@@ -1,21 +1,21 @@
 define([
-  'views/content-view',
+  'views/archive-view',
   'models/settings-model',
   'models/post-model',
   'collections/post-collection',
   'controllers/event-bus',
   'sinon'
-], function (ContentView, Settings, Post, Posts, EventBus) {
+], function (ArchiveView, Settings, Post, Posts, EventBus) {
   'use strict';
 
-  describe("ContentView", function() {
+  describe("ArchiveView", function() {
     beforeEach(function() {
       this.posts = new Posts([
         new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1'}),
         new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
       ]);
 
-      this.view = new ContentView({collection: this.posts});
+      this.view = new ArchiveView({collection: this.posts});
       this.view.render();
     });
 
@@ -40,7 +40,7 @@ define([
           new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
         ]);
 
-        this.view = new ContentView({collection: this.posts});
+        this.view = new ArchiveView({collection: this.posts});
         this.view.render();
       });
 
@@ -62,11 +62,11 @@ define([
         this.server = sinon.fakeServer.create();
         this.server.respondWith(
           'GET',
-          Settings.get('url') + '/posts?page=2',
+          Settings.get('apiUrl') + '/posts?page=2',
           [200, {'Content-Type': 'application/json'}, JSON.stringify(this.response)]
         );
 
-        this.view = new ContentView({collection: this.posts, limit: 2});
+        this.view = new ArchiveView({collection: this.posts, limit: 2});
         this.view.render();
 
         this.view.$('.pager .next a').click();

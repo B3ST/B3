@@ -1,3 +1,5 @@
+/* global define */
+
 define([
   'jquery',
   'underscore',
@@ -13,17 +15,18 @@ define([
 
   var view = _.extend(ReplyableView, {
     template: 'content/comments/comment-template.dust',
+    
     tagName:  function () {
       return 'li id="comment-' + this.model.get('ID') + '" class="media comment"';
     },
 
-    initialize: function (options) {
+    initialize: function () {
       this.post = null;
       this.user = null;
     },
 
     events: {
-      'click a.b3-reply-comment': 'renderReplyBox',
+      'click .b3-reply-comment': 'renderReplyBox', // from ReplyableView
     },
 
     parentId: function () {
