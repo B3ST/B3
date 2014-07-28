@@ -20,6 +20,7 @@
     "glob": "^4.0.4",
     "gulp": "^3.8.6",
     "gulp-autoprefixer": "0.0.8",
+    "gulp-bower-files": "^0.2.7",
     "gulp-cache": "^0.2.0",
     "gulp-changed": "^0.4.0",
     "gulp-complexity": "^0.2.1",

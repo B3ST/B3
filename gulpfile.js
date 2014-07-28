@@ -84,7 +84,7 @@ gulp.task('build:images', function () {
  * gulp build:fonts
  */
 gulp.task('build:fonts', function () {
-  return gulp.src('app/assets/fonts/**/*.{eot,svg,ttf,woff}')
+  return gulp.src(['app/assets/fonts/**/*.{eot,svg,ttf,woff}', 'lib/fonts/**/*.{eot,svg,ttf,woff}'])
     .pipe($.flatten())
     .pipe(gulp.dest('dist/assets/fonts/'))
     .pipe($.size({title: 'fonts'}));
@@ -94,8 +94,6 @@ gulp.task('build:fonts', function () {
  * gulp bower
  */
 gulp.task('bower', function () {
-  // console.log(bowerFiles);
-
   gulp.src(bowerFiles.js)
     .pipe($.uglify())
     .pipe(gulp.dest('lib/'));
@@ -219,6 +217,13 @@ gulp.task('watch:server', function () {
 gulp.task('clean', function () {
   return gulp.src(['dist/', 'lib/'], { read: false })
     .pipe($.rimraf());
+});
+
+/**
+ * gulp rebuild
+ */
+gulp.task('rebuild', function (cb) {
+  runSequence('clean', ['build'], cb);
 });
 
 /**
