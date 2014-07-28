@@ -1,0 +1,12 @@
+{#sidebar:widgets}
+<div class="widget">
+  {?title}
+  <div class="widget-heading">
+    <h3 class="widget-title">{title}</h3>
+  </div>
+  {/title}
+  <div class="widget-body">
+    {content|s}
+  </div>
+</div>
+{/sidebar}

@@ -16,7 +16,8 @@
     "error/not-found-template",
     "forms/searchform-template",
     "forms/replyform-template",
-    "navigation/menus/menu-item-template"
+    "navigation/menus/menu-item-template",
+    "widget-areas/sidebar-template"
   ];
 
   var config = {
