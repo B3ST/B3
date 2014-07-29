@@ -47,7 +47,7 @@ define([
 
       it("should trigger an event of navigation", function() {
         this.view.$('.b3-post-title > a').first().click();
-        expect(this.spy).wasCalledWith('router:nav', {route: 'post/post-1', options: {trigger: true}});
+        expect(this.spy).toHaveBeenCalledWith('router:nav', {route: 'post/post-1', options: {trigger: true}});
       });
     });
 
