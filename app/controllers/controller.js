@@ -66,6 +66,7 @@ define([
 
     /**
      * Display posts of a given category
+     *
      * @param  {string} category Category name
      * @param  {int}    page     Page number
      */
@@ -77,12 +78,25 @@ define([
 
     /**
      * Display posts of a given tag
+     *
      * @param  {string} tag  Tag name
      * @param  {int}    page Page number
      */
     showPostByTag: function (tag, page) {
       var filter = new PostFilter();
       filter.byTag(tag);
+      this.fetchPostsOfPage(filter, page);
+    },
+
+    /**
+     * Display posts of a given author
+     *
+     * @param  {string} author Author name
+     * @param  {int}    page   Page number
+     */
+    showPostByAuthor: function (author, page) {
+      var filter = new PostFilter();
+      filter.byAuthor(author);
       this.fetchPostsOfPage(filter, page);
     },
 

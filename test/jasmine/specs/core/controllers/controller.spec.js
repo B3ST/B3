@@ -13,6 +13,68 @@ define([
 ], function (Controller, Settings, User, Post, Page, Posts, ArchiveView, SinglePostView, NotFoundView, App) {
   'use strict';
 
+  function sharedBehaviourFor (type, options) {
+    describe(options.method, function() {
+      it("should fetch the corresponding posts of a given " + type, function() {
+        this.spy = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.controller = new Controller({
+          posts: new Posts(),
+          app:   this.app
+        });
+        options.function(this.controller);
+
+        expect(this.spy).toHaveBeenCalled();
+      });
+
+      describe("When fetching is successful", function() {
+        it("should show the archive view", function() {
+          var response = new Post({ID: 1});
+          this.spy = spyOn(this.app.main, 'show');
+          this.server = sinon.fakeServer.create();
+          this.server.respondWith(
+            'GET',
+            options.request,
+            [200, {'Content-Type': 'application/json'}, JSON.stringify([response.toJSON()])]
+          );
+
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   this.app,
+            user:  this.user
+          });
+
+          options.function(this.controller);
+          this.server.respond();
+
+          expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
+        });
+      });
+
+      describe("When fetching fails", function() {
+        it("should show a not found view", function() {
+          this.spy = spyOn(this.app.main, 'show');
+          this.server = sinon.fakeServer.create();
+          this.server.respondWith(
+            'GET',
+            options.request,
+            [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
+          );
+
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+          options.function(this.controller);
+          this.server.respond();
+
+          var view = this.spy.mostRecentCall.args[0];
+          expect(view instanceof NotFoundView).toBeTruthy();
+        });
+      });
+    });
+  }
+
   describe("Controller", function() {
     beforeEach(function() {
       this.app  = App;
@@ -243,124 +305,28 @@ define([
       });
     });
 
-    describe(".showPostByCategory", function() {
-      it("should fetch the corresponding posts of a given category", function() {
-        this.spy = spyOn(Posts.prototype, 'fetch').andCallThrough();
-        this.controller = new Controller({
-          posts: new Posts(),
-          app:   this.app
-        });
-        this.controller.showPostByCategory('category');
-
-        expect(this.spy).toHaveBeenCalled();
-      });
-
-      describe("When fetching is successful", function() {
-        it("should show the archive view", function() {
-          var response = new Post({ID: 1});
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('apiUrl') + '/posts?filter[category_name]=category&page=1',
-            [200, {'Content-Type': 'application/json'}, JSON.stringify([response.toJSON()])]
-          );
-
-          this.controller = new Controller({
-            posts: new Posts(),
-            app:   this.app,
-            user:  this.user
-          });
-
-          this.controller.showPostByCategory('category');
-          this.server.respond();
-
-          expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
-        });
-      });
-
-      describe("When fetching fails", function() {
-        it("should show a not found view", function() {
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('apiUrl') + '/posts?filter[category_name]=category&page=1',
-            [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
-          );
-
-          this.controller = new Controller({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
-          this.controller.showPostByCategory('category');
-          this.server.respond();
-
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
-        });
-      });
+    sharedBehaviourFor('category', {
+      method: ".showPostByCategory",
+      function: function (controller) {
+        controller.showPostByCategory('category');
+      },
+      request: Settings.get('apiUrl') + '/posts?filter[category_name]=category&page=1',
     });
 
-    describe(".showPostByTag", function() {
-      it("should fetch the corresponding posts of a given category", function() {
-        this.spy = spyOn(Posts.prototype, 'fetch').andCallThrough();
-        this.controller = new Controller({
-          posts: new Posts(),
-          app:   this.app
-        });
-        this.controller.showPostByTag('tag');
+    sharedBehaviourFor('tag', {
+      method: ".showPostByTag",
+      function: function(controller) {
+        controller.showPostByTag('tag');
+      },
+      request: Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1'
+    });
 
-        expect(this.spy).toHaveBeenCalled();
-      });
-
-      describe("When fetching is successful", function() {
-        it("should show the archive view", function() {
-          var response = new Post({ID: 1});
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1',
-            [200, {'Content-Type': 'application/json'}, JSON.stringify([response.toJSON()])]
-          );
-
-          this.controller = new Controller({
-            posts: new Posts(),
-            app:   this.app,
-            user:  this.user
-          });
-
-          this.controller.showPostByTag('tag');
-          this.server.respond();
-
-          expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
-        });
-      });
-
-      describe("When fetching fails", function() {
-        it("should show a not found view", function() {
-          this.spy = spyOn(this.app.main, 'show');
-          this.server = sinon.fakeServer.create();
-          this.server.respondWith(
-            'GET',
-            Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1',
-            [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
-          );
-
-          this.controller = new Controller({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
-          this.controller.showPostByTag('tag');
-          this.server.respond();
-
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
-        });
-      });
+    sharedBehaviourFor('author', {
+      method: ".showPostByAuthor",
+      function: function (controller) {
+        controller.showPostByAuthor('author');
+      },
+      request: Settings.get('apiUrl') + '/posts?filter[author_name]=author&page=1'
     });
 
     describe(".showPageBySlug", function() {
