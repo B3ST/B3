@@ -43,6 +43,13 @@ define([
       return this;
     },
 
+    /* Tags */
+    byTag: function (tag) {
+      checkStringType(tag);
+      this.filter.filter.tag = tag;
+      return this;
+    },
+
     /* Pagination and Order */
     onPage: function (page) {
       checkIntType(page);
