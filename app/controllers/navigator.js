@@ -11,6 +11,10 @@ define([
   var Navigator = Backbone.Model.extend({
     navigate: function (route, trigger) {
       EventBus.trigger('router:nav', {route: route, options: {trigger: trigger}});
+    },
+
+    getRoute: function () {
+      return Backbone.history.fragment;
     }
   });
 
