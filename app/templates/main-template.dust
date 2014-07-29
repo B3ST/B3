@@ -5,12 +5,12 @@
   Published on <time class="published" datetime="{date}">{date}</time>
   {~n}
   by <span class="byline author vcard"><a href="{author.URL}" rel="author" class="fn">{author.name}</a></span>
-  <div id="b3-post-categories">
 
   {! Do change this and style at will :) !}
+  <div class="b3-post-categories">
   {# terms.category }
     <span class="label label-default">
-      <a href="{link}" style="text-decoration: none; color: white;">{name}</a>
+      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
     </span>
   {/ terms.category }
   </div>

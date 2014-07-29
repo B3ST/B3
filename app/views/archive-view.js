@@ -26,9 +26,10 @@ define([
     template: 'main-template.dust',
 
     events: {
-      'click .b3-post-title > a': 'selectPost',
-      'click .b3-pager-next':     'renderNextPage',
-      'click .b3-pager-previous': 'renderPrevPage'
+      'click .b3-post-title > a':             'selectPost',
+      'click .b3-pager-next':                 'renderNextPage',
+      'click .b3-pager-previous':             'renderPrevPage',
+      'click .b3-post-categories > span > a': 'displayCategory'
     },
 
     collectionEvents: {
@@ -53,10 +54,23 @@ define([
       });
     },
 
-    selectPost: function (ev) {
-      var input = $(ev.currentTarget).attr('id');
+    selectPost: function (event) {
+      var input = $(event.currentTarget).attr('id');
       Navigator.navigate('post/' + input, true);
-      ev.preventDefault();
+      event.preventDefault();
+    },
+
+    displayCategory: function (event) {
+      var id   = event.currentTarget.id,
+          slug = $(event.currentTarget).attr('slug');
+
+      this.filter = new PostFilter();
+      this.filter.byCategoryId(id);
+
+      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      Navigator.navigate('post/category/' + slug, false);
+
+      event.preventDefault();
     },
 
     renderNextPage: function (event) {
