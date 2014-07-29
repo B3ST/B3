@@ -303,6 +303,66 @@ define([
       });
     });
 
+    describe(".showPostByTag", function() {
+      it("should fetch the corresponding posts of a given category", function() {
+        this.spy = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.controller = new Controller({
+          posts: new Posts(),
+          app:   this.app
+        });
+        this.controller.showPostByTag('tag');
+
+        expect(this.spy).toHaveBeenCalled();
+      });
+
+      describe("When fetching is successful", function() {
+        it("should show the archive view", function() {
+          var response = new Post({ID: 1});
+          this.spy = spyOn(this.app.main, 'show');
+          this.server = sinon.fakeServer.create();
+          this.server.respondWith(
+            'GET',
+            Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1',
+            [200, {'Content-Type': 'application/json'}, JSON.stringify([response.toJSON()])]
+          );
+
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   this.app,
+            user:  this.user
+          });
+
+          this.controller.showPostByTag('tag');
+          this.server.respond();
+
+          expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
+        });
+      });
+
+      describe("When fetching fails", function() {
+        it("should show a not found view", function() {
+          this.spy = spyOn(this.app.main, 'show');
+          this.server = sinon.fakeServer.create();
+          this.server.respondWith(
+            'GET',
+            Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1',
+            [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
+          );
+
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+          this.controller.showPostByTag('tag');
+          this.server.respond();
+
+          var view = this.spy.mostRecentCall.args[0];
+          expect(view instanceof NotFoundView).toBeTruthy();
+        });
+      });
+    });
+
     describe(".showPageBySlug", function() {
       it("should fetch the corresponding page", function() {
         this.spy = spyOn(Page.prototype, 'fetch').andCallThrough();

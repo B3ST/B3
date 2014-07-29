@@ -66,18 +66,24 @@ define([
 
     /**
      * Display posts of a given category
-     * @param  {string} category
-     * @param  {int} page
+     * @param  {string} category Category name
+     * @param  {int}    page     Page number
      */
     showPostByCategory: function (category, page) {
-      page = page || 1;
-
       var filter = new PostFilter();
-      filter.byCategory(category).onPage(page);
+      filter.byCategory(category);
+      this.fetchPostsOfPage(filter, page);
+    },
 
-      this.posts.fetch({reset: true, data: filter.serialize()})
-          .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this))
-          .fail(function () { this.show(this.notFoundView()); }.bind(this));
+    /**
+     * Display posts of a given tag
+     * @param  {string} tag  Tag name
+     * @param  {int}    page Page number
+     */
+    showPostByTag: function (tag, page) {
+      var filter = new PostFilter();
+      filter.byTag(tag);
+      this.fetchPostsOfPage(filter, page);
     },
 
     /**
@@ -108,6 +114,20 @@ define([
      */
     showPageBySlug: function (slug, page) {
       this.fetchModelBy(Page, 'slug', slug, page);
+    },
+
+    /**
+     * Fetch all posts using a set of filters and display the
+     * corresponding view on success or fail.
+     *
+     * @param  {PostFilter} filter The filters used to fetch the posts
+     * @param  {int}        page   Page number
+     */
+    fetchPostsOfPage: function (filter, page) {
+      filter.onPage(page || 1);
+      this.posts.fetch({reset: true, data: filter.serialize()})
+          .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this))
+          .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
     /**
@@ -175,6 +195,5 @@ define([
         user:       this.user
       });
     }
-
   });
 });
