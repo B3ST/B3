@@ -75,6 +75,18 @@ define([
       event.preventDefault();
     },
 
+    displayTag: function (event) {
+      var slug = $(event.currentTarget).attr('slug');
+
+      this.filter = new PostFilter();
+      this.filter.byTag(slug);
+
+      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      Navigator.navigate('post/tag/' + slug, false);
+
+      event.preventDefault();
+    },
+
     renderNextPage: function (event) {
       event.preventDefault();
 
