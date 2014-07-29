@@ -28,7 +28,6 @@ define([
       return decodeURIComponent($.param(this.filter));
     },
 
-    /* Category */
     byCategory: function (category) {
       checkStringType(category);
       this.filter.filter.category_name = category;
@@ -41,14 +40,24 @@ define([
       return this;
     },
 
-    /* Tags */
     byTag: function (tag) {
       checkStringType(tag);
       this.filter.filter.tag = tag;
       return this;
     },
 
-    /* Pagination and Order */
+    byAuthor: function (name) {
+      checkStringType(name);
+      this.filter.filter.author_name = name;
+      return this;
+    },
+
+    byAuthorId: function (aid) {
+      checkIntType(aid);
+      this.filter.filter.author = aid;
+      return this;
+    },
+
     onPage: function (page) {
       checkIntType(page);
       this.filter.page = page;

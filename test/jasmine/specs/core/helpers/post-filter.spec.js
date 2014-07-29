@@ -31,6 +31,20 @@ define([
       });
     });
 
+    describe(".byAuthor", function() {
+      it("should encode using the author_name parameter", function() {
+        this.filter.byAuthor('author');
+        expect(this.filter.serialize()).toEqual('filter[author_name]=author');
+      });
+    });
+
+    describe(".byAuthorId", function() {
+      it("should encode using the author parameter", function() {
+        this.filter.byAuthorId(1);
+        expect(this.filter.serialize()).toEqual('filter[author]=1');
+      });
+    });
+
     describe(".onPage", function() {
       it("should encode using the page parameter", function() {
         this.filter.onPage(1);
