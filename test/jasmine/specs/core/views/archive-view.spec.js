@@ -146,5 +146,4 @@ define([
       route:   'post/author/author-1'
     });
   });
-
 });
