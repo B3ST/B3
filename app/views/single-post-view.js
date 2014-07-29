@@ -20,6 +20,11 @@ define([
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, Settings, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   'use strict';
 
+  function display (event, route) {
+    var slug = $(event.currentTarget).attr('slug');
+    Navigator.navigate(route + slug, true);
+  }
+
   var view = _.extend(ReplyableView, {
     template:  'main-template.dust',
     childView: CommentView,
@@ -31,7 +36,8 @@ define([
       'click .b3-pagination .next a':         'renderNextPage',
       'click .b3-pagination .previous a':     'renderPrevPage',
       'click .b3-pagination .number a':       'renderPageNumber',
-      'click .b3-post-categories > span > a': 'displayCategory'
+      'click .b3-post-categories > span > a': 'displayCategory',
+      'click .b3-post-tags > span > a':       'displayTag'
     },
 
     initialize: function (options) {
@@ -86,8 +92,12 @@ define([
     },
 
     displayCategory: function (event) {
-      var slug = $(event.currentTarget).attr('slug');
-      Navigator.navigate('post/category/' + slug, true);
+      display(event, 'post/category/');
+      event.preventDefault();
+    },
+
+    displayTag: function (event) {
+      display(event, 'post/tag/');
       event.preventDefault();
     },
 
@@ -147,7 +157,7 @@ define([
             chunk = chunk.render(bodies.block, context.push({
               'page':    page,
               'url':     view.getRoute(page),
-              'current': page === parseInt(view.page)
+              'current': page === parseInt(view.page, 10)
             }));
           });
 

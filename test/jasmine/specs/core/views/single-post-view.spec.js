@@ -13,6 +13,20 @@ define([
 ], function ($, SinglePostView, EventBus, ReplyFormView, User, Post, Comment, Comments) {
   'use strict';
 
+  function sharedBehaviourFor (action, options) {
+    describe("When clicking in " + action, function() {
+      it("should trigger an event of navigation", function() {
+        this.spy = spyOn(EventBus, 'trigger');
+        this.post = new Post({ID: 1, title: 'Title', terms: {category: {ID: 1, slug: 'post-1', link: "http://localhost:8888/wordpress/post/category/content"}, post_tag: {ID: 1, slug: 'tag-1', link: "http://localhost:8888/wordpress/post/tag/content"}}});
+        this.view = new SinglePostView({model: this.post, user: this.user});
+        this.view.render();
+
+        this.view.$(options.click).click();
+        expect(this.spy).toHaveBeenCalledWith('router:nav', {route: options.route, options: {trigger: true}});
+      });
+    });
+  }
+
   describe("SinglePostView", function() {
     beforeEach(function() {
       this.user = new User();
@@ -271,16 +285,7 @@ define([
       });
     });
 
-    describe("When clicking in category", function() {
-      it("should trigger an event of navigation", function() {
-        this.spy = spyOn(EventBus, 'trigger');
-        this.post = new Post({ID: 1, title: 'Title', slug: 'post-1', terms: {category: {ID: 1, link: "http://localhost:8888/wordpress/post/category/content"}}});
-        this.view = new SinglePostView({model: this.post, user: this.user});
-        this.view.render();
-
-        this.view.$('.b3-post-categories > span > a').click();
-        expect(this.spy).toHaveBeenCalledWith('router:nav', {route: 'post/category/post-1', options: {trigger: true}});
-      });
-    });
+    sharedBehaviourFor('category', {click: '.b3-post-categories > span > a', route: 'post/category/post-1'});
+    sharedBehaviourFor('tag', {click: '.b3-post-tags > span > a', route: 'post/tag/tag-1'});
   });
 });
