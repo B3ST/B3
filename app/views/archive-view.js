@@ -30,7 +30,8 @@ define([
       'click .b3-pager-next':                 'renderNextPage',
       'click .b3-pager-previous':             'renderPrevPage',
       'click .b3-post-categories > span > a': 'displayCategory',
-      'click .b3-post-tags > span > a':       'displayTag'
+      'click .b3-post-tags > span > a':       'displayTag',
+      'click .b3-post-author > span > a':     'displayAuthor'
     },
 
     collectionEvents: {
@@ -82,6 +83,19 @@ define([
 
       this.collection.fetch({reset: true, data: this.filter.serialize()});
       Navigator.navigate('post/tag/' + slug, false);
+
+      event.preventDefault();
+    },
+
+    displayAuthor: function (event) {
+      var id   = event.currentTarget.id,
+          slug = $(event.currentTarget).attr('slug');
+
+      this.filter = new PostFilter();
+      this.filter.byAuthorId(id);
+
+      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      Navigator.navigate('post/author/' + slug, false);
 
       event.preventDefault();
     },

@@ -2,9 +2,13 @@
 
 {! Entry metadata !}
 {< entry-meta }
-  Published on <time class="published" datetime="{date}">{date}</time>
-  {~n}
-  by <span class="byline author vcard"><a href="{author.URL}" rel="author" class="fn">{author.name}</a></span>
+  <div class="b3-post-author">
+    Published on <time class="published" datetime="{date}">{date}</time>
+    {~n}
+    by <span class="byline author vcard">
+        <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" rel="author" class="fn">{author.name}</a>
+      </span>
+  </div>
 
   {! Do change this and style at will :) !}
   <div class="b3-post-categories">
