@@ -28,7 +28,7 @@ define([
   var view = _.extend(ReplyableView, {
     template:  'main-template.dust',
     childView: CommentView,
-    tagName: 'div id="post"',
+    tagName:   'div id="post"',
     events: {
       'click .b3-reply-post':                 'renderReplyBox', // from ReplyableView
       'click .b3-pager-next':                 'renderNextPage',
@@ -37,7 +37,9 @@ define([
       'click .b3-pagination .previous a':     'renderPrevPage',
       'click .b3-pagination .number a':       'renderPageNumber',
       'click .b3-post-categories > span > a': 'displayCategory',
-      'click .b3-post-tags > span > a':       'displayTag'
+      'click .b3-post-tags > span > a':       'displayTag',
+      'click .b3-post-author > span > a':     'displayAuthor',
+      'click #b3-post-author > a':            'displayAuthor'
     },
 
     initialize: function (options) {
@@ -98,6 +100,11 @@ define([
 
     displayTag: function (event) {
       display(event, 'post/tag/');
+      event.preventDefault();
+    },
+
+    displayAuthor: function (event) {
+      display(event, 'post/author/');
       event.preventDefault();
     },
 
