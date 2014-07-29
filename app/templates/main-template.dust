@@ -14,7 +14,14 @@
     </span>
   {/ terms.category }
   </div>
-  {! TODO: Tags !}
+
+  <div class="b3-post-tags">
+  {# terms.post_tag }
+    <span class="label label-primary">
+      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
+    </span>
+  {/ terms.post_tag }
+  </div>
 {/ entry-meta }
 
 {! Previous/next pager !}
