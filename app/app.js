@@ -26,6 +26,9 @@
     App.navigate = function(route, options){
       options = options || {};
       this.appRouter.navigate(route, options);
+      if (!options.trigger) {
+        window.scrollTo(0, 0);
+      }
     };
 
     App.titleChange = function(title) {
