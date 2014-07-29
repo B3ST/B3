@@ -16,6 +16,11 @@ define([
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, Navigator) {
   'use strict';
 
+  function routeIsPaged (route) {
+    var isPaged = route.match(/page\/\d/);
+    return isPaged !== null && isPaged.length > 0;
+  }
+
   var ArchiveView = Backbone.Marionette.ItemView.extend({
     tagName:  'div id="posts" class="container"',
     template: 'main-template.dust',
@@ -31,8 +36,9 @@ define([
     },
 
     initialize: function (options) {
-      this.page  = options.page || 1;
-      this.limit = options.limit || 11;
+      this.page   = options.page || 1;
+      this.limit  = options.limit || 11;
+      this.filter = options.filter || new PostFilter();
 
       EventBus.trigger('title:change');
     },
@@ -50,7 +56,7 @@ define([
     selectPost: function (ev) {
       var input = $(ev.currentTarget).attr('id');
       Navigator.navigate('post/' + input, true);
-      return false;
+      ev.preventDefault();
     },
 
     renderNextPage: function (event) {
@@ -98,13 +104,17 @@ define([
     },
 
     getParams: function () {
-      var filter = new PostFilter();
-      filter.onPage(this.page);
-      return {data: filter.serialize(), reset: true};
+      this.filter.onPage(this.page);
+      return {data: this.filter.serialize(), reset: true};
     },
 
     navigate: function () {
-      Navigator.navigate('page/' + this.page, false);
+      var route = Navigator.getRoute(),
+          regex = /page\/\d/;
+
+      route = (routeIsPaged(route)) ? route.replace(regex, 'page/' + this.page)
+                                    : route + '/page/' + this.page;
+      Navigator.navigate(route, false);
     }
   });
 

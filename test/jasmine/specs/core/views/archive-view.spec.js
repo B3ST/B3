@@ -4,8 +4,9 @@ define([
   'models/post-model',
   'collections/post-collection',
   'controllers/event-bus',
+  'controllers/navigator',
   'sinon'
-], function (ArchiveView, Settings, Post, Posts, EventBus) {
+], function (ArchiveView, Settings, Post, Posts, EventBus, Navigator) {
   'use strict';
 
   describe("ArchiveView", function() {
@@ -52,6 +53,9 @@ define([
 
     describe("When clicking in next page", function() {
       beforeEach(function() {
+        this.spy = spyOn(Navigator, 'getRoute').andCallFake(function () {
+          return 'some/route/url/page/1';
+        });
         this.eventbus = spyOn(EventBus, 'trigger');
         this.posts = new Posts([
           new Post({ID: 1, title: 'Sticky', excerpt: 'Excerpt 1', slug: 'post-1'}),
@@ -81,7 +85,7 @@ define([
 
       it("should navigate to page/<id> URL", function() {
         var page = this.view.page;
-        expect(this.eventbus).toHaveBeenCalledWith('router:nav', {route: 'page/' + page, options: {trigger: false}});
+        expect(this.eventbus).toHaveBeenCalledWith('router:nav', {route: 'some/route/url/page/' + page, options: {trigger: false}});
       });
     });
   });
