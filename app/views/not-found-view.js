@@ -2,8 +2,10 @@
 
 define([
   'backbone',
+  'marionette',
   'error/not-found-template'
-], function (Backbone) {
+  /*jshint unused: false*/
+], function (Backbone, Marionette) {
   'use strict';
 
   var NotFoundView = Backbone.Marionette.ItemView.extend({
