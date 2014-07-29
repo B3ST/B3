@@ -25,12 +25,13 @@ define([
     childView: CommentView,
     tagName: 'div id="post"',
     events: {
-      'click .b3-reply-post':             'renderReplyBox', // from ReplyableView
-      'click .b3-pager-next':             'renderNextPage',
-      'click .b3-pager-previous':         'renderPrevPage',
-      'click .b3-pagination .next a':     'renderNextPage',
-      'click .b3-pagination .previous a': 'renderPrevPage',
-      'click .b3-pagination .number a':   'renderPageNumber'
+      'click .b3-reply-post':                 'renderReplyBox', // from ReplyableView
+      'click .b3-pager-next':                 'renderNextPage',
+      'click .b3-pager-previous':             'renderPrevPage',
+      'click .b3-pagination .next a':         'renderNextPage',
+      'click .b3-pagination .previous a':     'renderPrevPage',
+      'click .b3-pagination .number a':       'renderPageNumber',
+      'click .b3-post-categories > span > a': 'displayCategory'
     },
 
     initialize: function (options) {
@@ -41,7 +42,7 @@ define([
         fail: function () { this.displayError(); }.bind(this)
       });
 
-      this.page    = parseInt(options.page) || 1;
+      this.page    = parseInt(options.page, 10) || 1;
       this.content = this.model.get('content').split(/<!--nextpage-->/);
       this.post    = this.model;
       this.user    = options.user;
@@ -82,6 +83,12 @@ define([
         var commentSection = collectionView.$('.b3-comments');
         $(commentSection[0]).append(itemView.el);
       }
+    },
+
+    displayCategory: function (event) {
+      var slug = $(event.currentTarget).attr('slug');
+      Navigator.navigate('post/category/' + slug, true);
+      event.preventDefault();
     },
 
     renderNextPage: function (event) {

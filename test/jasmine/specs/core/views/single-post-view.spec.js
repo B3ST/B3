@@ -270,5 +270,17 @@ define([
         });
       });
     });
+
+    describe("When clicking in category", function() {
+      it("should trigger an event of navigation", function() {
+        this.spy = spyOn(EventBus, 'trigger');
+        this.post = new Post({ID: 1, title: 'Title', slug: 'post-1', terms: {category: {ID: 1, link: "http://localhost:8888/wordpress/post/category/content"}}});
+        this.view = new SinglePostView({model: this.post, user: this.user});
+        this.view.render();
+
+        this.view.$('.b3-post-categories > span > a').click();
+        expect(this.spy).toHaveBeenCalledWith('router:nav', {route: 'post/category/post-1', options: {trigger: true}});
+      });
+    });
   });
 });
