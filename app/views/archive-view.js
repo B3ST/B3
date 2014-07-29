@@ -29,7 +29,8 @@ define([
       'click .b3-post-title > a':             'selectPost',
       'click .b3-pager-next':                 'renderNextPage',
       'click .b3-pager-previous':             'renderPrevPage',
-      'click .b3-post-categories > span > a': 'displayCategory'
+      'click .b3-post-categories > span > a': 'displayCategory',
+      'click .b3-post-tags > span > a':       'displayTag'
     },
 
     collectionEvents: {
@@ -69,6 +70,18 @@ define([
 
       this.collection.fetch({reset: true, data: this.filter.serialize()});
       Navigator.navigate('post/category/' + slug, false);
+
+      event.preventDefault();
+    },
+
+    displayTag: function (event) {
+      var slug = $(event.currentTarget).attr('slug');
+
+      this.filter = new PostFilter();
+      this.filter.byTag(slug);
+
+      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      Navigator.navigate('post/tag/' + slug, false);
 
       event.preventDefault();
     },
