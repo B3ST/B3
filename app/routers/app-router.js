@@ -2,16 +2,19 @@
 
 define([
   'marionette'
-], function(Marionette) {
+], function (Marionette) {
   'use strict';
+
   return Marionette.AppRouter.extend({
     appRoutes: {
-      ""                     : "showHome",
-      "page/:page"           : "showArchive",
-      "post/:slug/page/:page": "showPostBySlug",
-      "post/:slug"           : "showPostBySlug",
-      "post/:id"             : "showPostById",
-      "*slug"                : "showPageBySlug"
+      ""                             : "showHome",
+      "page/:page"                   : "showArchive",
+      "post/:slug/page/:page"        : "showPostBySlug",
+      "post/:slug"                   : "showPostBySlug",
+      "post/:id"                     : "showPostById",
+      "post/category/:cat"           : "showPostByCategory",
+      "post/category/:cat/page/:page": "showPostByCategory",
+      "*slug"                        : "showPageBySlug"
     }
   });
 });

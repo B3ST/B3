@@ -45,7 +45,7 @@ define([
       filter.onPage(page);
 
       this.posts.fetch({reset: true, data: filter.serialize()});
-      this.show(this.contentView(this.posts, page));
+      this.show(this.archiveView(this.posts, page, filter));
     },
 
     /**
@@ -62,6 +62,22 @@ define([
       } else {
         this.fetchModelBy(Post, 'ID', id, page);
       }
+    },
+
+    /**
+     * Display posts of a given category
+     * @param  {string} category
+     * @param  {int} page
+     */
+    showPostByCategory: function (category, page) {
+      page = page || 1;
+
+      var filter = new PostFilter();
+      filter.byCategory(category).onPage(page);
+
+      this.posts.fetch({reset: true, data: filter.serialize()})
+          .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this))
+          .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
     /**
@@ -111,7 +127,7 @@ define([
 
       post.fetch()
         .done(function () { this.show(this.singlePostView(post, page)); }.bind(this))
-        .fail(function () { this.show(this.error()); }.bind(this));
+        .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
     /**
@@ -128,7 +144,7 @@ define([
      *
      * @return {NotFoundView} New "Not found" view instance.
      */
-    error: function () {
+    notFoundView: function () {
       return new NotFoundView();
     },
 
@@ -137,10 +153,11 @@ define([
      *
      * @param  {array}       posts Post collection to display.
      * @param  {int}         page  Page number.
+     * @param  {Object}      filter The searching filter
      * @return {ArchiveView}       New archive view instance.
      */
-    contentView: function (posts, page) {
-      return new ArchiveView({collection: posts, page: page});
+    archiveView: function (posts, page, filter) {
+      return new ArchiveView({collection: posts, page: page, filter: filter});
     },
 
     /**
