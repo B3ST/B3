@@ -45,6 +45,13 @@ define([
       });
     });
 
+    describe(".bySearchingFor", function() {
+      it("should encode using the s parameter", function() {
+        this.filter.bySearchingFor('search term');
+        expect(this.filter.serialize()).toEqual('filter[s]=search+term');
+      });
+    });
+
     describe(".onPage", function() {
       it("should encode using the page parameter", function() {
         this.filter.onPage(1);
