@@ -2,11 +2,30 @@
 
 {! Entry metadata !}
 {< entry-meta }
-  Published on <time class="published" datetime="{date}">{date}</time>
-  {~n}
-  by <span class="byline author vcard"><a href="{author.URL}" rel="author" class="fn">{author.name}</a></span>
-  {! TODO: Categories !}
-  {! TODO: Tags !}
+  <div class="b3-post-author">
+    Published on <time class="published" datetime="{date}">{date}</time>
+    {~n}
+    by <span class="byline author vcard">
+        <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" rel="author" class="fn">{author.name}</a>
+      </span>
+  </div>
+
+  {! Do change this and style at will :) !}
+  <div class="b3-post-categories">
+  {# terms.category }
+    <span class="label label-default">
+      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
+    </span>
+  {/ terms.category }
+  </div>
+
+  <div class="b3-post-tags">
+  {# terms.post_tag }
+    <span class="label label-primary">
+      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
+    </span>
+  {/ terms.post_tag }
+  </div>
 {/ entry-meta }
 
 {! Previous/next pager !}
