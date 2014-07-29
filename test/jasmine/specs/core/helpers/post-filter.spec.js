@@ -24,6 +24,13 @@ define([
       });
     });
 
+    describe(".byTag", function() {
+      it("should encode using the tag parameter", function() {
+        this.filter.byTag('tag');
+        expect(this.filter.serialize()).toEqual('filter[tag]=tag');
+      });
+    });
+
     describe(".onPage", function() {
       it("should encode using the page parameter", function() {
         this.filter.onPage(1);
