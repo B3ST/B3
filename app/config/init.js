@@ -124,14 +124,19 @@
       return response;
     };
 
+    function fetchModel (parentModel, attributes) {
+      var object = new parentModel.constructor(attributes);
+      object.set('ID', parent);
+      object.fetch();
+      return object;
+    }
+
     Backbone.Model.prototype.parent = function() {
-      var object, parent = this.get('parent');
+      var parent = this.get('parent'), parentModel = this;
 
       if (parent === 0) {
         return null;
       }
-
-      var parentModel = this;
 
       if (typeof this.parentModel !== 'undefined') {
         /**
@@ -144,11 +149,7 @@
       if (parentModel.collection) {
         return parentModel.collection.get(parent);
       } else {
-        object = new parentModel.constructor(this.attributes);
-        object.set('ID', parent);
-
-        object.fetch();
-        return object;
+        return fetchModel(parentModel, this.attributes);
       }
     };
 
