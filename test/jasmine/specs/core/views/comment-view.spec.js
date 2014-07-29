@@ -3,11 +3,15 @@ define([
   'models/comment-model',
   'models/post-model',
   'models/user-model',
+  'controllers/event-bus',
   'views/reply-form-view'
-], function (CommentView, Comment, Post, User, ReplyFormView) {
+], function (CommentView, Comment, Post, User, EventBus, ReplyFormView) {
+  'use strict';
+
   describe("CommentView", function() {
     beforeEach(function() {
-      this.user = new User({ URL: 'user-url', name: 'some name' });
+      this.bus  = spyOn(EventBus, 'trigger');
+      this.user = new User({ID: 1, URL: 'user-url', name: 'some-name', slug: 'author-slug'});
       this.post = new Post({ID: 1, comment_status: 'open'});
       this.comment = new Comment({
         ID:      1,
@@ -26,10 +30,8 @@ define([
       });
     });
 
-    describe("Clicking reply", function() {
+    describe("When clicking in reply", function() {
       it("should display a comment box", function() {
-        var that       = this;
-
         this.view      = new CommentView({model: this.comment});
         this.view.user = this.user;
         this.view.render();
@@ -58,6 +60,16 @@ define([
         runs(function() {
           expect(box[0].isEqualNode(template)).toBeTruthy();
         });
+      });
+    });
+
+    describe("When clicking in author", function() {
+      it("should trigger a navigation event", function() {
+        this.view = new CommentView({model: this.comment});
+        this.view.render();
+
+        this.view.$('.b3-comment-author').click();
+        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'post/author/author-slug', options: {trigger: true}});
       });
     });
   });

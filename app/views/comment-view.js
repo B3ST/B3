@@ -9,15 +9,21 @@ define([
   'dust.helpers',
   'dust.marionette',
   'views/replyable-view',
+  'controllers/navigator',
   'content/comments/comment-template'
-], function ($, _, Backbone, Marionette, dust, dustHelpers, dustMarionette, ReplyableView) {
+], function ($, _, Backbone, Marionette, dust, dustHelpers, dustMarionette, ReplyableView, Navigator) {
   'use strict';
 
   var view = _.extend(ReplyableView, {
     template: 'content/comments/comment-template.dust',
-    
+
     tagName:  function () {
       return 'li id="comment-' + this.model.get('ID') + '" class="media comment"';
+    },
+
+    events: {
+      'click .b3-reply-comment':  'renderReplyBox', // from ReplyableView
+      'click .b3-comment-author': 'displayAuthor'
     },
 
     initialize: function () {
@@ -25,12 +31,18 @@ define([
       this.user = null;
     },
 
-    events: {
-      'click .b3-reply-comment': 'renderReplyBox', // from ReplyableView
+    serializeData: function () {
+      return this.model.toJSON();
     },
 
     parentId: function () {
       return this.model.get('ID');
+    },
+
+    displayAuthor: function (event) {
+      var slug = $(event.currentTarget).attr('slug');
+      Navigator.navigate('post/author/' + slug, true);
+      event.preventDefault();
     }
   });
 

@@ -4,7 +4,9 @@
 
 <div class="comment-body media-body b3-comment-content">
   <h4 class="comment-meta media-heading">
-    <a href="{author.url}" class="b3-comment-author">{author.name}</a> on <a href="{meta.links.self}">
+    <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" class="b3-comment-author">{author.name}</a>
+    {~s} on {~s}
+    <a href="{meta.links.self}">
       <time datetime="{date}">{date}</time>
     </a>:
   </h4>
