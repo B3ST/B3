@@ -1,6 +1,10 @@
+/* global define */
+
 define([
   'helpers/post-filter'
 ], function (PostFilter) {
+  'use strict';
+
   describe("PostFilter", function() {
     beforeEach(function() {
       this.filter = new PostFilter();
@@ -42,6 +46,13 @@ define([
       it("should encode using the author parameter", function() {
         this.filter.byAuthorId(1);
         expect(this.filter.serialize()).toEqual('filter[author]=1');
+      });
+    });
+
+    describe(".bySearchingFor", function() {
+      it("should encode using the s parameter", function() {
+        this.filter.bySearchingFor('search term');
+        expect(this.filter.serialize()).toEqual('filter[s]=search+term');
       });
     });
 
