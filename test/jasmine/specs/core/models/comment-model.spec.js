@@ -92,56 +92,6 @@ define([
           expect(this.model.attributes).toEqual(empty.attributes);
         });
       });
-
-      describe("When fetching parent", function() {
-        it("should set its attributes", function() {
-          var user = {
-            ID: 1,
-            username: 'wordpress',
-            email: 'generic@wordpress.org',
-            password: '',
-            name: 'WordPress',
-            first_name: 'Word',
-            last_name: 'Press',
-            nickname: 'The WordPresser',
-            slug: 'wordpress',
-            URL: 'http://wordpress.org',
-            avatar: 'http://s.w.org/style/images/wp-header-logo-2x.png?1'
-          };
-
-          this.model = new Comment({
-            ID: 2,
-            post: 1,
-            content: 'Here is a super test comment',
-            status: 'approved',
-            type: 'comment',
-            parent: 1,
-            author: new User(user),
-            date: new Date(),
-            date_tz: 'Etc/UTC',
-            date_gmt: new Date(),
-            meta: {
-              links: {
-                up: 'http://example.com/wp-json/posts/1',
-                self: 'http://example.com/wp-json/posts/1/comments/2'
-              }
-            }
-          });
-
-          var response = {"ID":1,"post":1,"content":"Here is a test comment","status":"approved","type":"comment","parent":0,"author":{"ID":1,"username":"wordpress","email":"generic@wordpress.org","password":"","name":"WordPress","first_name":"Word","last_name":"Press","nickname":"The WordPresser","slug":"wordpress","URL":"http://wordpress.org","avatar":"http://s.w.org/style/images/wp-header-logo-2x.png?1","meta":{"links":{"self":"http://example.com/wp-json/users/1","archives":"http://example.com/wp-json/users/1/posts"}}},"date":"2014-05-22T04:57:25+00:00","date_tz":"UTC","date_gmt":"2014-05-22T04:57:25+00:00","meta":{"links":{"up":"http://example.com/wp-json/posts/1","self":"http://example.com/wp-json/posts/1/comments/2"}}};
-
-          this.server.respondWith(
-            'GET',
-            Settings.get('apiUrl') + '/posts/1/b3:replies/1',
-            [ 200, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
-          );
-          var parent = this.model.parent();
-          this.server.respond();
-
-          expect(parent.get('ID')).toEqual(1);
-          expect(parent.get('content')).toEqual('Here is a test comment');
-        });
-      });
     });
   });
 });

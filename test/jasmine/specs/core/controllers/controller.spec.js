@@ -75,6 +75,7 @@ define([
         });
       });
     });
+  }
 
   function stubServer (options) {
     var server = sinon.fakeServer.create();

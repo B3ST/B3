@@ -126,35 +126,6 @@
       return response;
     };
 
-    function fetchModel (parentModel, attributes) {
-      var object = new parentModel.constructor(attributes);
-      object.set('ID', parent);
-      object.fetch();
-      return object;
-    }
-
-    Backbone.Model.prototype.parent = function() {
-      var parent = this.get('parent'), parentModel = this;
-
-      if (parent === 0) {
-        return null;
-      }
-
-      if (typeof this.parentModel !== 'undefined') {
-        /**
-         * Probably a better way to do this. Perhaps grab a cached version of the
-         * instantiated model?
-         */
-        parentModel = new this.parentModel();
-      }
-
-      if (parentModel.collection) {
-        return parentModel.collection.get(parent);
-      } else {
-        return fetchModel(parentModel, this.attributes);
-      }
-    };
-
     Backbone.Model.prototype.sync = function(method, model, options) {
       options = options || {};
 

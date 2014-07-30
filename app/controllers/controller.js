@@ -68,10 +68,7 @@ define([
       filter.onPage(page);
 
       this.posts.fetch({reset: true, data: filter.serialize()});
-<<<<<<< HEAD
       this.show(this.archiveView(this.posts, page, filter));
-=======
-      this.show(this.archiveView(this.posts, page));
     },
 
     /**
@@ -118,7 +115,6 @@ define([
       this.currentView  = this.previousView;
       this.showingEmpty = false;
       this.show(new this.previousView(this.previousOptions));
->>>>>>> 12-search-madness
     },
 
     /**
@@ -273,13 +269,9 @@ define([
      * @return {ArchiveView}       New archive view instance.
      */
     archiveView: function (posts, page, filter) {
-<<<<<<< HEAD
-      return new ArchiveView({collection: posts, page: page, filter: filter});
-=======
       this.currentView    = ArchiveView;
       this.currentOptions = {collection: posts, page: page, filter: filter};
       return new ArchiveView(this.currentOptions);
->>>>>>> 12-search-madness
     },
 
     /**
