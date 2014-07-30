@@ -51,6 +51,10 @@ define([
       it("should render the menu and display its items", function() {
         expect(this.view.$('#menu-primary').children().length).toEqual(2);
       });
+
+      it("should render the search bar", function() {
+        expect(this.view.$('#search-nav-bar').length).toEqual(1);
+      });
     });
 
     describe("When clicking in home", function() {
