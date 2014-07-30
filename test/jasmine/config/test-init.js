@@ -15,6 +15,7 @@
     "error/not-found-template",
     "forms/searchform-template",
     "forms/replyform-template",
+    "forms/navigation-search-template",
     "navigation/menus/menu-item-template"
   ];
 
@@ -146,6 +147,7 @@
       root + 'core/views/reply-form-view.spec',
       root + 'core/views/menu-view.spec',
       root + 'core/views/menu-item-view.spec',
+      root + 'core/views/search-view.spec',
 
       // helpers
       root + 'core/helpers/post-filter.spec',

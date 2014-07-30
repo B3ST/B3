@@ -16,6 +16,7 @@
     "error/not-found-template",
     "forms/searchform-template",
     "forms/replyform-template",
+    "forms/navigation-search-template",
     "navigation/menus/menu-item-template"
   ];
 

@@ -1,0 +1,4 @@
+<form role="search" method="get" action="#" class="navbar-form navbar-right">
+  <label class="screen-reader-text" for="search-site">Search for:</label>
+  <input type="search" placeholder="Enter search terms" class="form-control" name="s" id="search-site" value="">
+</form>
