@@ -11,6 +11,7 @@ define([
       "post/:slug/page/:page": "showPostBySlug",
       "post/:slug"           : "showPostBySlug",
       "post/:id"             : "showPostById",
+      "post?*queryString"    : "showSearch",
       "*slug"                : "showPageBySlug"
     }
   });
