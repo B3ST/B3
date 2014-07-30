@@ -10,6 +10,9 @@ define([
 
   describe("SearchView", function() {
     beforeEach(function() {
+      spyOn(Navigator, 'getRoute').andCallFake(function () {
+        return 'some/url';
+      });
       this.view = new SearchView({});
       this.view.render();
     });
@@ -27,9 +30,6 @@ define([
         });
 
         it("should save the previous route", function() {
-          spyOn(Navigator, 'getRoute').andCallFake(function () {
-            return 'some/url';
-          });
           this.view.$('input#search-site').val('ter');
           this.view.$('input#search-site').keyup();
           expect(this.view.previousRoute).toEqual('some/url');
