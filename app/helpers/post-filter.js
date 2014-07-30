@@ -21,6 +21,10 @@ define([
   }
 
   var PostFilter = Backbone.Model.extend({
+    defaults: {
+      'paging-schema': 'url'
+    },
+
     initialize: function () {
       this.filter        = {};
       this.filter.filter = {};

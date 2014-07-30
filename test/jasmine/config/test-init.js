@@ -15,6 +15,7 @@
     "error/not-found-template",
     "forms/searchform-template",
     "forms/replyform-template",
+    "forms/navigation-search-template",
     "navigation/menus/menu-item-template",
     "widget-areas/sidebar-template"
   ];
@@ -100,7 +101,7 @@
     "models/user-model",
     "bootstrap",
     "backbone.validateAll"
-  ], function($, _, Backbone, Marionette, jasmine, Settings, User) {
+  ], function ($, _, Backbone, Marionette, jasmine, Settings, User) {
     var root = '../../../../test/jasmine/specs/';
 
     Settings.set('require.config', config);
@@ -151,6 +152,7 @@
       root + 'core/views/menu-view.spec',
       root + 'core/views/menu-item-view.spec',
       root + 'core/views/sidebar-view.spec',
+      root + 'core/views/search-view.spec',
 
       // helpers
       root + 'core/helpers/post-filter.spec',
@@ -194,8 +196,16 @@
       return response;
     };
 
+    function fetchModel (parentModel, attributes) {
+      var object = new parentModel.constructor(attributes);
+      object.set('ID', parent);
+
+      object.fetch();
+      return object;
+    }
+
     Backbone.Model.prototype.parent = function() {
-      var object, parent = this.get('parent');
+      var parent = this.get('parent');
 
       if (parent === 0) {
         return null;
@@ -213,13 +223,8 @@
 
       if (parentModel.collection) {
         return parentModel.collection.get(parent);
-
       } else {
-        object = new parentModel.constructor(this.attributes);
-        object.set('ID', parent);
-
-        object.fetch();
-        return object;
+        return fetchModel();
       }
     };
 

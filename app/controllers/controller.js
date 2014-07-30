@@ -6,21 +6,44 @@ define([
   'backbone',
   'marionette',
   'helpers/post-filter',
+  'controllers/event-bus',
   'models/settings-model',
   'models/post-model',
   'models/page-model',
   'collections/post-collection',
   'views/archive-view',
   'views/single-post-view',
+  'views/empty-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, PostFilter, Settings, Post, Page, Posts, ArchiveView, SinglePostView, NotFoundView) {
+], function ($, _, Backbone, Marionette, PostFilter, EventBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, NotFoundView) {
   'use strict';
+
+  function filterInt (value) {
+    return (/^(\-|\+)?([0-9]+|Infinity)$/.test(value)) ? Number(value): NaN;
+  }
+
+  function getParams (queryString) {
+    var result = {},
+        regex  = new RegExp("([^?=&]+)(=([^&]*))?", "g");
+
+    queryString.replace(regex, function (q1, q2, q3, q4) {
+      result[q2] = (isNaN(filterInt(q4)) ? q4 : parseInt(q4, 10));
+    });
+
+    return result;
+  }
 
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
-      this.app   = options.app;
-      this.posts = options.posts;
-      this.user  = options.user;
+      this.app    = options.app;
+      this.posts  = options.posts;
+      this.search = new Posts();
+      this.user   = options.user;
+
+      _.bindAll(this, 'showEmptySearchView', 'showSearchResults', 'showPreviousView');
+      EventBus.bind('search:start', this.showEmptySearchView);
+      EventBus.bind('search:term', this.showSearchResults);
+      EventBus.bind('search:end', this.showPreviousView);
     },
 
     /**
@@ -45,7 +68,57 @@ define([
       filter.onPage(page);
 
       this.posts.fetch({reset: true, data: filter.serialize()});
+<<<<<<< HEAD
       this.show(this.archiveView(this.posts, page, filter));
+=======
+      this.show(this.archiveView(this.posts, page));
+    },
+
+    /**
+     * Display the results of a search
+     *
+     * @param  {string} query The query string
+     */
+    showSearch: function (query) {
+      this.showSearchResults(getParams(query));
+    },
+
+    /**
+     * Displays a blank page when the user is searching
+     */
+    showEmptySearchView: function () {
+      if (!this.showingEmpty) {
+        this.previousView    = this.currentView;
+        this.previousOptions = this.currentOptions;
+        this.showingEmpty    = true;
+        this.show(this.emptyView());
+      }
+    },
+
+    /**
+     * Displays the results of a given search
+     *
+     * @param  {Object} options The search terms
+     */
+    showSearchResults: function (options) {
+      var page   = options.page || 1,
+          filter = new PostFilter({'paging-schema': 'query'});
+
+      filter.bySearchingFor(options.s).onPage(page);
+
+      this.search.fetch({reset: true, data: filter.serialize()})
+                 .done(function () { this.show(new ArchiveView({collection: this.search, page: page, filter: filter})); }.bind(this))
+                 .fail(function () { this.show(this.notFoundView()); }.bind(this));
+    },
+
+    /**
+     * Displays the previous view
+     */
+    showPreviousView: function () {
+      this.currentView  = this.previousView;
+      this.showingEmpty = false;
+      this.show(new this.previousView(this.previousOptions));
+>>>>>>> 12-search-madness
     },
 
     /**
@@ -183,6 +256,15 @@ define([
     },
 
     /**
+     * Creates a new `EmptyView` instance
+     *
+     * @return {EmptyView} New "Empty" view instance
+     */
+    emptyView: function () {
+      return new EmptyView();
+    },
+
+    /**
      * Creates a new ArchiveView instance for a post list.
      *
      * @param  {array}       posts Post collection to display.
@@ -191,7 +273,13 @@ define([
      * @return {ArchiveView}       New archive view instance.
      */
     archiveView: function (posts, page, filter) {
+<<<<<<< HEAD
       return new ArchiveView({collection: posts, page: page, filter: filter});
+=======
+      this.currentView    = ArchiveView;
+      this.currentOptions = {collection: posts, page: page, filter: filter};
+      return new ArchiveView(this.currentOptions);
+>>>>>>> 12-search-madness
     },
 
     /**
@@ -202,12 +290,9 @@ define([
      * @return {SinglePostView}       New single post view instance.
      */
     singlePostView: function (model, page) {
-      return new SinglePostView({
-        model:      model,
-        page:       page,
-        collection: new Posts(),
-        user:       this.user
-      });
+      this.currentView    = SinglePostView;
+      this.currentOptions = {model: model, page: page, collection: new Posts(), user: this.user};
+      return new SinglePostView(this.currentOptions);
     }
   });
 });

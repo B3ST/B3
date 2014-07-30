@@ -24,6 +24,7 @@ define([
       "post/:slug"                     : "showPostBySlug",
 
       "post/:id"                       : "showPostById",
+      "post?*queryString"              : "showSearch",
 
       "*slug"                          : "showPageBySlug"
     }

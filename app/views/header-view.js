@@ -9,10 +9,11 @@ define([
   'models/settings-model',
   'models/menu-model',
   'views/menu-view',
+  'views/search-view',
   'controllers/event-bus',
   'controllers/navigator',
   'header-template'
-], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, EventBus, Navigator) {
+], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, SearchView, EventBus, Navigator) {
   'use strict';
 
   var HeaderView = Backbone.Marionette.ItemView.extend({
@@ -32,18 +33,19 @@ define([
     },
 
     onRender: function () {
-      if (this.menuView) {
-        this.menuView.destroy();
-      }
+      this.menuView   = new MenuView({collection: this.model.getItems()});
+      this.searchView = new SearchView({});
 
-      this.menuView = new MenuView({collection: this.model.getItems()});
       this.menuView.render();
+      this.searchView.render();
 
-      this.$('#b3-header-nav').append(this.menuView.el);
+      this.$('#b3-header-nav').append(this.menuView.el)
+                              .append(this.searchView.el);
     },
 
     onDestroy: function () {
       this.menuView.destroy();
+      this.searchView.destroy();
     },
 
     serializeData: function () {
