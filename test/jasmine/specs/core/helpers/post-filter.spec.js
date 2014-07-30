@@ -10,6 +10,10 @@ define([
       expect(this.filter.serialize).toBeDefined();
     });
 
+    it("should have a default paging-schema", function() {
+      expect(this.filter.get('paging-schema')).toEqual('url');
+    });
+
     describe(".byCategory", function() {
       it("should encode using the category_name parameter", function() {
         this.filter.byCategory('name');
