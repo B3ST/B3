@@ -99,6 +99,7 @@ define([
       this.app.main.$el.html('');
       this.app.header.$el.html('');
       this.app.footer.$el.html('');
+      window.scrollTo(0, 0);
     });
 
     describe(".initialize", function() {
