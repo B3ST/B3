@@ -14,8 +14,9 @@ define([
   'views/archive-view',
   'views/single-post-view',
   'views/empty-view',
+  'views/loading-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, PostFilter, EventBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, NotFoundView) {
+], function ($, _, Backbone, Marionette, PostFilter, EventBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, LoadingView, NotFoundView) {
   'use strict';
 
   function filterInt (value) {
@@ -67,8 +68,9 @@ define([
       var filter = new PostFilter();
       filter.onPage(page);
 
-      this.posts.fetch({reset: true, data: filter.serialize()});
-      this.show(this.archiveView(this.posts, page, filter));
+      this.show(this.loadingView());
+      this.posts.fetch({reset: true, data: filter.serialize()})
+                .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this));
     },
 
     /**
@@ -208,6 +210,7 @@ define([
      */
     fetchPostsOfPage: function (filter, page) {
       filter.onPage(page || 1);
+      this.show(this.loadingView());
       this.posts.fetch({reset: true, data: filter.serialize()})
           .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
@@ -228,9 +231,10 @@ define([
       query[field] = value;
       post         = new model(query);
 
+      this.show(this.loadingView());
       post.fetch()
-        .done(function () { this.show(this.singlePostView(post, page)); }.bind(this))
-        .fail(function () { this.show(this.notFoundView()); }.bind(this));
+          .done(function () { this.show(this.singlePostView(post, page)); }.bind(this))
+          .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
     /**
@@ -252,12 +256,21 @@ define([
     },
 
     /**
-     * Creates a new `EmptyView` instance
+     * Creates a new `EmptyView` instance.
      *
-     * @return {EmptyView} New "Empty" view instance
+     * @return {EmptyView} New "Empty" view instance.
      */
     emptyView: function () {
       return new EmptyView();
+    },
+
+    /**
+     * Creates a new `LoadingView` instance.
+     *
+     * @return {LoadingView} New "Loading" view instance.
+     */
+    loadingView: function () {
+      return new LoadingView();
     },
 
     /**

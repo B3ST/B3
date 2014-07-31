@@ -135,7 +135,7 @@ define([
       });
 
       it("should fetch the collection of posts of a given page", function() {
-        this.spy = spyOn(Posts.prototype, 'fetch');
+        this.spy = spyOn(Posts.prototype, 'fetch').andCallThrough();
         this.controller = new Controller({
           posts: new Posts(),
           app:   this.app,
@@ -150,6 +150,17 @@ define([
 
       it("should show the archive view", function() {
         this.spy = spyOn(this.app.main, 'show');
+        var response = [
+          new Post({ID: 1, title: 'post-1'}).toJSON(),
+          new Post({ID: 2, title: 'post-2'}).toJSON()
+        ];
+        this.server = sinon.fakeServer.create();
+        this.server.respondWith(
+          'GET',
+          Settings.get('apiUrl') + '/posts?page=2',
+          [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
+        );
+
         this.controller = new Controller({
           posts: new Posts(),
           app:   this.app,
@@ -172,7 +183,7 @@ define([
           user:  this.user
         });
 
-        this.controller.showArchive();
+        this.controller.show(this.controller.archiveView());
       });
 
       it("should display a blank empty view", function() {
@@ -274,7 +285,7 @@ define([
           user:  this.user
         });
 
-        this.controller.showArchive();
+        this.controller.show(this.controller.archiveView());
         this.controller.showEmptySearchView();
         this.controller.showPreviousView();
 
