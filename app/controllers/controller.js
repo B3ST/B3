@@ -11,11 +11,12 @@ define([
   'models/post-model',
   'models/page-model',
   'collections/post-collection',
+  'collections/comment-collection',
   'views/archive-view',
   'views/single-post-view',
   'views/empty-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, PostFilter, EventBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, NotFoundView) {
+], function ($, _, Backbone, Marionette, PostFilter, EventBus, Settings, Post, Page, Posts, Comments, ArchiveView, SinglePostView, EmptyView, NotFoundView) {
   'use strict';
 
   function filterInt (value) {
@@ -283,7 +284,7 @@ define([
      */
     singlePostView: function (model, page) {
       this.currentView    = SinglePostView;
-      this.currentOptions = {model: model, page: page, collection: new Posts(), user: this.user};
+      this.currentOptions = {model: model, page: page, collection: new Comments(), user: this.user};
       return new SinglePostView(this.currentOptions);
     }
   });

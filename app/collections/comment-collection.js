@@ -9,7 +9,7 @@ define([
   var Comments = Backbone.Collection.extend({
     model:      Comment,
     comparator: function (comment) {
-      return [comment.get('parent'), comment.get('ID')];
+      return comment.get('ID');
     }
   });
 
