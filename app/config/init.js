@@ -38,6 +38,7 @@
       "dust.marionette":      root + "/lib/backbone.marionette.dust",
       "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
       "bootstrap":            root + "/lib/bootstrap",
+      "bootstrap.notify":     root + "/lib/bootstrap-notify",
       "text":                 root + "/lib/text",
     },
 
@@ -66,7 +67,8 @@
       },
 
       // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
-      "backbone.validateAll": ["backbone"]
+      "backbone.validateAll": ["backbone"],
+      "bootstrap.notify": ["bootstrap"]
     }
   };
 
@@ -89,6 +91,7 @@
     "models/user-model",
     "jqueryui",
     "bootstrap",
+    "bootstrap.notify",
     "backbone.validateAll"
   ], function(_, $, Backbone, App, Settings, User) {
     var parseableDates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
@@ -108,7 +111,7 @@
         attributes.author = this.get('author').attributes;
       }
 
-      if (this.get('post')) {
+      if (_.isObject(this.get('post'))) {
         attributes.post = this.get('post').toJSON();
       }
 
