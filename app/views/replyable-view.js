@@ -9,6 +9,7 @@ define([
   var ReplyableView = {
     renderReplyBox: function (event) {
       event.preventDefault();
+      event.stopPropagation();
       this.clickedReplyButton = $(event.currentTarget);
 
       if (!this.$(this.replyForm).length) {
