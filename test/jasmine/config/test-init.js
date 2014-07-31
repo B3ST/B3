@@ -16,6 +16,7 @@
     "forms/searchform-template",
     "forms/replyform-template",
     "forms/navigation-search-template",
+    "navigation/loading-template",
     "navigation/menus/menu-item-template",
     "widget-areas/sidebar-template"
   ];
