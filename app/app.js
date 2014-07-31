@@ -27,7 +27,9 @@
       options = options || {};
       this.appRouter.navigate(route, options);
       if (!options.trigger) {
-        window.scrollTo(0, 0);
+        $('body,html').animate({
+          scrollTop: 0
+        }, 800);
       }
     };
 
