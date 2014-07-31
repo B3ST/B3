@@ -55,7 +55,14 @@ define([
     replyFormDestroyed: function () {
       $(this.clickedReplyButton).fadeIn('fast');
       $(this.replyForm.el).remove();
+      $('.notifications').notify({
+        closable: false,
+        message: {
+          html: '<b>Well done!</b> Reply posted with success'
+        }
+      }).show();
       this.replyForm = null;
+      this.previouslyRendered = false;
     },
   };
 

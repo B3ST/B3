@@ -55,11 +55,11 @@ define([
       if (this.validateForm()) {
         this.getComment().save()
           .done(function (response) {
-            this.slideUpAndDestroy();
-            EventBus.trigger('comment:create', new Comment(response));
+            this.slideUpAndDestroy(response);
           }.bind(this))
-          .fail(function (response) {
-            this.displayWarning(response.responseJSON[0].message);
+          .fail(function (arg1, arg2, arg3) {
+            console.log(arg1, arg2, arg3);
+            this.displayWarning(arg1.responseJSON[0].message);
           }.bind(this));
       }
     },
@@ -70,9 +70,10 @@ define([
       }.bind(this));
     },
 
-    slideUpAndDestroy: function () {
-      $(this.el).slideUp('slow', function() {
+    slideUpAndDestroy: function (response) {
+      $(this.el).slideUp('slow', function () {
         this.destroy();
+        EventBus.trigger('comment:create', new Comment(response));
       }.bind(this));
     },
 
@@ -83,18 +84,7 @@ define([
     },
 
     validateForm: function () {
-      var valid = true;
-
-      this.$('.form-group').each(function (index, group) {
-        $(group).removeClass('has-error');
-
-        $(group).find('.required').each(function(index, input) {
-          if (_.isEmpty($(input).val())) {
-            $(group).addClass('has-error');
-            valid = false;
-          }
-        });
-      }.bind(this));
+      var valid = this.validateFormGroup();
 
       if (!valid) {
         this.displayWarning('Please fill all required fields.');
@@ -115,6 +105,23 @@ define([
       if (_.isEmpty(message)) {
         this.resetWarning();
       }
+    },
+
+    validateFormGroup: function () {
+      var valid = true;
+
+      this.$('.form-group').each(function (index, group) {
+        $(group).removeClass('has-error');
+
+        $(group).find('.required').each(function(index, input) {
+          if (_.isEmpty($(input).val())) {
+            $(group).addClass('has-error');
+            valid = false;
+          }
+        });
+      }.bind(this));
+
+      return valid;
     },
 
     getComment: function () {

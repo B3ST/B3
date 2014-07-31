@@ -18,6 +18,7 @@
 <body <?php body_class(); ?> role="document">
     <div id="header"></div>
     <div id="main" role="main"></div>
+    <div class='notifications bottom-right'></div>
     <div id="widgets"></div>
     <div id="footer"></div>
     <?php wp_footer(); ?>
