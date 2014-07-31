@@ -108,6 +108,10 @@
         attributes.author = this.get('author').attributes;
       }
 
+      if (this.get('post')) {
+        attributes.post = this.get('post').toJSON();
+      }
+
       return attributes;
     };
 

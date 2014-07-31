@@ -179,6 +179,10 @@
         attributes.author = this.get('author').attributes;
       }
 
+      if (_.isObject(this.get('post'))) {
+        attributes.post = this.get('post').toJSON();
+      }
+
       return attributes;
     };
 
