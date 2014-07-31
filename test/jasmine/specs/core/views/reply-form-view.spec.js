@@ -15,7 +15,7 @@ define([
 
   describe("ReplyFormView", function() {
     beforeEach(function() {
-      this.parentView = jasmine.createSpyObj('parentView', ['replyFormRendered', 'replyFormDestroyed']);
+      this.parentView = jasmine.createSpyObj('parentView', ['replyFormRendered', 'replyFormDestroyed', 'replyFormCancelled']);
       this.user       = new User({ID: 1, name: 'name'});
       this.post       = new Post({ID: 1, comment_status: 'open'});
     });
@@ -63,19 +63,18 @@ define([
 
     describe("Clicking the cancel button", function() {
       beforeEach(function() {
-        this.spy = spyOn(Backbone.Marionette.ItemView.prototype, 'destroy').andCallThrough();
         this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user:this.user});
         this.view.render();
 
         this.view.$('#b3-cancel').click();
       });
 
-      it("should destroy the view", function() {
-        expect(this.spy).toHaveBeenCalled();
+      it("should hide the view", function() {
+        expect(this.view.$el.is(':visible')).toBeFalsy();
       });
 
       it("should tell the parent view that the view was destroyed", function() {
-        expect(this.parentView.replyFormDestroyed).toHaveBeenCalled();
+        expect(this.parentView.replyFormCancelled).toHaveBeenCalled();
       });
     });
 

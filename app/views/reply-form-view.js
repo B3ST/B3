@@ -28,14 +28,14 @@ define([
       this.user       = options.user;
       this.parentView = options.parentView;
       this.parentId   = options.parentId;
-      this.model      = options.model || new Post();
+      this.post       = options.post || new Post();
     },
 
     serializeData: function () {
       return {
         author:  this.user.attributes,
         guest:   !this.user.isLoggedIn(),
-        post:    this.model.attributes,
+        post:    this.post.attributes,
         comment: ''
       };
     },
@@ -64,6 +64,12 @@ define([
       }
     },
 
+    slideUpAndHide: function () {
+      $(this.el).slideUp('slow', function() {
+        $(this).hide();
+      }.bind(this));
+    },
+
     slideUpAndDestroy: function () {
       $(this.el).slideUp('slow', function() {
         this.destroy();
@@ -72,7 +78,8 @@ define([
 
     cancelReply: function (ev) {
       ev.preventDefault();
-      this.slideUpAndDestroy();
+      this.slideUpAndHide();
+      this.parentView.replyFormCancelled();
     },
 
     validateForm: function () {
@@ -113,7 +120,7 @@ define([
     getComment: function () {
       return new Comment({
         content:        this.$('[name="comment_content"]').val(),
-        post:           this.model.get('ID'),
+        post:           this.post.get('ID'),
         parent_comment: this.parentId,
         author:         this.getUser()
       });
