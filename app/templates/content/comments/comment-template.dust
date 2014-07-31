@@ -19,14 +19,13 @@
 
   {content|s}
 
-  {! TODO: Don't show reply button if comments closed. !}
-  {!@eq key=comment_status value="open"!}
+  {@eq key=post.comment_status value="open"}
     <div>
       <a href="#reply" class="b3-reply-comment button reply" role="button">
         <span class="icon-comment"></span> Reply
       </a>
     </div>
-  {!/eq!}
+  {/eq}
 
   <ul class="comments b3-comments"></ul>
 </div>
