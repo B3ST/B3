@@ -14,7 +14,7 @@
   <div class="b3-post-categories">
   {# terms.category }
     <span class="label label-default">
-      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
+      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
     </span>
   {/ terms.category }
   </div>
@@ -22,7 +22,7 @@
   <div class="b3-post-tags">
   {# terms.post_tag }
     <span class="label label-primary">
-      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
+      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
     </span>
   {/ terms.post_tag }
   </div>
