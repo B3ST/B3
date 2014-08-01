@@ -82,7 +82,7 @@ define([
                 .done(function () { this.hideLoading(); }.bind(this));
 
       this.show(this.archiveView(this.posts, page, filter));
-      this.showLoading();
+      this.showLoading({value: (Math.floor(Math.random() * 31) + 50)});
     },
 
     /**
@@ -267,8 +267,8 @@ define([
     /**
      * Triggers a command to display the loading view
      */
-    showLoading: function () {
-      CommandBus.execute('loading:show');
+    showLoading: function (options) {
+      CommandBus.execute('loading:show', options);
     },
 
     /**

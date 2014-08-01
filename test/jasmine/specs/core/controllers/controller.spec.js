@@ -253,7 +253,7 @@ define([
       });
 
       it("should trigger a loading:show command", function() {
-        expect(this.bus).toHaveBeenCalledWith('loading:show');
+        expect(this.bus).toHaveBeenCalledWith('loading:show', jasmine.any(Object));
       });
 
       describe("When fetching is successful", function() {

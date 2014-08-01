@@ -17,7 +17,13 @@ define([
       CommandBus.setHandler('loading:hide', this.hide);
     },
 
-    show: function () {
+    show: function (options) {
+      if (options) {
+        var placeholder = '.loading > div.progress > div.progress-bar';
+        $(placeholder).attr('aria-valuenow', options.value)
+                      .css('width', options.value + '%');
+      }
+
       $('.loading').show();
     },
 
