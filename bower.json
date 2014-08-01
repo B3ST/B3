@@ -42,6 +42,12 @@
     "Backbone.validateAll": {
       "main": "src/javascripts/Backbone.validateAll.min.js"
     },
+    "bootstrap-notify": {
+      "main": [
+        "js/bootstrap-notify.js",
+        "css/bootstrap-notify.css"
+      ]
+    },
     "browser-sync-client": {
       "main": "dist/index.min.js"
     },
