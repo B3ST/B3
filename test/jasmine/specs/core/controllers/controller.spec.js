@@ -249,7 +249,7 @@ define([
       });
 
       it("should fetch the collection of posts of a given page", function() {
-        expect(this.posts).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 }), xhr: jasmine.any(Function)});
+        expect(this.posts).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
       });
 
       it("should trigger a loading:show command", function() {
@@ -324,7 +324,7 @@ define([
         });
 
         this.controller.showSearchResults({s: 'term'});
-        expect(this.fetch).toHaveBeenCalledWith({reset: true, data: 'filter[s]=term&page=1', xhr: jasmine.any(Function)});
+        expect(this.fetch).toHaveBeenCalledWith({reset: true, data: 'filter[s]=term&page=1'});
       });
 
       describe("When fetching is successful", function() {

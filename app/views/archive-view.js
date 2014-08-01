@@ -8,14 +8,13 @@ define([
   'dust',
   'dust.marionette',
   'helpers/post-filter',
-  'helpers/fetch-progress',
   'controllers/event-bus',
   'controllers/command-bus',
   'controllers/navigator',
   // Shims
   'main-template',
   'archive/posts-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, FetchProgress, EventBus, CommandBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, CommandBus, Navigator) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.ItemView.extend({
@@ -147,7 +146,7 @@ define([
 
     getParams: function () {
       this.filter.onPage(this.page);
-      return {data: this.filter.serialize(), reset: true, xhr: FetchProgress.xhr };
+      return {data: this.filter.serialize(), reset: true};
     },
 
     navigate: function () {

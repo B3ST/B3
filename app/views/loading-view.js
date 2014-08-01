@@ -27,9 +27,10 @@ define([
     },
 
     progress: function (options) {
-      var placeholder = '.loading > div.progress > div.progress-bar';
-      $(placeholder).attr('aria-valuenow', options.value)
-                    .css('width', options.value + '%');
+      var placeholder = '.loading > div.progress > div.progress-bar',
+          progress = options.loaded/options.total;
+      $(placeholder).attr('aria-valuenow', progress)
+                    .css('width', progress + '%');
     }
   });
 

@@ -6,7 +6,6 @@ define([
   'backbone',
   'marionette',
   'helpers/post-filter',
-  'helpers/fetch-progress',
   'controllers/event-bus',
   'controllers/command-bus',
   'models/settings-model',
@@ -18,7 +17,7 @@ define([
   'views/empty-view',
   'views/loading-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, PostFilter, FetchProgress, EventBus, CommandBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, LoadingView, NotFoundView) {
+], function ($, _, Backbone, Marionette, PostFilter, EventBus, CommandBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, LoadingView, NotFoundView) {
   'use strict';
 
   function filterInt (value) {
@@ -40,7 +39,6 @@ define([
     return {
       reset: true,
       data:  filter.serialize(),
-      xhr:   FetchProgress.xhr
     };
   }
 
