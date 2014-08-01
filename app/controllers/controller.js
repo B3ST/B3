@@ -7,6 +7,7 @@ define([
   'marionette',
   'helpers/post-filter',
   'controllers/event-bus',
+  'controllers/command-bus',
   'models/settings-model',
   'models/post-model',
   'models/page-model',
@@ -16,7 +17,7 @@ define([
   'views/empty-view',
   'views/loading-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, PostFilter, EventBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, LoadingView, NotFoundView) {
+], function ($, _, Backbone, Marionette, PostFilter, EventBus, CommandBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, LoadingView, NotFoundView) {
   'use strict';
 
   function filterInt (value) {
@@ -36,11 +37,20 @@ define([
 
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
-      this.app    = options.app;
-      this.posts  = options.posts;
-      this.search = new Posts();
-      this.user   = options.user;
+      this.app     = options.app;
+      this.posts   = options.posts;
+      this.user    = options.user;
 
+      this.initAux();
+      this.bindToEvents();
+    },
+
+    initAux: function () {
+      this.loading = this.loadingView();
+      this.search  = new Posts();
+    },
+
+    bindToEvents: function () {
       _.bindAll(this, 'showEmptySearchView', 'showSearchResults', 'showPreviousView');
       EventBus.bind('search:start', this.showEmptySearchView);
       EventBus.bind('search:term', this.showSearchResults);
@@ -63,14 +73,16 @@ define([
      * @param {int} page Page number.
      */
     showArchive: function (page) {
-      page = page || 1;
-
       var filter = new PostFilter();
+
+      page = page || 1;
       filter.onPage(page);
 
-      this.show(this.loadingView());
       this.posts.fetch({reset: true, data: filter.serialize()})
-                .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this));
+                .done(function () { this.hideLoading(); }.bind(this));
+
+      this.show(this.archiveView(this.posts, page, filter));
+      this.showLoading();
     },
 
     /**
@@ -130,8 +142,26 @@ define([
 
       if (post) {
         this.show(this.singlePostView(post, page));
+        this.hideLoading();
       } else {
         this.fetchModelBy(Post, 'ID', id, page);
+      }
+    },
+
+    /**
+     * Display a post given its unique alphanumeric slug.
+     *
+     * @param {String} slug Post slug.
+     * @param {int}    page Page number.
+     */
+    showPostBySlug: function (slug, page) {
+      var post = this.posts.where({slug: slug});
+
+      if (post.length > 0) {
+        this.show(this.singlePostView(post[0], page));
+        this.hideLoading();
+      } else {
+        this.fetchModelBy(Post, 'slug', slug, page);
       }
     },
 
@@ -172,22 +202,6 @@ define([
     },
 
     /**
-     * Display a post given its unique alphanumeric slug.
-     *
-     * @param {String} slug Post slug.
-     * @param {int}    page Page number.
-     */
-    showPostBySlug: function (slug, page) {
-      var post = this.posts.where({slug: slug});
-
-      if (post.length > 0) {
-        this.show(this.singlePostView(post[0], page));
-      } else {
-        this.fetchModelBy(Post, 'slug', slug, page);
-      }
-    },
-
-    /**
      * Display a page given its unique alphanumeric slug.
      *
      * WordPress allows pages to be placed in a hierarchy. In these
@@ -209,10 +223,13 @@ define([
      * @param  {int}        page   Page number
      */
     fetchPostsOfPage: function (filter, page) {
-      filter.onPage(page || 1);
-      this.show(this.loadingView());
+      page = page || 1;
+      filter.onPage(page);
+
+      this.show(this.archiveView(this.posts, page, filter));
+      this.showLoading();
       this.posts.fetch({reset: true, data: filter.serialize()})
-          .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this))
+          .done(function () { this.hideLoading(); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
@@ -225,15 +242,16 @@ define([
      * @param {int}    page  Page number.
      */
     fetchModelBy: function (model, field, value, page) {
-      var query = {};
-      var post;
+      var post, query = {};
 
       query[field] = value;
       post         = new model(query);
 
-      this.show(this.loadingView());
       post.fetch()
-          .done(function () { this.show(this.singlePostView(post, page)); }.bind(this))
+          .done(function () {
+            this.show(this.singlePostView(post, page));
+            this.hideLoading();
+          }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
@@ -244,6 +262,20 @@ define([
      */
     show: function (view) {
       this.app.main.show(view);
+    },
+
+    /**
+     * Triggers a command to display the loading view
+     */
+    showLoading: function () {
+      CommandBus.execute('loading:show');
+    },
+
+    /**
+     * Triggers a command to hide the loading view
+     */
+    hideLoading: function () {
+      CommandBus.execute('loading:hide');
     },
 
     /**
