@@ -9,11 +9,12 @@ define([
   'dust.marionette',
   'helpers/post-filter',
   'controllers/event-bus',
+  'controllers/command-bus',
   'controllers/navigator',
   // Shims
   'main-template',
   'archive/posts-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, CommandBus, Navigator) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.ItemView.extend({
@@ -39,6 +40,10 @@ define([
       this.filter = options.filter || new PostFilter();
 
       EventBus.trigger('title:change');
+    },
+
+    onRender: function () {
+      CommandBus.execute('loading:hide');
     },
 
     serializeData: function () {
