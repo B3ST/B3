@@ -174,6 +174,7 @@ class B3Theme {
 
         foreach ($permastructs as $key => $permastruct) {
             $permastructs[$key] = preg_replace( '/%([^%]+)%/', ":$1", $permastruct );
+            $permastructs[$key] = preg_replace( '/^\/(.*)/i', "$1", $permastructs[$key] );
         }
 
         return $permastructs;
