@@ -35,6 +35,25 @@ define([
     return result;
   }
 
+  function handleProgress (evt) {
+    if (evt.lengthComputable) {
+      var percentComplete = evt.loaded / evt.total;
+      CommandBus.execute('loading:progress', {value: percentComplete});
+    }
+  }
+
+  function fetchParams (filter) {
+    return {
+      reset: true,
+      data: filter.serialize(),
+      xhr: function () {
+        var xhr = $.ajaxSettings.xhr();
+        xhr.onprogress = handleProgress;
+        return xhr;
+      }
+    };
+  }
+
   return Backbone.Marionette.Controller.extend({
     initialize: function(options) {
       this.app     = options.app;
@@ -78,11 +97,11 @@ define([
       page = page || 1;
       filter.onPage(page);
 
-      this.posts.fetch({reset: true, data: filter.serialize()})
+      this.posts.fetch(fetchParams(filter))
                 .done(function () { this.hideLoading(); }.bind(this));
 
       this.show(this.archiveView(this.posts, page, filter));
-      this.showLoading({value: (Math.floor(Math.random() * 31) + 50)});
+      this.showLoading();
     },
 
     /**
@@ -117,7 +136,7 @@ define([
 
       filter.bySearchingFor(options.s).onPage(page);
 
-      this.search.fetch({reset: true, data: filter.serialize()})
+      this.search.fetch(fetchParams(filter))
                  .done(function () { this.show(new ArchiveView({collection: this.search, page: page, filter: filter})); }.bind(this))
                  .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
@@ -228,7 +247,7 @@ define([
 
       this.show(this.archiveView(this.posts, page, filter));
       this.showLoading();
-      this.posts.fetch({reset: true, data: filter.serialize()})
+      this.posts.fetch(fetchParams(filter))
           .done(function () { this.hideLoading(); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
@@ -267,8 +286,8 @@ define([
     /**
      * Triggers a command to display the loading view
      */
-    showLoading: function (options) {
-      CommandBus.execute('loading:show', options);
+    showLoading: function () {
+      CommandBus.execute('loading:show');
     },
 
     /**
