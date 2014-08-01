@@ -8,13 +8,14 @@ define([
   'dust',
   'dust.marionette',
   'helpers/post-filter',
+  'helpers/fetch-progress',
   'controllers/event-bus',
   'controllers/command-bus',
   'controllers/navigator',
   // Shims
   'main-template',
   'archive/posts-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, CommandBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, FetchProgress, EventBus, CommandBus, Navigator) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.ItemView.extend({
@@ -69,7 +70,7 @@ define([
       this.filter = new PostFilter();
       this.filter.byCategoryId(id);
 
-      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      this.collection.fetch(this.getParams());
       Navigator.navigate('post/category/' + slug, false);
 
       event.preventDefault();
@@ -81,7 +82,7 @@ define([
       this.filter = new PostFilter();
       this.filter.byTag(slug);
 
-      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      this.collection.fetch(this.getParams());
       Navigator.navigate('post/tag/' + slug, false);
 
       event.preventDefault();
@@ -94,7 +95,7 @@ define([
       this.filter = new PostFilter();
       this.filter.byAuthorId(id);
 
-      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      this.collection.fetch(this.getParams());
       Navigator.navigate('post/author/' + slug, false);
 
       event.preventDefault();
@@ -146,7 +147,7 @@ define([
 
     getParams: function () {
       this.filter.onPage(this.page);
-      return {data: this.filter.serialize(), reset: true};
+      return {data: this.filter.serialize(), reset: true, xhr: FetchProgress.xhr };
     },
 
     navigate: function () {

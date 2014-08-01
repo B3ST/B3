@@ -136,19 +136,19 @@ define([
 
     sharedBehaviourFor('category', {
       click:   '.b3-post-categories > span > a',
-      request: Settings.get('apiUrl') + '/posts?filter[cat]=1',
+      request: Settings.get('apiUrl') + '/posts?filter[cat]=1&page=1',
       route:   'post/category/post-1'
     });
 
     sharedBehaviourFor('tag', {
       click:   '.b3-post-tags > span > a',
-      request: Settings.get('apiUrl') + '/posts?filter[tag]=tag-1',
+      request: Settings.get('apiUrl') + '/posts?filter[tag]=tag-1&page=1',
       route:   'post/tag/tag-1'
     });
 
     sharedBehaviourFor('author', {
       click:   '.b3-post-author > span > a',
-      request: Settings.get('apiUrl') + '/posts?filter[author]=1',
+      request: Settings.get('apiUrl') + '/posts?filter[author]=1&page=1',
       route:   'post/author/author-1'
     });
   });
