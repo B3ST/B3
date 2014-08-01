@@ -28,7 +28,7 @@ define([
 
     progress: function (options) {
       var placeholder = '.loading > div.progress > div.progress-bar',
-          progress = options.loaded/options.total;
+          progress = options.loaded/options.total * 100;
       $(placeholder).attr('aria-valuenow', progress)
                     .css('width', progress + '%');
     }
