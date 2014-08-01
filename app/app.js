@@ -26,11 +26,9 @@
     App.navigate = function(route, options){
       options = options || {};
       this.appRouter.navigate(route, options);
-      if (!options.trigger) {
-        $('body,html').animate({
-          scrollTop: 0
-        }, 800);
-      }
+      $('body,html').animate({
+        scrollTop: 0
+      }, 800);
     };
 
     App.titleChange = function(title) {
