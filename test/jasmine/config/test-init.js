@@ -16,7 +16,6 @@
     "forms/searchform-template",
     "forms/replyform-template",
     "forms/navigation-search-template",
-    "navigation/loading-template",
     "navigation/menus/menu-item-template",
     "widget-areas/sidebar-template"
   ];
@@ -154,6 +153,7 @@
       root + 'core/views/menu-item-view.spec',
       root + 'core/views/sidebar-view.spec',
       root + 'core/views/search-view.spec',
+      root + 'core/views/loading-view.spec',
 
       // helpers
       root + 'core/helpers/post-filter.spec',

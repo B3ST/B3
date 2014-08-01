@@ -2,28 +2,27 @@
 
 define([
   'jquery',
+  'underscore',
   'backbone',
   'marionette',
-  'dust',
-  'dust.marionette',
-  'navigation/loading-template'
+  'controllers/command-bus'
   /* jshint unused: false */
-], function ($, Backbone, Marionette, dust, dustMarionette) {
+], function ($, _, Backbone, Marionette, CommandBus) {
   'use strict';
 
   var LoadingView = Backbone.Marionette.ItemView.extend({
-    template: 'navigation/loading-template.dust',
-    tagName:  'div class="modal bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true"',
-
-    onRender: function () {
-      var now = Math.floor(Math.random() * 100 + 1);
-      this.$('.progress-bar').css('width', now + '%')
-                             .attr('aria-valuenow', now);
-      this.$el.modal('toggle');
+    initialize: function () {
+      _.bindAll(this, 'show', 'hide');
+      CommandBus.setHandler('loading:show', this.show);
+      CommandBus.setHandler('loading:hide', this.hide);
     },
 
-    onDestroy: function () {
-      this.$el.modal('toggle');
+    show: function () {
+      $('.loading').show();
+    },
+
+    hide: function () {
+      $('.loading').hide();
     }
   });
 
