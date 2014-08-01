@@ -98,10 +98,10 @@
     "marionette",
     "jasmine-html",
     "models/settings-model",
-    "models/user-model",
+    "config/rewrite",
     "bootstrap",
     "backbone.validateAll"
-  ], function ($, _, Backbone, Marionette, jasmine, Settings, User) {
+  ], function ($, _, Backbone, Marionette, jasmine, Settings, Rewrite) {
     var root = '../../../../test/jasmine/specs/';
 
     Settings.set('require.config', config);
@@ -164,37 +164,8 @@
       root + 'core/app.spec'
     ];
 
-    var parseableDates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
-
-    Backbone.Model.prototype.toJSON = function() {
-      var attributes = _.clone(this.attributes);
-
-      _.each(parseableDates, function(key) {
-        if (key in attributes) {
-          attributes[key] = attributes[key].toISOString();
-        }
-      });
-
-      if (_.isObject(this.get('author'))) {
-        attributes.author = this.get('author').attributes;
-      }
-
-      return attributes;
-    };
-
-    Backbone.Model.prototype.parse = function(response) {
-      _.each(parseableDates, function(key) {
-        if (response.hasOwnProperty(key)) {
-          response[key] = new Date(response[key]);
-        }
-      });
-
-      if (response.author) {
-        response.author = new User(response.author);
-      }
-
-      return response;
-    };
+    Backbone.Model.prototype.toJSON = Rewrite.toJSON;
+    Backbone.Model.prototype.parse  = Rewrite.parse;
 
     $(function() {
       require(specs, function() {

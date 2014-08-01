@@ -81,67 +81,35 @@
 
   // Includes Desktop Specific JavaScript files here (or inside of your Desktop router)
   require([
-    "underscore",
     "jquery",
+    "underscore",
     "backbone",
+    "marionette",
     "app",
     "models/settings-model",
-    "models/user-model",
+    "config/rewrite",
     "jqueryui",
     "bootstrap",
-    "backbone.validateAll"
-  ], function(_, $, Backbone, App, Settings, User) {
-    var parseableDates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
-
+    "backbone.validateAll",
+  ], function ($, _, Backbone, Marionette, App, Settings, Rewrite) {
     Settings.set('require.config', config);
 
-    Backbone.Model.prototype.toJSON = function() {
-      var attributes = _.clone(this.attributes);
+    Backbone.Model.prototype.toJSON = Rewrite.toJSON;
+    Backbone.Model.prototype.parse  = Rewrite.parse;
+    Backbone.Model.prototype.sync   = Rewrite.sync;
 
-      _.each(parseableDates, function(key) {
-        if (key in attributes) {
-          attributes[key] = attributes[key].toISOString();
-        }
-      });
+    Marionette.AppRouter.prototype.processAppRoutes = Rewrite.processAppRoutes;
+    Marionette.AppRouter.prototype._getWpRoutes     = Rewrite._getWpRoutes;
+    Marionette.AppRouter.prototype._processOnRoute  = function(routeName, routeArgs) {
+    // find the path that matched
+      var routePath = _.invert(this.appRoutes)[routeName];
 
-      if (this.get('author')) {
-        attributes.author = this.get('author').attributes;
+      // make sure an onRoute is there, and call it
+      if (_.isFunction(this.onRoute)) {
+        this.onRoute(routeName, routePath, routeArgs);
       }
-
-      return attributes;
-    };
-
-    Backbone.Model.prototype.parse = function(response) {
-      _.each(parseableDates, function(key) {
-        if (response.hasOwnProperty(key)) {
-          var timestamp = Date.parse(response[key]);
-          response[key] = new Date(timestamp);
-        }
-      });
-
-      if (response.author) {
-        response.author = new User(response.author);
-      }
-
-      return response;
-    };
-
-    Backbone.Model.prototype.sync = function(method, model, options) {
-      options = options || {};
-
-      var beforeSend = options.beforeSend;
-      options.beforeSend = function(xhr) {
-        xhr.setRequestHeader('X-WP-Nonce', Settings.get('nonce'));
-
-        if (beforeSend) {
-          return beforeSend.apply(this, arguments);
-        }
-      };
-
-      return Backbone.sync(method, model, options);
     };
 
     App.start();
   });
-
 })();
