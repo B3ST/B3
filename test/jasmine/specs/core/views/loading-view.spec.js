@@ -41,6 +41,10 @@ define([
       it("should bind to loading:hide command", function() {
         expect(this.bus).toHaveBeenCalledWith('loading:hide', this.view.hide);
       });
+
+      it("should bind to loading:progress command", function() {
+        expect(this.bus).toHaveBeenCalledWith('loading:progress', this.view.progress);
+      });
     });
 
     describe(".show", function() {

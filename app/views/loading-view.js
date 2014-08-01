@@ -12,23 +12,24 @@ define([
 
   var LoadingView = Backbone.Marionette.ItemView.extend({
     initialize: function () {
-      _.bindAll(this, 'show', 'hide');
+      _.bindAll(this, 'show', 'hide', 'progress');
       CommandBus.setHandler('loading:show', this.show);
       CommandBus.setHandler('loading:hide', this.hide);
+      CommandBus.setHandler('loading:progress', this.progress);
     },
 
     show: function (options) {
-      if (options) {
-        var placeholder = '.loading > div.progress > div.progress-bar';
-        $(placeholder).attr('aria-valuenow', options.value)
-                      .css('width', options.value + '%');
-      }
-
       $('.loading').show();
     },
 
     hide: function () {
       $('.loading').hide();
+    },
+
+    progress: function (options) {
+      var placeholder = '.loading > div.progress > div.progress-bar';
+      $(placeholder).attr('aria-valuenow', options.value)
+                    .css('width', options.value + '%');
     }
   });
 
