@@ -1,3 +1,8 @@
+{! This can be changed at will, it is just to supply a default loading !}
+<div class="loading">
+  {+ loading /}
+</div>
+
 <article class="{post_class}">
 
   <header class="jumbotron">

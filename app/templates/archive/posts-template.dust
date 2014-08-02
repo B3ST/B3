@@ -1,3 +1,8 @@
+{! This can be changed at will, it is just to supply a default loading !}
+<div class="loading">
+  {+ loading /}
+</div>
+
 {#posts}
   <article class="b3-post {post_class}">
     <header>

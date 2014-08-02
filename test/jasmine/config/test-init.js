@@ -157,6 +157,7 @@
       root + 'core/views/menu-item-view.spec',
       root + 'core/views/sidebar-view.spec',
       root + 'core/views/search-view.spec',
+      root + 'core/views/loading-view.spec',
 
       // helpers
       root + 'core/helpers/post-filter.spec',

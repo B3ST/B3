@@ -5,9 +5,10 @@ define([
   'models/user-model',
   'collections/post-collection',
   'controllers/event-bus',
+  'controllers/command-bus',
   'controllers/navigator',
   'sinon'
-], function (ArchiveView, Settings, Post, User, Posts, EventBus, Navigator) {
+], function (ArchiveView, Settings, Post, User, Posts, EventBus, CommandBus, Navigator) {
   'use strict';
 
   function sharedBehaviourFor (action, options) {
@@ -50,6 +51,7 @@ define([
 
   describe("ArchiveView", function() {
     beforeEach(function() {
+      this.cbus  = spyOn(CommandBus, 'execute');
       this.posts = new Posts([
         new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1'}),
         new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
@@ -62,6 +64,10 @@ define([
     describe(".render", function() {
       it("should render the template", function() {
         expect(this.view.$el.children('.b3-post').length).toEqual(2);
+      });
+
+      it("should trigger a loading:hide command", function() {
+        expect(this.cbus).toHaveBeenCalledWith('loading:hide');
       });
     });
 
@@ -130,19 +136,19 @@ define([
 
     sharedBehaviourFor('category', {
       click:   '.b3-post-categories > span > a',
-      request: Settings.get('apiUrl') + '/posts?filter[cat]=1',
+      request: Settings.get('apiUrl') + '/posts?filter[cat]=1&page=1',
       route:   'post/category/post-1'
     });
 
     sharedBehaviourFor('tag', {
       click:   '.b3-post-tags > span > a',
-      request: Settings.get('apiUrl') + '/posts?filter[tag]=tag-1',
+      request: Settings.get('apiUrl') + '/posts?filter[tag]=tag-1&page=1',
       route:   'post/tag/tag-1'
     });
 
     sharedBehaviourFor('author', {
       click:   '.b3-post-author > span > a',
-      request: Settings.get('apiUrl') + '/posts?filter[author]=1',
+      request: Settings.get('apiUrl') + '/posts?filter[author]=1&page=1',
       route:   'post/author/author-1'
     });
   });

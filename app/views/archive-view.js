@@ -9,11 +9,12 @@ define([
   'dust.marionette',
   'helpers/post-filter',
   'controllers/event-bus',
+  'controllers/command-bus',
   'controllers/navigator',
   // Shims
   'main-template',
   'archive/posts-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, CommandBus, Navigator) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.ItemView.extend({
@@ -41,6 +42,10 @@ define([
       EventBus.trigger('title:change');
     },
 
+    onRender: function () {
+      CommandBus.execute('loading:hide');
+    },
+
     serializeData: function () {
       return _.extend(this.getDustTemplate(), {posts: this.getModels()});
     },
@@ -64,7 +69,7 @@ define([
       this.filter = new PostFilter();
       this.filter.byCategoryId(id);
 
-      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      this.collection.fetch(this.getParams());
       Navigator.navigate('post/category/' + slug, false);
 
       event.preventDefault();
@@ -76,7 +81,7 @@ define([
       this.filter = new PostFilter();
       this.filter.byTag(slug);
 
-      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      this.collection.fetch(this.getParams());
       Navigator.navigate('post/tag/' + slug, false);
 
       event.preventDefault();
@@ -89,7 +94,7 @@ define([
       this.filter = new PostFilter();
       this.filter.byAuthorId(id);
 
-      this.collection.fetch({reset: true, data: this.filter.serialize()});
+      this.collection.fetch(this.getParams());
       Navigator.navigate('post/author/' + slug, false);
 
       event.preventDefault();

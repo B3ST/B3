@@ -18,8 +18,7 @@
     "forms/replyform-template",
     "forms/navigation-search-template",
     "navigation/menus/menu-item-template",
-    "widget-areas/sidebar-template",
-    "navigation/menus/menu-item-template"
+    "widget-areas/sidebar-template"
   ];
 
   var config = {
@@ -89,11 +88,12 @@
     "app",
     "models/settings-model",
     "models/user-model",
+    'controllers/command-bus',
     "jqueryui",
     "bootstrap",
     "bootstrap.notify",
     "backbone.validateAll"
-  ], function(_, $, Backbone, App, Settings, User) {
+  ], function(_, $, Backbone, App, Settings, User, CommandBus) {
     var parseableDates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
 
     Settings.set('require.config', config);
@@ -137,8 +137,19 @@
       options = options || {};
 
       var beforeSend = options.beforeSend;
-      options.beforeSend = function(xhr) {
+      options.beforeSend = function(xhr, settings) {
         xhr.setRequestHeader('X-WP-Nonce', Settings.get('nonce'));
+
+        settings.xhr = function () {
+          var xhr = $.ajaxSettings.xhr();
+          xhr.onprogress = function (evt) {
+            if (evt.lengthComputable) {
+              CommandBus.execute('loading:progress', {loaded: evt.loaded, total: evt.total});
+            }
+          };
+
+          return xhr;
+        };
 
         if (beforeSend) {
           return beforeSend.apply(this, arguments);
