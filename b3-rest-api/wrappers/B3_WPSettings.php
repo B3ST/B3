@@ -50,6 +50,21 @@ class B3_WPSettings {
         }
     }
 
+    protected function prepare_route ( $route ) {
+        // Rewrite tokens:
+        $route = preg_replace( '/%([^%]+)%/', ":$1", $route );
+
+        // Trim leading and trailing slashes:
+        $route = preg_replace( '/^\/|\/$/', '', $route );
+
+        return $route;
+    }
+
+    protected function add_route( &$routes, $route, $resource ) {
+        $route          = $this->prepare_route( $route );
+        $routes[$route] = $resource;
+    }
+
     /**
      * [get_routes description]
      *
@@ -69,35 +84,36 @@ class B3_WPSettings {
     protected function get_routes () {
         global $wp_rewrite;
 
-        $raw_routes = array(
-            $wp_rewrite->front . '%post_id%'     => 'post',
-            $wp_rewrite->front . '%postname%'    => 'post',
-            $wp_rewrite->get_page_permastruct()   => 'page',
-            $wp_rewrite->get_author_permastruct() => 'author',
-            $wp_rewrite->get_date_permastruct()   => 'date',
-            $wp_rewrite->get_month_permastruct()  => 'date',
-            $wp_rewrite->get_year_permastruct()   => 'date',
-            $wp_rewrite->get_search_permastruct() => 'search',
-        );
+        $pagination_base = '/' . $wp_rewrite->pagination_base . '/:page';
+        $comments_base   = '/' . $wp_rewrite->comments_base;
+        $attachment_base = '/attachment/:attachment';
+
+        $routes = array();
+
+        $this->add_route( $routes, $wp_rewrite->front . '%post_id%'     , 'post' );
+        $this->add_route( $routes, $wp_rewrite->front . '%postname%'    , 'post' );
+        $this->add_route( $routes, $wp_rewrite->get_page_permastruct()  , 'page' );
+        $this->add_route( $routes, $wp_rewrite->get_author_permastruct(), 'author' );
+        $this->add_route( $routes, $wp_rewrite->get_date_permastruct()  , 'date' );
+        $this->add_route( $routes, $wp_rewrite->get_month_permastruct() , 'date' );
+        $this->add_route( $routes, $wp_rewrite->get_year_permastruct()  , 'date' );
+        $this->add_route( $routes, $wp_rewrite->get_search_permastruct(), 'search' );
 
         // Public post types:
 
-        $post_types      = get_post_types( array( 'public' => true ) );
-        $attachment_base = '/attachment/:attachment';
-        $comments_base   = '/' . $wp_rewrite->comments_base;
+        $post_types = get_post_types( array( 'public' => true ) );
 
         foreach ($post_types as $post_type) {
             $route = $wp_rewrite->get_extra_permastruct( $post_type );
 
             if (empty( $route )) {
-                $route     = '/';
                 $post_type = 'root';
             }
 
             if ($post_type !== 'attachment') {
-                $raw_routes[$route]                                     = $post_type;
-                $raw_routes[$route . $attachment_base]                  = 'attachment';
-                $raw_routes[$route . $attachment_base . $comments_base] = 'comments';
+                $this->add_route( $routes, $route                           , $post_type );
+                $this->add_route( $routes, $route . $attachment_base        , 'attachment' );
+                $this->add_route( $routes, $attachment_base . $comments_base, 'comments' );
             }
         }
 
@@ -106,25 +122,34 @@ class B3_WPSettings {
         $taxonomies = get_taxonomies( array( 'public' => true ) );
 
         foreach ($taxonomies as $taxonomy) {
-            $route              = $wp_rewrite->get_extra_permastruct( $taxonomy );
-            $raw_routes[$route] = $taxonomy;
+            $route = $wp_rewrite->get_extra_permastruct( $taxonomy );
+            $this->add_route( $routes, $route, $taxonomy );
         }
 
-        // Cleanup:
+        // Extra routes:
 
-        $routes = array();
-        $page   = '/' . $wp_rewrite->pagination_base . '/:page';
+        $extra = array();
 
-        foreach ($raw_routes as $route => $resource) {
-            // Rewrite tokens:
-            $route = preg_replace( '/%([^%]+)%/', ":$1", $route );
+        foreach ($routes as $route => $resource) {
+            // Add pagination paths:
+            $this->add_route( $extra, $route . $pagination_base, $resource );
 
-            // Trim leading and trailing slashes:
-            $route = preg_replace( '/^\/|\/$/', '', $route );
+            // Add comment and attachment routes for posts and pages:
+            if ($resource === 'page' || $resource === 'post') {
+                $this->add_route( $extra, $route . $comments_base, 'comments' );
+                $this->add_route( $extra, $route . $comments_base . $pagination_base, 'comments' );
 
-            $routes[$route]                     = $resource;
-            $routes[$route . $page]             = $resource;
+                $this->add_route( $extra, $route . $attachment_base, 'attachment' );
+                $this->add_route( $extra, $route . $attachment_base . $pagination_base, 'attachment' );
+
+                $this->add_route( $extra, $route . $attachment_base . $comments_base, 'comments' );
+                $this->add_route( $extra, $route . $attachment_base . $comments_base . $pagination_base, 'comments' );
+            }
         }
+
+        $routes = array_merge( $extra, $routes );
+
+        ksort( $routes );
 
         /**
          * Allows developers to alter the list of resource routes sent
