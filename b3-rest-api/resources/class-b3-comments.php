@@ -7,21 +7,7 @@
 /**
  * Implements a Comment resource API.
  */
-class B3_Comment {
-
-    /**
-     * [$server description]
-     * @var WP_JSON_ResponseHandler
-     */
-    protected $server;
-
-    /**
-     * [__construct description]
-     * @param [type] $server [description]
-     */
-    public function __construct ( WP_JSON_ResponseHandler $server ) {
-        $this->server = $server;
-    }
+class B3_Comment extends B3_API {
 
     /**
      * [register_routes description]
