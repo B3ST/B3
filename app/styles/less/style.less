@@ -32,115 +32,59 @@ body {
   word-wrap: break-word;
 }
 
-.label a {
-  text-decoration: none;
-  color: white;
+.navbar-container {
+  .container;
 }
 
-.progress span {
-  display: block;
-  position: absolute;
-  width: 90%;
-  font-weight: bold;
-}
-
-button,
-.button {
-  .btn;
-
-  &.reply {
-    .btn-default;
-  }
-
-  &.search {
-    .btn-primary;
+.jumbotron {
+  //.make-row();
+  .container-fluid;
+  .jumbotron-container {
   }
 }
 
-form.comment {
-  a.cancel {
-    .btn;
-    .text-danger;
-    .pull-right;
-  }
-
-  button.reply {
-    .btn;
-    .btn-primary;
-    .pull-right;
-  }
-
-  .form-help {
-    .help-block;
-  }
-}
-
-.gallery {
+#content-wrapper {
   .container;
 
-  & .gallery-item {
-    clear: right;
+  #main {
+    .make-md-column(9);
+    .make-xs-column(12);
+
+    .entry,
+    .entries {
+      .make-md-column(12);
+      .make-xs-column(12);
+    }
+
+    @media (min-width: @screen-md-min) {
+      padding-left: 0;
+    }
   }
 
-  &.gallery-columns-1 .gallery-item {
-    .make-md-column(12); .make-xs-column(12);
+  #sidebar {
+    .container;
+    .make-md-column(3);
+    .make-xs-column(12);
+
+    @media (min-width: @screen-md-min) {
+      padding-right: 0;
+    }
   }
 
-  &.gallery-columns-2 .gallery-item {
-    .make-md-column(6); .make-xs-column(12);
+  #main {
+    margin-top: 20px;
   }
 
-  &.gallery-columns-3 .gallery-item {
-    .make-md-column(4); .make-xs-column(6);
-  }
-
-  &.gallery-columns-4 .gallery-item {
-    .make-md-column(3); .make-xs-column(6);
-  }
-
-  &.gallery-columns-5 .gallery-item {
-    .make-lg-column(2.4); .make-md-column(3); .make-xs-column(6);
-  }
-
-  &.gallery-columns-6 .gallery-item {
-    .make-lg-column(2); .make-md-column(3); .make-xs-column(6);
-  }
-
-  &.gallery-columns-7 .gallery-item {
-    .make-lg-column(1.714); .make-md-column(3); .make-xs-column(6);
-  }
-
-  &.gallery-columns-8 .gallery-item {
-    .make-lg-column(1.5); .make-md-column(3); .make-xs-column(6);
-  }
-
-  &.gallery-columns-9 .gallery-item {
-    .make-lg-column(1.333); .make-md-column(3); .make-xs-column(6);
-  }
-
-  &.gallery-columns-10 .gallery-item {
-    .make-lg-column(1.2); .make-md-column(3); .make-xs-column(6);
-  }
-
-  .gallery-icon {
-    .thumbnail;
-    display: inline-block;
-  }
-
-  .wp-caption-text {
-    padding: @thumbnail-caption-padding 0;
-    color:   @thumbnail-caption-color;
+  #sidebar {
+    margin-top: 40px;
   }
 }
 
-.wp-caption {
-  .thumbnail;
-  max-width: 100%;
-  height: 100%;
+.loading-container {
+  margin: 16px;
 
-  .wp-caption-text {
-    padding: @thumbnail-caption-padding 0;
-    color:   @thumbnail-caption-color;
+  .progress-bar {
+    .progress-bar-striped;
   }
 }
 
@@ -183,117 +127,40 @@ img {
   .table-striped;
 }
 
-.comment {
-  .media;
-
-  &, &:first-child {
-    margin-top: 20px;
-  }
-
-  .avatar {
-    .pull-left;
-
-    img {
-      .media-object;
-    }
-  }
-
-  .comment-body {
-    .media-body;
-
-    .comment-heading {
-      .media-heading;
-    }
-
-    .comment-meta {
-    }
-
-    .comments {
-    }
+.label-category {
+  .label;
+  .label-primary;
+  a {
+    color: #fff;
   }
 }
 
-.comments {
-  clear:        left;
-  padding-left: 0;
-}
+/**
+ * Import gallery styles.
+ */
+@import url(_gallery.less);
 
-.b3-credits {
-  padding-top:    40px;
-  padding-bottom: 40px;
-  margin-top:     100px;
-  color:          #777;
-  text-align:     center;
-  border-top:     1px solid #E5E5E5;
+/**
+ * Import comment styles.
+ */
+@import url(_comments.less);
 
-  .social-buttons {
-    display:       inline-block;
-    padding-left:  0;
-    list-style:    none;
-    margin-bottom: 20px;
+/**
+ * Import sidebar styles.
+ */
+@import url(_sidebar.less);
 
-    li {
-      display:     inline-block;
-      padding:     5px 8px;
-      line-height: 1;
+/**
+ * Import icon styles.
+ */
+@import url(_icons.less);
 
-      .github {
-        overflow: hidden;
-        border:   0;
-      }
-    }
-  }
+/**
+ * Import form styles.
+ */
+@import url(_forms.less);
 
-  .footer-links {
-    padding-left: 0;
-    margin-top:   20px;
-    color:        #999;
-
-    li {
-      display: inline;
-
-      &::before{
-        content: '\00B7';
-        padding: 0 10px;
-      }
-
-      &:first-child {
-        padding-left: 0;
-
-        &::before {
-          content:      '';
-          padding-left: 0;
-        }
-      }
-    }
-  }
-
-  p {
-    margin-bottom: 0;
-  }
-}
-
-.icon-cancel {
-  .glyphicon;
-  .glyphicon-remove;
-}
-
-.icon-comment {
-  .glyphicon;
-  .glyphicon-comment;
-}
-
-.icon-info {
-  .glyphicon;
-  .glyphicon-info-sign;
-}
-
-.icon-search {
-  .glyphicon;
-  .glyphicon-search;
-}
-
-.icon-send {
-  .glyphicon;
-  .glyphicon-send;
-}
+/**
+ * Import footer styles.
+ */
+@import url(_footer.less);

@@ -1,20 +1,34 @@
 {! This can be changed at will, it is just to supply a default loading !}
-<div class="loading">
-  {+ loading /}
-</div>
 
-{#posts}
-  <article class="b3-post {post_class}">
-    <header>
-      <h1 class="b3-post-title page-header">
-        <a id="{slug}" href="#">{title|s}</a>
+{+ loading /}
+
+{?title}
+  <header class="jumbotron">
+    <div class="jumbotron-container">
+      <h1 class="b3-archive-title archive-title">
+        {title|s}
       </h1>
-      {+ entry-meta /}
-    </header>
-    <div class="b3-post-excerpt">
-      {excerpt|s}
     </div>
-  </article>
-{/posts}
+  </header>
+{/title}
 
-{+ pager /}
+<div class="entries">
+
+
+  {#posts}
+    <article class="b3-post {post_class}">
+      <header>
+        <h1 class="b3-post-title page-header">
+          <a id="{slug}" href="#">{title|s}</a>
+        </h1>
+        {+ entry-meta /}
+      </header>
+      <div class="b3-post-excerpt">
+        {excerpt|s}
+      </div>
+    </article>
+  {/posts}
+
+  {+ pager /}
+
+</div>

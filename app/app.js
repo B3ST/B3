@@ -54,7 +54,7 @@
       App.header.show(new HeaderView({menus: menus}));
 
       if (sidebars && sidebars.sidebar) {
-        App.widgets.show(new SidebarView({model: new Sidebar(sidebars.sidebar)}));
+        App.sidebar.show(new SidebarView({model: new Sidebar(sidebars.sidebar)}));
       }
 
       App.footer.show(new FooterView());
@@ -102,7 +102,7 @@
       App.addRegions({
         header:  '#header',
         main:    '#main',
-        widgets: '#widgets',
+        sidebar: '#sidebar',
         footer:  '#footer'
       });
     });

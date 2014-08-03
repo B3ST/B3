@@ -19,18 +19,19 @@ define([
     },
 
     show: function (options) {
-      $('.loading').show();
+      $('.loading-container').show(); // TODO: this.$el.show()
     },
 
     hide: function () {
-      $('.loading').hide();
+      $('.loading-container').hide(); // TODO: this.$el.hide()
     },
 
     progress: function (options) {
-      var placeholder = '.loading > div.progress > div.progress-bar',
-          progress = options.loaded/options.total * 100;
-      $(placeholder).attr('aria-valuenow', progress)
-                    .css('width', progress + '%');
+      var progress = options.loaded / options.total * 100;
+
+      $('.loading-container .progress-bar')  // TODO: this.$('.progress')...
+        .prop('aria-valuenow', progress)
+        .css('width', progress + '%');
     }
   });
 

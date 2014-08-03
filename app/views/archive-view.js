@@ -18,7 +18,7 @@ define([
   'use strict';
 
   var ArchiveView = Backbone.Marionette.ItemView.extend({
-    tagName:  'div id="posts" class="container"',
+    tagName:  'div id="archive"',
     template: 'main-template.dust',
 
     events: {

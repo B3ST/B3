@@ -88,7 +88,7 @@
     "app",
     "models/settings-model",
     "models/user-model",
-    'controllers/command-bus',
+    "controllers/command-bus",
     "jqueryui",
     "bootstrap",
     "bootstrap.notify",
@@ -137,15 +137,17 @@
       options = options || {};
 
       var beforeSend = options.beforeSend;
+
       options.beforeSend = function(xhr, settings) {
         xhr.setRequestHeader('X-WP-Nonce', Settings.get('nonce'));
 
         settings.xhr = function () {
           var xhr = $.ajaxSettings.xhr();
           xhr.onprogress = function (evt) {
-            if (evt.lengthComputable) {
-              CommandBus.execute('loading:progress', {loaded: evt.loaded, total: evt.total});
-            }
+            CommandBus.execute('loading:progress', {
+              loaded: evt.loaded,
+              total:  evt.lengthComputable ? evt.total : evt.loaded
+            });
           };
 
           return xhr;

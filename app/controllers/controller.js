@@ -18,7 +18,7 @@ define([
   'views/empty-view',
   'views/loading-view',
   'views/not-found-view'
-], function ($, _, Backbone, Marionette, PostFilter, EventBus, CommandBus, Settings, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, LoadingView, NotFoundView) {
+], function ($, _, Backbone, Marionette, PostFilter, EventBus, CommandBus, Settings, Post, Page, Posts, Comments, ArchiveView, SinglePostView, EmptyView, LoadingView, NotFoundView) {
   'use strict';
 
   function filterInt (value) {
@@ -26,8 +26,8 @@ define([
   }
 
   function getParams (queryString) {
-    var result = {},
-        regex  = new RegExp("([^?=&]+)(=([^&]*))?", "g");
+    var result = {};
+    var regex  = new RegExp("([^?=&]+)(=([^&]*))?", "g");
 
     queryString.replace(regex, function (q1, q2, q3, q4) {
       result[q2] = (isNaN(filterInt(q4)) ? q4 : parseInt(q4, 10));
@@ -49,13 +49,10 @@ define([
       this.posts   = options.posts;
       this.user    = options.user;
 
-      this.initAux();
-      this.bindToEvents();
-    },
-
-    initAux: function () {
       this.loading = this.loadingView();
       this.search  = new Posts();
+
+      this.bindToEvents();
     },
 
     bindToEvents: function () {
@@ -90,16 +87,19 @@ define([
                 .done(function () { this.hideLoading(); }.bind(this));
 
       this.show(this.archiveView(this.posts, page, filter));
+
       this.showLoading();
     },
 
     /**
      * Display the results of a search
      *
-     * @param  {string} query The query string
+     * @param {String} query The query string
      */
     showSearch: function (query) {
       this.showSearchResults(getParams(query));
+
+      this.showLoading();
     },
 
     /**
