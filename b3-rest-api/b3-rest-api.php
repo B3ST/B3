@@ -4,12 +4,7 @@
  * @subpackage B3/API
  */
 
-include_once( dirname( __FILE__ ) . '/resources/class-b3-api.php' );
-include_once( dirname( __FILE__ ) . '/resources/class-b3-comments.php' );
-include_once( dirname( __FILE__ ) . '/resources/class-b3-menus.php' );
-include_once( dirname( __FILE__ ) . '/resources/class-b3-posts.php' );
-include_once( dirname( __FILE__ ) . '/resources/class-b3-settings.php' );
-include_once( dirname( __FILE__ ) . '/resources/class-b3-sidebars.php' );
+require_once( dirname( __FILE__ ) . '/resources/B3_API.php' );
 
 class B3_JSON_REST_API {
 
@@ -50,6 +45,7 @@ class B3_JSON_REST_API {
         $this->server = $server;
 
         foreach ($this->resources as $class => $resource) {
+            include_once( dirname( __FILE__ ) . '/resources/' . $class . '.php' );
             $this->resources[$class] = $resource = new $class( $server );
             add_filter( 'json_endpoints', array( $resource, 'register_routes' ), 10, 1 );
         }
