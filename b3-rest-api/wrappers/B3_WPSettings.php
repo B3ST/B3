@@ -1,13 +1,37 @@
 <?php
 
+define( 'B3_EP_NONE'      , 0 );
+define( 'B3_EP_PAGE'      , 1 );
+define( 'B3_EP_ATTACHMENT', 2 );
+define( 'B3_EP_COMMENTS'  , 4 );
+define( 'B3_EP_ALL'       , B3_EP_PAGE | B3_EP_ATTACHMENT | B3_EP_COMMENTS );
+
 class B3_WPSettings {
+
+    /**
+     * [$route_pagination_base description]
+     * @var string
+     */
+    protected $route_pagination_base = '';
+
+    /**
+     * [$route_comments_base description]
+     * @var string
+     */
+    protected $route_comments_base   = '';
+
+    /**
+     * [$route_attachment_base description]
+     * @var string
+     */
+    protected $route_attachment_base = '';
 
     /**
      * [get_options description]
      * @return [type] [description]
      */
-    public function get_options () {
-        return $this->options;
+    public function __construct () {
+
     }
 
     /**
@@ -50,6 +74,11 @@ class B3_WPSettings {
         }
     }
 
+    /**
+     * [prepare_route description]
+     * @param  [type] $route [description]
+     * @return [type]        [description]
+     */
     protected function prepare_route ( $route ) {
         // Rewrite tokens:
         $route = preg_replace( '/%([^%]+)%/', ":$1", $route );
@@ -60,9 +89,53 @@ class B3_WPSettings {
         return $route;
     }
 
-    protected function add_route( &$routes, $route, $resource ) {
-        $route          = $this->prepare_route( $route );
-        $routes[$route] = $resource;
+    /**
+     * [add_route description]
+     * @param array  $routes   New routes will be added to this array.
+     * @param string $route    New base route to add.
+     * @param string $resource Resource for the route.
+     * @param int    $mask     Extra endpoints mask (default B3_EP_NONE)
+     *                         - B3_EP_NONE
+     *                         - B3_EP_PAGE
+     *                         - B3_EP_ATTACHMENT
+     *                         - B3_EP_COMMENTS
+     *                         - B3_EP_ALL
+     */
+    protected function add_route( &$routes, $route, $resource, $mask = B3_EP_NONE ) {
+        $route         = $this->prepare_route( $route );
+
+        $added         = array();
+        $added[$route] = $resource;
+
+        if (B3_EP_ATTACHMENT & $mask) {
+            $attachment_route = $this->prepare_route( $route . $this->route_attachment_base );
+            $added[$attachment_route] = 'attachment';
+        }
+
+        $comments = array();
+
+        foreach ($added as $route => $resource) {
+            if ((B3_EP_COMMENTS & $mask) || ($resource === 'attachment')) {
+                $comments_route = $this->prepare_route( $route . $this->route_comments_base );
+                $comments[$comments_route] = 'comments';
+            }
+        }
+
+        $added = array_merge( $added, $comments );
+
+        if (B3_EP_PAGE & $mask) {
+            $pages = array();
+            foreach ($added as $route => $resource) {
+                if ($resource === 'attachment') {
+                    continue;
+                }
+                $paging_route = $this->prepare_route( $route . $this->route_pagination_base );
+                $pages[$paging_route] = $resource;
+            }
+            $added = array_merge( $added, $pages );
+        }
+
+        $routes = array_merge( $routes, $added );
     }
 
     /**
@@ -84,20 +157,20 @@ class B3_WPSettings {
     protected function get_routes () {
         global $wp_rewrite;
 
-        $pagination_base = '/' . $wp_rewrite->pagination_base . '/:page';
-        $comments_base   = '/' . $wp_rewrite->comments_base;
-        $attachment_base = '/attachment/:attachment';
+        $this->route_comments_base   = '/' . $wp_rewrite->comments_base;
+        $this->route_pagination_base = '/' . $wp_rewrite->pagination_base . '/:page';
+        $this->route_attachment_base = '/attachment/:attachment';
 
         $routes = array();
 
-        $this->add_route( $routes, $wp_rewrite->front . '%post_id%'     , 'post' );
-        $this->add_route( $routes, $wp_rewrite->front . '%postname%'    , 'post' );
-        $this->add_route( $routes, $wp_rewrite->get_page_permastruct()  , 'page' );
-        $this->add_route( $routes, $wp_rewrite->get_author_permastruct(), 'author' );
-        $this->add_route( $routes, $wp_rewrite->get_date_permastruct()  , 'date' );
-        $this->add_route( $routes, $wp_rewrite->get_month_permastruct() , 'date' );
-        $this->add_route( $routes, $wp_rewrite->get_year_permastruct()  , 'date' );
-        $this->add_route( $routes, $wp_rewrite->get_search_permastruct(), 'search' );
+        $this->add_route( $routes, $wp_rewrite->front . '%post_id%'     , 'post'  , B3_EP_ALL );
+        $this->add_route( $routes, $wp_rewrite->front . '%postname%'    , 'post'  , B3_EP_ALL );
+        $this->add_route( $routes, $wp_rewrite->get_page_permastruct()  , 'page'  , B3_EP_ALL );
+        $this->add_route( $routes, $wp_rewrite->get_author_permastruct(), 'author', B3_EP_PAGE );
+        $this->add_route( $routes, $wp_rewrite->get_date_permastruct()  , 'date'  , B3_EP_PAGE );
+        $this->add_route( $routes, $wp_rewrite->get_month_permastruct() , 'date'  , B3_EP_PAGE );
+        $this->add_route( $routes, $wp_rewrite->get_year_permastruct()  , 'date'  , B3_EP_PAGE );
+        $this->add_route( $routes, $wp_rewrite->get_search_permastruct(), 'search', B3_EP_PAGE );
 
         // Public post types:
 
@@ -105,15 +178,15 @@ class B3_WPSettings {
 
         foreach ($post_types as $post_type) {
             $route = $wp_rewrite->get_extra_permastruct( $post_type );
+            $mask  = B3_EP_ALL;
 
             if (empty( $route )) {
                 $post_type = 'root';
+                $mask      = B3_EP_PAGE | B3_EP_ATTACHMENT;
             }
 
             if ($post_type !== 'attachment') {
-                $this->add_route( $routes, $route                           , $post_type );
-                $this->add_route( $routes, $route . $attachment_base        , 'attachment' );
-                $this->add_route( $routes, $attachment_base . $comments_base, 'comments' );
+                $this->add_route( $routes, $route, $post_type, $mask );
             }
         }
 
@@ -123,31 +196,8 @@ class B3_WPSettings {
 
         foreach ($taxonomies as $taxonomy) {
             $route = $wp_rewrite->get_extra_permastruct( $taxonomy );
-            $this->add_route( $routes, $route, $taxonomy );
+            $this->add_route( $routes, $route, $taxonomy, B3_EP_PAGE );
         }
-
-        // Extra routes:
-
-        $extra = array();
-
-        foreach ($routes as $route => $resource) {
-            // Add pagination paths:
-            $this->add_route( $extra, $route . $pagination_base, $resource );
-
-            // Add comment and attachment routes for posts and pages:
-            if ($resource === 'page' || $resource === 'post') {
-                $this->add_route( $extra, $route . $comments_base, 'comments' );
-                $this->add_route( $extra, $route . $comments_base . $pagination_base, 'comments' );
-
-                $this->add_route( $extra, $route . $attachment_base, 'attachment' );
-                $this->add_route( $extra, $route . $attachment_base . $pagination_base, 'attachment' );
-
-                $this->add_route( $extra, $route . $attachment_base . $comments_base, 'comments' );
-                $this->add_route( $extra, $route . $attachment_base . $comments_base . $pagination_base, 'comments' );
-            }
-        }
-
-        $routes = array_merge( $extra, $routes );
 
         ksort( $routes );
 
