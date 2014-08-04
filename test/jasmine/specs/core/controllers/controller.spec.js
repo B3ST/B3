@@ -244,7 +244,7 @@ define([
           user:  this.user
         });
 
-        this.controller.showArchive(2);
+        this.controller.showArchive({paged: 2});
         this.server.respond();
       });
 
@@ -275,7 +275,7 @@ define([
             user:  this.user
           });
 
-          this.controller.showArchive(2);
+          this.controller.showArchive({paged: 2});
           this.server.respond();
         });
 
@@ -413,7 +413,7 @@ define([
     sharedBehaviourForSingle({
       method: ".showPostById",
       runTestMethod: function (controller) {
-        controller.showPostById(1);
+        controller.showPostById({id: 1});
       },
       request: Settings.get('apiUrl') + '/posts/1'
     });
@@ -421,7 +421,7 @@ define([
     sharedBehaviourForSingle({
       method: ".showPostBySlug",
       runTestMethod: function  (controller) {
-        controller.showPostBySlug('post-slug-1');
+        controller.showPostBySlug({post: 'post-slug-1'});
       },
       request: Settings.get('apiUrl') + '/posts/b3:slug:post-slug-1'
     });
@@ -429,7 +429,7 @@ define([
     sharedBehaviourForArchiveOfType('category', {
       method: ".showPostByCategory",
       runTestMethod: function  (controller) {
-        controller.showPostByCategory('category');
+        controller.showPostByCategory({category: 'category'});
       },
       request: Settings.get('apiUrl') + '/posts?filter[category_name]=category&page=1',
     });
@@ -437,7 +437,7 @@ define([
     sharedBehaviourForArchiveOfType('tag', {
       method: ".showPostByTag",
       runTestMethod: function (controller) {
-        controller.showPostByTag('tag');
+        controller.showPostByTag({post_tag: 'tag'});
       },
       request: Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1'
     });
@@ -445,7 +445,7 @@ define([
     sharedBehaviourForArchiveOfType('author', {
       method: ".showPostByAuthor",
       runTestMethod: function  (controller) {
-        controller.showPostByAuthor('author');
+        controller.showPostByAuthor({author: 'author'});
       },
       request: Settings.get('apiUrl') + '/posts?filter[author_name]=author&page=1'
     });
@@ -457,7 +457,7 @@ define([
           posts: new Posts(),
           app:   this.app
         });
-        this.controller.showPageBySlug('page-slug');
+        this.controller.showPageBySlug({page: 'page-slug'});
 
         expect(this.spy).toHaveBeenCalled();
       });
@@ -476,7 +476,7 @@ define([
             posts: new Posts(),
             app:   this.app
           });
-          this.controller.showPageBySlug('page-slug');
+          this.controller.showPageBySlug({page: 'page-slug'});
           this.server.respond();
 
           var view = this.spy.mostRecentCall.args[0];
@@ -498,7 +498,7 @@ define([
             posts: new Posts(),
             app:   this.app
           });
-          this.controller.showPageBySlug('page-slug');
+          this.controller.showPageBySlug({page: 'page-slug'});
           this.server.respond();
 
           var view = this.spy.mostRecentCall.args[0];

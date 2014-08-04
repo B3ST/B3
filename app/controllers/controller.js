@@ -65,11 +65,11 @@ define([
     /**
      * Display the home page.
      */
-    showHome: function () {
+    showHome: function (params) {
       // TODO: Display either a post list or a page according to WordPress'
       // home page settings (full post list vs page ID):
 
-      this.showArchive();
+      this.showArchive(params);
     },
 
     /**
@@ -77,10 +77,10 @@ define([
      *
      * @param {int} page Page number.
      */
-    showArchive: function (page) {
-      var filter = new PostFilter();
+    showArchive: function (params) {
+      var filter = new PostFilter(),
+          page   = params.paged || 1;
 
-      page = page || 1;
       filter.onPage(page);
 
       this.posts.fetch(fetchParams(filter))
@@ -145,14 +145,15 @@ define([
      * @param {int} id   Post ID.
      * @param {int} page Page number.
      */
-    showPostById: function (id, page) {
-      var post = this.posts.get(id);
+    showPostById: function (params) {
+      var post = this.posts.get(params.id),
+          page = params.paged;
 
       if (post) {
         this.show(this.singlePostView(post, page));
         this.hideLoading();
       } else {
-        this.fetchModelBy(Post, 'ID', id, page);
+        this.fetchModelBy(Post, 'ID', params.id, page);
       }
     },
 
@@ -162,8 +163,10 @@ define([
      * @param {String} slug Post slug.
      * @param {int}    page Page number.
      */
-    showPostBySlug: function (slug, page) {
-      var post = this.posts.where({slug: slug});
+    showPostBySlug: function (params) {
+      var slug = params.post,
+          page = params.page,
+          post = this.posts.where({slug: slug});
 
       if (post.length > 0) {
         this.show(this.singlePostView(post[0], page));
@@ -179,8 +182,11 @@ define([
      * @param  {string} category Category name
      * @param  {int}    page     Page number
      */
-    showPostByCategory: function (category, page) {
-      var filter = new PostFilter();
+    showPostByCategory: function (params) {
+      var filter = new PostFilter(),
+          category = params.category,
+          page     = params.paged;
+
       filter.byCategory(category);
       this.fetchPostsOfPage(filter, page);
     },
@@ -191,8 +197,11 @@ define([
      * @param  {string} tag  Tag name
      * @param  {int}    page Page number
      */
-    showPostByTag: function (tag, page) {
-      var filter = new PostFilter();
+    showPostByTag: function (params) {
+      var filter = new PostFilter(),
+          tag    = params.post_tag,
+          page   = params.paged;
+
       filter.byTag(tag);
       this.fetchPostsOfPage(filter, page);
     },
@@ -203,8 +212,11 @@ define([
      * @param  {string} author Author name
      * @param  {int}    page   Page number
      */
-    showPostByAuthor: function (author, page) {
-      var filter = new PostFilter();
+    showPostByAuthor: function (params) {
+      var filter = new PostFilter(),
+          author = params.author,
+          page   = params.paged;
+
       filter.byAuthor(author);
       this.fetchPostsOfPage(filter, page);
     },
@@ -219,7 +231,10 @@ define([
      * @param {String} slug Page slug.
      * @param {int}    page Page number.
      */
-    showPageBySlug: function (slug, page) {
+    showPageBySlug: function (params) {
+      var slug = params.page,
+          page = params.paged;
+
       this.fetchModelBy(Page, 'slug', slug, page);
     },
 
