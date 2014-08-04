@@ -99,17 +99,8 @@
     Backbone.Model.prototype.parse  = Rewrite.parse;
     Backbone.Model.prototype.sync   = Rewrite.sync;
 
+    Backbone.Router.prototype._extractParameters    = Rewrite.extractParameters;
     Marionette.AppRouter.prototype.processAppRoutes = Rewrite.processAppRoutes;
-    Marionette.AppRouter.prototype._getWpRoutes     = Rewrite._getWpRoutes;
-    Marionette.AppRouter.prototype._processOnRoute  = function(routeName, routeArgs) {
-    // find the path that matched
-      var routePath = _.invert(this.appRoutes)[routeName];
-
-      // make sure an onRoute is there, and call it
-      if (_.isFunction(this.onRoute)) {
-        this.onRoute(routeName, routePath, routeArgs);
-      }
-    };
 
     App.start();
   });
