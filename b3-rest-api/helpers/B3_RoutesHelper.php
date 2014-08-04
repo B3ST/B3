@@ -41,7 +41,7 @@ class B3_RoutesHelper {
     public function __construct () {
         global $wp_rewrite;
 
-        $this->pagination_base = '(/' . $wp_rewrite->pagination_base . '/:page)';
+        $this->pagination_base = '(/' . $wp_rewrite->pagination_base . '/:paged)';
         $this->comments_base   = '/' . $wp_rewrite->comments_base;
         $this->attachment_base = '/attachment/:attachment';
 
@@ -159,7 +159,9 @@ class B3_RoutesHelper {
      */
     protected function add_post_routes () {
         $resource = array( 'object' => 'post', 'type' => 'post' );
-        $this->add_routes( get_option( 'permalink_structure' ), $resource, B3_EP_ALL );
+        $permastruct = get_option( 'permalink_structure' );
+        $permastruct = preg_replace( '/%postname%/', '%post%', $permastruct );
+        $this->add_routes( $permastruct, $resource, B3_EP_ALL );
     }
 
     /**
@@ -171,7 +173,9 @@ class B3_RoutesHelper {
     protected function add_page_routes () {
         global $wp_rewrite;
         $resource = array( 'object' => 'post', 'type' => 'page' );
-        $this->add_routes( $wp_rewrite->get_page_permastruct(), $resource, B3_EP_ALL );
+        $permastruct = $wp_rewrite->get_page_permastruct();
+        $permastruct = preg_replace( '/%pagename%/', '%page%', $permastruct );
+        $this->add_routes( $permastruct, $resource, B3_EP_ALL );
     }
 
     /**
