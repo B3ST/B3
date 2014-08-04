@@ -61,7 +61,7 @@ define([
           paramsObj = {};
 
       _.each(this.appParams[route], function (key, index) {
-        paramsObj[key] = params[index] ? params[index] : null;
+        paramsObj[key.replace(':', '')] = params[index] ? params[index] : null;
       });
 
       return [paramsObj];
