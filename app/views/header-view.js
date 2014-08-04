@@ -53,7 +53,7 @@ define([
     },
 
     index: function (ev) {
-      this.navigate('');
+      Navigator.navigateToHome('', null, true);
       EventBus.trigger('menu-item:select', {id: -1});
       ev.preventDefault();
     },
@@ -63,10 +63,6 @@ define([
       return menus.map(function (menu) {
         return menu.attributes;
       });
-    },
-
-    navigate: function (route) {
-      Navigator.navigate(route, true);
     }
   });
 

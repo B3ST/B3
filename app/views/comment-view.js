@@ -41,7 +41,7 @@ define([
 
     displayAuthor: function (event) {
       var slug = $(event.currentTarget).attr('slug');
-      Navigator.navigate('post/author/' + slug, true);
+      Navigator.navigateToAuthor(slug, null, true);
       event.preventDefault();
     }
   });

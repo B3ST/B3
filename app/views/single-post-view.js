@@ -20,11 +20,6 @@ define([
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, Settings, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   'use strict';
 
-  function display (event, route) {
-    var slug = $(event.currentTarget).attr('slug');
-    Navigator.navigate(route + slug, true);
-  }
-
   function scrollToReply (id) {
     var placeholder = "#comment-" + id,
         offset      = $(placeholder).offset();
@@ -106,17 +101,20 @@ define([
     },
 
     displayCategory: function (event) {
-      display(event, 'post/category/');
+      var slug = $(event.currentTarget).attr('slug');
+      Navigator.navigateToCategory(slug, null, true);
       event.preventDefault();
     },
 
     displayTag: function (event) {
-      display(event, 'post/tag/');
+      var slug = $(event.currentTarget).attr('slug');
+      Navigator.navigateToTag(slug, null, true);
       event.preventDefault();
     },
 
     displayAuthor: function (event) {
-      display(event, 'post/author/');
+      var slug = $(event.currentTarget).attr('slug');
+      Navigator.navigateToAuthor(slug, null, true);
       event.preventDefault();
     },
 
