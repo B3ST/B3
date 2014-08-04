@@ -1,6 +1,6 @@
 /* global WP_API_SETTINGS, require */
 
-(function () {
+(function() {
   'use strict';
 
   var root = WP_API_SETTINGS.root;
@@ -101,6 +101,18 @@
 
     Backbone.Router.prototype._extractParameters    = Rewrite.extractParameters;
     Marionette.AppRouter.prototype.processAppRoutes = Rewrite.processAppRoutes;
+
+    if (!String.prototype.supplant) {
+      String.prototype.supplant = function(o) {
+        return this.replace(
+          /\{([^{}]*)\}/g,
+          function(a, b) {
+            var r = o[b];
+            return typeof r === 'string' || typeof r === 'number' ? r : a;
+          }
+        );
+      };
+    }
 
     App.start();
   });

@@ -164,6 +164,7 @@
 
       // controllers
       root + 'core/controllers/controller.spec',
+      root + 'core/controllers/navigator.spec',
 
       // app
       root + 'core/app.spec'
@@ -171,6 +172,18 @@
 
     Backbone.Model.prototype.toJSON = Rewrite.toJSON;
     Backbone.Model.prototype.parse  = Rewrite.parse;
+
+    if (!String.prototype.supplant) {
+      String.prototype.supplant = function(o) {
+        return this.replace(
+          /\{([^{}]*)\}/g,
+          function(a, b) {
+            var r = o[b];
+            return typeof r === 'string' || typeof r === 'number' ? r : a;
+          }
+        );
+      };
+    }
 
     $(function() {
       require(specs, function() {
