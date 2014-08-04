@@ -32,7 +32,7 @@ define([
 
         var widget = this.view.$('.widget')[0],
             model  = this.model.get('widgets')[0];
-        expect($(widget).find('div.widget-body').text()).not.toEqual('');
+        expect($(widget).find('div.panel-body').text()).not.toEqual('');
       });
     });
   });

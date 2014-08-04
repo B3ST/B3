@@ -50,14 +50,14 @@ define([
     describe(".show", function() {
       it("should display the loading view", function() {
         this.view.show();
-        expect($('.loading').is(':visible')).toBeTruthy();
+        expect($('.loading-container').is(':visible')).toBeTruthy();
       });
     });
 
     describe(".hide", function() {
       it("should hide the loading view", function() {
         this.view.hide();
-        expect($('.loading').is(':visible')).toBeFalsy();
+        expect($('.loading-container').is(':visible')).toBeFalsy();
       });
     });
   });

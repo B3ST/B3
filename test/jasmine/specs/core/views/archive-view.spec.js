@@ -39,7 +39,7 @@ define([
       });
 
       it("should display all posts with that " + action, function() {
-        var posts = this.view.$el.children('.b3-post');
+        var posts = this.view.$('.b3-post');
         expect(posts.length).toEqual(this.response.length);
       });
 
@@ -63,7 +63,7 @@ define([
 
     describe(".render", function() {
       it("should render the template", function() {
-        expect(this.view.$el.children('.b3-post').length).toEqual(2);
+        expect(this.view.$('.b3-post').length).toEqual(2);
       });
 
       it("should trigger a loading:hide command", function() {
@@ -74,7 +74,7 @@ define([
     describe("When the collection changes", function() {
       it("should re-render the view", function() {
         this.posts.reset();
-        expect(this.view.$el.children('.b3-post').length).toEqual(0);
+        expect(this.view.$('.b3-post').length).toEqual(0);
       });
     });
 
@@ -123,7 +123,7 @@ define([
       });
 
       it("should render the page with the new results", function() {
-        var posts = this.view.$el.children('.b3-post');
+        var posts = this.view.$('.b3-post');
         expect($(posts[0]).find('.b3-post-title').text()).toEqual(this.response[0].title);
         expect($(posts[1]).find('.b3-post-title').text()).toEqual(this.response[1].title);
       });
