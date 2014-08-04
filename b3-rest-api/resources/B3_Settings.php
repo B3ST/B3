@@ -4,7 +4,7 @@
  * @subpackage B3/API
  */
 
-require_once( dirname( __FILE__ ) . '/../wrappers/B3_WPSettings.php' );
+require_once( dirname( __FILE__ ) . '/../helpers/B3_SettingsHelper.php' );
 
 /**
  * Implements the Settings resource API.
@@ -45,7 +45,7 @@ class B3_Settings extends B3_API {
     public function __construct ( WP_JSON_ResponseHandler $server ) {
         parent::__construct( $server );
 
-        $this->settings = new B3_WPSettings();
+        $this->settings = new B3_SettingsHelper();
     }
 
     /**
