@@ -127,12 +127,12 @@ class B3_RoutesHelper {
         }
 
         if (B3_EP_COMMENTS & $mask) {
-            $comments_resource = array( 'object' => 'comments', 'type' => 'comments' );
-
+            $comments_resource = array( 'object' => 'comments', 'type' => $resource['type'] );
             $comments_route = $this->prepare_route( $route . $this->comments_base . $this->pagination_base );
             $routes[$comments_route] = $comments_resource;
 
             if ($attachment_route) {
+                $comments_resource = array( 'object' => 'comments', 'type' => 'attachment' );
                 $comments_route = $this->prepare_route( $attachment_route . $this->comments_base . $this->pagination_base );
                 $routes[$comments_route] = $comments_resource;
             }
