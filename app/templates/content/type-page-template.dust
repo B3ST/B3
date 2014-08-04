@@ -1,18 +1,23 @@
+{! This can be changed at will, it is just to supply a default loading !}
+
+{+ loading /}
+
 <article class="{post_class}">
 
   <header class="jumbotron">
-    <div class="container">
+    <div class="jumbotron-container">
       <h1 class="b3-post-title post-title entry-title">
         {title|s}
       </h1>
     </div>
   </header>
 
-  <div class="container">
-
+  <div class="entry">
     <div class="b3-post-content entry-content post-content">
       {content|s}
     </div>
+
+    {+ pagination /}
 
     <footer>
       {+ entry-meta /}
@@ -31,4 +36,3 @@
 
 </article>
 
-{+ pagination /}

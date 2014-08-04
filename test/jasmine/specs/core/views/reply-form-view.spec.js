@@ -15,21 +15,21 @@ define([
 
   describe("ReplyFormView", function() {
     beforeEach(function() {
-      this.parentView = jasmine.createSpyObj('parentView', ['replyFormRendered', 'replyFormDestroyed']);
+      this.parentView = jasmine.createSpyObj('parentView', ['replyFormRendered', 'replyFormDestroyed', 'replyFormCancelled']);
       this.user       = new User({ID: 1, name: 'name'});
-      this.post       = new Post({ID: 1});
+      this.post       = new Post({ID: 1, comment_status: 'open'});
     });
 
     describe(".initialize", function() {
       it("should set its parent view", function() {
-        this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user});
+        this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user: this.user});
         expect(this.view.parentView).toEqual(this.parentView);
       });
     });
 
     describe(".render", function() {
       beforeEach(function() {
-        this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user});
+        this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user: this.user});
         this.view.render();
       });
 
@@ -43,7 +43,7 @@ define([
 
       describe("while the user is logged in", function() {
         it("should hide the form for name and user email", function() {
-          this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user});
+          this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user: this.user});
           this.view.render();
 
           expect(this.view.$('#b3-author').length).toEqual(0);
@@ -53,7 +53,7 @@ define([
       describe("while the user is not logged in", function() {
         it("should display a form for name and user email", function() {
           this.user = new User();
-          this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user});
+          this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user: this.user});
           this.view.render();
 
           expect(this.view.$('#b3-author').length).toEqual(1);
@@ -63,19 +63,18 @@ define([
 
     describe("Clicking the cancel button", function() {
       beforeEach(function() {
-        this.spy = spyOn(Backbone.Marionette.ItemView.prototype, 'destroy').andCallThrough();
-        this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user:this.user});
+        this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user:this.user});
         this.view.render();
 
         this.view.$('#b3-cancel').click();
       });
 
-      it("should destroy the view", function() {
-        expect(this.spy).toHaveBeenCalled();
+      it("should hide the view", function() {
+        expect(this.view.$el.is(':visible')).toBeFalsy();
       });
 
       it("should tell the parent view that the view was destroyed", function() {
-        expect(this.parentView.replyFormDestroyed).toHaveBeenCalled();
+        expect(this.parentView.replyFormCancelled).toHaveBeenCalled();
       });
     });
 
@@ -88,7 +87,7 @@ define([
         }, this);
 
         this.eventBus = spyOn(EventBus, 'trigger');
-        this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user, parentId: 0});
+        this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user: this.user, parentId: 0});
         this.view.render();
 
         this.view.$('[name="comment_content"]').val('Some reply');
@@ -151,7 +150,7 @@ define([
       describe("when user is not logged in", function() {
         beforeEach(function() {
           this.user = new User();
-          this.view = new ReplyFormView({model: this.post, parentView: this.parentView, user: this.user, parentId: 0});
+          this.view = new ReplyFormView({post: this.post, parentView: this.parentView, user: this.user, parentId: 0});
           this.view.render();
 
           this.view.$('[name="comment_content"]').val('Some reply');

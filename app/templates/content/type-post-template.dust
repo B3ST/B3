@@ -1,7 +1,11 @@
+{! This can be changed at will, it is just to supply a default loading !}
+
+{+ loading /}
+
 <article class="{post_class}">
 
   <header class="jumbotron">
-    <div class="container">
+    <div class="jumbotron-container">
       <h1 class="b3-post-title post-title entry-title">
         {title|s}
       </h1>
@@ -14,22 +18,21 @@
     </div>
   </header>
 
-  <div class="container">
-
+  <div class="entry">
     <div class="b3-post-content entry-content post-content">
       {content|s}
     </div>
+
+    {+ pagination /}
 
     <footer>
       {+ entry-meta /}
     </footer>
 
-    {+ pagination /}
-
     <aside class="post-comments">
       {@eq key=comment_status value="open"}
         <a href="#reply" class="b3-reply-post button reply" role="button">
-          <span class="glyphicon glyphicon-comment"></span> Reply
+          <span class="icon-reply"></span> Reply
         </a>
       {/eq}
 

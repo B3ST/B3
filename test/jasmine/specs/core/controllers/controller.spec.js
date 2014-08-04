@@ -10,12 +10,125 @@ define([
   'views/empty-view',
   'views/not-found-view',
   'controllers/event-bus',
+  'controllers/command-bus',
   'app',
   'sinon'
-], function (Controller, Settings, User, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, NotFoundView, EventBus, App) {
+], function (Controller, Settings, User, Post, Page, Posts, ArchiveView, SinglePostView, EmptyView, NotFoundView, EventBus, CommandBus, App) {
   'use strict';
 
-  function sharedBehaviourFor (type, options) {
+  function stubServer (options) {
+    var server = sinon.fakeServer.create();
+    server.respondWith(
+      'GET',
+      options.url,
+      [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
+    );
+
+    return server;
+  }
+
+  function sharedBehaviourForSingle (options) {
+    describe(options.method, function() {
+      beforeEach(function() {
+        this.cBus  = spyOn(CommandBus, 'execute');
+        this.posts = [
+          new Post({ID: 1, title: 'post-1', slug: 'post-slug-1'}),
+          new Post({ID: 2, title: 'post-2', slug: 'post-slug-2'})
+        ];
+        this.appShow = spyOn(this.app.main, 'show');
+
+        this.controller = new Controller({
+          posts: new Posts(this.posts),
+          app:   App,
+          user:  this.user
+        });
+
+        options.runTestMethod(this.controller);
+      });
+
+      it("should show a single content view with the selected post", function() {
+        var view = this.appShow.mostRecentCall.args[0];
+        expect(view instanceof SinglePostView).toBeTruthy();
+        expect(view.model).toEqual(this.posts[0]);
+      });
+
+      it("should trigger a loading:hide command", function() {
+        expect(this.cBus).toHaveBeenCalledWith('loading:hide');
+      });
+
+      describe("When post is not defined", function() {
+        beforeEach(function() {
+          this.response   = new Post({ID: 1, title: 'title'});
+          this.fetch      = spyOn(Post.prototype, 'fetch').andCallThrough();
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+
+          options.runTestMethod(this.controller);
+        });
+
+        it("should fetch the selected post", function() {
+          expect(this.fetch).toHaveBeenCalled();
+        });
+
+        describe("When fetching is successful", function() {
+          beforeEach(function() {
+              this.server = stubServer({
+              response: this.response.toJSON(),
+              url:      options.request,
+              code:     200
+            });
+
+            this.controller = new Controller({
+              posts: new Posts(),
+              app:   App,
+              user:  this.user
+            });
+
+            options.runTestMethod(this.controller);
+            this.server.respond();
+          });
+
+          it("should display the corresponding view", function() {
+            var view = this.appShow.mostRecentCall.args[0];
+            expect(view instanceof SinglePostView).toBeTruthy();
+            expect(view.model).toBeDefined();
+          });
+
+          it("should trigger a loading:hide command", function() {
+            expect(this.cBus).toHaveBeenCalledWith('loading:hide');
+          });
+        });
+
+        describe("When fetching fails", function() {
+          beforeEach(function() {
+            this.server = stubServer({
+              response: '',
+              url:      options.request,
+              code:     404
+            });
+
+            this.controller = new Controller({
+              posts: new Posts(),
+              app:   App,
+              user:  this.user
+            });
+            options.runTestMethod(this.controller);
+            this.server.respond();
+          });
+
+          it("should display a not found view", function() {
+            var view = this.appShow.mostRecentCall.args[0];
+            expect(view instanceof NotFoundView).toBeTruthy();
+          });
+        });
+      });
+    });
+  }
+
+  function sharedBehaviourForArchiveOfType (type, options) {
     describe(options.method, function() {
       it("should fetch the corresponding posts of a given " + type, function() {
         this.spy = spyOn(Posts.prototype, 'fetch').andCallThrough();
@@ -23,7 +136,7 @@ define([
           posts: new Posts(),
           app:   this.app
         });
-        options.function(this.controller);
+        options.runTestMethod(this.controller);
 
         expect(this.spy).toHaveBeenCalled();
       });
@@ -45,7 +158,7 @@ define([
             user:  this.user
           });
 
-          options.function(this.controller);
+          options.runTestMethod(this.controller);
           this.server.respond();
 
           expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
@@ -67,7 +180,7 @@ define([
             app:   App,
             user:  this.user
           });
-          options.function(this.controller);
+          options.runTestMethod(this.controller);
           this.server.respond();
 
           var view = this.spy.mostRecentCall.args[0];
@@ -75,17 +188,6 @@ define([
         });
       });
     });
-  }
-
-  function stubServer (options) {
-    var server = sinon.fakeServer.create();
-    server.respondWith(
-      'GET',
-      options.url,
-      [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
-    );
-
-    return server;
   }
 
   describe("Controller", function() {
@@ -99,6 +201,7 @@ define([
       this.app.main.$el.html('');
       this.app.header.$el.html('');
       this.app.footer.$el.html('');
+      window.scrollTo(0, 0);
     });
 
     describe(".initialize", function() {
@@ -132,34 +235,57 @@ define([
           url:      Settings.get('apiUrl') + '/posts',
           code:     200
         });
+
+        this.bus        = spyOn(CommandBus, 'execute');
+        this.posts      = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.controller = new Controller({
+          posts: new Posts(),
+          app:   this.app,
+          user:  this.user
+        });
+
+        this.controller.showArchive(2);
+        this.server.respond();
       });
 
       it("should fetch the collection of posts of a given page", function() {
-        this.spy = spyOn(Posts.prototype, 'fetch');
-        this.controller = new Controller({
-          posts: new Posts(),
-          app:   this.app,
-          user:  this.user
-        });
-
-        this.controller.showArchive(2);
-        this.server.respond();
-
-        expect(this.spy).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
+        expect(this.posts).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
       });
 
-      it("should show the archive view", function() {
-        this.spy = spyOn(this.app.main, 'show');
-        this.controller = new Controller({
-          posts: new Posts(),
-          app:   this.app,
-          user:  this.user
+      it("should trigger a loading:show command", function() {
+        expect(this.bus).toHaveBeenCalledWith('loading:show');
+      });
+
+      describe("When fetching is successful", function() {
+        beforeEach(function() {
+          this.spy = spyOn(this.app.main, 'show');
+          var response = [
+            new Post({ID: 1, title: 'post-1'}).toJSON(),
+            new Post({ID: 2, title: 'post-2'}).toJSON()
+          ];
+          this.server = stubServer({
+            url:      Settings.get('apiUrl') + '/posts?page=2',
+            code:     200,
+            response: response
+          });
+
+          this.controller = new Controller({
+            posts: new Posts(),
+            app:   this.app,
+            user:  this.user
+          });
+
+          this.controller.showArchive(2);
+          this.server.respond();
         });
 
-        this.controller.showArchive(2);
-        this.server.respond();
+        it("should show the archive view", function() {
+          expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
+        });
 
-        expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
+        it("should trigger a loading:hide command", function() {
+          expect(this.bus).toHaveBeenCalledWith('loading:hide');
+        });
       });
     });
 
@@ -172,7 +298,7 @@ define([
           user:  this.user
         });
 
-        this.controller.showArchive();
+        this.controller.show(this.controller.archiveView());
       });
 
       it("should display a blank empty view", function() {
@@ -274,7 +400,7 @@ define([
           user:  this.user
         });
 
-        this.controller.showArchive();
+        this.controller.show(this.controller.archiveView());
         this.controller.showEmptySearchView();
         this.controller.showPreviousView();
 
@@ -284,197 +410,41 @@ define([
       });
     });
 
-    describe(".showPostById", function() {
-      it("should show a single content view with the selected post", function() {
-        var posts = [
-          new Post({ID: 1, title: 'post-1'}),
-          new Post({ID: 2, title: 'post-2'})
-        ];
-        this.spy = spyOn(this.app.main, 'show');
-
-        this.controller = new Controller({
-          posts: new Posts(posts),
-          app:   App,
-          user:  this.user
-        });
-
-        this.controller.showPostById(1);
-
-        var view = this.spy.mostRecentCall.args[0];
-        expect(view instanceof SinglePostView).toBeTruthy();
-        expect(view.model).toEqual(posts[0]);
-      });
-
-      describe("When post is not defined", function() {
-        beforeEach(function() {
-          this.response = new Post({ID: 2, title: 'title'});
-          this.spy = spyOn(Post.prototype, 'fetch').andCallThrough();
-          var posts = [this.response];
-        });
-
-        it("should fetch the selected post", function() {
-          this.controller = new Controller({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
-
-          this.controller.showPostById(2);
-          expect(this.spy).toHaveBeenCalled();
-        });
-
-        describe("When fetching is successful", function() {
-          it("should display the corresponding view", function() {
-            this.spy = spyOn(this.app.main, 'show');
-            this.server = stubServer({
-              response: this.response.toJSON(),
-              url:      Settings.get('apiUrl') + '/posts/2',
-              code:     200
-            });
-
-            this.controller = new Controller({
-              posts: new Posts(),
-              app:   App,
-              user:  this.user
-            });
-            this.controller.showPostById(2);
-            this.server.respond();
-
-            var view = this.spy.mostRecentCall.args[0];
-            expect(view instanceof SinglePostView).toBeTruthy();
-            expect(view.model).toBeDefined();
-          });
-        });
-
-        describe("When fetching fails", function() {
-          it("should display an error view", function() {
-            this.spy = spyOn(this.app.main, 'show');
-            this.server = stubServer({
-              response: '',
-              url:      Settings.get('apiUrl') + '/posts/2',
-              code:     404
-            });
-
-            this.controller = new Controller({
-              posts: new Posts(),
-              app:   App,
-              user:  this.user
-            });
-            this.controller.showPostById(2);
-            this.server.respond();
-
-            var view = this.spy.mostRecentCall.args[0];
-            expect(view instanceof NotFoundView).toBeTruthy();
-          });
-        });
-      });
+    sharedBehaviourForSingle({
+      method: ".showPostById",
+      runTestMethod: function (controller) {
+        controller.showPostById(1);
+      },
+      request: Settings.get('apiUrl') + '/posts/1'
     });
 
-    describe(".showPostBySlug", function() {
-      it("should show a single content view with the selected post", function() {
-        var posts = [
-          new Post({title: 'post-1', slug: 'post-slug-1'}),
-          new Post({title: 'post-2', slug: 'post-slug-2'})
-        ];
-        this.spy = spyOn(this.app.main, 'show');
-
-        this.controller = new Controller({
-          posts: new Posts(posts),
-          app:   App,
-          user:  this.user
-        });
-
-        this.controller.showPostBySlug('post-slug-1');
-
-        var view = this.spy.mostRecentCall.args[0];
-        expect(view instanceof SinglePostView).toBeTruthy();
-        expect(view.model).toEqual(posts[0]);
-      });
-
-      describe("When post is not defined", function() {
-        beforeEach(function() {
-          this.response = new Post({title: 'title', slug: 'post-slug-2'});
-          this.spy = spyOn(Post.prototype, 'fetch').andCallThrough();
-          var posts = [this.response];
-        });
-
-        it("should fetch the selected post", function() {
-          this.controller = new Controller({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
-
-          this.controller.showPostBySlug('post-slug-2');
-          expect(this.spy).toHaveBeenCalled();
-        });
-
-        describe("When fetching is successful", function() {
-          it("should display the corresponding view", function() {
-            this.spy = spyOn(this.app.main, 'show');
-            this.server = stubServer({
-              response: this.response.toJSON(),
-              url:      Settings.get('apiUrl') + '/posts/b3:slug:post-slug-2',
-              code:     200
-            });
-
-            this.controller = new Controller({
-              posts: new Posts(),
-              app:   App,
-              user:  this.user
-            });
-            this.controller.showPostBySlug('post-slug-2');
-            this.server.respond();
-
-            var view = this.spy.mostRecentCall.args[0];
-            expect(view instanceof SinglePostView).toBeTruthy();
-            expect(view.model).toBeDefined();
-          });
-        });
-
-        describe("When fetching fails", function() {
-          it("should display a not found view", function() {
-            this.spy = spyOn(this.app.main, 'show');
-            this.server = stubServer({
-              response: '',
-              url:      Settings.get('apiUrl') + '/posts/b3:slug:post-slug-2',
-              code:     404
-            });
-
-            this.controller = new Controller({
-              posts: new Posts(),
-              app:   App,
-              user:  this.user
-            });
-            this.controller.showPostBySlug('post-slug-2');
-            this.server.respond();
-
-            var view = this.spy.mostRecentCall.args[0];
-            expect(view instanceof NotFoundView).toBeTruthy();
-          });
-        });
-      });
+    sharedBehaviourForSingle({
+      method: ".showPostBySlug",
+      runTestMethod: function  (controller) {
+        controller.showPostBySlug('post-slug-1');
+      },
+      request: Settings.get('apiUrl') + '/posts/b3:slug:post-slug-1'
     });
 
-    sharedBehaviourFor('category', {
+    sharedBehaviourForArchiveOfType('category', {
       method: ".showPostByCategory",
-      function: function (controller) {
+      runTestMethod: function  (controller) {
         controller.showPostByCategory('category');
       },
       request: Settings.get('apiUrl') + '/posts?filter[category_name]=category&page=1',
     });
 
-    sharedBehaviourFor('tag', {
+    sharedBehaviourForArchiveOfType('tag', {
       method: ".showPostByTag",
-      function: function(controller) {
+      runTestMethod: function (controller) {
         controller.showPostByTag('tag');
       },
       request: Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1'
     });
 
-    sharedBehaviourFor('author', {
+    sharedBehaviourForArchiveOfType('author', {
       method: ".showPostByAuthor",
-      function: function (controller) {
+      runTestMethod: function  (controller) {
         controller.showPostByAuthor('author');
       },
       request: Settings.get('apiUrl') + '/posts?filter[author_name]=author&page=1'

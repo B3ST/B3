@@ -18,8 +18,7 @@
     "forms/replyform-template",
     "forms/navigation-search-template",
     "navigation/menus/menu-item-template",
-    "widget-areas/sidebar-template",
-    "navigation/menus/menu-item-template"
+    "widget-areas/sidebar-template"
   ];
 
   var config = {
@@ -38,6 +37,7 @@
       "dust.marionette":      root + "/lib/backbone.marionette.dust",
       "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
       "bootstrap":            root + "/lib/bootstrap",
+      "bootstrap.notify":     root + "/lib/bootstrap-notify",
       "text":                 root + "/lib/text",
     },
 
@@ -66,7 +66,8 @@
       },
 
       // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
-      "backbone.validateAll": ["backbone"]
+      "backbone.validateAll": ["backbone"],
+      "bootstrap.notify": ["bootstrap"]
     }
   };
 

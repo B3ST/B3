@@ -35,6 +35,7 @@
       "dust.marionette":      root + "/lib/backbone.marionette.dust",
       "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
       "bootstrap":            root + "/lib/bootstrap",
+      "bootstrap.notify":     root + "/lib/bootstrap-notify",
       "text":                 root + "/lib/text",
       "jasmine":              root + "/libs/jasmine",
       "jasmine-html":         root + "/libs/jasmine-html",
@@ -68,6 +69,8 @@
         "exports": "dustHelpers"
       },
 
+      "bootstrap.notify": ["bootstrap"],
+
       "backbone.validateAll": ["backbone"],
 
       "jasmine": {
@@ -100,6 +103,7 @@
     "models/settings-model",
     "config/rewrite",
     "bootstrap",
+    "bootstrap.notify",
     "backbone.validateAll"
   ], function ($, _, Backbone, Marionette, jasmine, Settings, Rewrite) {
     var root = '../../../../test/jasmine/specs/';
@@ -153,6 +157,7 @@
       root + 'core/views/menu-item-view.spec',
       root + 'core/views/sidebar-view.spec',
       root + 'core/views/search-view.spec',
+      root + 'core/views/loading-view.spec',
 
       // helpers
       root + 'core/helpers/post-filter.spec',

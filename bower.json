@@ -22,7 +22,9 @@
     "requirejs": "~2.1.14",
     "text": "~2.0.12",
     "marionette-dust": "~0.1.6",
-    "i18n": "requirejs/i18n#~2.0.4"
+    "i18n": "requirejs/i18n#~2.0.4",
+    "bootstrap-notify": "~0.1.0",
+    "momentjs": "~2.8.1"
   },
   "devDependencies": {
     "jasmine": "~2.0.0",
@@ -40,6 +42,12 @@
   "overrides": {
     "Backbone.validateAll": {
       "main": "src/javascripts/Backbone.validateAll.min.js"
+    },
+    "bootstrap-notify": {
+      "main": [
+        "js/bootstrap-notify.js",
+        "css/bootstrap-notify.css"
+      ]
     },
     "browser-sync-client": {
       "main": "dist/index.min.js"

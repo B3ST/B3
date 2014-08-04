@@ -28,14 +28,14 @@ define([
       this.user       = options.user;
       this.parentView = options.parentView;
       this.parentId   = options.parentId;
-      this.model      = options.model || new Post();
+      this.post       = options.post || new Post();
     },
 
     serializeData: function () {
       return {
         author:  this.user.attributes,
         guest:   !this.user.isLoggedIn(),
-        post:    this.model.attributes,
+        post:    this.post.attributes,
         comment: ''
       };
     },
@@ -55,39 +55,36 @@ define([
       if (this.validateForm()) {
         this.getComment().save()
           .done(function (response) {
-            this.slideUpAndDestroy();
-            EventBus.trigger('comment:create', new Comment(response));
+            this.slideUpAndDestroy(response);
           }.bind(this))
-          .fail(function (response) {
-            this.displayWarning(response.responseJSON[0].message);
+          .fail(function (arg1, arg2, arg3) {
+            console.log(arg1, arg2, arg3);
+            this.displayWarning(arg1.responseJSON[0].message);
           }.bind(this));
       }
     },
 
-    slideUpAndDestroy: function () {
+    slideUpAndHide: function () {
       $(this.el).slideUp('slow', function() {
+        $(this).hide();
+      }.bind(this));
+    },
+
+    slideUpAndDestroy: function (response) {
+      $(this.el).slideUp('slow', function () {
         this.destroy();
+        EventBus.trigger('comment:create', new Comment(response));
       }.bind(this));
     },
 
     cancelReply: function (ev) {
       ev.preventDefault();
-      this.slideUpAndDestroy();
+      this.slideUpAndHide();
+      this.parentView.replyFormCancelled();
     },
 
     validateForm: function () {
-      var valid = true;
-
-      this.$('.form-group').each(function (index, group) {
-        $(group).removeClass('has-error');
-
-        $(group).find('.required').each(function(index, input) {
-          if (_.isEmpty($(input).val())) {
-            $(group).addClass('has-error');
-            valid = false;
-          }
-        });
-      }.bind(this));
+      var valid = this.validateFormGroup();
 
       if (!valid) {
         this.displayWarning('Please fill all required fields.');
@@ -110,10 +107,27 @@ define([
       }
     },
 
+    validateFormGroup: function () {
+      var valid = true;
+
+      this.$('.form-group').each(function (index, group) {
+        $(group).removeClass('has-error');
+
+        $(group).find('.required').each(function(index, input) {
+          if (_.isEmpty($(input).val())) {
+            $(group).addClass('has-error');
+            valid = false;
+          }
+        });
+      }.bind(this));
+
+      return valid;
+    },
+
     getComment: function () {
       return new Comment({
         content:        this.$('[name="comment_content"]').val(),
-        post:           this.model.get('ID'),
+        post:           this.post.get('ID'),
         parent_comment: this.parentId,
         author:         this.getUser()
       });

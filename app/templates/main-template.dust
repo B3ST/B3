@@ -12,17 +12,18 @@
 
   {! Do change this and style at will :) !}
   <div class="b3-post-categories">
-  {# terms.category }
-    <span class="label label-default">
-      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
+  {#terms.category}
+    <span class="label-category">
+      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
     </span>
-  {/ terms.category }
+    {~s}
+  {/terms.category}
   </div>
 
   <div class="b3-post-tags">
   {# terms.post_tag }
     <span class="label label-primary">
-      <a href="{link}" id="{ID}" slug="{slug}" style="text-decoration: none; color: white;">{name}</a>
+      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
     </span>
   {/ terms.post_tag }
   </div>
@@ -77,3 +78,13 @@
     <button class="search form-control" role="search"><span class="icon-search"></span> Search</button>
   </form>
 {/ search }
+
+{! Loading !}
+{< loading }
+  <div class="loading-container progress">
+    <div class="progress-bar active" role="progressbar"
+      aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+      <span class="screen-reader-text">{! TODO !}% Complete</span>
+    </div>
+  </div>
+{/ loading }

@@ -1,11 +1,12 @@
 define([
+  'jquery',
   'views/comment-view',
   'models/comment-model',
   'models/post-model',
   'models/user-model',
   'controllers/event-bus',
   'views/reply-form-view'
-], function (CommentView, Comment, Post, User, EventBus, ReplyFormView) {
+], function ($, CommentView, Comment, Post, User, EventBus, ReplyFormView) {
   'use strict';
 
   describe("CommentView", function() {
@@ -31,6 +32,10 @@ define([
     });
 
     describe("When clicking in reply", function() {
+      beforeEach(function() {
+        $.fx.off = true;
+      });
+
       it("should display a comment box", function() {
         this.view      = new CommentView({model: this.comment});
         this.view.user = this.user;
@@ -43,23 +48,13 @@ define([
           parentId:   this.comment.get('ID')
         }).render().el;
 
-        $(template).slideDown();
+        $(template).show();
 
         var button = this.view.$('.b3-reply-comment');
-        var box;
+        button.click();
 
-        runs(function() {
-          button.click();
-        });
-
-        waitsFor(function() {
-          box = $(button).next('#b3-replyform');
-          return box.length > 0;
-        }, "the comment form to appear", 750);
-
-        runs(function() {
-          expect(box[0].isEqualNode(template)).toBeTruthy();
-        });
+        var box = $(button).next('#b3-replyform');
+        expect(box[0].isEqualNode(template)).toBeTruthy();
       });
     });
 

@@ -12,14 +12,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php wp_title( '|', true, 'right' ); ?></title>
     <link rel="profile" href="http://gmpg.org/xfn/11">
-    <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> role="document">
-    <div id="header"></div>
-    <div id="main" role="main"></div>
-    <div id="widgets"></div>
-    <div id="footer"></div>
+    <div id="header" role="header"></div>
+    <div id="content-wrapper">
+        <div id="main" role="main"></div>
+        <div id="sidebar"></div>
+    </div>
+    <div id="footer" role="footer"></div>
+    <div id="notifications"></div>
     <?php wp_footer(); ?>
 </body>
 </html>

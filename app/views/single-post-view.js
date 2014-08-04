@@ -25,6 +25,17 @@ define([
     Navigator.navigate(route + slug, true);
   }
 
+  function scrollToReply (id) {
+    var placeholder = "#comment-" + id,
+        offset      = $(placeholder).offset();
+    if (offset) {
+      $('html,body').animate({
+        scrollTop: offset.top
+      }, 'slow');
+      $(placeholder).effect('highlight', {}, 1500);
+    }
+  }
+
   var view = _.extend(ReplyableView, {
     template:  'main-template.dust',
     childView: CommentView,
@@ -60,9 +71,10 @@ define([
     },
 
     addComment: function (comment) {
-      this.collection.add(comment);
+      this.collection.add(comment.set({post: this.post}));
       this.collection.sort();
       this.render();
+      scrollToReply(comment.get('ID'));
     },
 
     parentId: function () {

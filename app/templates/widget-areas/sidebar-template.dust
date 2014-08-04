@@ -1,12 +1,12 @@
 {#sidebar:widgets}
-<div class="widget">
+<aside class="widget panel">
   {?title}
-  <div class="widget-heading">
-    <h3 class="widget-title">{title}</h3>
-  </div>
+  <header class="panel-heading">
+    <div class="panel-title">{title}</div>
+  </header>
   {/title}
-  <div class="widget-body">
+  <div class="panel-body">
     {content|s}
   </div>
-</div>
+</aside>
 {/sidebar}
