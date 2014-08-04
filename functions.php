@@ -146,10 +146,10 @@ class B3Theme {
             'sitePath' => (string) $site_url_components['path'],
             'rootUrl'  => get_stylesheet_directory_uri(),
             'siteUrl'  => site_url(),
-            'routes' => $this->_get_permastructs(),
-            'root'   => get_stylesheet_directory_uri(),
-            'url'    => site_url(),
-            'path'    => (string) $site_url_components['path'],
+            'routes'   => $this->_get_permastructs(),
+            'root'     => get_stylesheet_directory_uri(),
+            'url'      => site_url(),
+            'path'     => (string) $site_url_components['path'],
             );
 
         wp_register_script( $this->slug . '-settings', $this->settings_uri );

@@ -41,7 +41,7 @@ class B3_RoutesHelper {
     public function __construct () {
         global $wp_rewrite;
 
-        $this->pagination_base = '/' . $wp_rewrite->pagination_base . '/:page';
+        $this->pagination_base = '(/' . $wp_rewrite->pagination_base . '/:page)';
         $this->comments_base   = '/' . $wp_rewrite->comments_base;
         $this->attachment_base = '/attachment/:attachment';
 
@@ -53,6 +53,8 @@ class B3_RoutesHelper {
         $this->add_search_routes();
         $this->add_post_type_routes();
         $this->add_taxonomy_routes();
+
+        $this->unfold_tokens();
 
         ksort( $this->routes );
     }
@@ -80,15 +82,17 @@ class B3_RoutesHelper {
     /**
      * Format a single route string.
      *
-     * @param  [type] $route [description]
-     * @return [type]        [description]
+     * Rewrites tokens and removes leading and trailing slashes.
+     *
+     * @param  string $route Permastruct obtained from WordPress.
+     * @return string        Formatted route.
      */
     protected function prepare_route ( $route ) {
         // Rewrite tokens:
         $route = preg_replace( '/%([^%]+)%/', ":$1", $route );
 
         // Trim leading and trailing slashes:
-        $route = preg_replace( '/^\/|\/$/', '', $route );
+        $route = preg_replace( '#^/|/$#', '', $route );
 
         return $route;
     }
@@ -108,37 +112,30 @@ class B3_RoutesHelper {
      *                         - B3_EP_COMMENTS
      *                         - B3_EP_ALL
      */
-    protected function add_route ( $route, $resource, $mask = B3_EP_NONE ) {
-        $routes         = array();
-        $route          = $this->prepare_route( $route );
-        $routes[$route] = $resource;
+    protected function add_routes ( $route, $resource, $mask = B3_EP_NONE ) {
+        $routes = array();
+        $route  = $this->prepare_route( $route );
+
+        $attachment_route = '';
+        $resource_route   = $this->prepare_route( $route . $this->pagination_base );
+
+        $routes[$resource_route] = $resource;
 
         if (B3_EP_ATTACHMENT & $mask) {
             $attachment_route = $this->prepare_route( $route . $this->attachment_base );
             $routes[$attachment_route] = array( 'object' => 'post', 'type' => 'attachment' );
         }
 
-        $comments = array();
+        if (B3_EP_COMMENTS & $mask) {
+            $comments_resource = array( 'object' => 'comments', 'type' => 'comments' );
 
-        foreach ($routes as $route => $resource) {
-            if ((B3_EP_COMMENTS & $mask) || ($resource['type'] === 'attachment')) {
-                $comments_route = $this->prepare_route( $route . $this->comments_base );
-                $comments[$comments_route] = array( 'object' => 'comments', 'type' => 'comments' );
+            $comments_route = $this->prepare_route( $route . $this->comments_base . $this->pagination_base );
+            $routes[$comments_route] = $comments_resource;
+
+            if ($attachment_route) {
+                $comments_route = $this->prepare_route( $attachment_route . $this->comments_base . $this->pagination_base );
+                $routes[$comments_route] = $comments_resource;
             }
-        }
-
-        $routes = array_merge( $routes, $comments );
-
-        if (B3_EP_PAGE & $mask) {
-            $pages = array();
-            foreach ($routes as $route => $resource) {
-                if ($resource['type'] === 'attachment') {
-                    continue;
-                }
-                $paging_route = $this->prepare_route( $route . $this->pagination_base );
-                $pages[$paging_route] = $resource;
-            }
-            $routes = array_merge( $routes, $pages );
         }
 
         $this->routes = array_merge( $this->routes, $routes );
@@ -151,7 +148,7 @@ class B3_RoutesHelper {
      */
     protected function add_root_routes () {
         $resource  = array( 'object' => 'archive', 'type' => 'root' );
-        $this->add_route( '', $resource, B3_EP_PAGE | B3_EP_ATTACHMENT );
+        $this->add_routes( '', $resource, B3_EP_PAGE | B3_EP_ATTACHMENT );
     }
 
     /**
@@ -161,10 +158,8 @@ class B3_RoutesHelper {
      * attachments (and their comments).
      */
     protected function add_post_routes () {
-        global $wp_rewrite;
         $resource = array( 'object' => 'post', 'type' => 'post' );
-        $this->add_route( $wp_rewrite->front . '%post_id%', $resource, B3_EP_ALL );
-        $this->add_route( $wp_rewrite->front . '%postname%', $resource, B3_EP_ALL );
+        $this->add_routes( get_option( 'permalink_structure' ), $resource, B3_EP_ALL );
     }
 
     /**
@@ -176,7 +171,7 @@ class B3_RoutesHelper {
     protected function add_page_routes () {
         global $wp_rewrite;
         $resource = array( 'object' => 'post', 'type' => 'page' );
-        $this->add_route( $wp_rewrite->get_page_permastruct(), $resource, B3_EP_ALL );
+        $this->add_routes( $wp_rewrite->get_page_permastruct(), $resource, B3_EP_ALL );
     }
 
     /**
@@ -187,7 +182,7 @@ class B3_RoutesHelper {
     protected function add_author_routes () {
         global $wp_rewrite;
         $resource = array( 'object' => 'author', 'type' => 'author' );
-        $this->add_route( $wp_rewrite->get_author_permastruct(), $resource, B3_EP_PAGE );
+        $this->add_routes( $wp_rewrite->get_author_permastruct(), $resource, B3_EP_PAGE );
     }
 
     /**
@@ -198,9 +193,9 @@ class B3_RoutesHelper {
     protected function add_date_routes () {
         global $wp_rewrite;
         $resource = array( 'object' => 'archive', 'type' => 'date' );
-        $this->add_route( $wp_rewrite->get_date_permastruct(), $resource, B3_EP_PAGE );
-        $this->add_route( $wp_rewrite->get_month_permastruct(), $resource, B3_EP_PAGE );
-        $this->add_route( $wp_rewrite->get_year_permastruct(), $resource, B3_EP_PAGE );
+        $this->add_routes( $wp_rewrite->get_date_permastruct(), $resource, B3_EP_PAGE );
+        $this->add_routes( $wp_rewrite->get_month_permastruct(), $resource, B3_EP_PAGE );
+        $this->add_routes( $wp_rewrite->get_year_permastruct(), $resource, B3_EP_PAGE );
     }
 
     /**
@@ -211,7 +206,7 @@ class B3_RoutesHelper {
     protected function add_search_routes () {
         global $wp_rewrite;
         $resource = array( 'object' => 'archive', 'type' => 'search' );
-        $this->add_route( $wp_rewrite->get_search_permastruct(), $resource, B3_EP_PAGE );
+        $this->add_routes( $wp_rewrite->get_search_permastruct(), $resource, B3_EP_PAGE );
     }
 
     /**
@@ -245,7 +240,7 @@ class B3_RoutesHelper {
                       ? B3_EP_COMMENTS | B3_EP_PAGE
                       : B3_EP_ALL;
 
-            $this->add_route( $route, $resource, $mask );
+            $this->add_routes( $route, $resource, $mask );
         }
     }
 
@@ -268,7 +263,19 @@ class B3_RoutesHelper {
         foreach ($taxonomies as $taxonomy) {
             $route    = $wp_rewrite->get_extra_permastruct( $taxonomy );
             $resource = array( 'object' => 'taxonomy', 'type' => $taxonomy );
-            $this->add_route( $route, $resource, B3_EP_PAGE );
+            $this->add_routes( $route, $resource, B3_EP_PAGE );
+        }
+    }
+
+    /**
+     * Extract tokens from routes and include them as resource data.
+     */
+    protected function unfold_tokens () {
+        foreach ($this->routes as $route => $resource) {
+            $tokens = array();
+            preg_match_all( '#:([^/:*()]+)#', $route, $tokens );
+            $resource['tokens']   = $tokens[1];
+            $this->routes[$route] = $resource;
         }
     }
 
