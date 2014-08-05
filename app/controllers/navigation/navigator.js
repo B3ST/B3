@@ -5,7 +5,7 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'controllers/event-bus',
+  'controllers/bus/event-bus',
   'models/settings-model'
 ], function ($, _, Backbone, Marionette, EventBus, Settings) {
   'use strict';

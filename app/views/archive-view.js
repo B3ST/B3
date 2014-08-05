@@ -8,9 +8,9 @@ define([
   'dust',
   'dust.marionette',
   'helpers/post-filter',
-  'controllers/event-bus',
-  'controllers/command-bus',
-  'controllers/navigator',
+  'controllers/bus/event-bus',
+  'controllers/bus/command-bus',
+  'controllers/navigation/navigator',
   // Shims
   'main-template',
   'archive/posts-template'

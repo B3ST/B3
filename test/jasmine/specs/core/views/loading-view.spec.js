@@ -2,7 +2,7 @@
 
 define([
   'views/loading-view',
-  'controllers/command-bus',
+  'controllers/bus/command-bus',
 
   // just for testing purposes, not a direct dependency
   'views/archive-view',

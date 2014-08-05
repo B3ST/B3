@@ -1,8 +1,8 @@
 /* global define */
 
 define([
-  'controllers/navigator',
-  'controllers/event-bus',
+  'controllers/navigation/navigator',
+  'controllers/bus/event-bus',
   'models/settings-model'
 ], function (Navigator, EventBus, Settings) {
   'use strict';

@@ -4,9 +4,9 @@ define([
   'models/post-model',
   'models/user-model',
   'collections/post-collection',
-  'controllers/event-bus',
-  'controllers/command-bus',
-  'controllers/navigator',
+  'controllers/bus/event-bus',
+  'controllers/bus/command-bus',
+  'controllers/navigation/navigator',
   'sinon'
 ], function (ArchiveView, Settings, Post, User, Posts, EventBus, CommandBus, Navigator) {
   'use strict';

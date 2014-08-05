@@ -5,7 +5,7 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'controllers/command-bus'
+  'controllers/bus/command-bus'
   /* jshint unused: false */
 ], function ($, _, Backbone, Marionette, CommandBus) {
   'use strict';

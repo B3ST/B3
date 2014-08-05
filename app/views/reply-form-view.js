@@ -7,7 +7,7 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
-  'controllers/event-bus',
+  'controllers/bus/event-bus',
   'models/comment-model',
   'models/user-model',
   'models/post-model',

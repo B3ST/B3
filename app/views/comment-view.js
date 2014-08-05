@@ -9,7 +9,7 @@ define([
   'dust.helpers',
   'dust.marionette',
   'views/replyable-view',
-  'controllers/navigator',
+  'controllers/navigation/navigator',
   'content/comments/comment-template'
 ], function ($, _, Backbone, Marionette, dust, dustHelpers, dustMarionette, ReplyableView, Navigator) {
   'use strict';
