@@ -52,23 +52,7 @@ define([
 
   var Navigator = Backbone.Model.extend({
     initialize: function () {
-      this.routes = this.processRoutes(Settings.get('routes'));
-    },
-
-    processRoutes: function (routes) {
-      var keys    = _.keys(routes),
-          mapping = {};
-
-      _.each(keys, function (key) {
-        var route = routes[key];
-        if (!mapping.hasOwnProperty(route.type)) {
-          mapping[route.type] = [];
-        }
-
-        mapping[route.type].push(getCurlyKey(key));
-      });
-
-      return mapping;
+      this.routes = this._processRoutes(Settings.get('routes'));
     },
 
     navigate: function (route, trigger) {
@@ -76,32 +60,31 @@ define([
     },
 
     navigateToHome: function (home, page, trigger) {
-      this.navigateToType(this.routes.root, {paged: page}, trigger);
+      this._navigateToType(this.routes.root, {paged: page}, trigger);
     },
 
     navigateToPost: function (post, page, trigger) {
-      this.navigateToType(this.routes.post, {post: post, paged: page}, trigger);
+      this._navigateToType(this.routes.post, {post: post, paged: page}, trigger);
     },
 
     navigateToPage: function (page, paged, trigger) {
-      this.navigateToType(this.routes.page, {page: page, paged: paged}, trigger);
+      this._navigateToType(this.routes.page, {page: page, paged: paged}, trigger);
     },
 
     navigateToAuthor: function (author, paged, trigger) {
-      this.navigateToType(this.routes.author, {author: author, paged: paged}, trigger);
+      this._navigateToType(this.routes.author, {author: author, paged: paged}, trigger);
     },
 
     navigateToCategory: function (category, paged, trigger) {
-      this.navigateToType(this.routes.category, {category: category, paged: paged}, trigger);
+      this._navigateToType(this.routes.category, {category: category, paged: paged}, trigger);
     },
 
     navigateToTag: function (tag, paged, trigger) {
-      this.navigateToType(this.routes.post_tag, {post_tag: tag, paged: paged}, trigger);
+      this._navigateToType(this.routes.post_tag, {post_tag: tag, paged: paged}, trigger);
     },
 
-    navigateToType: function (type, data, trigger) {
-      var route = buildUri(type[0], data);
-      this.navigate(route, trigger);
+    navigateToSearch: function (search, paged, trigger) {
+      this._navigateToType(this.routes.search, {search: search, paged: paged}, trigger);
     },
 
     getRoute: function () {
@@ -116,7 +99,28 @@ define([
       route = (routeIsPaged(route)) ? route.replace(regex, url(page))
                                     : route + '/' + url(page);
       return route;
-    }
+    },
+
+    _navigateToType: function (type, data, trigger) {
+      var route = buildUri(type[0], data);
+      this.navigate(route, trigger);
+    },
+
+    _processRoutes: function (routes) {
+      var keys    = _.keys(routes),
+          mapping = {};
+
+      _.each(keys, function (key) {
+        var route = routes[key];
+        if (!mapping.hasOwnProperty(route.type)) {
+          mapping[route.type] = [];
+        }
+
+        mapping[route.type].push(getCurlyKey(key));
+      });
+
+      return mapping;
+    },
   });
 
   return new Navigator();

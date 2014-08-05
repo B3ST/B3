@@ -252,5 +252,13 @@ define([
         Navigator.navigateToTag(content, page, false);
       }
     });
+
+    sharedNavigationBehaviour(".navigateToSearch", {
+      type: 'search',
+      url:  'search/',
+      methodToTest: function (content, page) {
+        Navigator.navigateToSearch(content, page, false);
+      }
+    })
   });
 });
