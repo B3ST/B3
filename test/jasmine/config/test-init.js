@@ -163,8 +163,10 @@
       root + 'core/helpers/post-filter.spec',
 
       // controllers
-      root + 'core/controllers/controller.spec',
-      root + 'core/controllers/navigator.spec',
+      root + 'core/controllers/single-type-controller.spec',
+      root + 'core/controllers/archive-type-controller.spec',
+      root + 'core/controllers/search-controller.spec',
+      root + 'core/controllers/navigation/navigator.spec',
 
       // app
       root + 'core/app.spec'
@@ -175,13 +177,10 @@
 
     if (!String.prototype.supplant) {
       String.prototype.supplant = function(o) {
-        return this.replace(
-          /\{([^{}]*)\}/g,
-          function(a, b) {
-            var r = o[b];
-            return typeof r === 'string' || typeof r === 'number' ? r : a;
-          }
-        );
+        return this.replace(/\{([^{}]*)\}/g, function(a, b) {
+          var r = o[b];
+          return typeof r === 'string' || typeof r === 'number' ? r : a;
+        });
       };
     }
 
