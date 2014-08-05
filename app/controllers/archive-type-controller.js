@@ -5,30 +5,11 @@ define([
   'backbone',
   'marionette',
   'helpers/post-filter',
-  'controllers/bus/command-bus',
-  'views/archive-view',
-  'views/empty-view',
-  'views/loading-view',
-  'views/not-found-view'
-], function ($, Backbone, Marionette, PostFilter, CommandBus, ArchiveView, EmptyView, LoadingView, NotFoundView) {
+  'controllers/base-controller',
+], function ($, Backbone, Marionette, PostFilter, BaseController) {
   'use strict';
 
-  function fetchParams (filter) {
-    return {
-      reset: true,
-      data:  filter.serialize(),
-    };
-  }
-
-  return Marionette.Controller.extend({
-    initialize: function(options) {
-      this.app     = options.app;
-      this.posts   = options.posts;
-      this.user    = options.user;
-
-      this.loading = this.loadingView();
-    },
-
+  return BaseController.extend({
     /**
      * Display the home page.
      */
@@ -50,7 +31,7 @@ define([
 
       filter.onPage(page);
 
-      this.posts.fetch(fetchParams(filter))
+      this.posts.fetch(this._fetchParams(filter))
                 .done(function () { this.hideLoading(); }.bind(this));
 
       this.show(this.archiveView(this.posts, page, filter));
@@ -116,74 +97,18 @@ define([
 
       this.show(this.archiveView(this.posts, page, filter));
       this.showLoading();
-      this.posts.fetch(fetchParams(filter))
+      this.posts.fetch(this._fetchParams(filter))
           .done(function () { this.hideLoading(); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
     /**
-     * Display view.
-     *
-     * @param {Object} view View to display.
+     * Return the fetch parameters for a collection
+     * @param  {PostFilter} filter The filters to use in the fetching
+     * @return {Object}            The parameters to be used in the collection
      */
-    show: function (view) {
-      this.app.main.show(view);
-    },
-
-    /**
-     * Triggers a command to display the loading view
-     */
-    showLoading: function () {
-      CommandBus.execute('loading:show');
-    },
-
-    /**
-     * Triggers a command to hide the loading view
-     */
-    hideLoading: function () {
-      CommandBus.execute('loading:hide');
-    },
-
-    /**
-     * Creates a new `NotFoundView` instance.
-     *
-     * @return {NotFoundView} New "Not found" view instance.
-     */
-    notFoundView: function () {
-      return new NotFoundView();
-    },
-
-    /**
-     * Creates a new `EmptyView` instance.
-     *
-     * @return {EmptyView} New "Empty" view instance.
-     */
-    emptyView: function () {
-      return new EmptyView();
-    },
-
-    /**
-     * Creates a new `LoadingView` instance.
-     *
-     * @return {LoadingView} New "Loading" view instance.
-     */
-    loadingView: function () {
-      return new LoadingView();
-    },
-
-    /**
-     * Creates a new ArchiveView instance for a post list.
-     *
-     * @param  {array}       posts Post collection to display.
-     * @param  {int}         page  Page number.
-     * @param  {Object}      filter The searching filter
-     * @return {ArchiveView}       New archive view instance.
-     */
-    archiveView: function (posts, page, filter) {
-      this.currentView    = ArchiveView;
-      this.currentOptions = {collection: posts, page: page, filter: filter};
-      return new ArchiveView(this.currentOptions);
-    },
-
+    _fetchParams: function (filter) {
+      return { reset: true, data: filter.serialize(), };
+    }
   });
 });

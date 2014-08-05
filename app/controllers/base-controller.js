@@ -20,7 +20,9 @@ define([
       this.posts   = options.posts;
       this.user    = options.user;
 
-      this.postInitialize(options);
+      if (this.postInitialize) {
+        this.postInitialize(options);
+      }
     },
 
     /**
