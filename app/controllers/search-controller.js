@@ -53,7 +53,7 @@ define([
      */
     showSearchResults: function (options) {
       var page   = options.page || 1,
-          filter = new PostFilter({'paging-schema': 'query'});
+          filter = new PostFilter();
 
       filter.bySearchingFor(options.s).onPage(page);
 
