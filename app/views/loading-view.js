@@ -5,12 +5,18 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'controllers/bus/command-bus'
+  'dust',
+  'dust.marionette',
+  'controllers/bus/command-bus',
+  'loading-template'
   /* jshint unused: false */
-], function ($, _, Backbone, Marionette, CommandBus) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, CommandBus) {
   'use strict';
 
   var LoadingView = Backbone.Marionette.ItemView.extend({
+    template: 'loading-template.dust',
+    tagName:  'div id="loading"',
+
     initialize: function () {
       _.bindAll(this, 'show', 'hide', 'progress');
       CommandBus.setHandler('loading:show', this.show);
@@ -19,19 +25,19 @@ define([
     },
 
     show: function (options) {
-      $('.loading-container').show(); // TODO: this.$el.show()
+      this.$el.show();
     },
 
     hide: function () {
-      $('.loading-container').hide(); // TODO: this.$el.hide()
+      this.$el.hide();
     },
 
     progress: function (options) {
       var progress = options.loaded / options.total * 100;
 
-      $('.loading-container .progress-bar')  // TODO: this.$('.progress')...
-        .prop('aria-valuenow', progress)
-        .css('width', progress + '%');
+      this.$('.screen-reader-text').prop('aria-valuenow', progress)
+                                   .css('width', progress + '%')
+                                   .text(progress + '% Complete');
     }
   });
 

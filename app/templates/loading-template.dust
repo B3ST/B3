@@ -1,0 +1,5 @@
+<div class="loading-container progress">
+  <div class="progress-bar active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+    <span class="screen-reader-text"></span>
+  </div>
+</div>
