@@ -5,8 +5,9 @@ define([
   'underscore',
   'backbone',
   'models/user-model',
-  'models/settings-model'
-], function ($, _, Backbone, User, Settings) {
+  'models/settings-model',
+  'controllers/bus/command-bus'
+], function ($, _, Backbone, User, Settings, CommandBus) {
   'use strict';
 
   var parseableDates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
@@ -50,8 +51,19 @@ define([
       options = options || {};
 
       var beforeSend = options.beforeSend;
-      options.beforeSend = function(xhr) {
+      options.beforeSend = function(xhr, settings) {
         xhr.setRequestHeader('X-WP-Nonce', Settings.get('nonce'));
+
+        settings.xhr = function () {
+          var xhr = $.ajaxSettings.xhr();
+          xhr.onprogress = function (evt) {
+            if (evt.lengthComputable) {
+              CommandBus.execute('loading:progress', {loaded: evt.loaded, total: evt.total});
+            }
+          };
+
+          return xhr;
+        };
 
         if (beforeSend) {
           return beforeSend.apply(this, arguments);
