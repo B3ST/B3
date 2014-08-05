@@ -4,8 +4,8 @@ define([
   'jquery',
   'backbone',
   'marionette',
-  'controllers/event-bus',
-  'controllers/navigator',
+  'controllers/bus/event-bus',
+  'controllers/navigation/navigator',
   'forms/navigation-search-template'
   /* jshint unused: false */
 ], function ($, Backbone, Marionette, EventBus, Navigator) {

@@ -3,8 +3,8 @@
 define([
   'jquery',
   'views/search-view',
-  'controllers/event-bus',
-  'controllers/navigator'
+  'controllers/bus/event-bus',
+  'controllers/navigation/navigator'
 ], function ($, SearchView, EventBus, Navigator) {
   'use strict';
 

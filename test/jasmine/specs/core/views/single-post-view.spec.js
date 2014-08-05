@@ -3,7 +3,7 @@
 define([
   'jquery',
   'views/single-post-view',
-  'controllers/event-bus',
+  'controllers/bus/event-bus',
   'views/reply-form-view',
   'models/user-model',
   'models/post-model',

@@ -10,8 +10,8 @@ define([
   'models/menu-model',
   'views/menu-view',
   'views/search-view',
-  'controllers/event-bus',
-  'controllers/navigator',
+  'controllers/bus/event-bus',
+  'controllers/navigation/navigator',
   'header-template'
 ], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, SearchView, EventBus, Navigator) {
   'use strict';
@@ -53,7 +53,7 @@ define([
     },
 
     index: function (ev) {
-      this.navigate('');
+      Navigator.navigateToHome('', null, true);
       EventBus.trigger('menu-item:select', {id: -1});
       ev.preventDefault();
     },
@@ -63,10 +63,6 @@ define([
       return menus.map(function (menu) {
         return menu.attributes;
       });
-    },
-
-    navigate: function (route) {
-      Navigator.navigate(route, true);
     }
   });
 

@@ -1,6 +1,6 @@
 /* global WP_API_SETTINGS, require */
 
-(function () {
+(function() {
   'use strict';
 
   var root = WP_API_SETTINGS.root;
@@ -82,86 +82,35 @@
 
   // Includes Desktop Specific JavaScript files here (or inside of your Desktop router)
   require([
-    "underscore",
     "jquery",
+    "underscore",
     "backbone",
+    "marionette",
     "app",
     "models/settings-model",
-    "models/user-model",
-    "controllers/command-bus",
+    "config/rewrite",
     "jqueryui",
     "bootstrap",
-    "bootstrap.notify",
-    "backbone.validateAll"
-  ], function(_, $, Backbone, App, Settings, User, CommandBus) {
-    var parseableDates = ['date', 'modified', 'date_gmt', 'modified_gmt'];
-
+    "backbone.validateAll",
+  ], function ($, _, Backbone, Marionette, App, Settings, Rewrite) {
     Settings.set('require.config', config);
 
-    Backbone.Model.prototype.toJSON = function() {
-      var attributes = _.clone(this.attributes);
+    Backbone.Model.prototype.toJSON = Rewrite.toJSON;
+    Backbone.Model.prototype.parse  = Rewrite.parse;
+    Backbone.Model.prototype.sync   = Rewrite.sync;
 
-      _.each(parseableDates, function(key) {
-        if (key in attributes) {
-          attributes[key] = attributes[key].toISOString();
-        }
-      });
+    Backbone.Router.prototype._extractParameters    = Rewrite.extractParameters;
+    Marionette.AppRouter.prototype.processAppRoutes = Rewrite.processAppRoutes;
 
-      if (this.get('author')) {
-        attributes.author = this.get('author').attributes;
-      }
-
-      if (_.isObject(this.get('post'))) {
-        attributes.post = this.get('post').toJSON();
-      }
-
-      return attributes;
-    };
-
-    Backbone.Model.prototype.parse = function(response) {
-      _.each(parseableDates, function(key) {
-        if (response.hasOwnProperty(key)) {
-          var timestamp = Date.parse(response[key]);
-          response[key] = new Date(timestamp);
-        }
-      });
-
-      if (response.author) {
-        response.author = new User(response.author);
-      }
-
-      return response;
-    };
-
-    Backbone.Model.prototype.sync = function(method, model, options) {
-      options = options || {};
-
-      var beforeSend = options.beforeSend;
-
-      options.beforeSend = function(xhr, settings) {
-        xhr.setRequestHeader('X-WP-Nonce', Settings.get('nonce'));
-
-        settings.xhr = function () {
-          var xhr = $.ajaxSettings.xhr();
-          xhr.onprogress = function (evt) {
-            CommandBus.execute('loading:progress', {
-              loaded: evt.loaded,
-              total:  evt.lengthComputable ? evt.total : evt.loaded
-            });
-          };
-
-          return xhr;
-        };
-
-        if (beforeSend) {
-          return beforeSend.apply(this, arguments);
-        }
+    if (!String.prototype.supplant) {
+      String.prototype.supplant = function(o) {
+        return this.replace(/\{([^{}]*)\}/g, function(a, b) {
+          var r = o[b];
+          return typeof r === 'string' || typeof r === 'number' ? r : a;
+        });
       };
-
-      return Backbone.sync(method, model, options);
-    };
+    }
 
     App.start();
   });
-
 })();

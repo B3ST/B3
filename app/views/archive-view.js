@@ -8,9 +8,9 @@ define([
   'dust',
   'dust.marionette',
   'helpers/post-filter',
-  'controllers/event-bus',
-  'controllers/command-bus',
-  'controllers/navigator',
+  'controllers/bus/event-bus',
+  'controllers/bus/command-bus',
+  'controllers/navigation/navigator',
   // Shims
   'main-template',
   'archive/posts-template'
@@ -58,7 +58,7 @@ define([
 
     selectPost: function (event) {
       var input = $(event.currentTarget).attr('id');
-      Navigator.navigate('post/' + input, true);
+      Navigator.navigateToPost(input, null, true);
       event.preventDefault();
     },
 
@@ -70,7 +70,7 @@ define([
       this.filter.byCategoryId(id);
 
       this.collection.fetch(this.getParams());
-      Navigator.navigate('post/category/' + slug, false);
+      Navigator.navigateToCategory(slug, null, false);
 
       event.preventDefault();
     },
@@ -82,7 +82,7 @@ define([
       this.filter.byTag(slug);
 
       this.collection.fetch(this.getParams());
-      Navigator.navigate('post/tag/' + slug, false);
+      Navigator.navigateToTag(slug, null, false);
 
       event.preventDefault();
     },
@@ -95,7 +95,7 @@ define([
       this.filter.byAuthorId(id);
 
       this.collection.fetch(this.getParams());
-      Navigator.navigate('post/author/' + slug, false);
+      Navigator.navigateToAuthor(slug, null, false);
 
       event.preventDefault();
     },

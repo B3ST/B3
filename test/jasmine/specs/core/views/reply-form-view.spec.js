@@ -4,7 +4,7 @@ define([
   'jquery',
   'backbone',
   'views/reply-form-view',
-  'controllers/event-bus',
+  'controllers/bus/event-bus',
   'models/settings-model',
   'models/user-model',
   'models/comment-model',

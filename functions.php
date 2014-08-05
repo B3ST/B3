@@ -11,6 +11,7 @@ if (!defined( 'WPINC' )) {
  * FIXME: Eventually move this to its own plugin.
  */
 require_once get_template_directory() . '/b3-rest-api/b3-rest-api.php';
+require_once get_template_directory() . '/b3-rest-api/helpers/B3_RoutesHelper.php';
 
 class B3Theme {
 
@@ -133,6 +134,7 @@ class B3Theme {
         }
 
         $site_url_components = parse_url( site_url() );
+        $routes_helper       = new B3_RoutesHelper();
 
         $settings = array(
             'name'  => get_bloginfo( 'name' ),
@@ -146,7 +148,7 @@ class B3Theme {
             'sitePath' => (string) $site_url_components['path'],
             'rootUrl'  => get_stylesheet_directory_uri(),
             'siteUrl'  => site_url(),
-            'routes'   => $this->_get_permastructs(),
+            'routes'   => $routes_helper->get_routes(),
             'root'     => get_stylesheet_directory_uri(),
             'url'      => site_url(),
             'path'     => (string) $site_url_components['path'],
@@ -183,6 +185,7 @@ class B3Theme {
 
         foreach ($permastructs as $key => $permastruct) {
             $permastructs[$key] = preg_replace( '/%([^%]+)%/', ":$1", $permastruct );
+            $permastructs[$key] = preg_replace( '/^\/(.*)/i', "$1", $permastructs[$key] );
         }
 
         return $permastructs;
