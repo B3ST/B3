@@ -49,8 +49,12 @@ define([
 
       this.appParams = {};
       _.each(routeNames, function(route) {
+        var controller = _.find(controllers, function (controller) {
+          return controller[routes[route]] ? true : false;
+        });
+
         this.appParams[this._routeToRegExp(route)] = route.match(/:([^\/:()*]+)/g);
-        this._addAppRoute(controllers, route, routes[route]);
+        this._addAppRoute(controller, route, routes[route]);
       }, this);
 
       this.appRoutes = appRoutes;

@@ -9,8 +9,10 @@
     'backbone',
     'marionette',
     'routers/app-router',
-    'controllers/controller',
-    'controllers/event-bus',
+    'controllers/single-type-controller',
+    'controllers/archive-type-controller',
+    'controllers/search-controller',
+    'controllers/bus/event-bus',
     'models/settings-model',
     'models/user-model',
     'models/sidebar-model',
@@ -18,10 +20,10 @@
     'views/header-view',
     'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, Controller, EventBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, SingleTypeController, ArchiveTypeController, SearchController, EventBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
 
-    var App   = new Backbone.Marionette.Application(),
-        user  = new User({ID: 'me'});
+    var App         = new Backbone.Marionette.Application(),
+        user        = new User({ID: 'me'});
 
     App.navigate = function(route, options){
       options = options || {};
@@ -59,13 +61,20 @@
 
       App.footer.show(new FooterView());
 
+      var options = {
+        app:   App,
+        posts: new Posts(),
+        user:  user,
+        menus: menus
+      };
+      var controllers = [
+        new SingleTypeController(options),
+        new ArchiveTypeController(options),
+        new SearchController(options)
+      ];
+
       App.appRouter = new AppRouter({
-        controller: new Controller({
-          app:   App,
-          posts: new Posts(),
-          user:  user,
-          menus: menus
-        })
+        controller: controllers,
       });
 
       if(Backbone.history) {
