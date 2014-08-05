@@ -1,7 +1,3 @@
-{! This can be changed at will, it is just to supply a default loading !}
-
-{+ loading /}
-
 {?title}
   <header class="jumbotron">
     <div class="jumbotron-container">
@@ -13,8 +9,6 @@
 {/title}
 
 <div class="entries">
-
-
   {#posts}
     <article class="b3-post {post_class}">
       <header>
@@ -30,5 +24,4 @@
   {/posts}
 
   {+ pager /}
-
 </div>
