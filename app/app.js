@@ -9,8 +9,8 @@
     'backbone',
     'marionette',
     'routers/app-router',
-    'controllers/single-type-controller',
-    'controllers/archive-type-controller',
+    'controllers/single-controller',
+    'controllers/archive-controller',
     'controllers/search-controller',
     'controllers/loading-controller',
     'controllers/bus/event-bus',
@@ -21,7 +21,7 @@
     'views/header-view',
     'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, SingleTypeController, ArchiveTypeController, SearchController, LoadingController, EventBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, SingleController, ArchiveController, SearchController, LoadingController, EventBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
 
     var App = new Backbone.Marionette.Application(),
         user = new User({ID: 'me'});
@@ -80,8 +80,8 @@
       };
 
       var controllers = [
-        new SingleTypeController(options),
-        new ArchiveTypeController(options),
+        new SingleController(options),
+        new ArchiveController(options),
         new SearchController(options)
       ];
 
