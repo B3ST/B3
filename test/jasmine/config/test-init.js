@@ -164,7 +164,7 @@
       root + 'core/helpers/post-filter.spec',
 
       // controllers
-      root + 'core/controllers/single-type-controller.spec',
+      root + 'core/controllers/single-controller.spec',
       root + 'core/controllers/archive-controller.spec',
       root + 'core/controllers/search-controller.spec',
       root + 'core/controllers/loading-controller.spec',
