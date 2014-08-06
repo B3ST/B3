@@ -165,7 +165,7 @@
 
       // controllers
       root + 'core/controllers/single-type-controller.spec',
-      root + 'core/controllers/archive-type-controller.spec',
+      root + 'core/controllers/archive-controller.spec',
       root + 'core/controllers/search-controller.spec',
       root + 'core/controllers/loading-controller.spec',
       root + 'core/controllers/navigation/navigator.spec',

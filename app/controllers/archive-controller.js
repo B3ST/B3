@@ -31,12 +31,9 @@ define([
 
       filter.onPage(page);
 
-      this.posts.fetch(this._fetchParams(filter))
-                .done(function () { this.hideLoading(); }.bind(this));
-
-      this.show(this.archiveView(this.posts, page, filter));
-
       this.showLoading();
+      this.posts.fetch(this._fetchParams(filter))
+                .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this));
     },
 
     /**
@@ -95,10 +92,9 @@ define([
       page = page || 1;
       filter.onPage(page);
 
-      this.show(this.archiveView(this.posts, page, filter));
       this.showLoading();
       this.posts.fetch(this._fetchParams(filter))
-          .done(function () { this.hideLoading(); }.bind(this))
+          .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 

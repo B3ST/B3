@@ -2,7 +2,7 @@
 
 define([
   'app',
-  'controllers/archive-type-controller',
+  'controllers/archive-controller',
   'controllers/bus/command-bus',
   'models/post-model',
   'models/settings-model',
