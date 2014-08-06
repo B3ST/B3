@@ -5,20 +5,19 @@ define([
   'backbone',
   'marionette',
   'controllers/bus/command-bus',
-  'collections/comment-collection',
   'views/archive-view',
   'views/single-post-view',
   'views/not-found-view',
   'views/empty-view',
   'views/loading-view'
-], function ($, Backbone, Marionette, CommandBus, Comments, ArchiveView, SinglePostView, NotFoundView, EmptyView, LoadingView) {
+], function ($, Backbone, Marionette, CommandBus, ArchiveView, SinglePostView, NotFoundView, EmptyView, LoadingView) {
   'use strict';
 
   return Marionette.Controller.extend({
     initialize: function(options) {
-      this.app     = options.app;
-      this.posts   = options.posts;
-      this.user    = options.user;
+      this.app   = options.app;
+      this.posts = options.posts;
+      this.user  = options.user;
 
       if (this.postInitialize) {
         this.postInitialize(options);
@@ -95,8 +94,8 @@ define([
      * @param  {int}               page  Page number.
      * @return {SinglePostView}       New single post view instance.
      */
-    singlePostView: function (model, page) {
-      return new SinglePostView({model: model, page: page, collection: new Comments(), user: this.user});
+    singlePostView: function (model, collection, page) {
+      return new SinglePostView({model: model, page: page, collection: collection, user: this.user});
     }
   });
 });
