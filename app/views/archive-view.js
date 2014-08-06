@@ -25,9 +25,15 @@ define([
       'click .b3-post-title > a':             'selectPost',
       'click .b3-pager-next':                 'renderNextPage',
       'click .b3-pager-previous':             'renderPrevPage',
-      'click .b3-post-categories > span > a': 'displayCategory',
-      'click .b3-post-tags > span > a':       'displayTag',
-      'click .b3-post-author > span > a':     'displayAuthor'
+      'click .b3-post-categories > span > a': function (event) {
+        this.displayType('archive:display:category', event);
+      },
+      'click .b3-post-tags > span > a':       function (event) {
+        this.displayType('archive:display:tag', event);
+      },
+      'click .b3-post-author > span > a':     function (event) {
+        this.displayType('archive:display:author', event);
+      }
     },
 
     collectionEvents: {
@@ -57,67 +63,27 @@ define([
     },
 
     selectPost: function (event) {
-      var input = $(event.currentTarget).attr('id');
+      var input = event.currentTarget.id;
       Navigator.navigateToPost(input, null, true);
       event.preventDefault();
     },
 
-    displayCategory: function (event) {
-      var id   = event.currentTarget.id,
+    displayType: function (type, event) {
+      var id   = parseInt(event.currentTarget.id, 10),
           slug = $(event.currentTarget).attr('slug');
 
-      this.filter = new PostFilter();
-      this.filter.byCategoryId(id);
-
-      this.collection.fetch(this.getParams());
-      Navigator.navigateToCategory(slug, null, false);
-
-      event.preventDefault();
-    },
-
-    displayTag: function (event) {
-      var slug = $(event.currentTarget).attr('slug');
-
-      this.filter = new PostFilter();
-      this.filter.byTag(slug);
-
-      this.collection.fetch(this.getParams());
-      Navigator.navigateToTag(slug, null, false);
-
-      event.preventDefault();
-    },
-
-    displayAuthor: function (event) {
-      var id   = event.currentTarget.id,
-          slug = $(event.currentTarget).attr('slug');
-
-      this.filter = new PostFilter();
-      this.filter.byAuthorId(id);
-
-      this.collection.fetch(this.getParams());
-      Navigator.navigateToAuthor(slug, null, false);
-
+      EventBus.trigger(type, {id: id, slug: slug});
       event.preventDefault();
     },
 
     renderNextPage: function (event) {
+      EventBus.trigger('archive:display:next:page', {});
       event.preventDefault();
-
-      if (!this.isLastPage()) {
-        this.page++;
-        this.collection.fetch(this.getParams());
-        this.navigate();
-      }
     },
 
     renderPrevPage: function (event) {
+      EventBus.trigger('archive:display:previous:page', {});
       event.preventDefault();
-
-      if (!this.isFirstPage()) {
-        this.page--;
-        this.collection.fetch(this.getParams());
-        this.navigate();
-      }
     },
 
     getDustTemplate: function () {
@@ -142,16 +108,6 @@ define([
 
     isFirstPage: function () {
       return this.page === 1;
-    },
-
-    getParams: function () {
-      this.filter.onPage(this.page);
-      return {data: this.filter.serialize(), reset: true};
-    },
-
-    navigate: function () {
-      var route = Navigator.getPagedRoute(this.filter, this.page);
-      Navigator.navigate(route, false);
     }
   });
 
