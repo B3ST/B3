@@ -92,6 +92,7 @@
     "config/rewrite",
     "jqueryui",
     "bootstrap",
+    "bootstrap.notify",
     "backbone.validateAll",
   ], function ($, _, Backbone, Marionette, App, Settings, Rewrite) {
     Settings.set('require.config', config);
