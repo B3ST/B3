@@ -9,7 +9,8 @@ define([
   'models/commentable-model'
 ], function ($, _, Backbone, User, Settings, Commentable) {
   'use strict';
-  var view = _.extend({
+
+  var Page = Commentable.extend({
     defaults: {
       ID             : null,
       title          : '',
@@ -44,8 +45,7 @@ define([
       return this.get('ID') ? (this.urlRoot + '/' + this.get('ID'))
                             : (this.urlRoot + '/' + this.get('slug'));
     }
-  }, Commentable);
+  });
 
-  var Page = Backbone.Model.extend(view);
   return Page;
 });
