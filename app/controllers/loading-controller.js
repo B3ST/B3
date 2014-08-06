@@ -16,14 +16,15 @@ define([
       this._bindToCommands();
     },
 
-    showView: function () {
+    displayLoading: function () {
       if (this.region) {
         this.loading = this._loadingView();
+        this.loading.show();
         this.region.show(this.loading);
       }
     },
 
-    removeView: function () {
+    removeLoading: function () {
       if (this.loading) {
         this.loading.destroy();
         this.loading = null;
@@ -37,9 +38,9 @@ define([
     },
 
     _bindToCommands: function () {
-      _.bindAll(this, 'showView', 'removeView', 'displayProgress');
-      CommandBus.setHandler('loading:show', this.showView);
-      CommandBus.setHandler('loading:hide', this.removeView);
+      _.bindAll(this, 'displayLoading', 'removeLoading', 'displayProgress');
+      CommandBus.setHandler('loading:show', this.displayLoading);
+      CommandBus.setHandler('loading:hide', this.removeLoading);
       CommandBus.setHandler('loading:progress', this.displayProgress);
     },
 
