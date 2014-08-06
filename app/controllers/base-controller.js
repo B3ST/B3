@@ -32,6 +32,7 @@ define([
      */
     show: function (view) {
       this.app.main.show(view);
+      this.hideLoading();
     },
 
     /**
