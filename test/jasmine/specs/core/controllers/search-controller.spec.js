@@ -68,7 +68,7 @@ define([
           user:  this.user
         });
 
-        this.controller.show(this.controller.archiveView());
+        this.controller.show(this.controller.archiveView(new Posts(), 1, null));
       });
 
       it("should display a blank empty view", function() {
@@ -170,7 +170,7 @@ define([
           user:  this.user
         });
 
-        this.controller.show(this.controller.archiveView());
+        this.controller.show(this.controller.archiveView(new Posts(), 1, null));
         this.controller.showEmptySearchView();
         this.controller.showPreviousView();
 

@@ -14,10 +14,10 @@ define([
 
   return BaseController.extend({
     postInitialize: function() {
-      this.bindToEvents();
+      this._bindToEvents();
     },
 
-    bindToEvents: function () {
+    _bindToEvents: function () {
       _.bindAll(this, 'showEmptySearchView', 'showSearchResults', 'showPreviousView');
       EventBus.bind('search:start', this.showEmptySearchView);
       EventBus.bind('search:term', this.showSearchResults);
