@@ -12,30 +12,33 @@ define([
   'collections/comment-collection',
   'models/settings-model',
   'models/post-model',
-  'models/page-model'
-], function ($, _, Backbone, Marionette, PostFilter, BaseController, EventBus, Navigator, Comments, Settings, Post, Page) {
+  'models/page-model',
+  'views/single-post-view',
+], function ($, _, Backbone, Marionette, PostFilter, BaseController, EventBus, Navigator, Comments, Settings, Post, Page, SinglePostView) {
   'use strict';
+
+  var CommentRegion = new Backbone.Marionette.Region({
+    el: ".b3-comments"
+  });
 
   return BaseController.extend({
     postInitialize: function (options) {
+      this.post = null;
       this.page = options.paged || 1;
+      this.collection = new Comments();
+      this._bindToEvents();
+    },
 
-      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'showPage', 'addComment');
+    _bindToEvents: function () {
+      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'showPage', 'addComment', 'saveCurrentState', 'loadPreviousState');
       EventBus.bind('single:display:category', this.navigateToCategories);
       EventBus.bind('single:display:tag', this.navigateToTags);
       EventBus.bind('single:display:author', this.navigateToAuthor);
       EventBus.bind('single:display:page', this.showPage);
       EventBus.bind('comment:create', this.addComment);
-    },
 
-    /**
-     * Adds a newly created comment
-     * @param {Comment} comment The new comment
-     */
-    addComment: function (comment) {
-      comment.set({post: this.post});
-      this.collection.add(comment);
-      this.collection.sort();
+      EventBus.bind('search:start', this.saveCurrentState);
+      EventBus.bind('search:stop', this.loadPreviousState);
     },
 
     /**
@@ -79,17 +82,16 @@ define([
      */
     showPostById: function (params) {
       var id   = params.id,
-          post = this.posts.get(id),
           page = params.paged || 1;
 
-      this.showLoading();
+      this.post = this.posts.get(id);
+      this.collection.reset();
 
-      if (post) {
-        this._fetchCommentsAndLoad(post);
+      if (this.post) {
+        this.show(this._singlePostView(this.post, this.collection, page));
+        this._loadComments(this.post);
       } else {
-        this._fetchModelBy(Post, 'ID', id, page)
-            .then(function (post) { this._fetchCommentsAndLoad(post, page); }.bind(this))
-            .fail(function () { this.show(this.notFoundView()); }.bind(this));
+        this._loadModel(Post, 'ID', id, page);
       }
     },
 
@@ -101,17 +103,16 @@ define([
      */
     showPostBySlug: function (params) {
       var slug = params.post || params.slug,
-          page = params.paged || 1,
-          post = this.posts.findWhere({slug: slug});
+          page = params.paged || 1;
 
-      this.showLoading();
+      this.post = this.posts.findWhere({slug: slug});
+      this.collection.reset();
 
-      if (post) {
-        this._fetchCommentsAndLoad(post);
+      if (this.post) {
+        this.show(this._singlePostView(this.post, this.collection, page));
+        this._loadComments(this.post);
       } else {
-        this._fetchModelBy(Post, 'slug', slug, page)
-            .then(function (post) { this._fetchCommentsAndLoad(post, page); }.bind(this))
-            .fail(function () { this.show(this.notFoundView()); }.bind(this));
+        this._loadModel(Post, 'slug', slug, page);
       }
     },
 
@@ -129,25 +130,70 @@ define([
       var slug  = params.page || params.slug,
           paged = params.paged || 1;
 
-      this.showLoading();
+      this.collection.reset();
+      this._loadModel(Page, 'slug', slug, paged);
+    },
 
-      this._fetchModelBy(Page, 'slug', slug, paged)
-          .then(function (page) { this._fetchCommentsAndLoad(page, paged); }.bind(this))
+    /**
+     * Saves the current state (post, collection, page and filter)
+     */
+    saveCurrentState: function () {
+      this.state = {
+        was_displaying: this.isDisplaying,
+        post:           this.post,
+        collection:     this.collection,
+        page:           this.page
+      };
+    },
+
+    /**
+     * Loads the previously saved state
+     */
+    loadPreviousState: function () {
+      if (this.state.was_displaying) {
+        this.collection = this.state.collection;
+        this.page       = this.state.page || 1;
+        this.post       = this.state.post;
+        this.show(this._singlePostView(this.post, this.collection, this.page));
+      }
+    },
+
+    /**
+     * Adds a newly created comment
+     * @param {Comment} comment The new comment
+     */
+    addComment: function (comment) {
+      comment.set({post: this.post});
+      this.collection.add(comment);
+      this.collection.sort();
+    },
+
+    /**
+     * Loads a given model
+     * @param  {Model} model The model type to load
+     * @param  {string} field The field to fetch by
+     * @param  {string} value The value of the field
+     * @param  {string} page  The page number
+     */
+    _loadModel: function (model, field, value, page) {
+      this._displayMainLoading();
+      this._fetchModelBy(model, field, value, page)
+          .then(function (post) {
+            this.post = post;
+            this.show(this._singlePostView(this.post, this.collection, page));
+            this._loadComments(post, page);
+          }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
     /**
      * Fetch comments of a model and display the corresponding view when done
-     * @param  {Model} model The model to fetch the comments from
-     * @param  {page}  page  The current page
+     * @param {Model} model The model to fetch the comments from
      */
-    _fetchCommentsAndLoad: function (model, page) {
-      this.collection = new Comments();
+    _loadComments: function (model) {
+      this._displayCommentLoading();
       this._fetchCommentsOf(model)
-          .done(function (comments) {
-            this.collection.add(comments);
-            this.show(this.singlePostView(model, this.collection, page));
-          }.bind(this))
+          .done(function (comments) { this.collection.reset(comments); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
@@ -188,6 +234,31 @@ define([
           .fail(function () { defer.reject(); });
 
       return defer.promise();
+    },
+
+    /**
+     * Display loading in the main section
+     */
+    _displayMainLoading: function () {
+      this.showLoading({region: this.app.main});
+    },
+
+    /**
+     * Display loading in the comment section
+     */
+    _displayCommentLoading: function () {
+      this.showLoading({region: CommentRegion});
+    },
+
+    /**
+     * Creates a new SinglePostView instance for a single post.
+     *
+     * @param  {Object}            posts Model to display.
+     * @param  {int}               page  Page number.
+     * @return {SinglePostView}       New single post view instance.
+     */
+    _singlePostView: function (model, collection, page) {
+      return new SinglePostView({model: model, page: page, collection: collection, user: this.user});
     }
   });
 });
