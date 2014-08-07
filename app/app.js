@@ -14,6 +14,7 @@
     'controllers/search-controller',
     'controllers/loading-controller',
     'controllers/bus/event-bus',
+    'controllers/bus/command-bus',
     'models/settings-model',
     'models/user-model',
     'models/sidebar-model',
@@ -21,7 +22,7 @@
     'views/header-view',
     'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, SingleController, ArchiveController, SearchController, LoadingController, EventBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, SingleController, ArchiveController, SearchController, LoadingController, EventBus, CommandBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
 
     var App = new Backbone.Marionette.Application(),
         user = new User({ID: 'me'});
@@ -95,7 +96,9 @@
     }
 
     function initializeControllers () {
-      new LoadingController({region: App.main});
+      CommandBus.setHandler('loading:show', function (data) {
+        new LoadingController(data).displayLoading();
+      });
     }
 
     function initializeEvents () {
