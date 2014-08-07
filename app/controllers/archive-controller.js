@@ -144,8 +144,10 @@ define([
      * Navigates to a given post
      * @param  {Object} params The object containing the post
      */
-    onShowPost: function (params) {
-      Navigator.navigateToPost(params.post, null, true);
+    onDisplayPost: function (params) {
+      var post = this.posts.get(params.post);
+      EventBus.trigger('post:show', {post: post});
+      Navigator.navigateToPost(post.get('slug'), null, false);
     },
 
     /**

@@ -138,16 +138,17 @@ define([
       });
     });
 
-    describe(".showPost", function() {
+    describe(".displayPost", function() {
       beforeEach(function() {
-        this.bus = spyOn(EventBus, 'trigger');
+        this.bus        = spyOn(EventBus, 'trigger');
+        this.post       = new Post({ID: 1, slug: 'post'});
         this.controller = new ArchiveController({
-          posts: new Posts(),
+          posts: new Posts([this.post]),
           app:   App,
           user: this.user
         });
 
-        this.controller.showPost({post: 'post'});
+        this.controller.displayPost({post: 1});
       });
 
       it("should not be displaying and save it into the state", function() {
@@ -155,8 +156,12 @@ define([
         expect(this.controller.state.was_displaying).toBeFalsy();
       });
 
+      it("should trigger a post:show event", function() {
+        expect(this.bus).toHaveBeenCalledWith('post:show', {post: this.post});
+      });
+
       it("should navigate to the given post", function() {
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: true }});
+        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: false }});
       });
     });
 
