@@ -40,6 +40,20 @@ define([
       });
     });
 
+    describe(".getRouteOfType", function() {
+      it("should return the route of the corresponding type", function() {
+        var route = Navigator.getRouteOfType('post', 'slug');
+        expect(route).toEqual('post/slug');
+      });
+
+      describe("When page is specified", function() {
+        it("should return the route with corresponding page", function() {
+          var route = Navigator.getRouteOfType('post', 'slug', 1);
+          expect(route).toEqual('post/slug/page/1');
+        });
+      });
+    });
+
     sharedNavigationBehaviour(".navigateToHome", {
       type: '',
       url:  '',

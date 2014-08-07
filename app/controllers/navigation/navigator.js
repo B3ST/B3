@@ -87,6 +87,13 @@ define([
       this._navigateToType(this.routes.search, {search: search, paged: paged}, trigger);
     },
 
+    getRouteOfType: function (type, slug, paged) {
+      var data   = {};
+      data[type] = slug;
+      data.paged = paged;
+      return buildUri(this.routes[type][0], data);
+    },
+
     getRoute: function () {
       return Backbone.history.fragment;
     },
