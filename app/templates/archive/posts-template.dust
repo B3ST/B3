@@ -13,7 +13,7 @@
     <article class="b3-post {post_class}">
       <header>
         <h1 class="b3-post-title page-header">
-          <a id="{slug}" href="#">{title|s}</a>
+          <a id="{ID}" slug="{slug}" href="#">{title|s}</a>
         </h1>
         {+ entry-meta /}
       </header>
