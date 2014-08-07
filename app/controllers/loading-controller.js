@@ -16,36 +16,31 @@ define([
       this._bindToCommands();
     },
 
+    /**
+     * Display a loading view in a given region
+     */
     displayLoading: function () {
-      if (this.region) {
-        this.loading = this._loadingView();
-        this.loading.show();
-        this.region.show(this.loading);
-      }
+      this.loading = this._loadingView();
+      this.region.show(this.loading);
     },
 
-    removeLoading: function () {
-      if (this.loading) {
-        this.loading.destroy();
-        this.loading = null;
-      }
-    },
-
+    /**
+     * Display the current progress
+     * @param  {Object} data An object containing the current progress (total and loaded)
+     */
     displayProgress: function (data) {
-      if (this.loading) {
-        this.loading.progress(data);
-      }
+      this.loading.progress(data);
     },
 
     _bindToCommands: function () {
-      _.bindAll(this, 'displayLoading', 'removeLoading', 'displayProgress');
-      CommandBus.setHandler('loading:show', this.displayLoading);
-      CommandBus.setHandler('loading:hide', this.removeLoading);
+      _.bindAll(this, 'displayProgress');
       CommandBus.setHandler('loading:progress', this.displayProgress);
     },
 
     _loadingView: function () {
       var loadingView = new LoadingView();
+      this.listenTo(loadingView, 'destroy', this.destroy);
+
       loadingView.render();
       return loadingView;
     }

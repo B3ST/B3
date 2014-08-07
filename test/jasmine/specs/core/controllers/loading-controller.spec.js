@@ -11,52 +11,40 @@ define([
   describe("LoadingController", function() {
     describe(".initialize", function() {
       beforeEach(function() {
-        this.bus = spyOn(CommandBus, 'setHandler');
-        this.view = new LoadingController({});
-      });
-
-      it("should bind to loading:show command", function() {
-        expect(this.bus).toHaveBeenCalledWith('loading:show', this.view.displayLoading);
-      });
-
-      it("should bind to loading:hide command", function() {
-        expect(this.bus).toHaveBeenCalledWith('loading:hide', this.view.removeLoading);
+        this.bus        = spyOn(CommandBus, 'setHandler');
+        this.controller = new LoadingController({});
       });
 
       it("should bind to loading:progress command", function() {
-        expect(this.bus).toHaveBeenCalledWith('loading:progress', this.view.displayProgress);
+        expect(this.bus).toHaveBeenCalledWith('loading:progress', this.controller.displayProgress);
       });
     });
 
     describe(".displayLoading", function() {
-      it("should display a loading view", function() {
-        this.show = spyOn(App.main, 'show');
-        this.view = new LoadingController({region: App.main});
-        this.view.displayLoading();
+      beforeEach(function() {
+        this.show       = spyOn(App.main, 'show');
+        this.destroy      = spyOn(LoadingController.prototype, 'listenTo');
+        this.controller = new LoadingController({region: App.main});
+        this.controller.displayLoading();
+      });
 
+      it("should display a loading view", function() {
         var view = this.show.mostRecentCall.args[0];
         expect(view instanceof LoadingView).toBeTruthy();
       });
-    });
 
-    describe(".removeLoading", function() {
-      it("should remove the loading view", function() {
-        this.destroy = spyOn(LoadingView.prototype, 'destroy');
-        this.view    = new LoadingController({region: App.main});
-        this.view.displayLoading();
-
-        this.view.removeLoading();
-        expect(this.destroy).toHaveBeenCalled();
+      it("should bind to its destroy event", function() {
+        expect(this.destroy).toHaveBeenCalledWith(jasmine.any(LoadingView), 'destroy', this.controller.destroy);
       });
     });
 
     describe(".displayProgress", function() {
       it("should display the current progress", function() {
-        this.progress = spyOn(LoadingView.prototype, 'progress');
-        this.view = new LoadingController({region: App.main});
-        this.view.displayLoading();
+        this.progress   = spyOn(LoadingView.prototype, 'progress');
+        this.controller = new LoadingController({region: App.main});
+        this.controller.displayLoading();
 
-        this.view.displayProgress({loaded: 10});
+        this.controller.displayProgress({loaded: 10});
         expect(this.progress).toHaveBeenCalledWith({loaded: 10});
       });
     });

@@ -17,14 +17,6 @@ define([
     template: 'loading-template.dust',
     tagName:  'div id="loading"',
 
-    show: function (options) {
-      this.$el.show();
-    },
-
-    hide: function () {
-      this.$el.hide();
-    },
-
     progress: function (options) {
       var progress = options.loaded / options.total * 100;
 
