@@ -56,6 +56,10 @@ define([
         expect(this.bus).toHaveBeenCalledWith('single:display:page', this.controller.showPage);
       });
 
+      it("should bind to post:show", function() {
+        expect(this.bus).toHaveBeenCalledWith('post:show', this.controller.showPost);
+      });
+
       it("should bind to comment:create", function() {
         expect(this.bus).toHaveBeenCalledWith('comment:create', this.controller.addComment);
       });
@@ -191,6 +195,31 @@ define([
       });
     });
 
+    describe(".showPost", function() {
+      var url  = 'http://root.org/post/1/comments';
+      var post = new Post({
+        ID:      1,
+        title:   'Title',
+        content: 'Some Content',
+        slug:    'post-slug-1',
+        meta: {
+          links: {
+            replies: this.url
+          }
+        }
+      });
+
+      beforeEach(function() {
+        this.appShow = spyOn(this.app.main, 'show');
+      });
+
+      sharedPostLoadingBehaviour({
+        runTestMethod: function (controller) {
+          controller.showPost({post: post});
+        }.bind(this)
+      });
+    });
+
     sharedNavigationBehaviourFor('.navigateToCategories', {
       route:        'post/category/slug',
       methodToTest: function (controller) {
@@ -244,6 +273,46 @@ define([
     });
   }
 
+  function sharedPostLoadingBehaviour (options) {
+    it("should trigger a loading:show command", function() {
+      this.cBus = spyOn(CommandBus, 'execute');
+
+      this.controller = new SingleController({
+        posts: new Posts([this.post]),
+        app:   App,
+        user:  this.user
+      });
+
+      options.runTestMethod(this.controller);
+      expect(this.cBus).toHaveBeenCalledWith('loading:show', {region: jasmine.any(Backbone.Marionette.Region)});
+    });
+
+    it("should display the corresponding view", function() {
+      this.controller = new SingleController({
+        posts: new Posts([this.post]),
+        app:   App,
+        user:  this.user
+      });
+
+      options.runTestMethod(this.controller);
+
+      var view = this.appShow.mostRecentCall.args[0];
+      expect(view instanceof SinglePostView).toBeTruthy();
+    });
+
+    it("should fetch the corresponding post comments", function() {
+      this.spy  = spyOn(Post.prototype, 'fetchComments').andCallThrough();
+      this.controller = new SingleController({
+        posts: new Posts([this.post]),
+        app:   App,
+        user:  this.user
+      });
+
+      options.runTestMethod(this.controller);
+      expect(this.spy).toHaveBeenCalled();
+    });
+  }
+
   function sharedBehaviourFor (method, options) {
     describe(method, function() {
       beforeEach(function() {
@@ -259,46 +328,11 @@ define([
             }
           }
         });
+
         this.appShow = spyOn(this.app.main, 'show');
       });
 
-      it("should trigger a loading:show command", function() {
-        this.cBus = spyOn(CommandBus, 'execute');
-
-        this.controller = new SingleController({
-          posts: new Posts([this.post]),
-          app:   App,
-          user:  this.user
-        });
-
-        options.runTestMethod(this.controller);
-        expect(this.cBus).toHaveBeenCalledWith('loading:show', {region: jasmine.any(Backbone.Marionette.Region)});
-      });
-
-      it("should display the corresponding view", function() {
-        this.controller = new SingleController({
-          posts: new Posts([this.post]),
-          app:   App,
-          user:  this.user
-        });
-
-        options.runTestMethod(this.controller);
-
-        var view = this.appShow.mostRecentCall.args[0];
-        expect(view instanceof SinglePostView).toBeTruthy();
-      });
-
-      it("should fetch the corresponding post comments", function() {
-        this.spy  = spyOn(Post.prototype, 'fetchComments').andCallThrough();
-        this.controller = new SingleController({
-          posts: new Posts([this.post]),
-          app:   App,
-          user:  this.user
-        });
-
-        options.runTestMethod(this.controller);
-        expect(this.spy).toHaveBeenCalled();
-      });
+      sharedPostLoadingBehaviour(options);
 
       xdescribe("When fetching comments", function() {
         describe("When fetching is successful", function() {

@@ -23,18 +23,20 @@ define([
 
   return BaseController.extend({
     postInitialize: function (options) {
-      this.post = null;
-      this.page = options.paged || 1;
+      this.post       = null;
+      this.page       = options.paged || 1;
       this.collection = new Comments();
       this._bindToEvents();
     },
 
     _bindToEvents: function () {
-      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'showPage', 'addComment', 'saveCurrentState', 'loadPreviousState');
+      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'showPage', 'showPost', 'addComment', 'saveCurrentState', 'loadPreviousState');
       EventBus.bind('single:display:category', this.navigateToCategories);
       EventBus.bind('single:display:tag', this.navigateToTags);
       EventBus.bind('single:display:author', this.navigateToAuthor);
       EventBus.bind('single:display:page', this.showPage);
+
+      EventBus.bind('post:show', this.showPost);
       EventBus.bind('comment:create', this.addComment);
 
       EventBus.bind('search:start', this.saveCurrentState);
@@ -72,6 +74,17 @@ define([
      */
     navigateToAuthor: function (data) {
       Navigator.navigateToAuthor(data.slug, null, true);
+    },
+
+    /**
+     * Display a given post
+     * @param  {Object} params Object containing the post
+     */
+    showPost: function (params) {
+      this.post = params.post;
+      this.collection.reset();
+      this.show(this._singlePostView(this.post, this.collection, 1));
+      this._loadComments(this.post);
     },
 
     /**
