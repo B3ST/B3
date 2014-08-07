@@ -43,7 +43,6 @@ define([
     initialize: function (options) {
       this.page   = options.page || 1;
       this.limit  = options.limit || 10;
-      this.filter = options.filter || new PostFilter();
 
       EventBus.trigger('title:change');
     },
@@ -64,7 +63,7 @@ define([
 
     selectPost: function (event) {
       var input = event.currentTarget.id;
-      Navigator.navigateToPost(input, null, true);
+      EventBus.trigger('archive:display:post', {post: input});
       event.preventDefault();
     },
 

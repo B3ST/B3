@@ -53,8 +53,9 @@ define([
       });
 
       it("should trigger an event of navigation", function() {
-        this.view.$('.b3-post-title > a').first().click();
-        expect(this.spy).toHaveBeenCalledWith('router:nav', {route: 'post/post-1', options: {trigger: true}});
+        var post = this.view.$('.b3-post-title > a').first();
+        post.click();
+        expect(this.spy).toHaveBeenCalledWith('archive:display:post', {post: post.attr('id')});
       });
     });
 
