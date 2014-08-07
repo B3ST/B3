@@ -6,9 +6,8 @@ define([
   'collections/post-collection',
   'controllers/bus/event-bus',
   'controllers/bus/command-bus',
-  'controllers/navigation/navigator',
   'sinon'
-], function (ArchiveView, Settings, Post, User, Posts, EventBus, CommandBus, Navigator) {
+], function (ArchiveView, Settings, Post, User, Posts, EventBus, CommandBus) {
   'use strict';
 
   describe("ArchiveView", function() {
@@ -55,7 +54,7 @@ define([
       it("should trigger an event of navigation", function() {
         var post = this.view.$('.b3-post-title > a').first();
         post.click();
-        expect(this.spy).toHaveBeenCalledWith('archive:display:post', {post: post.attr('id')});
+        expect(this.spy).toHaveBeenCalledWith('archive:display:post', {post: parseInt(post.attr('id'), 10)});
       });
     });
 

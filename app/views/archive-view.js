@@ -10,11 +10,10 @@ define([
   'helpers/post-filter',
   'controllers/bus/event-bus',
   'controllers/bus/command-bus',
-  'controllers/navigation/navigator',
   // Shims
   'main-template',
   'archive/posts-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, CommandBus, Navigator) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, PostFilter, EventBus, CommandBus) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.ItemView.extend({
@@ -62,13 +61,13 @@ define([
     },
 
     selectPost: function (event) {
-      var input = event.currentTarget.id;
+      var input = parseInt(event.currentTarget.id);
       EventBus.trigger('archive:display:post', {post: input});
       event.preventDefault();
     },
 
     displayType: function (type, event) {
-      var id   = parseInt(event.currentTarget.id, 10),
+      var id   = parseInt(event.currentTarget.id),
           slug = $(event.currentTarget).attr('slug');
 
       EventBus.trigger(type, {id: id, slug: slug});
