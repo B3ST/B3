@@ -26,23 +26,23 @@ define([
     },
 
     bindToEvents: function () {
-      _.bindAll(this, 'showPost');
-      EventBus.bind('archive:display:post', this.showPost);
+      _.bindAll(this, 'displayPost');
+      EventBus.bind('archive:display:post', this.displayPost);
     },
 
     onDestroy: function () {
-      EventBus.unbind('archive:display:post', this.showPost);
+      EventBus.unbind('archive:display:post', this.displayPost);
     },
 
     /**
      * Resets the displaying state
      * @param  {Object} params The object containing the post
      */
-    showPost: function (params) {
+    displayPost: function (params) {
       this.isDisplaying = false;
       this.state.was_displaying = false;
-      if (this.onShowPost) {
-        this.onShowPost(params);
+      if (this.onDisplayPost) {
+        this.onDisplayPost(params);
       }
     },
 
