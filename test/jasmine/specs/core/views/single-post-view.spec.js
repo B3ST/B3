@@ -19,12 +19,14 @@ define([
     });
 
     describe(".initialize", function() {
-      it("should set the document title", function () {
-        this.spy = spyOn(EventBus, 'trigger');
+      beforeEach(function() {
+        this.bus = spyOn(EventBus, 'trigger');
         this.post = new Post({ID: 1, title: 'Title'});
         this.view = new SinglePostView({model: this.post, user: this.user});
+      });
 
-        expect(this.spy).toHaveBeenCalledWith('title:change', 'Title');
+      it("should set the document title", function () {
+        expect(this.bus).toHaveBeenCalledWith('title:change', 'Title');
       });
     });
 

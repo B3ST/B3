@@ -25,13 +25,13 @@ define([
         offset      = $(placeholder).offset();
     if (offset) {
       $('html,body').animate({
-        scrollTop: offset.top
+        scrollTop: offset.top - 100
       }, 'slow');
       $(placeholder).effect('highlight', {}, 1500);
     }
   }
 
-  var view = _.extend(ReplyableView, {
+  var SinglePostView = ReplyableView.extend({
     template:  'main-template.dust',
     childView: CommentView,
     tagName:   'div id="post"',
@@ -57,7 +57,8 @@ define([
     },
 
     collectionEvents: {
-      'sort': 'scrollToComment'
+      'sort':  'scrollToComment',
+      'reset': 'render'
     },
 
     initialize: function (options) {
@@ -106,38 +107,37 @@ define([
       event.preventDefault();
     },
 
-    displayNextPage: function (event) {
+    displayPrevPage: function (event) {
       event.preventDefault();
-
-      if (this._hasNext()) {
-        this.page++;
-        this.render();
-        EventBus.trigger('single:display:page', {page: this.page});
+      if (this._hasPrevious()) {
+        this.page--;
+        this._renderPage();
       }
     },
 
-    displayPrevPage: function (event) {
+    displayNextPage: function (event) {
       event.preventDefault();
-
-      if (this._hasPrevious()) {
-        this.page--;
-        this.render();
-        EventBus.trigger('single:display:page', {page: this.page});
+      if (this._hasNext()) {
+        this.page++;
+        this._renderPage();
       }
     },
 
     displayPage: function (event) {
       event.preventDefault();
-
       if (this.page !== event.target.dataset.page) {
         this.page = parseInt(event.target.dataset.page, 10);
-        this.render();
-        EventBus.trigger('single:display:page', {page: this.page});
+        this._renderPage();
       }
     },
 
     displayError: function () {
       this.$('.b3-comments').text('Could not retrieve comments.');
+    },
+
+    _renderPage: function () {
+      this.render();
+      EventBus.trigger('single:display:page', {page: this.page});
     },
 
     _parseModel: function () {
@@ -197,27 +197,18 @@ define([
      *
      * @param  {int}   page Page number.
      * @return {route}      Route.
-     *
-     * @todo: Build route from Settings.routes.
      */
     _getRoute: function (page) {
-      var type  = this.model.get('type');
-      var route = '/' + type + '/' + this.model.get('slug');
+      var type = this.model.get('type'),
+          slug = this.model.get('slug');
 
-      // Pages have a different permalink structure:
-      if (type === 'page') {
-        route = '/' + this.model.get('slug');
+      if (page === 1) {
+        page = null;
       }
 
-      // Do not append /page/ to the URL on the first page:
-      if (page > 1) {
-        route += '/page/' + page;
-      }
-      return route;
+      return Navigator.getRouteOfType(type, slug, page);
     }
   });
-
-  var SinglePostView = Backbone.Marionette.CompositeView.extend(view);
 
   return SinglePostView;
 });
