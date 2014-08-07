@@ -6,23 +6,40 @@ define([
   'backbone',
   'marionette',
   'helpers/post-filter',
+  'collections/post-collection',
   'controllers/base-controller',
   'controllers/bus/event-bus',
-  'controllers/navigation/navigator'
-], function ($, _, Backbone, Marionette, PostFilter, BaseController, EventBus, Navigator) {
+  'controllers/navigation/navigator',
+  'views/archive-view'
+], function ($, _, Backbone, Marionette, PostFilter, Posts, BaseController, EventBus, Navigator, ArchiveView) {
   'use strict';
 
   return BaseController.extend({
     postInitialize: function (options) {
       this.page   = options.page || 1;
       this.filter = options.filter || new PostFilter();
+      this._bindToArchiveEvents();
+      this._bindToSearchEvents();
+    },
 
+    /**
+     * Binds to a set of events
+     */
+    _bindToArchiveEvents: function () {
       _.bindAll(this, 'showPostByCategory', 'showPostByTag', 'showPostByAuthor', 'showPreviousPage', 'showNextPage');
       EventBus.bind('archive:display:category', this.showPostByCategory);
       EventBus.bind('archive:display:tag', this.showPostByTag);
       EventBus.bind('archive:display:author', this.showPostByAuthor);
       EventBus.bind('archive:display:previous:page', this.showPreviousPage);
       EventBus.bind('archive:display:next:page', this.showNextPage);
+    },
+
+    _bindToSearchEvents: function () {
+      _.bindAll(this, 'saveCurrentState', 'loadPreviousState', 'displayResults');
+      EventBus.bind('search:start', this.saveCurrentState);
+      EventBus.bind('search:stop', this.loadPreviousState);
+      EventBus.bind('search:results:found', this.displayResults);
+      EventBus.bind('search:results:not_found', this.displayResults);
     },
 
     /**
@@ -124,6 +141,52 @@ define([
     },
 
     /**
+     * Navigates to a given post
+     * @param  {Object} params The object containing the post
+     */
+    onShowPost: function (params) {
+      Navigator.navigateToPost(params.post, null, true);
+    },
+
+    /**
+     * Saves the current state (posts, page and filter)
+     */
+    saveCurrentState: function () {
+      this.state = {
+        collection:     this.posts,
+        page:           this.page,
+        filter:         this.filter,
+        was_displaying: this.isDisplaying
+      };
+    },
+
+    /**
+     * Loads the previously saved state
+     */
+    loadPreviousState: function () {
+      if (this.state.was_displaying) {
+        this.posts  = this.state.collection;
+        this.page   = this.state.page || 1;
+        this.filter = this.state.filter;
+        this.show(this._archiveView(this.posts, this.page));
+      }
+    },
+
+    /**
+     * Displays the given results
+     */
+    displayResults: function (params) {
+      if (params) {
+        this.posts  = params.results;
+        this.filter = params.filter;
+        this.page   = 1;
+        this.show(this._archiveView(this.posts, this.page));
+      } else {
+        this.show(this.notFoundView());
+      }
+    },
+
+    /**
      * Display a given page
      */
     _displayPage: function (page) {
@@ -137,10 +200,11 @@ define([
      * corresponding view on success or fail.
      */
     _fetchPostsOfPage: function (page) {
+      this.posts = new Posts();
       this.filter.onPage(page);
-      this.showLoading();
+      this.showLoading({region: this.app.main});
       this.posts.fetch(this._fetchParams())
-          .done(function () { this.show(this.archiveView(this.posts, page)); }.bind(this))
+          .done(function () { this.show(this._archiveView(this.posts, page)); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
@@ -167,6 +231,17 @@ define([
      */
     _isFirstPage: function () {
       return this.page === 1;
+    },
+
+    /**
+     * Creates a new ArchiveView instance for a post list.
+     *
+     * @param  {array}       posts Post collection to display.
+     * @param  {int}         page  Page number.
+     * @return {ArchiveView}       New archive view instance.
+     */
+    _archiveView: function (posts, page) {
+      return new ArchiveView({collection: posts, page: page});
     }
   });
 });

@@ -55,8 +55,24 @@ define([
         expect(this.bus).toHaveBeenCalledWith('archive:display:next:page', this.controller.showNextPage);
       });
 
-      it("should bind to   archive:display:previous:page event", function() {
+      it("should bind to archive:display:previous:page event", function() {
         expect(this.bus).toHaveBeenCalledWith('archive:display:previous:page', this.controller.showPreviousPage);
+      });
+
+      it("should bind to search:start event", function() {
+        expect(this.bus).toHaveBeenCalledWith('search:start', this.controller.saveCurrentState);
+      });
+
+      it("should bind to search:stop event", function() {
+        expect(this.bus).toHaveBeenCalledWith('search:stop', this.controller.loadPreviousState);
+      });
+
+      it("should bind to search:results:found event", function() {
+        expect(this.bus).toHaveBeenCalledWith('search:results:found', this.controller.displayResults);
+      });
+
+      it("should bind to search:results:not_found event", function() {
+        expect(this.bus).toHaveBeenCalledWith('search:results:not_found', this.controller.displayResults);
       });
     });
 
@@ -90,7 +106,7 @@ define([
       });
 
       it("should trigger a loading:show command", function() {
-        expect(this.bus).toHaveBeenCalledWith('loading:show');
+        expect(this.bus).toHaveBeenCalledWith('loading:show', {region: jasmine.any(Backbone.Marionette.Region)});
       });
 
       describe("When fetching is successful", function() {
@@ -119,10 +135,114 @@ define([
         it("should show the archive view", function() {
           expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
         });
+      });
+    });
 
-        it("should trigger a loading:hide command", function() {
-          expect(this.bus).toHaveBeenCalledWith('loading:hide');
+    describe(".showPost", function() {
+      beforeEach(function() {
+        this.bus = spyOn(EventBus, 'trigger');
+        this.controller = new ArchiveController({
+          posts: new Posts(),
+          app:   App,
+          user: this.user
         });
+
+        this.controller.showPost({post: 'post'});
+      });
+
+      it("should not be displaying and save it into the state", function() {
+        expect(this.controller.isDisplaying).toBeFalsy();
+        expect(this.controller.state.was_displaying).toBeFalsy();
+      });
+
+      it("should navigate to the given post", function() {
+        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: true }});
+      });
+    });
+
+    describe(".saveCurrentState", function() {
+      it("should save the current displaying options", function() {
+        var posts = new Posts();
+        this.controller = new ArchiveController({
+          posts: posts,
+          app:   App,
+          user:  this.user
+        });
+
+        this.controller.show(this.controller._archiveView(posts, null, jasmine.any(Object)));
+        this.controller.saveCurrentState();
+
+        expect(this.controller.state).toEqual({
+          was_displaying: true,
+          collection:     posts,
+          page:           1,
+          filter:         jasmine.any(Object)
+        });
+      });
+    });
+
+    describe(".loadPreviousState", function() {
+      beforeEach(function() {
+        this.posts      = new Posts();
+        this.appShow    = spyOn(App.main, 'show');
+        this.controller = new ArchiveController({
+          posts: this.posts,
+          app:   App,
+          user:  this.user
+        });
+
+        this.controller.state = {
+          was_displaying: true,
+          collection:     this.posts
+        };
+
+        this.controller.loadPreviousState();
+      });
+
+      it("should load the previous displaying options", function() {
+        this.controller.posts = this.posts;
+        this.controller.page  = 1;
+      });
+
+      it("should display the corresponding view", function() {
+        var view = this.appShow.mostRecentCall.args[0];
+        expect(view instanceof ArchiveView).toBeTruthy();
+        expect(view.collection).toEqual(this.posts);
+      });
+    });
+
+    describe(".displayResults", function() {
+      it("should display the given results", function() {
+        this.posts      = new Posts();
+        this.appShow    = spyOn(App.main, 'show');
+        this.controller = new ArchiveController({
+          posts: this.posts,
+          app:   App,
+          user:  this.user
+        });
+
+        this.controller.displayResults({results: this.posts, filter: null});
+
+        var view = this.appShow.mostRecentCall.args[0];
+        expect(view instanceof ArchiveView).toBeTruthy();
+        expect(view.collection).toEqual(this.posts);
+      });
+    });
+
+    describe(".displayNotFound", function() {
+      it("should display a not found view", function() {
+        this.posts      = new Posts();
+        this.appShow    = spyOn(App.main, 'show');
+        this.controller = new ArchiveController({
+          posts: this.posts,
+          app:   App,
+          user:  this.user
+        });
+
+        this.controller.displayResults();
+
+        var view = this.appShow.mostRecentCall.args[0];
+        expect(view instanceof NotFoundView).toBeTruthy();
       });
     });
 
