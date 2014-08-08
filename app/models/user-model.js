@@ -24,7 +24,7 @@ define([
 
     idAttribute: 'ID',
 
-    urlRoot: Settings.get('apiUrl') + '/users',
+    urlRoot: Settings.get('api_url') + '/users',
 
     isLoggedIn: function () {
       return !isNaN(this.get('ID')) && !_.isEmpty(this.get('name'));

@@ -133,7 +133,7 @@ define([
           this.response = new Page({ID: 1, title: 'title', meta: { links: {replies: this.url }}});
           this.server   = stubServer({
             response: this.response.toJSON(),
-            url:      Settings.get('apiUrl') + '/pages/page-slug',
+            url:      Settings.get('api_url') + '/pages/page-slug',
             code:     200
           });
 
@@ -158,7 +158,7 @@ define([
           this.appShow = spyOn(this.app.main, 'show');
           this.server = stubServer({
             response: '',
-            url:      Settings.get('apiUrl') + '/pages/page-slug',
+            url:      Settings.get('api_url') + '/pages/page-slug',
             code:     404
           });
 
@@ -241,7 +241,7 @@ define([
     });
 
     sharedBehaviourFor(".showPostById", {
-      request:       Settings.get('apiUrl') + '/posts/1',
+      request:       Settings.get('api_url') + '/posts/1',
       model:         Post,
       runTestMethod: function (controller) {
         controller.showPostById({id: 1});
@@ -249,7 +249,7 @@ define([
     });
 
     sharedBehaviourFor(".showPostBySlug", {
-      request:       Settings.get('apiUrl') + '/posts/b3:slug:post-slug-1',
+      request:       Settings.get('api_url') + '/posts/b3:slug:post-slug-1',
       model:         Post,
       runTestMethod: function  (controller) {
         controller.showPostBySlug({post: 'post-slug-1'});

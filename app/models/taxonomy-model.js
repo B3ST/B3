@@ -19,7 +19,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: Settings.get('apiUrl') + '/taxonomies',
+    urlRoot: Settings.get('api_url') + '/taxonomies',
 
     fetchTerms: function (id) {
       id = id || '';

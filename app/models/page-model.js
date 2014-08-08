@@ -39,7 +39,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: Settings.get('apiUrl') + '/pages',
+    urlRoot: Settings.get('api_url') + '/pages',
 
     url: function () {
       return this.get('ID') ? (this.urlRoot + '/' + this.get('ID'))

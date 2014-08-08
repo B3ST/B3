@@ -33,7 +33,7 @@ define([
     url: function () {
       var pid = this.get('post') || '';
       var rid = this.get('ID') || '';
-      return Settings.get('apiUrl') + '/posts/' + pid + '/revisions/' + rid;
+      return Settings.get('api_url') + '/posts/' + pid + '/revisions/' + rid;
     }
   });
 

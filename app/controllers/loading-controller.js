@@ -22,6 +22,7 @@ define([
     displayLoading: function () {
       this.loading = this._loadingView();
       this.region.show(this.loading);
+      this.isDisplaying = true;
     },
 
     /**
@@ -29,7 +30,9 @@ define([
      * @param  {Object} data An object containing the current progress (total and loaded)
      */
     displayProgress: function (data) {
-      this.loading.progress(data);
+      if (this.isDisplaying) {
+        this.loading.progress(data);
+      }
     },
 
     _bindToCommands: function () {

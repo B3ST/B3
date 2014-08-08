@@ -19,7 +19,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: Settings.get('apiUrl') + '/posts/types'
+    urlRoot: Settings.get('api_url') + '/posts/types'
   });
 
   return PostType;

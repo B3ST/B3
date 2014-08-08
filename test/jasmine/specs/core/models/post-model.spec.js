@@ -86,7 +86,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            Settings.get('apiUrl') + '/posts/1',
+            Settings.get('api_url') + '/posts/1',
             [200, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
 
@@ -110,7 +110,7 @@ define([
 
           this.server.respondWith(
             'GET',
-            Settings.get('apiUrl') + '/posts/1',
+            Settings.get('api_url') + '/posts/1',
             [404, { 'Content-Type': 'application/json' }, JSON.stringify(response)]
           );
 

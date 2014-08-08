@@ -74,7 +74,7 @@ define([
           ];
           this.server = stubServer({
             response: response,
-            url:      Settings.get('apiUrl') + '/posts?filter[s]=term&page=1',
+            url:      Settings.get('api_url') + '/posts?filter[s]=term&page=1',
             code:     200
           });
           this.controller = getController();
@@ -91,7 +91,7 @@ define([
           this.bus = spyOn(EventBus, 'trigger');
           this.server = stubServer({
             response: '',
-            url:      Settings.get('apiUrl') + '/posts?filter[s]=term&page=1',
+            url:      Settings.get('api_url') + '/posts?filter[s]=term&page=1',
             code:     404
           });
 

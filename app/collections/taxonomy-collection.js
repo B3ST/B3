@@ -9,7 +9,7 @@ define([
   'use strict';
   var Taxonomies = Backbone.Collection.extend({
     model: Taxonomy,
-    url: Settings.get('apiUrl') + '/taxonomies'
+    url: Settings.get('api_url') + '/taxonomies'
   });
 
   return Taxonomies;

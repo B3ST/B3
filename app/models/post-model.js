@@ -40,7 +40,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: Settings.get('apiUrl') + '/posts',
+    urlRoot: Settings.get('api_url') + '/posts',
 
     url: function () {
       var query = '';

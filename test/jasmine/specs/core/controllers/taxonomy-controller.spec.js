@@ -22,7 +22,7 @@ define([
 
     describe(".getTaxonomy", function() {
       it("should return a promise", function() {
-        var tax = new Taxonomy({slug: 'category', meta: {links: { archives: Settings.get('apiUrl') + '/taxonomies/category/terms' }}});
+        var tax = new Taxonomy({slug: 'category', meta: {links: { archives: Settings.get('api_url') + '/taxonomies/category/terms' }}});
         var controller = taxonomyController();
         controller.taxonomies = new Taxonomies([tax]);
 

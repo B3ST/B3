@@ -22,7 +22,7 @@ define([
     url: function () {
       var tid = this.get('taxonomy') || '',
           id  = this.get('ID') || '';
-      return Settings.get('apiUrl') + '/taxonomies/' + tid + '/terms/' + id;
+      return Settings.get('api_url') + '/taxonomies/' + tid + '/terms/' + id;
     }
   });
 
