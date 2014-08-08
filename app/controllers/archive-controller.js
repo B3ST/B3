@@ -31,7 +31,8 @@ define([
      * Binds to a set of events
      */
     _bindToArchiveEvents: function () {
-      _.bindAll(this, 'showPostByCategory', 'showPostByTag', 'showPostByAuthor', 'showPreviousPage', 'showNextPage');
+      _.bindAll(this, 'showArchive', 'showPostByCategory', 'showPostByTag', 'showPostByAuthor', 'showPreviousPage', 'showNextPage');
+      EventBus.bind('archive:show', this.showArchive);
       EventBus.bind('archive:display:category', this.showPostByCategory);
       EventBus.bind('archive:display:tag', this.showPostByTag);
       EventBus.bind('archive:display:author', this.showPostByAuthor);
@@ -66,8 +67,8 @@ define([
      */
     showArchive: function (params) {
       this.taxonomy = null;
-      this.page = params.paged || 1;
-      this.filter = new PostFilter();
+      this.page     = params.paged || 1;
+      this.filter   = new PostFilter();
       this._fetchPostsOfPage(this.page);
     },
 

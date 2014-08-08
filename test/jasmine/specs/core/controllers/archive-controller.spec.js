@@ -41,6 +41,10 @@ define([
         });
       });
 
+      it("should bind to archive:show event", function() {
+        expect(this.bus).toHaveBeenCalledWith('archive:show', this.controller.showArchive);
+      });
+
       it("should bind to archive:display:category event", function() {
         expect(this.bus).toHaveBeenCalledWith('archive:display:category', this.controller.showPostByCategory);
       });
