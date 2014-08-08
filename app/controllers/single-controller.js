@@ -97,15 +97,7 @@ define([
       var id   = params.id,
           page = params.paged || 1;
 
-      this.post = this.posts.get(id);
-      this.collection.reset();
-
-      if (this.post) {
-        this.show(this._singlePostView(this.post, this.collection, page));
-        this._loadComments(this.post);
-      } else {
-        this._loadModel(Post, 'ID', id, page);
-      }
+      this._loadModel(Post, 'ID', id, page);
     },
 
     /**
@@ -118,15 +110,7 @@ define([
       var slug = params.post || params.slug,
           page = params.paged || 1;
 
-      this.post = this.posts.findWhere({slug: slug});
-      this.collection.reset();
-
-      if (this.post) {
-        this.show(this._singlePostView(this.post, this.collection, page));
-        this._loadComments(this.post);
-      } else {
-        this._loadModel(Post, 'slug', slug, page);
-      }
+      this._loadModel(Post, 'slug', slug, page);
     },
 
     /**
@@ -143,7 +127,6 @@ define([
       var slug  = params.page || params.slug,
           paged = params.paged || 1;
 
-      this.collection.reset();
       this._loadModel(Page, 'slug', slug, paged);
     },
 
@@ -189,6 +172,7 @@ define([
      * @param  {string} page  The page number
      */
     _loadModel: function (model, field, value, page) {
+      this.collection.reset();
       this._displayMainLoading();
       this._fetchModelBy(model, field, value, page)
           .then(function (post) {
