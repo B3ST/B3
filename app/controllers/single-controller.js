@@ -185,13 +185,19 @@ define([
      * @param  {string} page  The page number
      */
     _loadModel: function (model, field, value, page) {
+      var pageForPosts = Settings.get('page_for_posts');
+
       this.collection.reset();
       this._displayMainLoading();
       this._fetchModelBy(model, field, value, page)
           .then(function (post) {
-            this.post = post;
-            this.show(this._singlePostView(this.post, this.collection, page));
-            this._loadComments(post, page);
+            if (post.get('ID') === pageForPosts) {
+              EventBus.trigger('archive:show', {});
+            } else {
+              this.post = post;
+              this.show(this._singlePostView(this.post, this.collection, page));
+              this._loadComments(post, page);
+            }
           }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },

@@ -238,8 +238,41 @@ define([
 
       describe("When fetching is successful", function() {
         beforeEach(function() {
+          this.response = new Page({ID: 1, title: 'title', meta: { links: {replies: this.url }}});
+          this.server   = stubServer({
+            response: this.response.toJSON(),
+            url:      options.request,
+            code:     200
+          });
+        });
+
+        it("should trigger show:archive event if the page is supposed to display posts", function() {
+          spyOn(Settings, 'get').andCallFake(function () {
+            return 1;
+          });
+          this.bus = spyOn(EventBus, 'trigger');
+          this.controller = new SingleController({ app: App });
+
+          options.runTestMethod(this.controller);
+          this.server.respond();
+
+          expect(this.bus).toHaveBeenCalledWith('archive:show', {});
+        });
+
+        it("should display the corresponding view", function() {
+          this.url        = 'http://root.org/page/1/comments';
+          this.appShow    = spyOn(this.app.main, 'show');
+          this.controller = new SingleController({ app: App });
+
+          options.runTestMethod(this.controller);
+          this.server.respond();
+
+          var view = this.appShow.mostRecentCall.args[0];
+          expect(view instanceof SinglePostView).toBeTruthy();
+        });
+
+        it("should fetch the comments of the returned post", function() {
           this.url      = 'http://root.org/page/1/comments';
-          this.appShow  = spyOn(this.app.main, 'show');
           this.fetch    = spyOn(SingleController.prototype, '_loadComments').andCallThrough();
           this.response = new Page({ID: 1, title: 'title', meta: { links: {replies: this.url }}});
           this.server   = stubServer({
@@ -252,14 +285,7 @@ define([
 
           options.runTestMethod(this.controller);
           this.server.respond();
-        });
 
-        it("should display the corresponding view", function() {
-          var view = this.appShow.mostRecentCall.args[0];
-          expect(view instanceof SinglePostView).toBeTruthy();
-        });
-
-        it("should fetch the comments of the returned post", function() {
           expect(this.fetch).toHaveBeenCalled();
         });
       });

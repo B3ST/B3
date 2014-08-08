@@ -103,7 +103,7 @@
         controller: controllers,
       });
 
-      if(Backbone.history) {
+      if (Backbone.history) {
         Backbone.history.start({pushState: true, root: Settings.get('site_path')});
       }
     }
