@@ -6,13 +6,14 @@ define([
   'backbone',
   'marionette',
   'helpers/post-filter',
+  'models/settings-model',
   'collections/post-collection',
   'controllers/base-controller',
   'controllers/bus/event-bus',
   'controllers/bus/request-bus',
   'controllers/navigation/navigator',
   'views/archive-view'
-], function ($, _, Backbone, Marionette, PostFilter, Posts, BaseController, EventBus, RequestBus, Navigator, ArchiveView) {
+], function ($, _, Backbone, Marionette, PostFilter, Settings, Posts, BaseController, EventBus, RequestBus, Navigator, ArchiveView) {
   'use strict';
 
   return BaseController.extend({
@@ -50,10 +51,12 @@ define([
      * Display the home page.
      */
     showHome: function (params) {
-      // TODO: Display either a post list or a page according to WordPress'
-      // home page settings (full post list vs page ID):
-
-      this.showArchive(params);
+      var onFront = Settings.get('page_on_front');
+      if (onFront > 0) {
+        EventBus.trigger('page:show', {page: onFront});
+      } else {
+        this.showArchive(params);
+      }
     },
 
     /**

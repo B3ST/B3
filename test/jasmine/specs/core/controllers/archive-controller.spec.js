@@ -78,6 +78,42 @@ define([
       });
     });
 
+    describe(".showHome", function() {
+      describe("When home is not a page", function() {
+        it("should display the archive", function() {
+          spyOn(Settings, 'get').andCallFake(function () {
+            return 0;
+          });
+          this.archive = spyOn(ArchiveController.prototype, 'showArchive');
+          this.controller = new ArchiveController({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+
+          this.controller.showHome();
+          expect(this.archive).toHaveBeenCalled();
+        });
+      });
+
+      describe("When home is set to a page", function() {
+        it("should display that page", function() {
+          spyOn(Settings, 'get').andCallFake(function () {
+            return 100;
+          });
+          this.bus = spyOn(EventBus, 'trigger');
+          this.controller = new ArchiveController({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+
+          this.controller.showHome();
+          expect(this.bus).toHaveBeenCalledWith('page:show', {page: 100});
+        });
+      });
+    });
+
     describe(".showArchive", function() {
       beforeEach(function() {
         var response = [
