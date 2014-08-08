@@ -31,13 +31,14 @@ define([
      * Binds to a set of events
      */
     _bindToArchiveEvents: function () {
-      _.bindAll(this, 'showArchive', 'showPostByCategory', 'showPostByTag', 'showPostByAuthor', 'showPreviousPage', 'showNextPage');
+      _.bindAll(this, 'showArchive', 'showPostByCategory', 'showPostByTag', 'showPostByAuthor', 'showPreviousPage', 'showNextPage', 'showPage');
       EventBus.bind('archive:show', this.showArchive);
       EventBus.bind('archive:display:category', this.showPostByCategory);
       EventBus.bind('archive:display:tag', this.showPostByTag);
       EventBus.bind('archive:display:author', this.showPostByAuthor);
       EventBus.bind('archive:display:previous:page', this.showPreviousPage);
       EventBus.bind('archive:display:next:page', this.showNextPage);
+      EventBus.bind('archive:display:page', this.showPage);
     },
 
     _bindToSearchEvents: function () {
@@ -115,7 +116,7 @@ define([
 
         this._fetchPostsOfPage(this.page, this.taxonomy);
         Navigator.navigateToTag(slug, this.page, false);
-       }.bind(this));
+      }.bind(this));
     },
 
     /**
@@ -153,6 +154,17 @@ define([
     showPreviousPage: function () {
       if (!this._isFirstPage()) {
         this.page--;
+        this._displayPage(this.page, this.taxonomy);
+      }
+    },
+
+    /**
+     * Displays a given page
+     * @param  {Object} params Object containing the paged parameter
+     */
+    showPage: function (params) {
+      if (this.page !== params.paged) {
+        this.page = params.paged;
         this._displayPage(this.page, this.taxonomy);
       }
     },
@@ -225,7 +237,10 @@ define([
       this.filter.onPage(page);
       this.showLoading({region: this.app.main});
       this.posts.fetch(this._fetchParams())
-          .done(function () { this.show(this._archiveView(this.posts, page, title)); }.bind(this))
+          .done(function (collection, status, jqXHR) {
+            var totalPages = jqXHR.getResponseHeader('X-WP-TotalPages');
+            this.show(this._archiveView(this.posts, page, title, totalPages));
+          }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
@@ -262,8 +277,8 @@ define([
      * @param  {string}      title The title for the archive
      * @return {ArchiveView}       New archive view instance.
      */
-    _archiveView: function (posts, page, title) {
-      return new ArchiveView({collection: posts, page: page, title: title});
+    _archiveView: function (posts, page, title, total) {
+      return new ArchiveView({collection: posts, page: page, title: title, total: total});
     }
   });
 });

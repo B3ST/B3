@@ -45,6 +45,10 @@ define([
         expect(this.bus).toHaveBeenCalledWith('archive:show', this.controller.showArchive);
       });
 
+      it("should bind to archive:display:page event", function() {
+        expect(this.bus).toHaveBeenCalledWith('archive:display:page', this.controller.showPage);
+      });
+
       it("should bind to archive:display:category event", function() {
         expect(this.bus).toHaveBeenCalledWith('archive:display:category', this.controller.showPostByCategory);
       });
@@ -306,6 +310,14 @@ define([
       after:  1,
       methodToTest: function (controller) {
         controller.showPreviousPage();
+      }
+    });
+
+    sharedBehaviourForPaging('.showPage', {
+      before: 2,
+      after:  1,
+      methodToTest: function (controller) {
+        controller.showPage({paged: 1});
       }
     });
 
