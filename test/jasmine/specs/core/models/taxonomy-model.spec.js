@@ -99,8 +99,8 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.model.fetchTerms({
-            done: function (data) { expect(data.models[0].attributes).toEqual(response[0]); }
+          this.model.fetchTerms().done(function (data) {
+            expect(data.models[0].attributes).toEqual(response[0]);
           });
           this.server.respond();
         });
@@ -116,9 +116,9 @@ define([
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 
-          this.model.fetchTerms({
-            done: function (data) { expect(data).toEqual(response); }
-          }, 2);
+          this.model.fetchTerms(2).done(function (data) {
+            expect(data).toEqual(response);
+          });
           this.server.respond();
         });
       });
@@ -133,10 +133,9 @@ define([
             [404, {'Content-Type': 'application/json'}, JSON.stringify('')]
           );
 
-          this.model.fetchTerms({
-            done: function (data) { expect(true).toBeFalsy(); },
-            fail: function (data) { expect(data).not.toEqual({}); }
-          });
+          this.model.fetchTerms()
+              .done(function (data) { expect(true).toBeFalsy(); })
+              .fail(function (data) { expect(data).not.toEqual({}); });
         });
       });
 
