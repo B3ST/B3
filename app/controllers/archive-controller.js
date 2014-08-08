@@ -62,6 +62,7 @@ define([
      * @param {int} page Page number.
      */
     showArchive: function (params) {
+      this.taxonomy = null;
       this.page = params.paged || 1;
       this.filter = new PostFilter();
       this._fetchPostsOfPage(this.page);
