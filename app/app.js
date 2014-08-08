@@ -72,18 +72,21 @@
       App.footer.show(new FooterView());
     }
 
-    function initializeRoutes (menus) {
-      var options = {
-        app:   App,
-        posts: new Posts(),
-        user:  user,
-        menus: menus
-      };
-
+    function initializeRoutes () {
       var controllers = [
-        new SingleController(options),
-        new ArchiveController(options),
-        new SearchController(options)
+        new SingleController({
+          app:  App,
+          user: User
+        }),
+        new ArchiveController({
+          app:   App,
+          posts: new Posts(),
+          user:  user
+        }),
+        new SearchController({
+          app: App,
+          posts: new Posts()
+        })
       ];
 
       App.appRouter = new AppRouter({
