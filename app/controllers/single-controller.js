@@ -30,13 +30,14 @@ define([
     },
 
     _bindToEvents: function () {
-      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'showPage', 'showPost', 'addComment', 'saveCurrentState', 'loadPreviousState');
+      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'navigateToPage', 'showPost', 'showPageById', 'addComment', 'saveCurrentState', 'loadPreviousState');
       EventBus.bind('single:display:category', this.navigateToCategories);
       EventBus.bind('single:display:tag', this.navigateToTags);
       EventBus.bind('single:display:author', this.navigateToAuthor);
-      EventBus.bind('single:display:page', this.showPage);
+      EventBus.bind('single:display:page', this.navigateToPage);
 
       EventBus.bind('post:show', this.showPost);
+      EventBus.bind('page:show', this.showPageById);
       EventBus.bind('comment:create', this.addComment);
 
       EventBus.bind('search:start', this.saveCurrentState);
@@ -47,7 +48,7 @@ define([
      * Navigate to page
      * @param  {data} data The page to navigate to
      */
-    showPage: function (data) {
+    navigateToPage: function (data) {
       var route = Navigator.getPagedRoute(new PostFilter(), data.page);
       Navigator.navigate(route, false);
     },
@@ -111,6 +112,18 @@ define([
           page = params.paged || 1;
 
       this._loadModel(Post, 'slug', slug, page);
+    },
+
+    /**
+     * Display a page by an ID
+     *
+     * @param  {Object} params An Object containing the page ID and paged attribute
+     */
+    showPageById: function (params) {
+      var page  = params.page,
+          paged = params.paged || 1;
+
+      this._loadModel(Page, 'ID', page, paged);
     },
 
     /**

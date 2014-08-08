@@ -49,11 +49,15 @@ define([
       });
 
       it("should bind to single:display:page", function() {
-        expect(this.bus).toHaveBeenCalledWith('single:display:page', this.controller.showPage);
+        expect(this.bus).toHaveBeenCalledWith('single:display:page', this.controller.navigateToPage);
       });
 
       it("should bind to post:show", function() {
         expect(this.bus).toHaveBeenCalledWith('post:show', this.controller.showPost);
+      });
+
+      it("should bind to page:show", function() {
+        expect(this.bus).toHaveBeenCalledWith('page:show', this.controller.showPageById);
       });
 
       it("should bind to comment:create", function() {
@@ -116,64 +120,6 @@ define([
       });
     });
 
-    describe(".showPageBySlug", function() {
-      it("should fetch the selected page", function() {
-        this.fetch      = spyOn(Page.prototype, 'fetch').andCallThrough();
-        this.controller = new SingleController({ app: App });
-
-        this.controller.showPageBySlug({page: 'page-slug'});
-        expect(this.fetch).toHaveBeenCalled();
-      });
-
-      describe("When fetching is successful", function() {
-        beforeEach(function() {
-          this.url      = 'http://root.org/page/1/comments';
-          this.appShow  = spyOn(this.app.main, 'show');
-          this.fetch    = spyOn(SingleController.prototype, '_loadComments').andCallThrough();
-          this.response = new Page({ID: 1, title: 'title', meta: { links: {replies: this.url }}});
-          this.server   = stubServer({
-            response: this.response.toJSON(),
-            url:      Settings.get('api_url') + '/pages/page-slug',
-            code:     200
-          });
-
-          this.controller = new SingleController({ app: App });
-
-          this.controller.showPageBySlug({page: 'page-slug'});
-          this.server.respond();
-        });
-
-        it("should display the corresponding view", function() {
-          var view = this.appShow.mostRecentCall.args[0];
-          expect(view instanceof SinglePostView).toBeTruthy();
-        });
-
-        it("should fetch the comments of the returned post", function() {
-          expect(this.fetch).toHaveBeenCalled();
-        });
-      });
-
-      describe("When fetching fails", function() {
-        beforeEach(function() {
-          this.appShow = spyOn(this.app.main, 'show');
-          this.server = stubServer({
-            response: '',
-            url:      Settings.get('api_url') + '/pages/page-slug',
-            code:     404
-          });
-
-          this.controller = new SingleController({ app: App });
-          this.controller.showPageBySlug({page: 'page-slug'});
-          this.server.respond();
-        });
-
-        it("should display a not found view", function() {
-          var view = this.appShow.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
-        });
-      });
-    });
-
     describe(".showPost", function() {
       beforeEach(function() {
         this.url  = 'http://root.org/post/1/comments';
@@ -221,40 +167,52 @@ define([
 
     sharedNavigationBehaviourFor('.navigateToCategories', {
       route:        'post/category/slug',
-      methodToTest: function (controller) {
+      runTestMethod: function (controller) {
         controller.navigateToCategories({slug: 'slug'});
       }
     });
 
     sharedNavigationBehaviourFor('.navigateToTags', {
       route:        'post/tag/slug',
-      methodToTest: function (controller) {
+      runTestMethod: function (controller) {
         controller.navigateToTags({slug: 'slug'});
       }
     });
 
     sharedNavigationBehaviourFor('.navigateToAuthor', {
       route:        'post/author/slug',
-      methodToTest: function (controller) {
+      runTestMethod: function (controller) {
         controller.navigateToAuthor({slug: 'slug'});
       }
     });
 
-    sharedBehaviourFor(".showPostById", {
+    sharedPostBehaviourFor(".showPostById", {
       request:       Settings.get('api_url') + '/posts/1',
-      model:         Post,
       runTestMethod: function (controller) {
         controller.showPostById({id: 1});
       }
     });
 
-    sharedBehaviourFor(".showPostBySlug", {
+    sharedPostBehaviourFor(".showPostBySlug", {
       request:       Settings.get('api_url') + '/posts/b3:slug:post-slug-1',
-      model:         Post,
       runTestMethod: function  (controller) {
         controller.showPostBySlug({post: 'post-slug-1'});
       }
     });
+
+    sharedPageBehaviourFor(".showPageBySlug", {
+      request:       Settings.get('api_url') + '/pages/page-slug',
+      runTestMethod: function (controller) {
+        controller.showPageBySlug({page: 'page-slug'});
+      }
+    });
+
+    sharedPageBehaviourFor(".showPageById", {
+      request:       Settings.get('api_url') + '/pages/1',
+      runTestMethod: function (controller) {
+        controller.showPageById({page: 1});
+      }
+    })
   });
 
   function sharedNavigationBehaviourFor (method, options) {
@@ -262,13 +220,73 @@ define([
       it("should navigate to categories", function() {
         this.bus = spyOn(EventBus, 'trigger');
         this.controller = new SingleController({ app: App });
-        options.methodToTest(this.controller);
+        options.runTestMethod(this.controller);
         expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.route, options: {trigger: true}});
       });
     });
   }
 
-  function sharedBehaviourFor (method, options) {
+  function sharedPageBehaviourFor (method, options) {
+    describe(method, function() {
+      it("should fetch the selected page", function() {
+        this.fetch      = spyOn(Page.prototype, 'fetch').andCallThrough();
+        this.controller = new SingleController({ app: App });
+
+        options.runTestMethod(this.controller);
+        expect(this.fetch).toHaveBeenCalled();
+      });
+
+      describe("When fetching is successful", function() {
+        beforeEach(function() {
+          this.url      = 'http://root.org/page/1/comments';
+          this.appShow  = spyOn(this.app.main, 'show');
+          this.fetch    = spyOn(SingleController.prototype, '_loadComments').andCallThrough();
+          this.response = new Page({ID: 1, title: 'title', meta: { links: {replies: this.url }}});
+          this.server   = stubServer({
+            response: this.response.toJSON(),
+            url:      options.request,
+            code:     200
+          });
+
+          this.controller = new SingleController({ app: App });
+
+          options.runTestMethod(this.controller);
+          this.server.respond();
+        });
+
+        it("should display the corresponding view", function() {
+          var view = this.appShow.mostRecentCall.args[0];
+          expect(view instanceof SinglePostView).toBeTruthy();
+        });
+
+        it("should fetch the comments of the returned post", function() {
+          expect(this.fetch).toHaveBeenCalled();
+        });
+      });
+
+      describe("When fetching fails", function() {
+        beforeEach(function() {
+          this.appShow = spyOn(this.app.main, 'show');
+          this.server = stubServer({
+            response: '',
+            url:      options.request,
+            code:     404
+          });
+
+          this.controller = new SingleController({ app: App });
+          options.runTestMethod(this.controller);
+          this.server.respond();
+        });
+
+        it("should display a not found view", function() {
+          var view = this.appShow.mostRecentCall.args[0];
+          expect(view instanceof NotFoundView).toBeTruthy();
+        });
+      });
+    });
+  }
+
+  function sharedPostBehaviourFor (method, options) {
     describe(method, function() {
       beforeEach(function() {
         this.url  = 'http://root.org/post/1/comments';
