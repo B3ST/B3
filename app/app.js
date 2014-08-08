@@ -13,16 +13,18 @@
     'controllers/archive-controller',
     'controllers/search-controller',
     'controllers/loading-controller',
+    'controllers/taxonomy-controller',
     'controllers/bus/event-bus',
     'controllers/bus/command-bus',
     'models/settings-model',
     'models/user-model',
     'models/sidebar-model',
     'collections/post-collection',
+    'collections/taxonomy-collection',
     'views/header-view',
     'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, SingleController, ArchiveController, SearchController, LoadingController, EventBus, CommandBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, SingleController, ArchiveController, SearchController, LoadingController, TaxonomyController, EventBus, CommandBus, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
 
     var App = new Backbone.Marionette.Application(),
         user = new User({ID: 'me'});
@@ -62,6 +64,10 @@
       return $.get(Settings.get('apiUrl') + '/b3:sidebars');
     }
 
+    function getTaxonomies () {
+      return new Taxonomies().fetch();
+    }
+
     function initializeLayout (menus, sidebars) {
       App.header.show(new HeaderView({menus: menus}));
 
@@ -98,9 +104,13 @@
       }
     }
 
-    function initializeControllers () {
+    function initializeControllers (params) {
       CommandBus.setHandler('loading:show', function (data) {
         new LoadingController(data).displayLoading();
+      });
+
+      new TaxonomyController({
+        taxonomies: new Taxonomies(params.taxonomies)
       });
     }
 
@@ -115,15 +125,16 @@
     }
 
     function initializeResources () {
-      getMenus().then(function (menus) {
-        getSidebars().done(function (sidebars) {
-          user.fetch();
-          initializeLayout(menus, sidebars);
-          initializeRoutes(menus);
-          initializeControllers();
-          initializeEvents();
-        });
-      }); /* TODO: need a fail view .fail(); */
+      $.when(getMenus(), getSidebars(), getTaxonomies()).then(function (menus, sidebars, taxonomies) {
+        var params = {
+          taxonomies: taxonomies[0]
+        };
+        user.fetch();
+        initializeLayout(menus[0], sidebars[0]);
+        initializeEvents();
+        initializeControllers(params);
+        initializeRoutes(menus[0]);
+      }); /* TODO: need a fail view on .fail() */
 
       App.addRegions({
         header:  '#header',
