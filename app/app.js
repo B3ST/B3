@@ -86,7 +86,7 @@
       var controllers = [
         new SingleController({
           app:  App,
-          user: User
+          user: user
         }),
         new ArchiveController({
           app:   App,
@@ -94,8 +94,9 @@
           user:  user
         }),
         new SearchController({
-          app: App,
-          posts: new Posts()
+          app:   App,
+          posts: new Posts(),
+          user:  user
         })
       ];
 
