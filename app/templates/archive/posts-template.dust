@@ -1,8 +1,8 @@
 {?title}
   <header class="jumbotron">
     <div class="jumbotron-container">
-      <h1 class="b3-archive-title archive-title">
-        {title|s}
+      <h1 class="archive-title">
+        Archive: {title|s}
       </h1>
     </div>
   </header>
