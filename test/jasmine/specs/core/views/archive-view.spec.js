@@ -91,15 +91,21 @@ define([
     });
 
     sharedBehaviourFor('next button', {
-      click:         '.b3-pager-next',
+      click:         '.b3-pagination-next',
       event:         'archive:display:next:page',
       event_options: {}
     });
 
     sharedBehaviourFor('previous button', {
-      click:         '.b3-pager-previous',
+      click:         '.b3-pagination-previous',
       event:         'archive:display:previous:page',
       event_options: {}
+    });
+
+    sharedBehaviourFor('page button', {
+      click:         '.pagination .number:eq(2) a',
+      event:         'archive:display:page',
+      event_options: {page: 2}
     });
   });
 
@@ -111,7 +117,7 @@ define([
           new Post({ID: 2, title: 'Oh post', excerpt: 'Excerpt 2', author: new User({ID: 1, slug: 'author-2', name: 'author-name'}), terms: {category: {ID: 1, slug: 'post-2', link: "http://localhost:8888/wordpress/post/category/content"}, post_tag: {ID: 2, slug: 'tag-2', link: "http://localhost:8888/wordpress/post/tag/content"}}})
         ]);
         this.bus  = spyOn(EventBus, 'trigger');
-        this.view = new ArchiveView({collection: this.posts, limit: 2});
+        this.view = new ArchiveView({collection: this.posts, limit: 2, total: 2});
         this.view.render();
         this.view.$(options.click).click();
       });

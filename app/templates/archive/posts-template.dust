@@ -23,5 +23,5 @@
     </article>
   {/posts}
 
-  {+ pager /}
+  {+ pagination /}
 </div>
