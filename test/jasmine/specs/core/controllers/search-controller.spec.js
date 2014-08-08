@@ -15,26 +15,11 @@ define([
 ], function (App, SearchController, EventBus, CommandBus, Settings, Post, User, Posts, ArchiveView, NotFoundView) {
   'use strict';
 
-  function stubServer (options) {
-    var server = sinon.fakeServer.create();
-    server.respondWith(
-      'GET',
-      options.url,
-      [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
-    );
-
-    return server;
-  }
-
   describe("SearchController", function() {
-    beforeEach(function() {
-      this.user = new User({ID: 1, email: 'email', name: 'name'});
-    });
-
     describe(".initialize", function() {
       beforeEach(function() {
         this.bus = spyOn(EventBus, 'bind');
-        this.controller = new SearchController({ app: App });
+        this.controller = getController();
       });
 
       it("should bind to search:view:start event", function() {
@@ -58,7 +43,7 @@ define([
       beforeEach(function() {
         this.bus        = spyOn(EventBus, 'trigger');
         this.command    = spyOn(CommandBus, 'execute');
-        this.controller = new SearchController({ app: App });
+        this.controller = getController();
         this.controller.searchStart();
       });
 
@@ -74,7 +59,7 @@ define([
     describe(".showSearchResults", function() {
       it("should query with the given term", function() {
         this.fetch      = spyOn(Posts.prototype, 'fetch').andCallThrough();
-        this.controller = new SearchController({ app: App });
+        this.controller = getController();
 
         this.controller.showSearchResults({s: 'term'});
         expect(this.fetch).toHaveBeenCalledWith({reset: true, data: 'filter[s]=term&page=1'});
@@ -92,7 +77,7 @@ define([
             url:      Settings.get('apiUrl') + '/posts?filter[s]=term&page=1',
             code:     200
           });
-          this.controller = new SearchController({ app: App });
+          this.controller = getController();
 
           this.controller.showSearchResults({s: 'term'});
           this.server.respond();
@@ -110,7 +95,7 @@ define([
             code:     404
           });
 
-          this.controller = new SearchController({ app: App });
+          this.controller = getController();
 
           this.controller.showSearchResults({s: 'term'});
           this.server.respond();
@@ -123,7 +108,7 @@ define([
     describe(".showSearch", function() {
       it("should display the results of the given query", function() {
         this.spy = spyOn(SearchController.prototype, 'showSearchResults');
-        this.controller = new SearchController({ app: App });
+        this.controller = getController();
 
         this.controller.showSearch({search: 'term', paged: 2});
         expect(this.spy).toHaveBeenCalledWith({s: 'term', page: 2});
@@ -133,7 +118,7 @@ define([
     describe(".displaySearchUrl", function() {
       it("should trigger a router:nav event to the corresponding url", function() {
         this.bus        = spyOn(EventBus, 'trigger');
-        this.controller = new SearchController({ app: App });
+        this.controller = getController();
 
         this.controller.displaySearchUrl({s: 'result'});
         EventBus.trigger('router:nav', {route: 'search/result', options: { trigger: false }});
@@ -143,11 +128,29 @@ define([
     describe(".searchStop", function() {
       it("should display the view prior to the search", function() {
         this.bus        = spyOn(EventBus, 'trigger');
-        this.controller = new SearchController({ app: App });
+        this.controller = getController();
 
         this.controller.searchStop();
         expect(this.bus).toHaveBeenCalledWith('search:stop');
       });
     });
   });
+
+  function stubServer (options) {
+    var server = sinon.fakeServer.create();
+    server.respondWith(
+      'GET',
+      options.url,
+      [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
+    );
+
+    return server;
+  }
+
+  function getController() {
+    return new SearchController({
+      app:   App,
+      posts: new Posts()
+    });
+  }
 });

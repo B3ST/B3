@@ -15,7 +15,6 @@ define([
 
   return BaseController.extend({
     postInitialize: function() {
-      this.posts = new Posts();
       this._bindToEvents();
     },
 
