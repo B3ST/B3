@@ -14,7 +14,7 @@ define([
 ], function ($, _, Backbone, Marionette, dust, dustHelpers, dustMarionette, ReplyableView, Navigator) {
   'use strict';
 
-  var view = _.extend(ReplyableView, {
+  var CommentView = ReplyableView.extend({
     template: 'content/comments/comment-template.dust',
 
     tagName:  function () {
@@ -46,6 +46,5 @@ define([
     }
   });
 
-  var CommentView = Backbone.Marionette.ItemView.extend(view);
   return CommentView;
 });

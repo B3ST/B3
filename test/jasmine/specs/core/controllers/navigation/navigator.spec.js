@@ -6,6 +6,111 @@ define([
   'models/settings-model'
 ], function (Navigator, EventBus, Settings) {
   'use strict';
+
+  describe("Navigator", function() {
+    beforeEach(function() {
+      Settings.set('routes', routes);
+      this.bus = spyOn(EventBus, 'trigger');
+    });
+
+    describe(".initialize", function() {
+      it("should set the default routes", function() {
+        Navigator.initialize();
+
+        expect(Navigator.routes.root[0]).toEqual('(/page/{paged})');
+        expect(Navigator.routes.page[0]).toEqual('{page}(/page/{paged})');
+        expect(Navigator.routes.post[0]).toEqual('post/{post}(/page/{paged})');
+        expect(Navigator.routes.date).toEqual([
+          'post/{year}(/page/{paged})',
+          'post/{year}/{monthnum}(/page/{paged})',
+          'post/{year}/{monthnum}/{day}(/page/{paged})'
+        ]);
+        expect(Navigator.routes.author[0]).toEqual('post/author/{author}(/page/{paged})');
+        expect(Navigator.routes.category[0]).toEqual('post/category/{category}(/page/{paged})');
+        expect(Navigator.routes.post_tag[0]).toEqual('post/tag/{post_tag}(/page/{paged})');
+        expect(Navigator.routes.post_format[0]).toEqual('post/type/{post_format}(/page/{paged})');
+        expect(Navigator.routes.search[0]).toEqual('search/{search}(/page/{paged})');
+      });
+    });
+
+    describe(".navigate", function() {
+      it("should trigger an event of router:nav", function() {
+        Navigator.navigate('route', false);
+        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'route', options: {trigger: false}});
+      });
+    });
+
+    describe(".getRouteOfType", function() {
+      it("should return the route of the corresponding type", function() {
+        var route = Navigator.getRouteOfType('post', 'slug');
+        expect(route).toEqual('post/slug');
+      });
+
+      describe("When page is specified", function() {
+        it("should return the route with corresponding page", function() {
+          var route = Navigator.getRouteOfType('post', 'slug', 1);
+          expect(route).toEqual('post/slug/page/1');
+        });
+      });
+    });
+
+    sharedNavigationBehaviour(".navigateToHome", {
+      type: '',
+      url:  '',
+      methodToTest: function (content, page) {
+        Navigator.navigateToHome(content, page, false);
+      }
+    });
+
+    sharedNavigationBehaviour(".navigateToPost", {
+      type: 'post',
+      url:  'post/',
+      methodToTest: function (content, page) {
+        Navigator.navigateToPost(content, page, false);
+      }
+    });
+
+    sharedNavigationBehaviour(".navigateToPage", {
+      type: 'page',
+      url:  '',
+      methodToTest: function (content, page) {
+        Navigator.navigateToPage(content, page, false);
+      }
+    });
+
+    sharedNavigationBehaviour(".navigateToAuthor", {
+      type: 'author',
+      url:  'post/author/',
+      methodToTest: function (content, page) {
+        Navigator.navigateToAuthor(content, page, false);
+      }
+    });
+
+    sharedNavigationBehaviour(".navigateToCategory", {
+      type: 'author',
+      url:  'post/category/',
+      methodToTest: function (content, page) {
+        Navigator.navigateToCategory(content, page, false);
+      }
+    });
+
+    sharedNavigationBehaviour(".navigateToTag", {
+      type: 'tag',
+      url:  'post/tag/',
+      methodToTest: function (content, page) {
+        Navigator.navigateToTag(content, page, false);
+      }
+    });
+
+    sharedNavigationBehaviour(".navigateToSearch", {
+      type: 'search',
+      url:  'search/',
+      methodToTest: function (content, page) {
+        Navigator.navigateToSearch(content, page, false);
+      }
+    })
+  });
+
   var routes = {
     "(/page/:paged)":{
       "object":"archive",
@@ -171,94 +276,4 @@ define([
       });
     });
   }
-
-  describe("Navigator", function() {
-    beforeEach(function() {
-      Settings.set('routes', routes);
-      this.bus = spyOn(EventBus, 'trigger');
-    });
-
-    describe(".initialize", function() {
-      it("should set the default routes", function() {
-        Navigator.initialize();
-
-        expect(Navigator.routes.root[0]).toEqual('(/page/{paged})');
-        expect(Navigator.routes.page[0]).toEqual('{page}(/page/{paged})');
-        expect(Navigator.routes.post[0]).toEqual('post/{post}(/page/{paged})');
-        expect(Navigator.routes.date).toEqual([
-          'post/{year}(/page/{paged})',
-          'post/{year}/{monthnum}(/page/{paged})',
-          'post/{year}/{monthnum}/{day}(/page/{paged})'
-        ]);
-        expect(Navigator.routes.author[0]).toEqual('post/author/{author}(/page/{paged})');
-        expect(Navigator.routes.category[0]).toEqual('post/category/{category}(/page/{paged})');
-        expect(Navigator.routes.post_tag[0]).toEqual('post/tag/{post_tag}(/page/{paged})');
-        expect(Navigator.routes.post_format[0]).toEqual('post/type/{post_format}(/page/{paged})');
-        expect(Navigator.routes.search[0]).toEqual('search/{search}(/page/{paged})');
-      });
-    });
-
-    describe(".navigate", function() {
-      it("should trigger an event of router:nav", function() {
-        Navigator.navigate('route', false);
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'route', options: {trigger: false}});
-      });
-    });
-
-    sharedNavigationBehaviour(".navigateToHome", {
-      type: '',
-      url:  '',
-      methodToTest: function (content, page) {
-        Navigator.navigateToHome(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToPost", {
-      type: 'post',
-      url:  'post/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToPost(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToPage", {
-      type: 'page',
-      url:  '',
-      methodToTest: function (content, page) {
-        Navigator.navigateToPage(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToAuthor", {
-      type: 'author',
-      url:  'post/author/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToAuthor(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToCategory", {
-      type: 'author',
-      url:  'post/category/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToCategory(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToTag", {
-      type: 'tag',
-      url:  'post/tag/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToTag(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToSearch", {
-      type: 'search',
-      url:  'search/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToSearch(content, page, false);
-      }
-    })
-  });
 });

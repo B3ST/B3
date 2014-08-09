@@ -59,7 +59,7 @@ define([
           }.bind(this))
           .fail(function (arg1, arg2, arg3) {
             console.log(arg1, arg2, arg3);
-            this.displayWarning(arg1.responseJSON[0].message);
+            this.displayWarning(arg2);
           }.bind(this));
       }
     },

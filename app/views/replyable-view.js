@@ -2,11 +2,13 @@
 
 define([
   'jquery',
+  'backbone',
+  'marionette',
   'views/reply-form-view'
-], function ($, ReplyFormView) {
+], function ($, Backbone, Marionette, ReplyFormView) {
   'use strict';
 
-  var ReplyableView = {
+  var ReplyableView = Backbone.Marionette.CompositeView.extend({
     renderReplyBox: function (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -64,7 +66,7 @@ define([
       this.replyForm = null;
       this.previouslyRendered = false;
     },
-  };
+  });
 
   return ReplyableView;
 });

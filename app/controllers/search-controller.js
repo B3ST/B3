@@ -8,46 +8,34 @@ define([
   'controllers/base-controller',
   'collections/post-collection',
   'helpers/post-filter',
-  'controllers/bus/event-bus'
-], function ($, _, Backbone, Marionette, BaseController, Posts, PostFilter, EventBus) {
+  'controllers/bus/event-bus',
+  'controllers/navigation/navigator'
+], function ($, _, Backbone, Marionette, BaseController, Posts, PostFilter, EventBus, Navigator) {
   'use strict';
 
   return BaseController.extend({
     postInitialize: function() {
-      this.bindToEvents();
+      this._bindToEvents();
     },
 
-    bindToEvents: function () {
-      _.bindAll(this, 'showEmptySearchView', 'showSearchResults', 'showPreviousView');
-      EventBus.bind('search:start', this.showEmptySearchView);
-      EventBus.bind('search:term', this.showSearchResults);
-      EventBus.bind('search:end', this.showPreviousView);
+    _bindToEvents: function () {
+      _.bindAll(this, 'searchStart', 'showSearchResults', 'displaySearchUrl', 'searchStop');
+      EventBus.bind('search:view:start', this.searchStart);
+      EventBus.bind('search:view:term', this.showSearchResults);
+      EventBus.bind('search:view:submit', this.displaySearchUrl);
+      EventBus.bind('search:view:stop', this.searchStop);
     },
 
     /**
-     * Display the results of a search
-     *
-     * @param {String} query The query string
+     * Warn other controllers that the user is starting search
      */
-    showSearch: function (query) {
-      this.showSearchResults(this._getParams(query));
-      this.showLoading();
+    searchStart: function () {
+      EventBus.trigger('search:start');
+      this._displayLoading();
     },
 
     /**
-     * Displays a blank page when the user is searching
-     */
-    showEmptySearchView: function () {
-      if (!this.showingEmpty) {
-        this.previousView    = this.app.main.currentView;
-        this.previousOptions = this.app.main.currentView.options;
-        this.showingEmpty    = true;
-        this.show(this.emptyView());
-      }
-    },
-
-    /**
-     * Displays the results of a given search
+     * Warn about the results of a given search
      *
      * @param  {Object} options The search terms
      */
@@ -57,18 +45,35 @@ define([
 
       filter.bySearchingFor(options.s).onPage(page);
 
+      this._displayLoading();
       this.posts.fetch(this._fetchParams(filter))
-                 .done(function () { this.show(this.archiveView(this.posts, page, filter)); }.bind(this))
-                 .fail(function () { this.show(this.notFoundView()); }.bind(this));
+                 .done(function () { EventBus.trigger('search:results:found', {results: this.posts, filter: filter}); }.bind(this))
+                 .fail(function () { EventBus.trigger('search:results:not_found'); }.bind(this));
     },
 
     /**
-     * Displays the previous view
+     * Displays the search url with the corresponding search term
+     *
+     * @param  {Object} options Object containing the search term s
      */
-    showPreviousView: function () {
-      this.currentView  = this.previousView;
-      this.showingEmpty = false;
-      this.show(new this.previousView.constructor(this.previousOptions));
+    displaySearchUrl: function (options) {
+      Navigator.navigateToSearch(options.s, null, false);
+    },
+
+    /**
+     * Get the search results
+     *
+     * @param {String} query The query string
+     */
+    showSearch: function (params) {
+      this.showSearchResults({s: params.search, page: params.paged});
+    },
+
+    /**
+     * Warn other controllers that the search has stopped
+     */
+    searchStop: function () {
+      EventBus.trigger('search:stop');
     },
 
     /**
@@ -81,28 +86,10 @@ define([
     },
 
     /**
-     * Parse query parameters
-     * @param  {string} queryString The query string from the URL
-     * @return {Object}             An objectified query
+     * Displays the loading view in the main region
      */
-    _getParams: function (queryString) {
-      var result = {};
-      var regex  = new RegExp("([^?=&]+)(=([^&]*))?", "g");
-
-      queryString.replace(regex, function (q1, q2, q3, q4) {
-        result[q2] = (isNaN(this._filterInt(q4)) ? q4 : parseInt(q4, 10));
-      }.bind(this));
-
-      return result;
-    },
-
-    /**
-     * Check if value is a number and return it
-     * @param  {string} value   The value to check
-     * @return {Number or NaN}  Returns the number in value or NaN
-     */
-    _filterInt: function (value) {
-      return (/^(\-|\+)?([0-9]+|Infinity)$/.test(value)) ? Number(value): NaN;
+    _displayLoading: function () {
+      this.showLoading({region: this.app.main});
     }
   });
 });

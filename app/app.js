@@ -9,10 +9,12 @@
     'backbone',
     'marionette',
     'routers/app-router',
-    'controllers/single-type-controller',
-    'controllers/archive-type-controller',
+    'controllers/single-controller',
+    'controllers/archive-controller',
     'controllers/search-controller',
+    'controllers/loading-controller',
     'controllers/bus/event-bus',
+    'controllers/bus/command-bus',
     'models/settings-model',
     'models/user-model',
     'models/sidebar-model',
@@ -20,10 +22,10 @@
     'views/header-view',
     'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, SingleTypeController, ArchiveTypeController, SearchController, EventBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, SingleController, ArchiveController, SearchController, LoadingController, EventBus, CommandBus, Settings, User, Sidebar, Posts, HeaderView, SidebarView, FooterView) {
 
-    var App         = new Backbone.Marionette.Application(),
-        user        = new User({ID: 'me'});
+    var App = new Backbone.Marionette.Application(),
+        user = new User({ID: 'me'});
 
     App.navigate = function(route, options){
       options = options || {};
@@ -52,6 +54,14 @@
       return (/iPhone|iPod|iPad|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
     }
 
+    function getMenus () {
+      return $.get(Settings.get('apiUrl') + '/b3:menus');
+    }
+
+    function getSidebars () {
+      return $.get(Settings.get('apiUrl') + '/b3:sidebars');
+    }
+
     function initializeLayout (menus, sidebars) {
       App.header.show(new HeaderView({menus: menus}));
 
@@ -60,17 +70,23 @@
       }
 
       App.footer.show(new FooterView());
+    }
 
-      var options = {
-        app:   App,
-        posts: new Posts(),
-        user:  user,
-        menus: menus
-      };
+    function initializeRoutes () {
       var controllers = [
-        new SingleTypeController(options),
-        new ArchiveTypeController(options),
-        new SearchController(options)
+        new SingleController({
+          app:  App,
+          user: User
+        }),
+        new ArchiveController({
+          app:   App,
+          posts: new Posts(),
+          user:  user
+        }),
+        new SearchController({
+          app: App,
+          posts: new Posts()
+        })
       ];
 
       App.appRouter = new AppRouter({
@@ -82,24 +98,13 @@
       }
     }
 
-    function getMenus () {
-      return $.get(Settings.get('apiUrl') + '/b3:menus');
+    function initializeControllers () {
+      CommandBus.setHandler('loading:show', function (data) {
+        new LoadingController(data).displayLoading();
+      });
     }
 
-    function getSidebars () {
-      return $.get(Settings.get('apiUrl') + '/b3:sidebars');
-    }
-
-    App.mobile = isMobile();
-
-    App.addInitializer(function() {
-      getMenus().then(function (menus) {
-        getSidebars().done(function (sidebars) {
-          user.fetch();
-          initializeLayout(menus, sidebars);
-        });
-      }); /* TODO: need a fail view .fail(); */
-
+    function initializeEvents () {
       EventBus.bind('router:nav', function (options) {
         App.navigate(options.route, options.options);
       });
@@ -107,6 +112,18 @@
       EventBus.bind('title:change', function (title) {
         App.titleChange(title);
       });
+    }
+
+    function initializeResources () {
+      getMenus().then(function (menus) {
+        getSidebars().done(function (sidebars) {
+          user.fetch();
+          initializeLayout(menus, sidebars);
+          initializeRoutes(menus);
+          initializeControllers();
+          initializeEvents();
+        });
+      }); /* TODO: need a fail view .fail(); */
 
       App.addRegions({
         header:  '#header',
@@ -114,7 +131,11 @@
         sidebar: '#sidebar',
         footer:  '#footer'
       });
-    });
+    }
+
+    App.mobile = isMobile();
+
+    App.addInitializer(initializeResources);
 
     return App;
   });

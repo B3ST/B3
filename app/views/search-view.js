@@ -33,25 +33,24 @@ define([
     },
 
     searchSite: function (event) {
-      var view   = this;
-      var search = $(event.currentTarget).val();
+      var search = this.$('#search-site').val();
 
       event.preventDefault();
 
       if (search.length === 0) {
-        this.triggerSearchEnd();
+        this._triggerSearchStop();
 
       } else if (this.previousSearch.length === 0) {
-        this.triggerSearchStart();
+        this._triggerSearchStart();
 
-      } else if (event.keyCode === 13) {
-        this.triggerSubmitSearchTerm(search);
+      } else if (event.type === 'submit') {
+        this._triggerSubmitSearchTerm(search);
       }
 
-      if (search.length > 2 && search !== this.previousSearch) {
-        this.triggerAfterDelay(function () {
-          view.triggerSearchTerm(search);
-        }, 500);
+      if (this._shouldTriggerSearch(event, search)) {
+        this._triggerAfterDelay(function () {
+          this._triggerSearchTerm(search);
+        }.bind(this), 500);
       }
 
       this.previousSearch = search;
@@ -65,31 +64,32 @@ define([
      * @param  {int}      delay    Time to wait, in milliseconds.
      * @return {Function}            [description]
      */
-    triggerAfterDelay: function (callback, delay) {
+    _triggerAfterDelay: function (callback, delay) {
       window.clearTimeout(this.timeoutId);
       this.timeoutId = window.setTimeout(callback, delay);
     },
 
-    triggerSearchStart: function () {
-      var route = Navigator.getRoute();
-      if (route.indexOf('s=') === -1) {
-        this.previousRoute = route;
-      }
-      EventBus.trigger('search:start');
+    _triggerSearchStart: function () {
+      EventBus.trigger('search:view:start');
     },
 
-    triggerSearchTerm: function (search) {
-      EventBus.trigger('search:term', {s: search});
+    _triggerSearchTerm: function (search) {
+      EventBus.trigger('search:view:term', {s: search});
     },
 
-    triggerSubmitSearchTerm: function (search) {
-      this.triggerSearchTerm(search);
-      Navigator.navigate('post?s=' + search, false);
+    _triggerSubmitSearchTerm: function (search) {
+      EventBus.trigger('search:view:submit', {s: search});
     },
 
-    triggerSearchEnd: function () {
-      EventBus.trigger('search:end');
-      Navigator.navigate(this.previousRoute, false);
+    _triggerSearchStop: function () {
+      EventBus.trigger('search:view:stop');
+    },
+
+    _shouldTriggerSearch: function (event, search) {
+      return search.length > 2              &&
+             search !== this.previousSearch &&
+             event.keyCode !== 8            && // backspace
+             event.keyCode !== 46;             // delete
     }
   });
 

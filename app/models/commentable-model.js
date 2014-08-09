@@ -2,60 +2,58 @@
 
 define([
   'jquery',
+  'backbone',
   'collections/revision-collection',
   'collections/comment-collection'
-], function ($, Revisions, Comments) {
+], function ($, Backbone, Revisions, Comments) {
   'use strict';
 
-  var Commentable = {
-    fetchRevisions: function (callbacks, id) {
-      return this.fetchMeta(id, 'version-history', Revisions, callbacks);
+  var Commentable = Backbone.Model.extend({
+    fetchRevisions: function (id) {
+      return this._fetchMeta(id, 'version-history', Revisions);
     },
 
-    fetchComments: function (callbacks, id) {
-      return this.fetchMeta(id, 'replies', Comments, callbacks);
+    fetchComments: function (id) {
+      return this._fetchMeta(id, 'replies', Comments);
     },
 
-    fetchMeta: function (id, link, collection, callbacks) {
+    _fetchMeta: function (id, link, collection) {
       id = id || '';
       if ($.isEmptyObject(this.get('meta'))) {
         return false;
       } else {
-        $.get(this.getMetaUrl(link) + '/' + id).done(function (data) {
-            data = this.getData(data, id, collection);
-            if (callbacks.done) {
-              callbacks.done(data);
-            }
-          }.bind(this)).fail(function (data) {
-            if (callbacks.fail) {
-              callbacks.fail(data);
-            }
-          });
+        var defer = $.Deferred();
+
+        $.get(this._getMetaUrl(link) + '/' + id)
+         .done(function (data) { defer.resolve(this._getData(data, id, collection)); }.bind(this))
+         .fail(function () { defer.reject(); });
+
+        return defer.promise();
       }
     },
 
-    getData: function (data, id, collection) {
+    _getData: function (data, id, collection) {
       var model = new collection().model;
       if (id === '') {
         data = $.map(data, function(item) {
-          return this.createModel(model, item);
+          return this._createModel(model, item);
         }.bind(this));
         return new collection(data).sort();
       } else {
-        return this.createModel(model, data);
+        return this._createModel(model, data);
       }
     },
 
-    createModel: function (model, item) {
+    _createModel: function (model, item) {
       var itemModel = model.prototype.parse(item);
       itemModel.post = this;
       return new model(itemModel);
     },
 
-    getMetaUrl: function (link) {
+    _getMetaUrl: function (link) {
       return this.get('meta').links[link];
     }
-  };
+  });
 
   return Commentable;
 });

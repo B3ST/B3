@@ -9,6 +9,7 @@
     "header-template",
     "main-template",
     "footer-template",
+    "loading-template",
     "content/type-post-template",
     "content/type-page-template",
     "content/comments/comment-template",
@@ -91,6 +92,7 @@
     "config/rewrite",
     "jqueryui",
     "bootstrap",
+    "bootstrap.notify",
     "backbone.validateAll",
   ], function ($, _, Backbone, Marionette, App, Settings, Rewrite) {
     Settings.set('require.config', config);

@@ -25,51 +25,54 @@ define([
         offset      = $(placeholder).offset();
     if (offset) {
       $('html,body').animate({
-        scrollTop: offset.top
+        scrollTop: offset.top - 100
       }, 'slow');
       $(placeholder).effect('highlight', {}, 1500);
     }
   }
 
-  var view = _.extend(ReplyableView, {
+  var SinglePostView = ReplyableView.extend({
     template:  'main-template.dust',
     childView: CommentView,
     tagName:   'div id="post"',
     events: {
       'click .b3-reply-post':                 'renderReplyBox', // from ReplyableView
-      'click .b3-pager-next':                 'renderNextPage',
-      'click .b3-pager-previous':             'renderPrevPage',
-      'click .b3-pagination .next a':         'renderNextPage',
-      'click .b3-pagination .previous a':     'renderPrevPage',
-      'click .b3-pagination .number a':       'renderPageNumber',
-      'click .b3-post-categories > span > a': 'displayCategory',
-      'click .b3-post-tags > span > a':       'displayTag',
-      'click .b3-post-author > span > a':     'displayAuthor',
-      'click #b3-post-author > a':            'displayAuthor'
+      'click .b3-pager-next':                 'displayNextPage',
+      'click .b3-pager-previous':             'displayPrevPage',
+      'click .b3-pagination .next a':         'displayNextPage',
+      'click .b3-pagination .previous a':     'displayPrevPage',
+      'click .b3-pagination .number a':       'displayPage',
+      'click .b3-post-categories > span > a': function (event) {
+        this.displayType('single:display:category', event);
+      },
+      'click .b3-post-tags > span > a':       function (event) {
+        this.displayType('single:display:tag', event);
+      },
+      'click .b3-post-author > span > a':     function (event) {
+        this.displayType('single:display:author', event);
+      },
+      'click #b3-post-author > a':            function (event) {
+        this.displayType('single:display:author', event);
+      }
+    },
+
+    collectionEvents: {
+      'sort':  'scrollToComment',
+      'reset': 'render'
     },
 
     initialize: function (options) {
-      EventBus.trigger('title:change', this.model.get('title'));
-
-      this.model.fetchComments({
-        done: function (data) { this.collection.add(data.models); }.bind(this),
-        fail: function () { this.displayError(); }.bind(this)
-      });
-
       this.page    = parseInt(options.page, 10) || 1;
       this.content = this.model.get('content').split(/<!--nextpage-->/);
       this.post    = this.model;
       this.user    = options.user;
 
-      _.bindAll(this, 'addComment');
-      EventBus.bind('comment:create', this.addComment);
+      EventBus.trigger('title:change', this.model.get('title'));
     },
 
-    addComment: function (comment) {
-      this.collection.add(comment.set({post: this.post}));
-      this.collection.sort();
+    scrollToComment: function (comments) {
       this.render();
-      scrollToReply(comment.get('ID'));
+      scrollToReply(comments.last().get('ID'));
     },
 
     parentId: function () {
@@ -77,15 +80,13 @@ define([
     },
 
     serializeData: function () {
-      return _.extend(this.parseModel(), this.getDustTemplate());
+      return _.extend(this._parseModel(), this._getDustTemplate());
     },
 
     onDestroy: function () {
       if (this.replyBoxRendered) {
         this.replyBox.destroy();
       }
-
-      EventBus.unbind('comment:create', this.addComment);
     },
 
     attachHtml: function (collectionView, itemView) {
@@ -100,51 +101,33 @@ define([
       }
     },
 
-    displayCategory: function (event) {
+    displayType: function (type, event) {
       var slug = $(event.currentTarget).attr('slug');
-      Navigator.navigateToCategory(slug, null, true);
+      EventBus.trigger(type, {slug: slug});
       event.preventDefault();
     },
 
-    displayTag: function (event) {
-      var slug = $(event.currentTarget).attr('slug');
-      Navigator.navigateToTag(slug, null, true);
+    displayPrevPage: function (event) {
       event.preventDefault();
-    },
-
-    displayAuthor: function (event) {
-      var slug = $(event.currentTarget).attr('slug');
-      Navigator.navigateToAuthor(slug, null, true);
-      event.preventDefault();
-    },
-
-    renderNextPage: function (event) {
-      event.preventDefault();
-
-      if (this.hasNext()) {
-        this.page++;
-        this.render();
-        this.navigate();
-      }
-    },
-
-    renderPrevPage: function (event) {
-      event.preventDefault();
-
-      if (this.hasPrevious()) {
+      if (this._hasPrevious()) {
         this.page--;
-        this.render();
-        this.navigate();
+        this._renderPage();
       }
     },
 
-    renderPageNumber: function (event) {
+    displayNextPage: function (event) {
       event.preventDefault();
+      if (this._hasNext()) {
+        this.page++;
+        this._renderPage();
+      }
+    },
 
+    displayPage: function (event) {
+      event.preventDefault();
       if (this.page !== event.target.dataset.page) {
-        this.page = event.target.dataset.page;
-        this.render();
-        this.navigate();
+        this.page = parseInt(event.target.dataset.page, 10);
+        this._renderPage();
       }
     },
 
@@ -152,42 +135,18 @@ define([
       this.$('.b3-comments').text('Could not retrieve comments.');
     },
 
-    parseModel: function () {
+    _renderPage: function () {
+      this.render();
+      EventBus.trigger('single:display:page', {page: this.page});
+    },
+
+    _parseModel: function () {
       var model = this.model.toJSON();
       model.content = this.content[this.page - 1];
-      return _.extend(model, this.getPagination());
+      return _.extend(model, this._getPagination());
     },
 
-    getPagination: function () {
-      var view = this;
-
-      return {
-        'has_next':     this.hasNext(),
-        'has_previous': this.hasPrevious(),
-        'pages':        this.content.length,
-
-        'pageIterator': function (chunk, context, bodies) {
-          var pages = context.current();
-
-          _(pages).times(function (n) {
-            var page = n + 1;
-            chunk = chunk.render(bodies.block, context.push({
-              'page':    page,
-              'url':     view.getRoute(page),
-              'current': page === parseInt(view.page, 10)
-            }));
-          });
-
-          return chunk;
-        }
-      };
-    },
-
-    /**
-     * [getDustTemplate description]
-     * @return {[type]} [description]
-     */
-    getDustTemplate: function () {
+    _getDustTemplate: function () {
       var template = 'content/type-post-template.dust';
       var type     = this.post.get('type');
       var config   = Settings.get('require.config');
@@ -199,12 +158,37 @@ define([
       return { 'parent-template': template };
     },
 
-    hasNext: function () {
+    _getPagination: function () {
+      var view = this;
+
+      return {
+        'has_next':     this._hasNext(),
+        'has_previous': this._hasPrevious(),
+        'pages':        this.content.length,
+
+        'pageIterator': function (chunk, context, bodies) {
+          var pages = context.current();
+
+          _(pages).times(function (n) {
+            var page = n + 1;
+            chunk = chunk.render(bodies.block, context.push({
+              'page':    page,
+              'url':     view._getRoute(page),
+              'current': page === parseInt(view.page, 10)
+            }));
+          });
+
+          return chunk;
+        }
+      };
+    },
+
+    _hasNext: function () {
       var total = this.content.length;
       return (total > 1 && this.page < total);
     },
 
-    hasPrevious: function () {
+    _hasPrevious: function () {
       return this.page > 1;
     },
 
@@ -213,32 +197,18 @@ define([
      *
      * @param  {int}   page Page number.
      * @return {route}      Route.
-     *
-     * @todo: Build route from Settings.routes.
      */
-    getRoute: function (page) {
-      var type  = this.model.get('type');
-      var route = '/' + type + '/' + this.model.get('slug');
+    _getRoute: function (page) {
+      var type = this.model.get('type'),
+          slug = this.model.get('slug');
 
-      // Pages have a different permalink structure:
-      if (type === 'page') {
-        route = '/' + this.model.get('slug');
+      if (page === 1) {
+        page = null;
       }
 
-      // Do not append /page/ to the URL on the first page:
-      if (page > 1) {
-        route += '/page/' + page;
-      }
-      return route;
-    },
-
-    navigate: function () {
-      var route = this.getRoute(this.page);
-      Navigator.navigate(route, false);
+      return Navigator.getRouteOfType(type, slug, page);
     }
   });
-
-  var SinglePostView = Backbone.Marionette.CompositeView.extend(view);
 
   return SinglePostView;
 });

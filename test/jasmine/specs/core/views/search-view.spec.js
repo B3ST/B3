@@ -24,16 +24,10 @@ define([
 
       describe("starting to type any term", function () {
 
-        it("should trigger an event of search:start", function() {
+        it("should trigger a search:view:start event", function() {
           this.view.$('input#search-site').val('t');
           this.view.$('input#search-site').keyup();
-          expect(this.bus).toHaveBeenCalledWith('search:start');
-        });
-
-        it("should save the previous route", function() {
-          this.view.$('input#search-site').val('t');
-          this.view.$('input#search-site').keyup();
-          expect(this.view.previousRoute).toEqual('some/url');
+          expect(this.bus).toHaveBeenCalledWith('search:view:start');
         });
 
         it("should save the previously typed term", function() {
@@ -47,16 +41,10 @@ define([
 
       describe("pasting a term", function () {
 
-        it("should trigger an event of search:start", function() {
+        it("should trigger a search:view:start", function() {
           this.view.$('input#search-site').val('pasted term');
           this.view.$('input#search-site').keyup();
-          expect(this.bus).toHaveBeenCalledWith('search:start');
-        });
-
-        it("should save the previous route", function() {
-          this.view.$('input#search-site').val('pasted term');
-          this.view.$('input#search-site').keyup();
-          expect(this.view.previousRoute).toEqual('some/url');
+          expect(this.bus).toHaveBeenCalledWith('search:view:start');
         });
 
         it("should save the previously typed term", function() {
@@ -70,17 +58,10 @@ define([
 
       describe("deleting all terms", function() {
 
-        it("should trigger an event of search:end when term is empty", function() {
+        it("should trigger a search:view:stop when term is empty", function() {
           this.view.$('input#search-site').val('');
           this.view.$('input#search-site').keyup();
-          expect(this.bus).toHaveBeenCalledWith('search:end');
-        });
-
-        it("should trigger a navigation to the previous url when term is empty", function() {
-          this.view.previousRoute = 'some/url';
-          this.view.$('input#search-site').val('');
-          this.view.$('input#search-site').keyup();
-          expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'some/url', options: {trigger: false}});
+          expect(this.bus).toHaveBeenCalledWith('search:view:stop');
         });
 
         it("should save the previously typed term", function() {
@@ -97,7 +78,7 @@ define([
         it("should trigger a search:start event", function() {
           this.view.$('input#search-site').val('term');
           this.view.$('input#search-site').keyup();
-          expect(this.bus).toHaveBeenCalledWith('search:start');
+          expect(this.bus).toHaveBeenCalledWith('search:view:start');
         });
 
         it("should trigger a search:term event after 500ms", function() {
@@ -105,24 +86,22 @@ define([
           this.view.$('input#search-site').val('term');
           this.view.$('input#search-site').keyup();
           clock.tick(500);
-          expect(this.bus).toHaveBeenCalledWith('search:term', {s: 'term'});
+          expect(this.bus).toHaveBeenCalledWith('search:view:term', {s: 'term'});
           clock.restore();
         });
       });
 
       describe("pressing the enter key", function() {
 
-        it("should navigate to a URL with the term in the query string", function() {
+        it("should trigger a search:view:submit event", function() {
           var e = jQuery.Event("keyup");
-          e.which = 13;
-          e.keyCode = 13;
+          e.type = 'submit';
 
           this.view.$('input#search-site').val('term');
           this.view.$('input#search-site').keyup();
           this.view.$("input#search-site").trigger(e);
-          expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'post?s=term', options: {trigger: false}});
+          expect(this.bus).toHaveBeenCalledWith('search:view:submit', {s: 'term'});
         });
-
       });
     });
   });
