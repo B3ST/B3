@@ -9,15 +9,19 @@ define([
   'collections/post-collection',
   'controllers/base-controller',
   'controllers/bus/event-bus',
+  'controllers/bus/request-bus',
   'controllers/navigation/navigator',
   'views/archive-view'
-], function ($, _, Backbone, Marionette, PostFilter, Posts, BaseController, EventBus, Navigator, ArchiveView) {
+], function ($, _, Backbone, Marionette, PostFilter, Posts, BaseController, EventBus, RequestBus, Navigator, ArchiveView) {
   'use strict';
 
   return BaseController.extend({
     postInitialize: function (options) {
-      this.page   = options.page || 1;
-      this.filter = options.filter || new PostFilter();
+      this.page       = options.page || 1;
+      this.filter     = options.filter || new PostFilter();
+      this.taxonomies = options.taxonomies;
+      this.taxTypes   = {};
+
       this._bindToArchiveEvents();
       this._bindToSearchEvents();
     },
@@ -58,6 +62,7 @@ define([
      * @param {int} page Page number.
      */
     showArchive: function (params) {
+      this.taxonomy = null;
       this.page = params.paged || 1;
       this.filter = new PostFilter();
       this._fetchPostsOfPage(this.page);
@@ -73,13 +78,17 @@ define([
       var category = params.category || params.id,
           slug     = params.category || params.slug;
 
-      this.page   = params.paged || 1;
-      this.filter = new PostFilter();
-      this.filter = isNaN(category) ? this.filter.byCategory(category)
-                                    : this.filter.byCategoryId(category);
+      $.when(RequestBus.request('taxonomy:get', {taxonomy: 'category', term: slug}))
+       .then(function (taxonomy) {
+        this.taxonomy = taxonomy;
+        this.page     = params.paged || 1;
+        this.filter   = new PostFilter();
+        this.filter   = isNaN(category) ? this.filter.byCategory(category)
+                                        : this.filter.byCategoryId(category);
 
-      this._fetchPostsOfPage(this.page);
-      Navigator.navigateToCategory(slug, this.page, false);
+        this._fetchPostsOfPage(this.page, this.taxonomy);
+        Navigator.navigateToCategory(slug, this.page, false);
+      }.bind(this));
     },
 
     /**
@@ -89,16 +98,20 @@ define([
      * @param  {int}    page Page number
      */
     showPostByTag: function (params) {
-      var tag    = params.post_tag || params.id,
-          slug   = params.post_tag || params.slug;
+      var tag      = params.post_tag || params.id,
+          slug     = params.post_tag || params.slug;
 
-      this.page   = params.paged || 1;
-      this.filter = new PostFilter();
-      this.filter = isNaN(tag) ? this.filter.byTag(tag)
-                               : this.filter.byTagId(tag);
+      $.when(RequestBus.request('taxonomy:get', {taxonomy: 'post_tag', term: slug}))
+       .then(function (taxonomy) {
+        this.taxonomy = taxonomy;
+        this.page     = params.paged || 1;
+        this.filter   = new PostFilter();
+        this.filter   = isNaN(tag) ? this.filter.byTag(tag)
+                                 : this.filter.byTagId(tag);
 
-      this._fetchPostsOfPage(this.page);
-      Navigator.navigateToTag(slug, this.page, false);
+        this._fetchPostsOfPage(this.page, this.taxonomy);
+        Navigator.navigateToTag(slug, this.page, false);
+       }.bind(this));
     },
 
     /**
@@ -126,7 +139,7 @@ define([
     showNextPage: function () {
       if (!this._isLastPage()) {
         this.page++;
-        this._displayPage(this.page);
+        this._displayPage(this.page, this.taxonomy);
       }
     },
 
@@ -136,7 +149,7 @@ define([
     showPreviousPage: function () {
       if (!this._isFirstPage()) {
         this.page--;
-        this._displayPage(this.page);
+        this._displayPage(this.page, this.taxonomy);
       }
     },
 
@@ -191,9 +204,9 @@ define([
     /**
      * Display a given page
      */
-    _displayPage: function (page) {
+    _displayPage: function (page, taxonomy) {
       var route = Navigator.getPagedRoute(this.filter, page);
-      this._fetchPostsOfPage(page);
+      this._fetchPostsOfPage(page, taxonomy);
       Navigator.navigate(route, false);
     },
 
@@ -201,12 +214,14 @@ define([
      * Fetch all posts using a set of filters and display the
      * corresponding view on success or fail.
      */
-    _fetchPostsOfPage: function (page) {
+    _fetchPostsOfPage: function (page, taxonomy) {
+      var title  = taxonomy ? taxonomy.get('name') : false;
+
       this.posts = new Posts();
       this.filter.onPage(page);
       this.showLoading({region: this.app.main});
       this.posts.fetch(this._fetchParams())
-          .done(function () { this.show(this._archiveView(this.posts, page)); }.bind(this))
+          .done(function () { this.show(this._archiveView(this.posts, page, title)); }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
@@ -240,10 +255,11 @@ define([
      *
      * @param  {array}       posts Post collection to display.
      * @param  {int}         page  Page number.
+     * @param  {string}      title The title for the archive
      * @return {ArchiveView}       New archive view instance.
      */
-    _archiveView: function (posts, page) {
-      return new ArchiveView({collection: posts, page: page});
+    _archiveView: function (posts, page, title) {
+      return new ArchiveView({collection: posts, page: page, title: title});
     }
   });
 });

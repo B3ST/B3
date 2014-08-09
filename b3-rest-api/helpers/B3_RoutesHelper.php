@@ -41,7 +41,7 @@ class B3_RoutesHelper {
     public function __construct () {
         global $wp_rewrite;
 
-        $this->pagination_base = '(/' . $wp_rewrite->pagination_base . '/:paged)';
+        $this->pagination_base = $wp_rewrite->pagination_base . '/:paged';
         $this->comments_base   = '/' . $wp_rewrite->comments_base;
         $this->attachment_base = '/attachment/:attachment';
 
@@ -97,6 +97,14 @@ class B3_RoutesHelper {
         return $route;
     }
 
+    protected function get_paginated_route ( $route = '' ) {
+        if (empty( $route )) {
+            return sprintf( '(%s)', $this->pagination_base );
+        }
+
+        return sprintf( '%s(/%s)', $route, $this->pagination_base );
+    }
+
     /**
      * Add a set of routes for a provided resource.
      *
@@ -117,7 +125,7 @@ class B3_RoutesHelper {
         $route  = $this->prepare_route( $route );
 
         $attachment_route = '';
-        $resource_route   = $this->prepare_route( $route . $this->pagination_base );
+        $resource_route   = $this->prepare_route( $this->get_paginated_route( $route ) );
 
         $routes[$resource_route] = $resource;
 
@@ -128,12 +136,12 @@ class B3_RoutesHelper {
 
         if (B3_EP_COMMENTS & $mask) {
             $comments_resource = array( 'object' => 'comments', 'type' => $resource['type'] );
-            $comments_route = $this->prepare_route( $route . $this->comments_base . $this->pagination_base );
+            $comments_route = $this->prepare_route( $this->get_paginated_route( $route . $this->comments_base ) );
             $routes[$comments_route] = $comments_resource;
 
             if ($attachment_route) {
                 $comments_resource = array( 'object' => 'comments', 'type' => 'attachment' );
-                $comments_route = $this->prepare_route( $attachment_route . $this->comments_base . $this->pagination_base );
+                $comments_route = $this->prepare_route( $this->get_paginated_route( $attachment_route . $this->comments_base ) );
                 $routes[$comments_route] = $comments_resource;
             }
         }

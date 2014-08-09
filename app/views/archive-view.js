@@ -24,24 +24,19 @@ define([
       'click .b3-post-title > a':             'selectPost',
       'click .b3-pager-next':                 'renderNextPage',
       'click .b3-pager-previous':             'renderPrevPage',
-      'click .b3-post-categories > span > a': function (event) {
-        this.displayType('archive:display:category', event);
-      },
-      'click .b3-post-tags > span > a':       function (event) {
-        this.displayType('archive:display:tag', event);
-      },
-      'click .b3-post-author > span > a':     function (event) {
-        this.displayType('archive:display:author', event);
-      }
+      'click .b3-post-categories > span > a': 'displayCategory',
+      'click .b3-post-tags > span > a':       'displayTag',
+      'click .b3-post-author > span > a':     'displayAuthor'
     },
 
     collectionEvents: {
-      "reset":  "render"
+      "reset": "render"
     },
 
     initialize: function (options) {
-      this.page   = options.page || 1;
-      this.limit  = options.limit || 10;
+      this.page  = options.page || 1;
+      this.limit = options.limit || 10;
+      this.title = options.title || false;
 
       EventBus.trigger('title:change');
     },
@@ -51,7 +46,7 @@ define([
     },
 
     serializeData: function () {
-      return _.extend(this.getDustTemplate(), {posts: this.getModels()});
+      return _.extend(this.getDustTemplate(), {posts: this.getModels(), title: this.title});
     },
 
     getModels: function () {
@@ -61,16 +56,23 @@ define([
     },
 
     selectPost: function (event) {
-      var input = parseInt(event.currentTarget.id);
+      var input = parseInt(event.currentTarget.id, 10);
       EventBus.trigger('archive:display:post', {post: input});
       event.preventDefault();
     },
 
-    displayType: function (type, event) {
-      var id   = parseInt(event.currentTarget.id),
-          slug = $(event.currentTarget).attr('slug');
+    displayCategory: function (event) {
+      this._displayType('archive:display:category', event);
+      event.preventDefault();
+    },
 
-      EventBus.trigger(type, {id: id, slug: slug});
+    displayTag: function (event) {
+      this._displayType('archive:display:tag', event);
+      event.preventDefault();
+    },
+
+    displayAuthor: function (event) {
+      this._displayType('archive:display:author', event);
       event.preventDefault();
     },
 
@@ -89,8 +91,8 @@ define([
     },
 
     getPagination: function () {
-      var has_next = !this.isLastPage();
-      var has_prev = !this.isFirstPage();
+      var has_next = !this._isLastPage();
+      var has_prev = !this._isFirstPage();
       var pages    = 999; // TODO: Try to get number of results
 
       return {
@@ -100,13 +102,20 @@ define([
       };
     },
 
-    isLastPage: function () {
+    _isLastPage: function () {
       return this.collection.models.length === 0;
     },
 
-    isFirstPage: function () {
+    _isFirstPage: function () {
       return this.page === 1;
-    }
+    },
+
+    _displayType: function (type, event) {
+      var id   = parseInt(event.currentTarget.id, 10),
+          slug = $(event.currentTarget).attr('slug');
+
+      EventBus.trigger(type, {id: id, slug: slug});
+    },
   });
 
   return ArchiveView;

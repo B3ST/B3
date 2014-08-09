@@ -5,15 +5,17 @@ define([
   'controllers/archive-controller',
   'controllers/bus/command-bus',
   'controllers/bus/event-bus',
+  'controllers/bus/request-bus',
   'controllers/navigation/navigator',
   'models/post-model',
   'models/settings-model',
   'models/user-model',
+  'models/taxonomy-model',
   'collections/post-collection',
   'views/archive-view',
   'views/not-found-view',
   'sinon'
-], function (App, ArchiveController, CommandBus, EventBus, Navigator, Post, Settings, User, Posts, ArchiveView, NotFoundView) {
+], function (App, ArchiveController, CommandBus, EventBus, RequestBus, Navigator, Post, Settings, User, Taxonomy, Posts, ArchiveView, NotFoundView) {
   'use strict';
 
   describe("ArchiveController", function() {
@@ -31,7 +33,7 @@ define([
 
     describe(".initialize", function() {
       beforeEach(function() {
-        this.bus = spyOn(EventBus, 'bind');
+        this.bus        = spyOn(EventBus, 'bind');
         this.controller = new ArchiveController({
           posts: new Posts(),
           app:   App,
@@ -268,30 +270,36 @@ define([
     });
 
     sharedBehaviourForArchiveOfType('category', {
-      method: ".showPostByCategory",
+      method:        ".showPostByCategory",
+      calledWith:    "category",
       runTestMethod: function  (controller) {
         controller.showPostByCategory({category: 'category'});
       },
       request: Settings.get('apiUrl') + '/posts?filter[category_name]=category&page=1',
-      route:   'post/category/category/page/1'
+      route:   'post/category/category/page/1',
+      taxonomy: true
     });
 
-    sharedBehaviourForArchiveOfType('tag', {
-      method: ".showPostByTag",
+    sharedBehaviourForArchiveOfType('post_tag', {
+      method:        ".showPostByTag",
+      calledWith:    "tag",
       runTestMethod: function (controller) {
         controller.showPostByTag({post_tag: 'tag'});
       },
       request: Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1',
-      route:   'post/tag/tag/page/1'
+      route:   'post/tag/tag/page/1',
+      taxonomy: true
     });
 
     sharedBehaviourForArchiveOfType('author', {
-      method: ".showPostByAuthor",
+      method:        ".showPostByAuthor",
+      calledWith:    "author",
       runTestMethod: function  (controller) {
         controller.showPostByAuthor({author: 'author'});
       },
       request: Settings.get('apiUrl') + '/posts?filter[author_name]=author&page=1',
-      route:   'post/author/author/page/1'
+      route:   'post/author/author/page/1',
+      taxonomy: false
     });
   });
 
@@ -308,31 +316,43 @@ define([
 
   function sharedBehaviourForArchiveOfType (type, options) {
     describe(options.method, function() {
+      beforeEach(function() {
+        this.request = spyOn(RequestBus, 'request').andCallFake(function () {
+          return new Taxonomy();
+        });
+      });
+
+      if (options.taxonomy) {
+        it("should request the given terms if not already loaded", function() {
+          var controller = new ArchiveController({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+
+          options.runTestMethod(controller);
+
+          expect(this.request).toHaveBeenCalledWith('taxonomy:get', {taxonomy: type, term: options.calledWith});
+        });
+      }
+
       it("should fetch the corresponding posts of a given " + type, function() {
-        this.spy = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.fetch      = spyOn(Posts.prototype, 'fetch').andCallThrough();
         this.controller = new ArchiveController({
           posts: new Posts(),
-          app:   App
+          app:   App,
+          user:  this.user
         });
+
         options.runTestMethod(this.controller);
 
-        expect(this.spy).toHaveBeenCalled();
+        expect(this.fetch).toHaveBeenCalled();
       });
 
-      it("should navigate to the corresponding url", function() {
-        this.bus = spyOn(EventBus, 'trigger');
-        this.controller = new ArchiveController({
-          posts: new Posts(),
-          app:   App
-        });
-        options.runTestMethod(this.controller);
-
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.route, options: {trigger: false}});
-      });
-
-      describe("When fetching is successful", function() {
+      describe("When fetching posts is successful", function() {
         it("should show the archive view", function() {
           var response = new Post({ID: 1});
+
           this.spy = spyOn(App.main, 'show');
           this.server = stubServer({
             url: options.request,
@@ -343,17 +363,18 @@ define([
           this.controller = new ArchiveController({
             posts: new Posts(),
             app:   App,
-            user:  this.user
+            user:  this.user,
           });
 
           options.runTestMethod(this.controller);
           this.server.respond();
 
-          expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
+          var view = this.spy.mostRecentCall.args[0];
+          expect(view instanceof ArchiveView).toBeTruthy();
         });
       });
 
-      describe("When fetching fails", function() {
+      describe("When fetching posts fails", function() {
         it("should show a not found view", function() {
           this.spy = spyOn(App.main, 'show');
           this.server = stubServer({
@@ -367,12 +388,26 @@ define([
             app:   App,
             user:  this.user
           });
+
           options.runTestMethod(this.controller);
           this.server.respond();
 
           var view = this.spy.mostRecentCall.args[0];
           expect(view instanceof NotFoundView).toBeTruthy();
         });
+      });
+
+      it("should navigate to the corresponding url", function() {
+        this.bus = spyOn(EventBus, 'trigger');
+        this.controller = new ArchiveController({
+          posts: new Posts(),
+          app:   App,
+          user:  this.user
+        });
+        this.controller.taxTypes[type] = this.taxType;
+        options.runTestMethod(this.controller);
+
+        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.route, options: {trigger: false}});
       });
     });
   }

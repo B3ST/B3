@@ -168,6 +168,7 @@
       root + 'core/controllers/archive-controller.spec',
       root + 'core/controllers/search-controller.spec',
       root + 'core/controllers/loading-controller.spec',
+      root + 'core/controllers/taxonomy-controller.spec',
       root + 'core/controllers/navigation/navigator.spec',
 
       // app

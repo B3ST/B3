@@ -39,6 +39,20 @@ define([
       });
     });
 
+    describe("When specifying a type", function() {
+      it("should display the type", function() {
+        this.posts = new Posts([
+          new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1'}),
+          new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
+        ]);
+
+        this.view = new ArchiveView({collection: this.posts, title: 'Category'});
+        this.view.render();
+
+        expect(this.view.$('.archive-title').text()).toContain('Category');
+      });
+    });
+
     describe("When clicking in title link", function() {
       beforeEach(function() {
         this.spy = spyOn(EventBus, 'trigger');
