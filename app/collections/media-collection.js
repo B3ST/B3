@@ -9,7 +9,7 @@ define([
   'use strict';
   var Medias = Backbone.Collection.extend({
     model: Media,
-    url: Settings.get('apiUrl') + '/media'
+    url: Settings.get('api_url') + '/media'
   });
 
   return Medias;

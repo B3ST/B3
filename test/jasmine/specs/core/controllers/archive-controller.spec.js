@@ -41,6 +41,14 @@ define([
         });
       });
 
+      it("should bind to archive:show event", function() {
+        expect(this.bus).toHaveBeenCalledWith('archive:show', this.controller.showArchive);
+      });
+
+      it("should bind to archive:display:page event", function() {
+        expect(this.bus).toHaveBeenCalledWith('archive:display:page', this.controller.showPage);
+      });
+
       it("should bind to archive:display:category event", function() {
         expect(this.bus).toHaveBeenCalledWith('archive:display:category', this.controller.showPostByCategory);
       });
@@ -78,6 +86,42 @@ define([
       });
     });
 
+    describe(".showHome", function() {
+      describe("When home is not a page", function() {
+        it("should display the archive", function() {
+          spyOn(Settings, 'get').andCallFake(function () {
+            return 0;
+          });
+          this.archive = spyOn(ArchiveController.prototype, 'showArchive');
+          this.controller = new ArchiveController({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+
+          this.controller.showHome();
+          expect(this.archive).toHaveBeenCalled();
+        });
+      });
+
+      describe("When home is set to a page", function() {
+        it("should display that page", function() {
+          spyOn(Settings, 'get').andCallFake(function () {
+            return 100;
+          });
+          this.bus = spyOn(EventBus, 'trigger');
+          this.controller = new ArchiveController({
+            posts: new Posts(),
+            app:   App,
+            user:  this.user
+          });
+
+          this.controller.showHome();
+          expect(this.bus).toHaveBeenCalledWith('page:show', {page: 100});
+        });
+      });
+    });
+
     describe(".showArchive", function() {
       beforeEach(function() {
         var response = [
@@ -87,7 +131,7 @@ define([
 
         this.server = stubServer({
           response: response,
-          url:      Settings.get('apiUrl') + '/posts',
+          url:      Settings.get('api_url') + '/posts',
           code:     200
         });
 
@@ -119,7 +163,7 @@ define([
             new Post({ID: 2, title: 'post-2'}).toJSON()
           ];
           this.server = stubServer({
-            url:      Settings.get('apiUrl') + '/posts?page=2',
+            url:      Settings.get('api_url') + '/posts?page=2',
             code:     200,
             response: response
           });
@@ -269,13 +313,21 @@ define([
       }
     });
 
+    sharedBehaviourForPaging('.showPage', {
+      before: 2,
+      after:  1,
+      methodToTest: function (controller) {
+        controller.showPage({paged: 1});
+      }
+    });
+
     sharedBehaviourForArchiveOfType('category', {
       method:        ".showPostByCategory",
       calledWith:    "category",
       runTestMethod: function  (controller) {
         controller.showPostByCategory({category: 'category'});
       },
-      request: Settings.get('apiUrl') + '/posts?filter[category_name]=category&page=1',
+      request: Settings.get('api_url') + '/posts?filter[category_name]=category&page=1',
       route:   'post/category/category/page/1',
       taxonomy: true
     });
@@ -286,7 +338,7 @@ define([
       runTestMethod: function (controller) {
         controller.showPostByTag({post_tag: 'tag'});
       },
-      request: Settings.get('apiUrl') + '/posts?filter[tag]=tag&page=1',
+      request: Settings.get('api_url') + '/posts?filter[tag]=tag&page=1',
       route:   'post/tag/tag/page/1',
       taxonomy: true
     });
@@ -297,7 +349,7 @@ define([
       runTestMethod: function  (controller) {
         controller.showPostByAuthor({author: 'author'});
       },
-      request: Settings.get('apiUrl') + '/posts?filter[author_name]=author&page=1',
+      request: Settings.get('api_url') + '/posts?filter[author_name]=author&page=1',
       route:   'post/author/author/page/1',
       taxonomy: false
     });

@@ -48,7 +48,7 @@ define([
      */
     selectMenu: function (ev) {
       var link     = ev.currentTarget.href;
-      var baseUrl  = Settings.get('url');
+      var baseUrl  = Settings.get('site_url');
       var resource = link.replace(baseUrl, '');
 
       // Do not handle external links:

@@ -144,14 +144,11 @@ class B3Theme {
             /**
              * @deprecated
              */
-            'apiUrl'   => home_url( json_get_url_prefix() ),
-            'sitePath' => (string) $site_url_components['path'],
-            'rootUrl'  => get_stylesheet_directory_uri(),
-            'siteUrl'  => site_url(),
-            'routes'   => $routes_helper->get_routes(),
-            'root'     => get_stylesheet_directory_uri(),
-            'url'      => site_url(),
-            'path'     => (string) $site_url_components['path'],
+            'api_url'   => home_url( json_get_url_prefix() ),
+            'site_path' => (string) $site_url_components['path'],
+            'root_url'  => get_stylesheet_directory_uri(),
+            'site_url'  => site_url(),
+            'routes'    => $routes_helper->get_routes()
             );
 
         wp_register_script( $this->slug . '-settings', $this->settings_uri );

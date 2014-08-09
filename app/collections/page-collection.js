@@ -9,7 +9,7 @@ define([
   'use strict';
   var Pages = Backbone.Collection.extend({
     model: Page,
-    url: Settings.get('apiUrl') + '/pages'
+    url: Settings.get('api_url') + '/pages'
   });
 
   return Pages;

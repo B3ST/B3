@@ -30,13 +30,14 @@ define([
     },
 
     _bindToEvents: function () {
-      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'showPage', 'showPost', 'addComment', 'saveCurrentState', 'loadPreviousState');
+      _.bindAll(this, 'navigateToCategories', 'navigateToTags', 'navigateToAuthor', 'navigateToPage', 'showPost', 'showPageById', 'addComment', 'saveCurrentState', 'loadPreviousState');
       EventBus.bind('single:display:category', this.navigateToCategories);
       EventBus.bind('single:display:tag', this.navigateToTags);
       EventBus.bind('single:display:author', this.navigateToAuthor);
-      EventBus.bind('single:display:page', this.showPage);
+      EventBus.bind('single:display:page', this.navigateToPage);
 
       EventBus.bind('post:show', this.showPost);
+      EventBus.bind('page:show', this.showPageById);
       EventBus.bind('comment:create', this.addComment);
 
       EventBus.bind('search:start', this.saveCurrentState);
@@ -47,7 +48,7 @@ define([
      * Navigate to page
      * @param  {data} data The page to navigate to
      */
-    showPage: function (data) {
+    navigateToPage: function (data) {
       var route = Navigator.getPagedRoute(new PostFilter(), data.page);
       Navigator.navigate(route, false);
     },
@@ -114,6 +115,18 @@ define([
     },
 
     /**
+     * Display a page by an ID
+     *
+     * @param  {Object} params An Object containing the page ID and paged attribute
+     */
+    showPageById: function (params) {
+      var page  = params.page,
+          paged = params.paged || 1;
+
+      this._loadModel(Page, 'ID', page, paged);
+    },
+
+    /**
      * Display a page given its unique alphanumeric slug.
      *
      * WordPress allows pages to be placed in a hierarchy. In these
@@ -172,13 +185,19 @@ define([
      * @param  {string} page  The page number
      */
     _loadModel: function (model, field, value, page) {
+      var pageForPosts = Settings.get('page_for_posts');
+
       this.collection.reset();
       this._displayMainLoading();
       this._fetchModelBy(model, field, value, page)
           .then(function (post) {
-            this.post = post;
-            this.show(this._singlePostView(this.post, this.collection, page));
-            this._loadComments(post, page);
+            if (post.get('ID') === pageForPosts) {
+              EventBus.trigger('archive:show', {});
+            } else {
+              this.post = post;
+              this.show(this._singlePostView(this.post, this.collection, page));
+              this._loadComments(post, page);
+            }
           }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },

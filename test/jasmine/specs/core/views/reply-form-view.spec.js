@@ -121,7 +121,7 @@ define([
           this.server = sinon.fakeServer.create();
           this.server.respondWith(
             'POST',
-            Settings.get('apiUrl') + '/posts/1/b3:replies/',
+            Settings.get('api_url') + '/posts/1/b3:replies/',
             [200, {'Content-Type': 'application/json'}, JSON.stringify(response)]
           );
 

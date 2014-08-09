@@ -46,7 +46,7 @@ class B3_SettingsHelper {
             case 'show_on_front':
             case 'page_on_front':
             case 'page_for_posts':
-                return get_option( $option );
+                return (int) get_option( $option );
 
             default:
                 return get_bloginfo( $option );

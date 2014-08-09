@@ -49,7 +49,7 @@ define([
     },
 
     serializeData: function () {
-      return Settings.attributes;
+      return {name: Settings.get('name')};
     },
 
     index: function (ev) {

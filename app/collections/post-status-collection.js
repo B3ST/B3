@@ -9,7 +9,7 @@ define([
   'use strict';
   var PostStatuses = Backbone.Collection.extend({
     model: PostStatus,
-    url: Settings.get('apiUrl') + '/posts/statuses'
+    url: Settings.get('api_url') + '/posts/statuses'
   });
 
   return PostStatuses;

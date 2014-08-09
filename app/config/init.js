@@ -3,7 +3,7 @@
 (function() {
   'use strict';
 
-  var root = WP_API_SETTINGS.root;
+  var root = WP_API_SETTINGS.root_url;
 
   var templateDeps = [
     "header-template",

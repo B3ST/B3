@@ -57,11 +57,15 @@
     }
 
     function getMenus () {
-      return $.get(Settings.get('apiUrl') + '/b3:menus');
+      return $.get(Settings.get('api_url') + '/b3:menus');
     }
 
     function getSidebars () {
-      return $.get(Settings.get('apiUrl') + '/b3:sidebars');
+      return $.get(Settings.get('api_url') + '/b3:sidebars');
+    }
+
+    function getSettings () {
+      return Settings.fetch();
     }
 
     function getTaxonomies () {
@@ -82,7 +86,7 @@
       var controllers = [
         new SingleController({
           app:  App,
-          user: User
+          user: user
         }),
         new ArchiveController({
           app:   App,
@@ -90,8 +94,9 @@
           user:  user
         }),
         new SearchController({
-          app: App,
-          posts: new Posts()
+          app:   App,
+          posts: new Posts(),
+          user:  user
         })
       ];
 
@@ -99,8 +104,8 @@
         controller: controllers,
       });
 
-      if(Backbone.history) {
-        Backbone.history.start({pushState: true, root: Settings.get('path')});
+      if (Backbone.history) {
+        Backbone.history.start({pushState: true, root: Settings.get('site_path')});
       }
     }
 
@@ -125,7 +130,8 @@
     }
 
     function initializeResources () {
-      $.when(getMenus(), getSidebars(), getTaxonomies()).then(function (menus, sidebars, taxonomies) {
+      $.when(getSettings(), getMenus(), getSidebars(), getTaxonomies()).then(function (settings, menus, sidebars, taxonomies) {
+        Settings.set(settings[0]);
         var params = {
           taxonomies: taxonomies[0]
         };

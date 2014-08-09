@@ -19,7 +19,7 @@ define([
     },
 
     idAttribute: 'slug',
-    urlRoot: Settings.get('apiUrl') + '/posts/statuses'
+    urlRoot: Settings.get('api_url') + '/posts/statuses'
   });
 
   return PostStatus;

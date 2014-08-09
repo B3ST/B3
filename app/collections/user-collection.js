@@ -9,7 +9,7 @@ define([
   'use strict';
   var Users = Backbone.Collection.extend({
     model: User,
-    url: Settings.get('apiUrl') + '/users'
+    url: Settings.get('api_url') + '/users'
   });
 
   return Users;

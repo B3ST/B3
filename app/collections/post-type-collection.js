@@ -9,7 +9,7 @@ define([
   'use strict';
   var PostTypes = Backbone.Collection.extend({
     model: PostType,
-    url: Settings.get('apiUrl') + '/posts/types'
+    url: Settings.get('api_url') + '/posts/types'
   });
 
   return PostTypes;

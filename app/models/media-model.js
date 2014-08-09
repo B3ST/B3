@@ -39,7 +39,7 @@ define([
     },
 
     idAttribute: 'ID',
-    urlRoot: Settings.get('apiUrl') + '/media'
+    urlRoot: Settings.get('api_url') + '/media'
   });
 
   return Media;
