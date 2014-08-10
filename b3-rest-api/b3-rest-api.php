@@ -5,6 +5,8 @@
  */
 
 require_once( dirname( __FILE__ ) . '/resources/B3_API.php' );
+require_once( dirname( __FILE__ ) . '/helpers/B3_RoutesHelper.php' );
+require_once( dirname( __FILE__ ) . '/helpers/B3_SettingsHelper.php' );
 
 class B3_JSON_REST_API {
 
@@ -33,6 +35,14 @@ class B3_JSON_REST_API {
             'B3_Sidebar'  => NULL,
         );
 
+        add_action( 'init', array( $this, 'init' ) );
+    }
+
+    /**
+     * [init description]
+     * @return [type] [description]
+     */
+    public function init () {
         add_action( 'wp_json_server_before_serve', array( $this, 'default_filters' ), 10, 1 );
     }
 
@@ -41,7 +51,7 @@ class B3_JSON_REST_API {
      * @param  WP_JSON_ResponseHandler $server [description]
      * @return [type]                          [description]
      */
-    function default_filters ( WP_JSON_ResponseHandler $server ) {
+    public function default_filters ( WP_JSON_ResponseHandler $server ) {
         $this->server = $server;
 
         foreach ($this->resources as $class => $resource) {

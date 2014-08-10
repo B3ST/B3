@@ -97,6 +97,11 @@ class B3_RoutesHelper {
         return $route;
     }
 
+    /**
+     * [get_paginated_route description]
+     * @param  string $route [description]
+     * @return [type]        [description]
+     */
     protected function get_paginated_route ( $route = '' ) {
         if (empty( $route )) {
             return sprintf( '(%s)', $this->pagination_base );

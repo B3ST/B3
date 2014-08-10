@@ -1,7 +1,5 @@
 <?php
 
-require_once( dirname( __FILE__ ) . '/B3_RoutesHelper.php' );
-
 class B3_SettingsHelper {
 
     /**

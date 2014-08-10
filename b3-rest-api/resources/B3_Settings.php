@@ -4,8 +4,6 @@
  * @subpackage B3/API
  */
 
-require_once( dirname( __FILE__ ) . '/../helpers/B3_SettingsHelper.php' );
-
 /**
  * Implements the Settings resource API.
  */

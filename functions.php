@@ -134,21 +134,22 @@ class B3Theme {
         }
 
         $site_url_components = parse_url( site_url() );
-        $routes_helper       = new B3_RoutesHelper();
+        $routes              = array();
+
+        if (class_exists( 'B3_RoutesHelper' )) {
+            $routes_helper = new B3_RoutesHelper();
+            $routes        = $routes_helper->get_routes();
+        }
 
         $settings = array(
-            'name'  => get_bloginfo( 'name' ),
-            'api'   => home_url( json_get_url_prefix() ),
-            'nonce' => wp_create_nonce( 'wp_json' ),
-
-            /**
-             * @deprecated
-             */
+            'name'      => get_bloginfo( 'name' ),
+            'api'       => home_url( json_get_url_prefix() ),
+            'nonce'     => wp_create_nonce( 'wp_json' ),
             'api_url'   => home_url( json_get_url_prefix() ),
             'site_path' => (string) $site_url_components['path'],
             'root_url'  => get_stylesheet_directory_uri(),
             'site_url'  => site_url(),
-            'routes'    => $routes_helper->get_routes()
+            'routes'    => $routes,
             );
 
         wp_register_script( $this->slug . '-settings', $this->settings_uri );
@@ -156,36 +157,6 @@ class B3Theme {
         wp_enqueue_script( $this->slug . '-settings' );
 
         wp_enqueue_style( $this->slug . '-style', $this->stylesheet_uri, NULL, $this->version, 'screen' );
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function _get_permastructs () {
-        global $wp_rewrite;
-
-        /**
-         * Allows developers to alter the list of permastructs sent to the client frontend.
-         * @param  array $permastructs List of permastructs.
-         * @return array               Filtered list of permastructs.
-         */
-        $permastructs = apply_filters( 'b3_permastructs', array(
-            'page'     => $wp_rewrite->get_page_permastruct(),
-            'category' => $wp_rewrite->get_category_permastruct(),
-            'tag'      => $wp_rewrite->get_tag_permastruct(),
-            'author'   => $wp_rewrite->get_author_permastruct(),
-            'date'     => $wp_rewrite->get_date_permastruct(),
-            'day'      => $wp_rewrite->get_day_permastruct(),
-            'month'    => $wp_rewrite->get_month_permastruct(),
-            'year'     => $wp_rewrite->get_year_permastruct(),
-            ) );
-
-        foreach ($permastructs as $key => $permastruct) {
-            $permastructs[$key] = preg_replace( '/%([^%]+)%/', ":$1", $permastruct );
-            $permastructs[$key] = preg_replace( '/^\/(.*)/i', "$1", $permastructs[$key] );
-        }
-
-        return $permastructs;
     }
 
     public function enqueue_require_script () {
