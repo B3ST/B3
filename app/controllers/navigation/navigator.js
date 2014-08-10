@@ -20,14 +20,14 @@ define([
   };
 
   function routeIsPaged (route) {
-    var isPaged = route.match(/(page\/\d)|(page=\d)/);
+    var isPaged = route.match(/(page\/\d+\/?$)|([?&]page=\d+)/);
     return isPaged !== null && isPaged.length > 0;
   }
 
   function buildUri(route, replace) {
     var pageRegex   = /(\(\/?page\/.*\))/g;
     var pageSection = route.match(pageRegex);
-    
+
     pageSection = (_.isEmpty(pageSection)) ? '' : pageSection[0];
 
     if (!replace.paged || replace.paged < 2) {
@@ -58,6 +58,7 @@ define([
     },
 
     navigate: function (route, trigger) {
+      route = this._routeFromAbsoluteUrl(route);
       EventBus.trigger('router:nav', {route: route, options: {trigger: trigger}});
     },
 
@@ -82,11 +83,11 @@ define([
     },
 
     navigateToCategory: function (category, paged, trigger) {
-      this.navigateToPostType('category', category, paged, trigger);
+      this.navigateToTaxonomy('category', category, paged, trigger);
     },
 
     navigateToTag: function (tag, paged, trigger) {
-      this.navigateToPostType('post_tag', tag, paged, trigger);
+      this.navigateToTaxonomy('post_tag', tag, paged, trigger);
     },
 
     /**
@@ -133,6 +134,18 @@ define([
 
       route = (routeIsPaged(route)) ? route.replace(regex, url(page))
                                     : route + '/' + url(page);
+      return route;
+    },
+
+    /**
+     * Extract route string from absolute URL.
+     * @param  {String} url Absolute or relative URL.
+     * @return {String}     Route.
+     */
+    _routeFromAbsoluteUrl: function (url) {
+      var re = new RegExp('^' + Settings.get('site_url') + '/', 'g');
+      route = url.replace(re, Settings.get('site_path'));
+      route = route.replace(/\/$/, '');
       return route;
     },
 

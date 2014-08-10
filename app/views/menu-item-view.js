@@ -48,7 +48,6 @@ define([
     selectMenu: function (ev) {
       var link     = ev.currentTarget.href;
       var baseUrl  = Settings.get('site_url');
-      var resource = link.replace(baseUrl, '');
 
       // Do not handle external links:
       if (link.indexOf(baseUrl) !== 0) {
@@ -58,7 +57,7 @@ define([
       ev.preventDefault();
 
       if (!this.dropdown) {
-        Navigator.navigate(resource, true);
+        Navigator.navigate(link, true);
         this.activateMenu();
         this.triggerMenuSelected(this.model.get('ID'), this.model.get('parent'));
       }
