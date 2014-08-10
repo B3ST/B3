@@ -28,7 +28,6 @@ define([
 
     initialize: function () {
       this.dropdown = false;
-
       _.bindAll(this, 'itemSelected');
       EventBus.bind('menu-item:select', this.itemSelected);
     },
