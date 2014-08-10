@@ -82,14 +82,6 @@ define([
       this.navigateToPostType('page', page, paged, trigger);
     },
 
-    navigateToCategory: function (category, paged, trigger) {
-      this.navigateToTaxonomy('category', category, paged, trigger);
-    },
-
-    navigateToTag: function (tag, paged, trigger) {
-      this.navigateToTaxonomy('post_tag', tag, paged, trigger);
-    },
-
     /**
      * [navigateToPostType description]
      * @param  {[type]} type    [description]
@@ -138,14 +130,14 @@ define([
     },
 
     /**
-     * Extract route string from absolute URL.
+     * Extract route string from an absolute URL.
      * @param  {String} url Absolute or relative URL.
      * @return {String}     Route.
      */
     _routeFromAbsoluteUrl: function (url) {
-      var re = new RegExp('^' + Settings.get('site_url') + '/', 'g');
-      route = url.replace(re, Settings.get('site_path'));
-      route = route.replace(/\/$/, '');
+      var re    = new RegExp('^' + Settings.get('site_url') + '/', 'g');
+      var route = url.replace(re, Settings.get('site_path'));
+      route     = route.replace(/\/$/, '');
       return route;
     },
 

@@ -92,7 +92,7 @@ define([
                                         : this.filter.byCategoryId(category);
 
         this._fetchPostsOfPage(this.page, this.taxonomy);
-        Navigator.navigateToCategory(slug, this.page, false);
+        Navigator.navigateToTaxonomy('category', slug, this.page, false);
       }.bind(this));
     },
 
@@ -115,7 +115,7 @@ define([
                                  : this.filter.byTagId(tag);
 
         this._fetchPostsOfPage(this.page, this.taxonomy);
-        Navigator.navigateToTag(slug, this.page, false);
+        Navigator.navigateToTaxonomy('post_tag', slug, this.page, false);
       }.bind(this));
     },
 

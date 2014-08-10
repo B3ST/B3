@@ -58,7 +58,7 @@ define([
      * @param  {Object} data Object containing the category slug
      */
     navigateToCategories: function (data) {
-      Navigator.navigateToCategory(data.slug, null, true);
+      Navigator.navigateToTaxonomy('category', data.slug, null, true);
     },
 
     /**
@@ -66,7 +66,7 @@ define([
      * @param  {Object} data Object containing the tag slug
      */
     navigateToTags: function (data) {
-      Navigator.navigateToTag(data.slug, null, true);
+      Navigator.navigateToTaxonomy('post_tag', data.slug, null, true);
     },
 
     /**
