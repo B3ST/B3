@@ -24,7 +24,7 @@ define([
 
   Settings.prototype.get = function (attr) {
     var field = this.attributes[attr];
-    if (_.isObject(field) && field.value) {
+    if (_.isObject(field) && !_.isUndefined(field.value)) {
       return field.value;
     } else {
       return field;
