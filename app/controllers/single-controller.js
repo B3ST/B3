@@ -192,7 +192,7 @@ define([
       this._fetchModelBy(model, field, value, page)
           .then(function (post) {
             if (post.get('ID') === pageForPosts) {
-              EventBus.trigger('archive:show', {});
+              EventBus.trigger('archive:show', { paged: page });
             } else {
               this.post = post;
               this.show(this._singlePostView(this.post, this.collection, page));
