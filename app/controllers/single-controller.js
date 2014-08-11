@@ -79,6 +79,7 @@ define([
 
     /**
      * Display a given post
+     *
      * @param  {Object} params Object containing the post
      */
     showPost: function (params) {
@@ -91,8 +92,7 @@ define([
     /**
      * Display a post given its unique identifier.
      *
-     * @param {int} id   Post ID.
-     * @param {int} page Page number.
+     * @param  {Object} params An Object containing the post ID and paged attribute
      */
     showPostById: function (params) {
       var id   = params.id,
@@ -104,8 +104,7 @@ define([
     /**
      * Display a post given its unique alphanumeric slug.
      *
-     * @param {String} slug Post slug.
-     * @param {int}    page Page number.
+     * @param  {Object} params An Object containing the post slug and paged attribute
      */
     showPostBySlug: function (params) {
       var slug = params.post || params.slug,
@@ -133,14 +132,22 @@ define([
      * situations, the page slug may consist of a slash-separated
      * path.
      *
-     * @param {String} slug Page slug.
-     * @param {int}    page Page number.
+     * @param  {Object} params An Object containing the page slug and paged attribute
      */
     showPageBySlug: function (params) {
       var slug  = params.page || params.slug,
           paged = params.paged || 1;
 
       this._loadModel(Page, 'slug', slug, paged);
+    },
+
+    /**
+     * Display a post given a custom type
+     *
+     * @param  {Object} params An Object containing the custom type and paged attribute
+     */
+    showCustomPost: function (params) {
+
     },
 
     /**
@@ -192,7 +199,7 @@ define([
       this._fetchModelBy(model, field, value, page)
           .then(function (post) {
             if (post.get('ID') === pageForPosts) {
-              EventBus.trigger('archive:show', {});
+              EventBus.trigger('archive:show', { paged: page });
             } else {
               this.post = post;
               this.show(this._singlePostView(this.post, this.collection, page));

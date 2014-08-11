@@ -20,8 +20,6 @@ define([
     postInitialize: function (options) {
       this.page       = options.page || 1;
       this.filter     = options.filter || new PostFilter();
-      this.taxonomies = options.taxonomies;
-      this.taxTypes   = {};
 
       this._bindToArchiveEvents();
       this._bindToSearchEvents();
@@ -76,8 +74,7 @@ define([
     /**
      * Display posts of a given category
      *
-     * @param  {string} category Category name
-     * @param  {int}    page     Page number
+     * @param  {Object} params Object containing the category name and page number
      */
     showPostByCategory: function (params) {
       var category = params.category || params.id,
@@ -99,8 +96,7 @@ define([
     /**
      * Display posts of a given tag
      *
-     * @param  {string} tag  Tag name
-     * @param  {int}    page Page number
+     * @param  {Object} params Object containing the tag name and page number
      */
     showPostByTag: function (params) {
       var tag      = params.post_tag || params.id,
@@ -122,8 +118,7 @@ define([
     /**
      * Display posts of a given author
      *
-     * @param  {string} author Author name
-     * @param  {int}    page   Page number
+     * @param  {Object} params Object containing the author and page number
      */
     showPostByAuthor: function (params) {
       var author = params.author || params.id,
@@ -136,6 +131,34 @@ define([
 
       this._fetchPostsOfPage(this.page);
       Navigator.navigateToAuthor(slug, this.page, false);
+    },
+
+    /**
+     * Display posts of a given date
+     *
+     * @param  {Object} params Object containing the date (year, month and/or day) and page number
+     */
+    showPostByDate: function (params) {
+      this.page   = params.paged || 1;
+      this.filter = this._dateFilter(params);
+
+      this._fetchPostsOfPage(this.page);
+      params = _.omit(params, 'paged');
+      _.each(params, function (value, key) {
+        if (!value) {
+          delete params[key];
+        }
+      });
+      Navigator.navigateToDate(params, this.page, false);
+    },
+
+    /**
+     * Display posts of a given taxonomy
+     *
+     * @param  {Object} params Object containing the taxonomy and page number
+     */
+    showCustomTaxonomy: function (params) {
+
     },
 
     /**
@@ -242,6 +265,16 @@ define([
             this.show(this._archiveView(this.posts, page, title, totalPages));
           }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
+    },
+
+    _dateFilter: function (params) {
+      var filter = new PostFilter();
+
+      if (params.hasOwnProperty('year')) { filter.withYear(params.year); }
+      if (params.hasOwnProperty('monthnum')) { filter.withMonth(params.monthnum); }
+      if (params.hasOwnProperty('day')) { filter.withDay(params.day); }
+
+      return filter;
     },
 
     /**

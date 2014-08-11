@@ -3,8 +3,9 @@
 define([
   'views/menu-item-view',
   'models/menu-item-model',
+  'models/settings-model',
   'controllers/bus/event-bus'
-], function (MenuItemView, MenuItem, EventBus) {
+], function (MenuItemView, MenuItem, Settings, EventBus) {
   'use strict';
 
   describe("MenuItemView", function() {
@@ -115,7 +116,7 @@ define([
 
         it("should trigger menu selection events", function() {
           this.view.$('.b3-menu-item').click();
-          expect(this.spy).toHaveBeenCalledWith('router:nav', {route: type + "about", options: {trigger: true}});
+          expect(this.spy).toHaveBeenCalledWith('router:nav', {route: Settings.get('site_url') + type + "about", options: {trigger: true}});
           expect(this.spy).toHaveBeenCalledWith('menu-item:select', {id: 1257, parent: 0});
         });
 

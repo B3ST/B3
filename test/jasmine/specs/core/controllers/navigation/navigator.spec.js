@@ -48,67 +48,67 @@ define([
 
       describe("When page is specified", function() {
         it("should return the route with corresponding page", function() {
-          var route = Navigator.getRouteOfType('post', 'slug', 1);
-          expect(route).toEqual('post/slug/page/1');
+          var route = Navigator.getRouteOfType('post', 'slug', 2);
+          expect(route).toEqual('post/slug/page/2');
         });
       });
     });
 
     sharedNavigationBehaviour(".navigateToHome", {
-      type: '',
-      url:  '',
+      type:         '',
+      url:          '',
       methodToTest: function (content, page) {
         Navigator.navigateToHome(content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToPost", {
-      type: 'post',
-      url:  'post/',
+      type:         'post',
+      url:          'post/',
       methodToTest: function (content, page) {
         Navigator.navigateToPost(content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToPage", {
-      type: 'page',
-      url:  '',
+      type:         'page',
+      url:          '',
       methodToTest: function (content, page) {
         Navigator.navigateToPage(content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToAuthor", {
-      type: 'author',
-      url:  'post/author/',
+      type:         'author',
+      url:          'post/author/',
       methodToTest: function (content, page) {
         Navigator.navigateToAuthor(content, page, false);
       }
     });
 
-    sharedNavigationBehaviour(".navigateToCategory", {
-      type: 'author',
-      url:  'post/category/',
+    sharedNavigationBehaviour(".navigateToTaxonomy", {
+      type:         'author',
+      url:          'post/category/',
       methodToTest: function (content, page) {
-        Navigator.navigateToCategory(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToTag", {
-      type: 'tag',
-      url:  'post/tag/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToTag(content, page, false);
+        Navigator.navigateToTaxonomy('category', content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToSearch", {
-      type: 'search',
-      url:  'search/',
+      type:         'search',
+      url:          'search/',
       methodToTest: function (content, page) {
         Navigator.navigateToSearch(content, page, false);
       }
-    })
+    });
+
+    sharedNavigationBehaviour(".navigateToDate", {
+      type:         '',
+      url:          'post/2014/03',
+      methodToTest: function (content, page) {
+        Navigator.navigateToDate({year: '2014', monthnum: '03'}, page, false);
+      }
+    });
   });
 
   var routes = {
@@ -270,8 +270,8 @@ define([
 
       describe("When specifying a page", function() {
         it("should trigger an event of router:nav to a " + options.type + " route", function() {
-          options.methodToTest(options.type, 1);
-          expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.url + options.type + '/page/1', options: {trigger: false}});
+          options.methodToTest(options.type, 2);
+          expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.url + options.type + '/page/2', options: {trigger: false}});
         });
       });
     });

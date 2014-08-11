@@ -103,9 +103,9 @@ define([
     });
 
     sharedBehaviourFor('page button', {
-      click:         '.pagination .number:eq(2) a',
+      click:         '.pagination .number:eq(1) a',
       event:         'archive:display:page',
-      event_options: {page: 2}
+      event_options: {paged: 2}
     });
   });
 

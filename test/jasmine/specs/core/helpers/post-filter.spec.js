@@ -60,6 +60,27 @@ define([
       });
     });
 
+    describe("withYear", function() {
+      it("should encode using the year parameter", function() {
+        this.filter.withYear('2013');
+        expect(this.filter.serialize()).toEqual('filter[year]=2013');
+      });
+    });
+
+    describe("withMonth", function() {
+      it("should encode using the month parameter", function() {
+        this.filter.withMonth('03');
+        expect(this.filter.serialize()).toEqual('filter[month]=03');
+      });
+    });
+
+    describe("withDay", function() {
+      it("should encode using the day parameter", function() {
+        this.filter.withDay('12');
+        expect(this.filter.serialize()).toEqual('filter[day]=12') ;
+      });
+    });
+
     describe(".onPage", function() {
       it("should encode using the page parameter", function() {
         this.filter.onPage(1);

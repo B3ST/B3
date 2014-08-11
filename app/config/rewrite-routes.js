@@ -9,32 +9,42 @@ define([
   'use strict';
 
   var methodNames = {
-    'root'    : 'showHome',
-    'post'    : 'showPostBySlug',
-    'page'    : 'showPageBySlug',
-    'author'  : 'showPostByAuthor',
-    'post_tag': 'showPostByTag',
-    'category': 'showPostByCategory',
-    'search'  : 'showSearch'
-    // 'attachment'
-    // 'date'
-    // 'post_format'
+    'archive': {
+      'root':   'showHome',
+      'date':   'showPostByDate',
+      'search': 'showSearch'
+    },
+    'post': {
+      'post':       'showPostBySlug',
+      'page':       'showPageBySlug',
+      'attachment': '',
+      'default':    'showCustomPost'
+    },
+    'taxonomy': {
+      'category': 'showPostByCategory',
+      'post_tag': 'showPostByTag',
+      'default' : 'showCustomTaxonomy'
+    },
+    'author'  : {
+      'author': 'showPostByAuthor',
+    }
   };
 
   function getWordPressRoutes () {
     var routes    = Settings.get('routes'),
         fragments = _.keys(routes),
-        methods   = {};
+        appRoutes = {};
 
     _.each(fragments, function (fragment) {
       var route = routes[fragment];
-      if (methodNames.hasOwnProperty(route.type)) {
-        var method = methodNames[route.type];
-        methods[fragment] = method;
+      if (methodNames.hasOwnProperty(route.object)) {
+        var methods = methodNames[route.object],
+            method = methods[route.type] || methods['default'];
+        appRoutes[fragment] = method;
       }
     });
 
-    return methods;
+    return appRoutes;
   }
 
   var RewriteRoutes = {

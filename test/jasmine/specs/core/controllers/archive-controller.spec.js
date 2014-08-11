@@ -328,7 +328,7 @@ define([
         controller.showPostByCategory({category: 'category'});
       },
       request: Settings.get('api_url') + '/posts?filter[category_name]=category&page=1',
-      route:   'post/category/category/page/1',
+      route:   'post/category/category',
       taxonomy: true
     });
 
@@ -339,18 +339,27 @@ define([
         controller.showPostByTag({post_tag: 'tag'});
       },
       request: Settings.get('api_url') + '/posts?filter[tag]=tag&page=1',
-      route:   'post/tag/tag/page/1',
+      route:   'post/tag/tag',
       taxonomy: true
     });
 
     sharedBehaviourForArchiveOfType('author', {
       method:        ".showPostByAuthor",
-      calledWith:    "author",
       runTestMethod: function  (controller) {
         controller.showPostByAuthor({author: 'author'});
       },
       request: Settings.get('api_url') + '/posts?filter[author_name]=author&page=1',
-      route:   'post/author/author/page/1',
+      route:   'post/author/author',
+      taxonomy: false
+    });
+
+    sharedBehaviourForArchiveOfType('date', {
+      method:        ".showPostByDate",
+      runTestMethod: function (controller) {
+        controller.showPostByDate({monthnum: '03', day: '12', year: '2014'});
+      },
+      request:  Settings.get('api_url') + '/posts?filter[year]=2014&filter[month]=03&filter[day]=12&page=1',
+      route:    'post/2014/03/12',
       taxonomy: false
     });
   });
@@ -456,7 +465,6 @@ define([
           app:   App,
           user:  this.user
         });
-        this.controller.taxTypes[type] = this.taxType;
         options.runTestMethod(this.controller);
 
         expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.route, options: {trigger: false}});

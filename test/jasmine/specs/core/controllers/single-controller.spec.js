@@ -256,7 +256,7 @@ define([
           options.runTestMethod(this.controller);
           this.server.respond();
 
-          expect(this.bus).toHaveBeenCalledWith('archive:show', {});
+          expect(this.bus).toHaveBeenCalledWith('archive:show', {paged: 1});
         });
 
         it("should display the corresponding view", function() {
