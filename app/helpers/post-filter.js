@@ -94,6 +94,39 @@ define([
     },
 
     /**
+     * Search filter using year
+     * @param  {string|array} year Year
+     * @return {PostFilter}        returns self
+     */
+    withYear: function (year) {
+      checkStringType(year);
+      this.filter.filter.year = year;
+      return this;
+    },
+
+    /**
+     * Search filter using month
+     * @param  {string|array} month Month
+     * @return {PostFilter}         returns self
+     */
+    withMonth: function (month) {
+      checkStringType(month);
+      this.filter.filter.month = month;
+      return this;
+    },
+
+    /**
+     * Search filter using day
+     * @param  {string|array} day Day
+     * @return {PostFilter}       returns self
+     */
+    withDay: function (day) {
+      checkStringType(day);
+      this.filter.filter.day = day;
+      return this;
+    },
+
+    /**
      * Search filter for searching terms
      * @param  {string} term Term to search for
      * @return {PostFilter}  returns self
