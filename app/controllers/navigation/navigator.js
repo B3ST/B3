@@ -82,26 +82,12 @@ define([
       this.navigateToPostType('page', page, paged, trigger);
     },
 
-    /**
-     * [navigateToPostType description]
-     * @param  {[type]} type    [description]
-     * @param  {[type]} slug    [description]
-     * @param  {[type]} paged   [description]
-     * @param  {[type]} trigger [description]
-     */
     navigateToPostType: function (type, post, paged, trigger) {
       var routeParams = {paged: paged};
       routeParams[type] = post;
       this._navigateToType(this.routes[type], routeParams, trigger);
     },
 
-    /**
-     * [navigateToTaxonomy description]
-     * @param  {[type]} taxonomy [description]
-     * @param  {[type]} term     [description]
-     * @param  {[type]} paged    [description]
-     * @param  {[type]} trigger  [description]
-     */
     navigateToTaxonomy: function (taxonomy, term, paged, trigger) {
       var routeParams = {paged: paged};
       routeParams[taxonomy] = term;
@@ -120,9 +106,9 @@ define([
     },
 
     getPagedRoute: function (filter, page) {
-      var url   = schema[filter.get('paging-schema')];
-      var regex = /(page\/\d)|(&page=\d)/;
-      var route = this.getRoute();
+      var url   = schema[filter.get('paging-schema')],
+          regex = /(page\/\d)|(&page=\d)/,
+          route = this.getRoute();
 
       route = (routeIsPaged(route)) ? route.replace(regex, url(page))
                                     : route + '/' + url(page);
@@ -135,10 +121,8 @@ define([
      * @return {String}     Route.
      */
     _routeFromAbsoluteUrl: function (url) {
-      var re    = new RegExp('^' + Settings.get('site_url') + '/', 'g');
-      var route = url.replace(re, Settings.get('site_path'));
-      route     = route.replace(/\/$/, '');
-      return route;
+      var re = new RegExp('^' + Settings.get('site_url') + '/', 'g');
+      return url.replace(re, '');
     },
 
     _navigateToType: function (type, data, trigger) {

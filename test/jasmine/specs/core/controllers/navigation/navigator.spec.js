@@ -48,8 +48,8 @@ define([
 
       describe("When page is specified", function() {
         it("should return the route with corresponding page", function() {
-          var route = Navigator.getRouteOfType('post', 'slug', 1);
-          expect(route).toEqual('post/slug/page/1');
+          var route = Navigator.getRouteOfType('post', 'slug', 2);
+          expect(route).toEqual('post/slug/page/2');
         });
       });
     });
@@ -86,19 +86,11 @@ define([
       }
     });
 
-    sharedNavigationBehaviour(".navigateToCategory", {
+    sharedNavigationBehaviour(".navigateToTaxonomy", {
       type: 'author',
       url:  'post/category/',
       methodToTest: function (content, page) {
-        Navigator.navigateToCategory(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToTag", {
-      type: 'tag',
-      url:  'post/tag/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToTag(content, page, false);
+        Navigator.navigateToTaxonomy('category', content, page, false);
       }
     });
 
@@ -270,8 +262,8 @@ define([
 
       describe("When specifying a page", function() {
         it("should trigger an event of router:nav to a " + options.type + " route", function() {
-          options.methodToTest(options.type, 1);
-          expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.url + options.type + '/page/1', options: {trigger: false}});
+          options.methodToTest(options.type, 2);
+          expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.url + options.type + '/page/2', options: {trigger: false}});
         });
       });
     });
