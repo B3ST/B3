@@ -126,8 +126,8 @@ define([
      * @return {String}     Route.
      */
     _routeFromAbsoluteUrl: function (url) {
-      var re = new RegExp('^' + Settings.get('site_url') + '/', 'g');
-      return url.replace(re, '');
+      var re = new RegExp('^' + Settings.get('site_url') + '/(.+?)/?$', 'g');
+      return url.replace(re, '$1');
     },
 
     _navigateToType: function (type, data, trigger) {
