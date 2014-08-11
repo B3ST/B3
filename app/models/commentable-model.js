@@ -14,7 +14,7 @@ define([
     },
 
     fetchComments: function (id) {
-      return this._fetchMeta(id, 'replies', Comments);
+      return this._fetchMeta(id, 'b3:replies', Comments);
     },
 
     _fetchMeta: function (id, link, collection) {
