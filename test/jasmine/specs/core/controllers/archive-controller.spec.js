@@ -328,7 +328,7 @@ define([
         controller.showPostByCategory({category: 'category'});
       },
       request: Settings.get('api_url') + '/posts?filter[category_name]=category&page=1',
-      route:   'post/category/category/page/1',
+      route:   'post/category/category',
       taxonomy: true
     });
 
@@ -339,7 +339,7 @@ define([
         controller.showPostByTag({post_tag: 'tag'});
       },
       request: Settings.get('api_url') + '/posts?filter[tag]=tag&page=1',
-      route:   'post/tag/tag/page/1',
+      route:   'post/tag/tag',
       taxonomy: true
     });
 
@@ -350,7 +350,7 @@ define([
         controller.showPostByAuthor({author: 'author'});
       },
       request: Settings.get('api_url') + '/posts?filter[author_name]=author&page=1',
-      route:   'post/author/author/page/1',
+      route:   'post/author/author',
       taxonomy: false
     });
   });
@@ -456,7 +456,6 @@ define([
           app:   App,
           user:  this.user
         });
-        this.controller.taxTypes[type] = this.taxType;
         options.runTestMethod(this.controller);
 
         expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.route, options: {trigger: false}});

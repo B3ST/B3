@@ -20,8 +20,6 @@ define([
     postInitialize: function (options) {
       this.page       = options.page || 1;
       this.filter     = options.filter || new PostFilter();
-      this.taxonomies = options.taxonomies;
-      this.taxTypes   = {};
 
       this._bindToArchiveEvents();
       this._bindToSearchEvents();
