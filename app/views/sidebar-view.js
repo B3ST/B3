@@ -7,19 +7,30 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
+  'controllers/navigation/navigator',
   'widget-areas/sidebar-template'
   /*jshint unused:false */
-], function ($, _, Backbone, Marionette, dust, dustMarionette) {
+], function ($, _, Backbone, Marionette, dust, dustMarionette, Navigator) {
   'use strict';
 
   var SidebarView = Backbone.Marionette.ItemView.extend({
     modelEvents: {
-      'change': 'render'
+      'change':  'render'
+    },
+
+    events: {
+      'click a': 'navigate'
     },
 
     initialize: function (options) {
       this.model.fetch();
       this.template = options.template || 'widget-areas/sidebar-template.dust';
+    },
+
+    /** TODO: This should be moved to a SidebarController */
+    navigate: function (event) {
+      event.preventDefault();
+      Navigator.navigate(event.currentTarget.href, true);
     },
 
     serializeData: function () {
