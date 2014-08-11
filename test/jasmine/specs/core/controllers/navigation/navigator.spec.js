@@ -55,52 +55,60 @@ define([
     });
 
     sharedNavigationBehaviour(".navigateToHome", {
-      type: '',
-      url:  '',
+      type:         '',
+      url:          '',
       methodToTest: function (content, page) {
         Navigator.navigateToHome(content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToPost", {
-      type: 'post',
-      url:  'post/',
+      type:         'post',
+      url:          'post/',
       methodToTest: function (content, page) {
         Navigator.navigateToPost(content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToPage", {
-      type: 'page',
-      url:  '',
+      type:         'page',
+      url:          '',
       methodToTest: function (content, page) {
         Navigator.navigateToPage(content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToAuthor", {
-      type: 'author',
-      url:  'post/author/',
+      type:         'author',
+      url:          'post/author/',
       methodToTest: function (content, page) {
         Navigator.navigateToAuthor(content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToTaxonomy", {
-      type: 'author',
-      url:  'post/category/',
+      type:         'author',
+      url:          'post/category/',
       methodToTest: function (content, page) {
         Navigator.navigateToTaxonomy('category', content, page, false);
       }
     });
 
     sharedNavigationBehaviour(".navigateToSearch", {
-      type: 'search',
-      url:  'search/',
+      type:         'search',
+      url:          'search/',
       methodToTest: function (content, page) {
         Navigator.navigateToSearch(content, page, false);
       }
-    })
+    });
+
+    sharedNavigationBehaviour(".navigateToDate", {
+      type:         '',
+      url:          'post/2014/03',
+      methodToTest: function (content, page) {
+        Navigator.navigateToDate({year: '2014', monthnum: '03'}, page, false);
+      }
+    });
   });
 
   var routes = {

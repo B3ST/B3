@@ -63,15 +63,20 @@ define([
     },
 
     navigateToHome: function (home, paged, trigger) {
-      this._navigateToType(this.routes.root, {paged: paged}, trigger);
+      this._navigateToType(this.routes.root[0], {paged: paged}, trigger);
     },
 
     navigateToSearch: function (search, paged, trigger) {
-      this._navigateToType(this.routes.search, {search: search, paged: paged}, trigger);
+      this._navigateToType(this.routes.search[0], {search: search, paged: paged}, trigger);
     },
 
     navigateToAuthor: function (author, paged, trigger) {
-      this._navigateToType(this.routes.author, {author: author, paged: paged}, trigger);
+      this._navigateToType(this.routes.author[0], {author: author, paged: paged}, trigger);
+    },
+
+    navigateToDate: function (date, paged, trigger) {
+      var numValues = _.keys(date).length;
+      this._navigateToType(this.routes.date[numValues - 1], _.extend(date, {paged: paged}), trigger);
     },
 
     navigateToPost: function (post, paged, trigger) {
@@ -85,13 +90,13 @@ define([
     navigateToPostType: function (type, post, paged, trigger) {
       var routeParams = {paged: paged};
       routeParams[type] = post;
-      this._navigateToType(this.routes[type], routeParams, trigger);
+      this._navigateToType(this.routes[type][0], routeParams, trigger);
     },
 
     navigateToTaxonomy: function (taxonomy, term, paged, trigger) {
       var routeParams = {paged: paged};
       routeParams[taxonomy] = term;
-      this._navigateToType(this.routes[taxonomy], routeParams, trigger);
+      this._navigateToType(this.routes[taxonomy][0], routeParams, trigger);
     },
 
     getRouteOfType: function (type, slug, paged) {
@@ -126,7 +131,7 @@ define([
     },
 
     _navigateToType: function (type, data, trigger) {
-      var route = buildUri(type[0], data);
+      var route = buildUri(type, data);
       this.navigate(route, trigger);
     },
 
