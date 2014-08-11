@@ -7,12 +7,6 @@ if (!defined( 'WPINC' )) {
     die;
 }
 
-/**
- * FIXME: Eventually move this to its own plugin.
- */
-require_once get_template_directory() . '/b3-rest-api/b3-rest-api.php';
-require_once get_template_directory() . '/b3-rest-api/helpers/B3_RoutesHelper.php';
-
 class B3Theme {
 
     /**
@@ -133,7 +127,7 @@ class B3Theme {
             return;
         }
 
-        $site_url_components = parse_url( site_url() );
+        $site_url = parse_url( site_url() );
         $routes              = array();
 
         if (class_exists( 'B3_RoutesHelper' )) {
@@ -146,7 +140,7 @@ class B3Theme {
             'api'       => home_url( json_get_url_prefix() ),
             'nonce'     => wp_create_nonce( 'wp_json' ),
             'api_url'   => home_url( json_get_url_prefix() ),
-            'site_path' => (string) $site_url_components['path'],
+            'site_path' => (string) isset( $site_url['path'] ) ? $site_url['path'] : '',
             'root_url'  => get_stylesheet_directory_uri(),
             'site_url'  => site_url(),
             'routes'    => $routes,
