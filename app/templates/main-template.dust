@@ -10,7 +10,7 @@
       </span>
   </div>
 
-  {! Do change this and style at will :) !}
+  {! Categories !}
   <div class="b3-post-categories">
   {#terms.category}
     <span class="label-category">
@@ -20,14 +20,16 @@
   {/terms.category}
   </div>
 
+  {! Tags !}
   <div class="b3-post-tags">
-  {# terms.post_tag }
+  {#terms.post_tag}
     <span class="label label-primary">
       <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
     </span>
-  {/ terms.post_tag }
+    {~s}
+  {/terms.post_tag}
   </div>
-{/ entry-meta }
+{/entry-meta}
 
 {! Previous/next pager !}
 {< pager }
