@@ -2,13 +2,12 @@
 
 'use strict';
 
-var gulp          = require('gulp');
-var gutil         = require('gulp-util');
-var $             = require('gulp-load-plugins')();
-var bowerFiles    = require('bower-files')({'dev': true});
-var runSequence   = require('run-sequence');
-var browserSync   = require('browser-sync');
-var reload        = browserSync.reload;
+var gulp        = require('gulp'),
+    gutil       = require('gulp-util'),
+    $           = require('gulp-load-plugins')(),
+    bowerFiles  = require('bower-files')({'dev': true}),
+    browserSync = require('browser-sync'),
+    reload      = browserSync.reload;
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -31,11 +30,10 @@ function _onError (error) {
  */
 gulp.task('build:styles', function () {
   return gulp.src(['app/styles/less/style.less'])
+    .pipe($.plumber())
     .pipe($.less())
-    .on('error', _onError)
+      .on('error', _onError)
     .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
-    .pipe($.csslint())
-    .on('error', _onError)
     .pipe($.minifyCss())
     .pipe($.concat('style.css'))
     .pipe(gulp.dest('dist/assets/styles/'))
@@ -48,8 +46,11 @@ gulp.task('build:styles', function () {
 gulp.task('build:scripts', function () {
   return gulp.src('app/**/*.js')
     .pipe($.changed('dist/'))
-    //.pipe($.uglify())
-    //.on('error', _onError)
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+      .pipe($.uglify())
+        .on('error', _onError)
+    .pipe($.sourcemaps.write())
     .pipe(gulp.dest('dist/'))
     .pipe($.size({title: 'scripts'}));
 });
@@ -60,8 +61,11 @@ gulp.task('build:scripts', function () {
 gulp.task('build:templates', function () {
   return gulp.src('app/templates/**/*.{html,dust}')
     .pipe($.changed('dist/templates/'))
-    .pipe($.dust())
-    .on('error', _onError)
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+      .pipe($.dust())
+        .on('error', _onError)
+    .pipe($.sourcemaps.write())
     .pipe(gulp.dest('dist/templates/'))
     .pipe($.size({title: 'templates'}));
 });
@@ -112,6 +116,7 @@ gulp.task('bower', function () {
 gulp.task('jshint', function () {
   return gulp.src('app/**/*.js')
     .pipe(reload({stream: true, once: true}))
+    .pipe($.plumber())
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
@@ -122,8 +127,7 @@ gulp.task('jshint', function () {
  */
 gulp.task('jasmine', function () {
   // var specRunner = require('./test/jasmine/config/test-init.js');
-
-  // TODO: Jasmine + RequireJS
+  //
   return gulp.src('test/jasmine/config/test-init.js')
     .pipe($.coverage.instrument({
       pattern: ['**/*.spec.js'],
@@ -181,7 +185,6 @@ gulp.task('watch:server', function () {
     },
     host: 'localhost',
     port: 3000,
-    // browser: ["google chrome", "firefox"],
     logLevel: 'debug'
   });
 
@@ -222,20 +225,20 @@ gulp.task('clean', function () {
 /**
  * gulp rebuild
  */
-gulp.task('rebuild', function (cb) {
-  runSequence('clean', ['build'], cb);
+gulp.task('rebuild', ['clean'], function () {
+  gulp.start('build');
 });
 
 /**
  * gulp build
  */
-gulp.task('build', function (cb) {
-  runSequence('bower', ['jshint', 'build:scripts', 'build:templates', 'build:styles', 'build:images', 'build:fonts'], cb);
+gulp.task('build', ['bower'], function () {
+  gulp.start('jshint', 'build:scripts', 'build:templates', 'build:styles', 'build:images', 'build:fonts');
 });
 
 /**
  * gulp
  */
-gulp.task('default', ['clean'], function () {
-  gulp.start(['build']);
+gulp.task('default', function () {
+  gulp.start('build');
 });

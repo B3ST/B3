@@ -40,8 +40,10 @@
     "gulp-load-plugins": "^0.5.3",
     "gulp-minify-css": "^0.3.6",
     "gulp-phpunit": "^0.5.3",
+    "gulp-plumber": "^0.6.4",
     "gulp-rimraf": "^0.1.0",
     "gulp-size": "^0.4.0",
+    "gulp-sourcemaps": "^1.1.1",
     "gulp-uglify": "^0.3.1",
     "gulp-uncss": "^0.4.5",
     "gulp-useref": "^0.5.0",
@@ -49,8 +51,7 @@
     "jasmine-runner-node": "0.0.1",
     "jshint": "^2.5.2",
     "jshint-stylish": "^0.4.0",
-    "requirejs": "^2.1.14",
-    "run-sequence": "^0.3.6"
+    "requirejs": "^2.1.14"
   },
   "main": "./server/server",
   "keywords": []
