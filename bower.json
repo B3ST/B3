@@ -27,9 +27,9 @@
     "momentjs": "~2.8.1"
   },
   "devDependencies": {
-    "jasmine": "~2.0.0",
+    "jasmine": "~2.0.3",
     "jasmine-jquery": "~2.0.5",
-    "sinon": "~1.10.2",
+    "sinon": "http://sinonjs.org/releases/sinon-1.10.3.js",
     "socket.io": "~1.0.6",
     "browser-sync-client": "shakyshane/browser-sync-client#~0.3.1"
   },
@@ -69,12 +69,9 @@
         "lib/jasmine-core/jasmine.js",
         "lib/jasmine-core/jasmine-html.js",
         "lib/jasmine-core/jasmine.css",
-        "lib/jasmine-core/boot.js",
+        "lib/jasmine-core/boot/boot.js",
         "lib/jasmine-core/json2.js"
       ]
-    },
-    "sinon": {
-      "main": "i18n.js"
     },
     "socket.io": {
       "main": [
