@@ -84,6 +84,8 @@ define([
         this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
         this.view.render();
 
+        $.fx.off;
+
         var template = new ReplyFormView({
           parentView: this.view,
           user:       this.user,
@@ -96,18 +98,11 @@ define([
         var button = this.view.$('.b3-reply-post');
         var box;
 
-        runs(function() {
-          button.click();
-        });
+        button.click();
 
-        waitsFor(function() {
-          box = $(button).next('#b3-replyform');
-          return box.length > 0;
-        }, "the comment form to appear.", 750);
-
-        runs(function() {
-          expect(box[0].isEqualNode(template)).toBeTruthy();
-        });
+        box = $(button).next('#b3-replyform');
+        expect(box.length).toEqual(1);
+        expect(box[0].isEqualNode(template)).toBeTruthy();
       });
     });
 

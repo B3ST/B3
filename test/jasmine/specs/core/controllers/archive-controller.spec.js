@@ -89,7 +89,7 @@ define([
     describe(".showHome", function() {
       describe("When home is not a page", function() {
         it("should display the archive", function() {
-          spyOn(Settings, 'get').andCallFake(function () {
+          spyOn(Settings, 'get').and.callFake(function () {
             return 0;
           });
           this.archive = spyOn(ArchiveController.prototype, 'showArchive');
@@ -106,7 +106,7 @@ define([
 
       describe("When home is set to a page", function() {
         it("should display that page", function() {
-          spyOn(Settings, 'get').andCallFake(function () {
+          spyOn(Settings, 'get').and.callFake(function () {
             return 100;
           });
           this.bus = spyOn(EventBus, 'trigger');
@@ -136,7 +136,7 @@ define([
         });
 
         this.bus        = spyOn(CommandBus, 'execute');
-        this.posts      = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.posts      = spyOn(Posts.prototype, 'fetch').and.callThrough();
         this.controller = new ArchiveController({
           posts: new Posts(),
           app:   App,
@@ -179,7 +179,7 @@ define([
         });
 
         it("should show the archive view", function() {
-          expect(this.spy.mostRecentCall.args[0] instanceof ArchiveView).toBeTruthy();
+          expect(this.spy.calls.mostRecent() typeof ArchiveView).toBeTruthy();
         });
       });
     });
@@ -256,8 +256,8 @@ define([
       });
 
       it("should display the corresponding view", function() {
-        var view = this.appShow.mostRecentCall.args[0];
-        expect(view instanceof ArchiveView).toBeTruthy();
+        var view = this.appShow.calls.mostRecent();
+        expect(view typeof ArchiveView).toBeTruthy();
         expect(view.collection).toEqual(this.posts);
       });
     });
@@ -274,8 +274,8 @@ define([
 
         this.controller.displayResults({results: this.posts, filter: null});
 
-        var view = this.appShow.mostRecentCall.args[0];
-        expect(view instanceof ArchiveView).toBeTruthy();
+        var view = this.appShow.calls.mostRecent();
+        expect(view typeof ArchiveView).toBeTruthy();
         expect(view.collection).toEqual(this.posts);
       });
     });
@@ -292,8 +292,8 @@ define([
 
         this.controller.displayResults();
 
-        var view = this.appShow.mostRecentCall.args[0];
-        expect(view instanceof NotFoundView).toBeTruthy();
+        var view = this.appShow.calls.mostRecent();
+        expect(view typeof NotFoundView).toBeTruthy();
       });
     });
 
@@ -364,21 +364,10 @@ define([
     });
   });
 
-  function stubServer (options) {
-    var server = sinon.fakeServer.create();
-    server.respondWith(
-      'GET',
-      options.url,
-      [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
-    );
-
-    return server;
-  }
-
   function sharedBehaviourForArchiveOfType (type, options) {
     describe(options.method, function() {
       beforeEach(function() {
-        this.request = spyOn(RequestBus, 'request').andCallFake(function () {
+        this.request = spyOn(RequestBus, 'request').and.callFake(function () {
           return new Taxonomy();
         });
       });
@@ -398,7 +387,7 @@ define([
       }
 
       it("should fetch the corresponding posts of a given " + type, function() {
-        this.fetch      = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.fetch      = spyOn(Posts.prototype, 'fetch').and.callThrough();
         this.controller = new ArchiveController({
           posts: new Posts(),
           app:   App,
@@ -430,8 +419,8 @@ define([
           options.runTestMethod(this.controller);
           this.server.respond();
 
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof ArchiveView).toBeTruthy();
+          var view = this.spy.calls.mostRecent();
+          expect(view typeof ArchiveView).toBeTruthy();
         });
       });
 
@@ -453,8 +442,8 @@ define([
           options.runTestMethod(this.controller);
           this.server.respond();
 
-          var view = this.spy.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
+          var view = this.spy.calls.mostRecent();
+          expect(view typeof NotFoundView).toBeTruthy();
         });
       });
 
@@ -475,9 +464,9 @@ define([
   function sharedBehaviourForPaging (method, options) {
     describe(method, function() {
       beforeEach(function() {
-        this.fetch = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.fetch = spyOn(Posts.prototype, 'fetch').and.callThrough();
         this.bus   = spyOn(EventBus, 'trigger');
-        spyOn(Navigator, 'getRoute').andCallFake(function () {
+        spyOn(Navigator, 'getRoute').and.callFake(function () {
           return 'url/page/' + options.before;
         });
         this.posts = [

@@ -29,8 +29,8 @@ define([
       });
 
       it("should display a loading view", function() {
-        var view = this.show.mostRecentCall.args[0];
-        expect(view instanceof LoadingView).toBeTruthy();
+        var view = this.show.calls.mostRecent();
+        expect(view typeof LoadingView).toBeTruthy();
       });
 
       it("should bind to its destroy event", function() {
