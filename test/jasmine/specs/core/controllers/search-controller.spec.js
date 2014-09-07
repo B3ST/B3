@@ -58,7 +58,7 @@ define([
 
     describe(".showSearchResults", function() {
       it("should query with the given term", function() {
-        this.fetch      = spyOn(Posts.prototype, 'fetch').andCallThrough();
+        this.fetch      = spyOn(Posts.prototype, 'fetch').and.callThrough();
         this.controller = getController();
 
         this.controller.showSearchResults({s: 'term'});
@@ -135,17 +135,6 @@ define([
       });
     });
   });
-
-  function stubServer (options) {
-    var server = sinon.fakeServer.create();
-    server.respondWith(
-      'GET',
-      options.url,
-      [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
-    );
-
-    return server;
-  }
 
   function getController() {
     return new SearchController({

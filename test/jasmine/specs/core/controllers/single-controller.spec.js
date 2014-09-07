@@ -113,8 +113,8 @@ define([
       });
 
       it("should display the corresponding view", function() {
-        var view = this.appShow.mostRecentCall.args[0];
-        expect(view instanceof SinglePostView).toBeTruthy();
+        var view = this.appShow.calls.mostRecent();
+        expect(view typeof SinglePostView).toBeTruthy();
         expect(view.collection).toEqual(this.comments);
         expect(view.model).toEqual(this.post);
       });
@@ -151,12 +151,12 @@ define([
         this.controller = new SingleController({ app: App });
         this.controller.showPost({post: this.post });
 
-        var view = this.appShow.mostRecentCall.args[0];
-        expect(view instanceof SinglePostView).toBeTruthy();
+        var view = this.appShow.calls.mostRecent();
+        expect(view typeof SinglePostView).toBeTruthy();
       });
 
       it("should fetch the corresponding post comments", function() {
-        this.spy  = spyOn(Post.prototype, 'fetchComments').andCallThrough();
+        this.spy  = spyOn(Post.prototype, 'fetchComments').and.callThrough();
 
         this.controller = new SingleController({ app: App });
         this.controller.showPost({post: this.post });
@@ -229,7 +229,7 @@ define([
   function sharedPageBehaviourFor (method, options) {
     describe(method, function() {
       it("should fetch the selected page", function() {
-        this.fetch      = spyOn(Page.prototype, 'fetch').andCallThrough();
+        this.fetch      = spyOn(Page.prototype, 'fetch').and.callThrough();
         this.controller = new SingleController({ app: App });
 
         options.runTestMethod(this.controller);
@@ -247,7 +247,7 @@ define([
         });
 
         it("should trigger show:archive event if the page is supposed to display posts", function() {
-          spyOn(Settings, 'get').andCallFake(function () {
+          spyOn(Settings, 'get').and.callFake(function () {
             return 1;
           });
           this.bus = spyOn(EventBus, 'trigger');
@@ -267,13 +267,13 @@ define([
           options.runTestMethod(this.controller);
           this.server.respond();
 
-          var view = this.appShow.mostRecentCall.args[0];
-          expect(view instanceof SinglePostView).toBeTruthy();
+          var view = this.appShow.calls.mostRecent();
+          expect(view typeof SinglePostView).toBeTruthy();
         });
 
         it("should fetch the comments of the returned post", function() {
           this.url      = 'http://root.org/page/1/comments';
-          this.fetch    = spyOn(SingleController.prototype, '_loadComments').andCallThrough();
+          this.fetch    = spyOn(SingleController.prototype, '_loadComments').and.callThrough();
           this.response = new Page({ID: 1, title: 'title', meta: { links: {replies: this.url }}});
           this.server   = stubServer({
             response: this.response.toJSON(),
@@ -305,8 +305,8 @@ define([
         });
 
         it("should display a not found view", function() {
-          var view = this.appShow.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
+          var view = this.appShow.calls.mostRecent();
+          expect(view typeof NotFoundView).toBeTruthy();
         });
       });
     });
@@ -332,7 +332,7 @@ define([
       });
 
      it("should fetch the selected post", function() {
-        this.fetch      = spyOn(Post.prototype, 'fetch').andCallThrough();
+        this.fetch      = spyOn(Post.prototype, 'fetch').and.callThrough();
         this.controller = new SingleController({
           app: App,
         });
@@ -343,7 +343,7 @@ define([
 
       describe("When fetching is successful", function() {
         beforeEach(function() {
-          this.fetch    = spyOn(SingleController.prototype, '_loadComments').andCallThrough();
+          this.fetch    = spyOn(SingleController.prototype, '_loadComments').and.callThrough();
           this.response = this.post;
           this.server   = stubServer({
             response: this.response.toJSON(),
@@ -362,8 +362,8 @@ define([
         });
 
         it("should display the corresponding view", function() {
-          var view = this.appShow.mostRecentCall.args[0];
-          expect(view instanceof SinglePostView).toBeTruthy();
+          var view = this.appShow.calls.mostRecent();
+          expect(view typeof SinglePostView).toBeTruthy();
         });
 
         it("should fetch the comments of the returned post", function() {
@@ -389,21 +389,10 @@ define([
         });
 
         it("should display a not found view", function() {
-          var view = this.appShow.mostRecentCall.args[0];
-          expect(view instanceof NotFoundView).toBeTruthy();
+          var view = this.appShow.calls.mostRecent();
+          expect(view typeof NotFoundView).toBeTruthy();
         });
       });
     });
-  }
-
-  function stubServer (options) {
-    var server = sinon.fakeServer.create();
-    server.respondWith(
-      'GET',
-      options.url,
-      [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
-    );
-
-    return server;
   }
 });

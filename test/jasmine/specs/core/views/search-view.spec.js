@@ -10,7 +10,7 @@ define([
 
   describe("SearchView", function() {
     beforeEach(function() {
-      spyOn(Navigator, 'getRoute').andCallFake(function () {
+      spyOn(Navigator, 'getRoute').and.callFake(function () {
         return 'some/url';
       });
       this.view = new SearchView({});
