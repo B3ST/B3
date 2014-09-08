@@ -29,7 +29,7 @@
   "devDependencies": {
     "jasmine": "~2.0.3",
     "jasmine-jquery": "~2.0.5",
-    "sinon": "http://sinonjs.org/releases/sinon-1.10.3.js",
+    "sinon": "~1.10.3",
     "socket.io": "~1.0.6",
     "browser-sync-client": "shakyshane/browser-sync-client#~0.3.1"
   },
@@ -63,6 +63,9 @@
     },
     "i18n": {
       "main": "i18n.js"
+    },
+    "sinon": {
+      "main": "lib/sinon.js"
     },
     "jasmine": {
       "main": [
