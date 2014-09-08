@@ -2,7 +2,7 @@
 
 define([
   'controllers/loading-controller',
-  'controllers/bus/command-bus',
+  'buses/command-bus',
   'views/loading-view',
   'app'
 ], function (LoadingController, CommandBus, LoadingView, App) {

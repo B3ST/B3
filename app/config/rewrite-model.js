@@ -6,7 +6,7 @@ define([
   'backbone',
   'models/user-model',
   'models/settings-model',
-  'controllers/bus/command-bus'
+  'buses/command-bus'
 ], function ($, _, Backbone, User, Settings, CommandBus) {
   'use strict';
 

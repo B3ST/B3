@@ -4,7 +4,7 @@ define([
   'models/comment-model',
   'models/post-model',
   'models/user-model',
-  'controllers/bus/event-bus',
+  'buses/event-bus',
   'views/reply-form-view'
 ], function ($, CommentView, Comment, Post, User, EventBus, ReplyFormView) {
   'use strict';

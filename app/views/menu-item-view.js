@@ -9,7 +9,7 @@ define([
   'dust.marionette',
   'models/menu-item-model',
   'models/settings-model',
-  'controllers/bus/event-bus',
+  'buses/event-bus',
   'controllers/navigation/navigator',
   'navigation/menus/menu-item-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {

@@ -2,7 +2,7 @@
 
 define([
   'controllers/navigation/navigator',
-  'controllers/bus/event-bus',
+  'buses/event-bus',
   'models/settings-model'
 ], function (Navigator, EventBus, Settings) {
   'use strict';

@@ -4,7 +4,7 @@ define([
   'views/menu-item-view',
   'models/menu-item-model',
   'models/settings-model',
-  'controllers/bus/event-bus'
+  'buses/event-bus'
 ], function (MenuItemView, MenuItem, Settings, EventBus) {
   'use strict';
 

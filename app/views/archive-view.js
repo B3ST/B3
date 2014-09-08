@@ -8,8 +8,8 @@ define([
   'dust',
   'dust.marionette',
   'helpers/post-filter',
-  'controllers/bus/event-bus',
-  'controllers/bus/command-bus',
+  'buses/event-bus',
+  'buses/command-bus',
   // Shims
   'main-template',
   'archive/posts-template'

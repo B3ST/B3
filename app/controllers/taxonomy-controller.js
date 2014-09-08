@@ -5,7 +5,7 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'controllers/bus/request-bus'
+  'buses/request-bus'
 ], function ($, _, Backbone, Marionette, RequestBus) {
   'use strict';
 

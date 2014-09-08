@@ -2,7 +2,7 @@
 
 define([
   'controllers/taxonomy-controller',
-  'controllers/bus/request-bus',
+  'buses/request-bus',
   'collections/taxonomy-collection',
   'models/taxonomy-model',
   'models/settings-model',

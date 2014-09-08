@@ -8,7 +8,7 @@ define([
   'dust',
   'dust.marionette',
   'models/settings-model',
-  'controllers/bus/event-bus',
+  'buses/event-bus',
   'controllers/navigation/navigator',
   'views/comment-view',
   'views/reply-form-view',

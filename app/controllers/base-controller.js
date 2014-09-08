@@ -5,8 +5,8 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'controllers/bus/command-bus',
-  'controllers/bus/event-bus',
+  'buses/command-bus',
+  'buses/event-bus',
   'views/not-found-view'
 ], function ($, _, Backbone, Marionette, CommandBus, EventBus, NotFoundView) {
   'use strict';

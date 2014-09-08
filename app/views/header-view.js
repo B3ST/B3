@@ -10,7 +10,7 @@ define([
   'models/menu-model',
   'views/menu-view',
   'views/search-view',
-  'controllers/bus/event-bus',
+  'buses/event-bus',
   'controllers/navigation/navigator',
   'header-template'
 ], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, SearchView, EventBus, Navigator) {

@@ -7,7 +7,7 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
-  'controllers/bus/command-bus',
+  'buses/command-bus',
   'loading-template'
   /* jshint unused: false */
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, CommandBus) {

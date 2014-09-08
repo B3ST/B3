@@ -9,8 +9,8 @@ define([
   'collections/comment-collection',
   'views/single-post-view',
   'views/not-found-view',
-  'controllers/bus/event-bus',
-  'controllers/bus/command-bus',
+  'buses/event-bus',
+  'buses/command-bus',
   'app',
   'sinon'
 ], function (SingleController, Settings, User, Post, Page, Comment, Posts, Comments, SinglePostView, NotFoundView, EventBus, CommandBus, App) {

@@ -9,8 +9,8 @@ define([
   'models/settings-model',
   'collections/post-collection',
   'controllers/base-controller',
-  'controllers/bus/event-bus',
-  'controllers/bus/request-bus',
+  'buses/event-bus',
+  'buses/request-bus',
   'controllers/navigation/navigator',
   'views/archive-view'
 ], function ($, _, Backbone, Marionette, PostFilter, Settings, Posts, BaseController, EventBus, RequestBus, Navigator, ArchiveView) {

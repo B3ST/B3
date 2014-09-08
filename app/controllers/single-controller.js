@@ -7,7 +7,7 @@ define([
   'marionette',
   'helpers/post-filter',
   'controllers/base-controller',
-  'controllers/bus/event-bus',
+  'buses/event-bus',
   'controllers/navigation/navigator',
   'collections/comment-collection',
   'models/settings-model',

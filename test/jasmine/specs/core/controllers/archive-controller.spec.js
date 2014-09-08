@@ -3,9 +3,9 @@
 define([
   'app',
   'controllers/archive-controller',
-  'controllers/bus/command-bus',
-  'controllers/bus/event-bus',
-  'controllers/bus/request-bus',
+  'buses/command-bus',
+  'buses/event-bus',
+  'buses/request-bus',
   'controllers/navigation/navigator',
   'models/post-model',
   'models/settings-model',

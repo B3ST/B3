@@ -3,8 +3,8 @@
 define([
   'app',
   'controllers/search-controller',
-  'controllers/bus/event-bus',
-  'controllers/bus/command-bus',
+  'buses/event-bus',
+  'buses/command-bus',
   'models/settings-model',
   'models/post-model',
   'models/user-model',

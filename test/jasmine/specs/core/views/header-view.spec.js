@@ -3,7 +3,7 @@ define([
   'models/settings-model',
   'models/menu-model',
   'collections/menu-item-collection',
-  'controllers/bus/event-bus'
+  'buses/event-bus'
 ], function (HeaderView, Settings, Menu, MenuItems, EventBus) {
   describe("HeaderView", function() {
     beforeEach(function() {
