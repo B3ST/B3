@@ -7,7 +7,7 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
-  'controllers/navigation/navigator',
+  'buses/navigator',
   'widget-areas/sidebar-template'
   /*jshint unused:false */
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, Navigator) {

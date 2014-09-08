@@ -9,7 +9,7 @@ define([
   'dust.marionette',
   'models/settings-model',
   'buses/event-bus',
-  'controllers/navigation/navigator',
+  'buses/navigator',
   'views/comment-view',
   'views/reply-form-view',
   'views/replyable-view',

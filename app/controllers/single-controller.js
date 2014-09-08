@@ -8,7 +8,7 @@ define([
   'helpers/post-filter',
   'controllers/base-controller',
   'buses/event-bus',
-  'controllers/navigation/navigator',
+  'buses/navigator',
   'collections/comment-collection',
   'models/settings-model',
   'models/post-model',

@@ -154,12 +154,13 @@
     specsRoot + 'core/helpers/post-filter.spec',
 
     // controllers
+    specsRoot + 'core/controllers/base-controller.spec',
     specsRoot + 'core/controllers/single-controller.spec',
     specsRoot + 'core/controllers/archive-controller.spec',
     specsRoot + 'core/controllers/search-controller.spec',
     specsRoot + 'core/controllers/loading-controller.spec',
     specsRoot + 'core/controllers/taxonomy-controller.spec',
-    specsRoot + 'core/controllers/navigation/navigator.spec',
+    specsRoot + 'core/buses/navigator.spec',
 
     // app
     specsRoot + 'core/app.spec'
@@ -180,7 +181,8 @@
     "backbone.validateAll",
 
     "../test/jasmine/config/using",
-    "../test/jasmine/config/stub-server"
+    "../test/jasmine/config/stub-server",
+    "../test/jasmine/config/inherits"
   ], function ($, _, Backbone, Marionette, jasmine, Settings, Rewrite) {
 
     require(specs, function() {

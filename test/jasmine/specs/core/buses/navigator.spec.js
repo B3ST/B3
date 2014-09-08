@@ -1,7 +1,7 @@
 /* global define */
 
 define([
-  'controllers/navigation/navigator',
+  'buses/navigator',
   'buses/event-bus',
   'models/settings-model'
 ], function (Navigator, EventBus, Settings) {

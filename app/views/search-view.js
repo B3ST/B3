@@ -5,7 +5,7 @@ define([
   'backbone',
   'marionette',
   'buses/event-bus',
-  'controllers/navigation/navigator',
+  'buses/navigator',
   'forms/navigation-search-template'
   /* jshint unused: false */
 ], function ($, Backbone, Marionette, EventBus, Navigator) {

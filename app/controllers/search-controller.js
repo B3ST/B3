@@ -9,7 +9,7 @@ define([
   'collections/post-collection',
   'helpers/post-filter',
   'buses/event-bus',
-  'controllers/navigation/navigator'
+  'buses/navigator'
 ], function ($, _, Backbone, Marionette, BaseController, Posts, PostFilter, EventBus, Navigator) {
   'use strict';
 
