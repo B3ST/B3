@@ -3,7 +3,8 @@
 (function() {
   'use strict';
 
-  var root = "../../../..";
+  var root = ".";
+
   var templateDeps = [
     "header-template",
     "footer-template",
@@ -22,26 +23,26 @@
   ];
 
   var config = {
-    baseUrl: root + "/app",
+    baseUrl: root + "app",
     paths: {
-      "jquery":               root + "/lib/jquery",
-      "jqueryui":             root + "/lib/jquery-ui",
-      "underscore":           root + "/lib/lodash.compat",
-      "backbone":             root + "/lib/backbone",
-      "backbone.wreqr":       root + "/lib/backbone.wreqr",
-      "backbone.babysitter":  root + "/lib/backbone.babysitter",
-      "marionette":           root + "/lib/backbone.marionette",
-      "dust":                 root + "/lib/dust-full.min",
-      "dust.helpers":         root + "/lib/dust-helpers.min",
-      "dust.marionette":      root + "/lib/backbone.marionette.dust",
-      "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
-      "bootstrap":            root + "/lib/bootstrap",
-      "bootstrap.notify":     root + "/lib/bootstrap-notify",
-      "text":                 root + "/lib/text",
-      "jasmine":              root + "/lib/jasmine",
-      "jasmine-html":         root + "/lib/jasmine-html",
-      "boot":                 root + "/lib/boot",
-      "sinon":                root + "/lib/sinon",
+      "jquery":               "../lib/jquery",
+      "jqueryui":             "../lib/jquery-ui",
+      "underscore":           "../lib/lodash.compat",
+      "backbone":             "../lib/backbone",
+      "backbone.wreqr":       "../lib/backbone.wreqr",
+      "backbone.babysitter":  "../lib/backbone.babysitter",
+      "marionette":           "../lib/backbone.marionette",
+      "dust":                 "../lib/dust-full.min",
+      "dust.helpers":         "../lib/dust-helpers.min",
+      "dust.marionette":      "../lib/backbone.marionette.dust",
+      "backbone.validateAll": "../lib/Backbone.validateAll.min",
+      "bootstrap":            "../lib/bootstrap",
+      "bootstrap.notify":     "../lib/bootstrap-notify",
+      "text":                 "../lib/text",
+      "jasmine":              "../lib/jasmine",
+      "jasmine-html":         "../lib/jasmine-html",
+      "boot":                 "../lib/boot",
+      "sinon":                "../lib/sinon",
     },
 
     shim: {
@@ -92,7 +93,7 @@
   };
 
   templateDeps.forEach(function(dep) {
-    config.paths[dep] = root + "/dist/templates/" + dep;
+    config.paths[dep] = "../dist/templates/" + dep;
     config.shim[dep] = {
       "deps": ["dust", "dust.helpers"]
     };
@@ -100,7 +101,7 @@
 
   require.config(config);
 
-  var specsRoot = '../../../../test/jasmine/specs/';
+  var specsRoot = '../test/jasmine/specs/';
   var specs = [
     // models
     specsRoot + 'core/models/base-model.spec',

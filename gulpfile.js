@@ -123,20 +123,25 @@ gulp.task('jshint', function () {
 });
 
 /**
- * gulp jasmine
+ * gulp karma
  */
-gulp.task('jasmine', function () {
-  // var specRunner = require('./test/jasmine/config/test-init.js');
-  //
-  return gulp.src('test/jasmine/config/test-init.js')
-    .pipe($.coverage.instrument({
-      pattern: ['**/*.spec.js'],
-      debugDirectory: 'debug'
+gulp.task('karma', function () {
+  var files = [
+    './test/jasmine/config/test-init.js'
+  ];
+
+  return gulp.src(files)
+    // .pipe($.coverage.instrument({
+    //   pattern: ['test/jasmine/**/*.spec.js'],
+    //   debugDirectory: 'debug'
+    // }))
+    .pipe($.karma({
+      configFile: 'karma.conf.js'
     }))
-    .pipe($.jasmine())
-    .pipe($.coverage.report({
-      outFile: 'test/jasmine/coverage.html'
-    }));
+    // .pipe($.coverage.report({
+    //   outFile: 'test/jasmine/coverage.html'
+    // }))
+    ;
 });
 
 /**
@@ -150,7 +155,7 @@ gulp.task('phpunit', function () {
 /**
  * gulp test
  */
-gulp.task('test', ['jasmine', 'phpunit']);
+gulp.task('test', ['karma', 'phpunit']);
 
 /**
  * gulp watch
