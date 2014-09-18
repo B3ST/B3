@@ -12,7 +12,7 @@ define([
   'views/search-view',
   'buses/event-bus',
   'buses/navigator',
-  'header-template'
+  'templates/header-template'
 ], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, SearchView, EventBus, Navigator) {
   'use strict';
 

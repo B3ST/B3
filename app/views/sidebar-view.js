@@ -8,7 +8,7 @@ define([
   'dust',
   'dust.marionette',
   'buses/navigator',
-  'widget-areas/sidebar-template'
+  'templates/widget-areas/sidebar-template'
   /*jshint unused:false */
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, Navigator) {
   'use strict';

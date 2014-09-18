@@ -14,9 +14,9 @@ define([
   'views/reply-form-view',
   'views/replyable-view',
   // Shims
-  'main-template',
-  'content/type-post-template',
-  'content/type-page-template'
+  'templates/main-template',
+  'templates/content/type-post-template',
+  'templates/content/type-page-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, Settings, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   'use strict';
 

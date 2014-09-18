@@ -8,7 +8,7 @@ define([
   'dust',
   'dust.marionette',
   'buses/command-bus',
-  'loading-template'
+  'templates/loading-template'
   /* jshint unused: false */
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, CommandBus) {
   'use strict';

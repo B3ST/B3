@@ -11,7 +11,7 @@ define([
   'models/comment-model',
   'models/user-model',
   'models/post-model',
-  'forms/replyform-template'
+  'templates/forms/replyform-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Comment, User, Post) {
   'use strict';
 

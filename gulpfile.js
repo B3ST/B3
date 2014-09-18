@@ -66,7 +66,7 @@ gulp.task('build:templates', function () {
       .pipe($.dust())
         .on('error', _onError)
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('dist/templates/'))
+    .pipe(gulp.dest('app/templates-compiled/'))
     .pipe($.size({title: 'templates'}));
 });
 

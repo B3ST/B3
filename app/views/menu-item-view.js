@@ -11,7 +11,7 @@ define([
   'models/settings-model',
   'buses/event-bus',
   'buses/navigator',
-  'navigation/menus/menu-item-template'
+  'templates/navigation/menus/menu-item-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {
   'use strict';
 

@@ -5,7 +5,7 @@ define([
   'backbone',
   'marionette',
   // Shims
-  'footer-template'
+  'templates/footer-template'
   /*jshint unused: false*/
 ], function ($, Backbone, Marionette) {
   'use strict';
