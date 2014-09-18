@@ -10,18 +10,18 @@
 
 <div class="entries">
   {#posts}
-    <article class="b3-post {post_class}">
+    <article class="post {post_class}">
       <header>
-        <h1 class="b3-post-title page-header">
+        <h1 class="title page-header">
           <a id="{ID}" slug="{slug}" href="#">{title|s}</a>
         </h1>
-        {+ entry-meta /}
+        {> "entry-meta-template.dust" /}
       </header>
-      <div class="b3-post-excerpt">
+      <div class="excerpt">
         {excerpt|s}
       </div>
     </article>
   {/posts}
 
-  {+ pagination /}
+  <div id="pagination-region"></div>
 </div>
