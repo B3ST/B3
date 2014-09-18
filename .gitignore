@@ -12,6 +12,7 @@ test/jasmine/coverage.html
 # JavaScript
 node_modules/**/*
 bower_components/**/*
+app/templates-compiled/**/*
 
 # PHP
 composer.phar
