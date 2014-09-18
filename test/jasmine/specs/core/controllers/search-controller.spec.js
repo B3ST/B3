@@ -15,7 +15,7 @@ define([
 ], function (App, SearchController, EventBus, CommandBus, Settings, Post, User, Posts, ArchiveView, NotFoundView) {
   'use strict';
 
-  describe("SearchController", function() {
+  xdescribe("SearchController", function() {
     describe(".initialize", function() {
       beforeEach(function() {
         this.bus = spyOn(EventBus, 'bind');

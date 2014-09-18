@@ -4,24 +4,6 @@
   'use strict';
 
   var root = WP_API_SETTINGS.root_url;
-
-  var templateDeps = [
-    "header-template",
-    "main-template",
-    "footer-template",
-    "loading-template",
-    "content/type-post-template",
-    "content/type-page-template",
-    "content/comments/comment-template",
-    "archive/posts-template",
-    "error/not-found-template",
-    "forms/searchform-template",
-    "forms/replyform-template",
-    "forms/navigation-search-template",
-    "navigation/menus/menu-item-template",
-    "widget-areas/sidebar-template"
-  ];
-
   var config = {
     //urlArgs: "bust=" + (new Date()).getTime(),
     baseUrl: root + "/dist",
@@ -40,6 +22,8 @@
       "bootstrap":            root + "/lib/bootstrap",
       "bootstrap.notify":     root + "/lib/bootstrap-notify",
       "text":                 root + "/lib/text",
+
+      "templates":            "templates-compiled"
     },
 
     shim: {
@@ -72,13 +56,6 @@
     }
   };
 
-  templateDeps.forEach(function(dep) {
-    config.paths[dep] = root + "/dist/templates/" + dep;
-    config.shim[dep] = {
-      "deps": ["dust"]
-    };
-  });
-
   require.config(config);
 
   // Includes Desktop Specific JavaScript files here (or inside of your Desktop router)
@@ -90,10 +67,16 @@
     "app",
     "models/settings-model",
     "config/rewrite",
+
     "jqueryui",
     "bootstrap",
     "bootstrap.notify",
     "backbone.validateAll",
+    "dust",
+    "dust.marionette",
+    "dust.helpers",
+
+    "helpers/page-iterator-helper"
   ], function ($, _, Backbone, Marionette, App, Settings, Rewrite) {
     Settings.set('require.config', config);
 

@@ -9,13 +9,13 @@
     'backbone',
     'marionette',
     'routers/app-router',
+    'apis/archive-api',
     'controllers/single-controller',
     'controllers/archive-controller',
     'controllers/search-controller',
     'controllers/loading-controller',
     'controllers/taxonomy-controller',
-    'buses/event-bus',
-    'buses/command-bus',
+    'buses/communicator',
     'models/settings-model',
     'models/user-model',
     'models/sidebar-model',
@@ -24,7 +24,7 @@
     'views/header-view',
     'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, SingleController, ArchiveController, SearchController, LoadingController, TaxonomyController, EventBus, CommandBus, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, ArchiveAPI, SingleController, ArchiveController, SearchController, LoadingController, TaxonomyController, Communicator, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
 
     var App = new Backbone.Marionette.Application(),
         user = new User({ID: 'me'});
@@ -83,16 +83,17 @@
     }
 
     function initializeRoutes () {
-      var controllers = [
+      var apis = [
+        new ArchiveAPI({ app: App }),
         new SingleController({
           app:  App,
           user: user
         }),
-        new ArchiveController({
-          app:   App,
-          posts: new Posts(),
-          user:  user
-        }),
+        // new ArchiveController({
+        //   app:   App,
+        //   posts: new Posts(),
+        //   user:  user
+        // }),
         new SearchController({
           app:   App,
           posts: new Posts(),
@@ -101,7 +102,7 @@
       ];
 
       App.appRouter = new AppRouter({
-        controller: controllers,
+        controller: apis,
       });
 
       if (Backbone.history) {
@@ -110,7 +111,7 @@
     }
 
     function initializeControllers (params) {
-      CommandBus.setHandler('loading:show', function (data) {
+      Communicator.commands.setHandler('loading:show', function (data) {
         new LoadingController(data).displayLoading();
       });
 
@@ -120,12 +121,16 @@
     }
 
     function initializeEvents () {
-      EventBus.bind('router:nav', function (options) {
+      Communicator.events.on('router:nav', function (options) {
         App.navigate(options.route, options.options);
       });
 
-      EventBus.bind('title:change', function (title) {
+      Communicator.events.on('title:change', function (title) {
         App.titleChange(title);
+      });
+
+      Communicator.requests.setHandler('default:region', function () {
+        return App.main;
       });
     }
 
