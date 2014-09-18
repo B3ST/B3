@@ -1,12 +1,12 @@
 /* global define */
 
 define([
-  'app',
   'controllers/archive-controller',
+  'controllers/base-controller',
   'buses/command-bus',
   'buses/event-bus',
   'buses/request-bus',
-  'controllers/navigation/navigator',
+  'buses/navigator',
   'models/post-model',
   'models/settings-model',
   'models/user-model',
@@ -15,74 +15,53 @@ define([
   'views/archive-view',
   'views/not-found-view',
   'sinon'
-], function (App, ArchiveController, CommandBus, EventBus, RequestBus, Navigator, Post, Settings, User, Taxonomy, Posts, ArchiveView, NotFoundView) {
+], function (ArchiveController, BaseController, CommandBus, EventBus, RequestBus, Navigator, Post, Settings, User, Taxonomy, Posts, ArchiveView, NotFoundView) {
   'use strict';
 
   describe("ArchiveController", function() {
+    var app, controller, options, user, region;
+
     beforeEach(function() {
-      this.user = new User({ID: 1, email: 'email', name: 'name'});
-      App.start();
+      var post = new Post({ID: 1, slug: 'post'});
+
+      user    = new User({ID: 1, email: 'email', name: 'name'}),
+      app     = jasmine.createSpyObj('main', ['show']);
+      region  = jasmine.createSpyObj('region', ['show']);
+      options = {
+        region: region,
+        posts:  new Posts([this.post]),
+        app:    app,
+        user:   user
+      };
     });
 
-    afterEach(function() {
-      App.main.$el.html('');
-      App.header.$el.html('');
-      App.footer.$el.html('');
-      window.scrollTo(0, 0);
+    it("should inherit from BaseController", function() {
+      expect(inherits(ArchiveController, BaseController)).toBeTruthy();
     });
 
-    describe(".initialize", function() {
-      beforeEach(function() {
-        this.bus        = spyOn(EventBus, 'bind');
-        this.controller = new ArchiveController({
-          posts: new Posts(),
-          app:   App,
-          user:  this.user
-        });
-      });
+    it("should bind to a given set of events", function() {
+      controller = new ArchiveController({});
+      expect(controller.busEvents).toEqual({
+        'archive:show':                  'showArchive',
+        'archive:view:display:category': 'showPostByCategory',
+        'archive:view:display:tag':      'showPostByTag',
+        'archive:view:display:author':   'showPostByAuthor',
 
-      it("should bind to archive:show event", function() {
-        expect(this.bus).toHaveBeenCalledWith('archive:show', this.controller.showArchive);
-      });
+        'pagination:previous:page':      'showPage',
+        'pagination:next:page':          'showPage',
+        'pagination:select:page':        'showPage',
 
-      it("should bind to archive:display:page event", function() {
-        expect(this.bus).toHaveBeenCalledWith('archive:display:page', this.controller.showPage);
+        'search:start':                  'saveCurrentState',
+        'search:stop':                   'loadPreviousState',
+        'search:results:found':          'displayResults',
+        'search:results:not_found':      'displayResults'
       });
+    });
 
-      it("should bind to archive:display:category event", function() {
-        expect(this.bus).toHaveBeenCalledWith('archive:display:category', this.controller.showPostByCategory);
-      });
-
-      it("should bind to archive:display:tag event", function() {
-        expect(this.bus).toHaveBeenCalledWith('archive:display:tag', this.controller.showPostByTag);
-      });
-
-      it("should bind to archive:display:author event", function() {
-        expect(this.bus).toHaveBeenCalledWith('archive:display:author', this.controller.showPostByAuthor);
-      });
-
-      it("should bind to archive:display:next:page event", function() {
-        expect(this.bus).toHaveBeenCalledWith('archive:display:next:page', this.controller.showNextPage);
-      });
-
-      it("should bind to archive:display:previous:page event", function() {
-        expect(this.bus).toHaveBeenCalledWith('archive:display:previous:page', this.controller.showPreviousPage);
-      });
-
-      it("should bind to search:start event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:start', this.controller.saveCurrentState);
-      });
-
-      it("should bind to search:stop event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:stop', this.controller.loadPreviousState);
-      });
-
-      it("should bind to search:results:found event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:results:found', this.controller.displayResults);
-      });
-
-      it("should bind to search:results:not_found event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:results:not_found', this.controller.displayResults);
+    it("should have a set of child controllers", function() {
+      controller = new ArchiveController({});
+      expect(controller.childControllers).toEqual({
+        pagination: 'paginationController'
       });
     });
 
@@ -92,15 +71,12 @@ define([
           spyOn(Settings, 'get').and.callFake(function () {
             return 0;
           });
-          this.archive = spyOn(ArchiveController.prototype, 'showArchive');
-          this.controller = new ArchiveController({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
+          var archive = spyOn(ArchiveController.prototype, 'showArchive');
 
-          this.controller.showHome();
-          expect(this.archive).toHaveBeenCalled();
+          controller = new ArchiveController(options);
+          controller.showHome();
+
+          expect(archive).toHaveBeenCalled();
         });
       });
 
@@ -109,121 +85,141 @@ define([
           spyOn(Settings, 'get').and.callFake(function () {
             return 100;
           });
-          this.bus = spyOn(EventBus, 'trigger');
-          this.controller = new ArchiveController({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
+          var bus = spyOn(EventBus, 'trigger');
 
-          this.controller.showHome();
-          expect(this.bus).toHaveBeenCalledWith('page:show', {page: 100});
+          controller = new ArchiveController(options);
+          controller.showHome();
+
+          expect(bus).toHaveBeenCalledWith('page:show', {page: 100});
         });
       });
     });
 
     describe(".showArchive", function() {
+      var server, bus, posts;
+
       beforeEach(function() {
         var response = [
           new Post({ID: 1, title: 'post-1'}).toJSON(),
           new Post({ID: 2, title: 'post-2'}).toJSON()
         ];
 
-        this.server = stubServer({
+        server = stubServer({
           response: response,
           url:      Settings.get('api_url') + '/posts',
           code:     200
         });
 
-        this.bus        = spyOn(CommandBus, 'execute');
-        this.posts      = spyOn(Posts.prototype, 'fetch').and.callThrough();
-        this.controller = new ArchiveController({
-          posts: new Posts(),
-          app:   App,
-          user:  this.user
-        });
+        bus        = spyOn(CommandBus, 'execute');
+        posts      = spyOn(Posts.prototype, 'fetch').and.callThrough();
+        controller = new ArchiveController(options);
 
-        this.controller.showArchive({paged: 2});
-        this.server.respond();
+        controller.showArchive({paged: 2});
+        server.respond();
       });
 
       it("should fetch the collection of posts of a given page", function() {
-        expect(this.posts).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
+        expect(posts).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
       });
 
-      it("should trigger a loading:show command", function() {
-        expect(this.bus).toHaveBeenCalledWith('loading:show', {region: jasmine.any(Backbone.Marionette.Region)});
+      xit("should trigger a show:loading command", function() {
+        expect(bus).toHaveBeenCalledWith('show:loading', { region: region, loading: true });
       });
 
       describe("When fetching is successful", function() {
+        var show;
+
         beforeEach(function() {
-          this.spy = spyOn(App.main, 'show');
+          show = spyOn(ArchiveController.prototype, 'show');
+
           var response = [
             new Post({ID: 1, title: 'post-1'}).toJSON(),
             new Post({ID: 2, title: 'post-2'}).toJSON()
-          ];
-          this.server = stubServer({
+          ], server = stubServer({
             url:      Settings.get('api_url') + '/posts?page=2',
             code:     200,
             response: response
           });
 
-          this.controller = new ArchiveController({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
+          controller = new ArchiveController(options);
 
-          this.controller.showArchive({paged: 2});
-          this.server.respond();
+          controller.showArchive({paged: 2});
+          server.respond();
         });
 
         it("should show the archive view", function() {
-          expect(this.spy.calls.mostRecent() typeof ArchiveView).toBeTruthy();
+          expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView));
         });
       });
     });
 
-    describe(".displayPost", function() {
+    describe('.showPage', function() {
+      var fetch, bus, controller;
+
       beforeEach(function() {
-        this.bus        = spyOn(EventBus, 'trigger');
-        this.post       = new Post({ID: 1, slug: 'post'});
-        this.controller = new ArchiveController({
-          posts: new Posts([this.post]),
-          app:   App,
-          user: this.user
+        fetch = spyOn(Posts.prototype, 'fetch').and.callThrough();
+        bus   = spyOn(EventBus, 'trigger');
+        spyOn(Navigator, 'getRoute').and.callFake(function () {
+          return 'url/page/2';
         });
 
-        this.controller.displayPost({post: 1});
+        var posts = [
+          new Post({ID: 1, title: 'post-1'}).toJSON(),
+          new Post({ID: 2, title: 'post-2'}).toJSON()
+        ];
+
+        controller = new ArchiveController({
+          posts:  new Posts(posts),
+          app:    jasmine.createSpyObj('main', ['show']),
+          user:   new User({ID: 1, email: 'email', name: 'name'}),
+          page:   2,
+          region: jasmine.createSpyObj('region', ['show'])
+        });
+        controller.showPage({page: 1});
+      });
+
+      it("should request the next page", function() {
+        expect(fetch).toHaveBeenCalledWith({reset: true, data: 'page=1'});
+      });
+
+      it("should navigate to page/<page_number> URL", function() {
+        expect(bus).toHaveBeenCalledWith('router:nav', {route: 'url/page/1', options: {trigger: false}});
+      });
+    });
+
+    xdescribe(".displayPost", function() {
+      var bus, post;
+
+      beforeEach(function() {
+        bus        = spyOn(EventBus, 'trigger');
+        controller = new ArchiveController(options);
+
+        controller.displayPost({post: 1});
       });
 
       it("should not be displaying and save it into the state", function() {
-        expect(this.controller.isDisplaying).toBeFalsy();
-        expect(this.controller.state.was_displaying).toBeFalsy();
+        expect(controller.isDisplaying).toBeFalsy();
+        expect(controller.state.was_displaying).toBeFalsy();
       });
 
       it("should trigger a post:show event", function() {
-        expect(this.bus).toHaveBeenCalledWith('post:show', {post: this.post});
+        expect(bus).toHaveBeenCalledWith('post:show', {post: this.post});
       });
 
       it("should navigate to the given post", function() {
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: false }});
+        expect(bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: false }});
       });
     });
 
-    describe(".saveCurrentState", function() {
+    xdescribe(".saveCurrentState", function() {
       it("should save the current displaying options", function() {
         var posts = new Posts();
-        this.controller = new ArchiveController({
-          posts: posts,
-          app:   App,
-          user:  this.user
-        });
+        controller = new ArchiveController(options);
 
-        this.controller.show(this.controller._archiveView(posts, null, jasmine.any(Object)));
-        this.controller.saveCurrentState();
+        controller.show(controller._archiveView(posts, null, jasmine.any(Object)));
+        controller.saveCurrentState();
 
-        expect(this.controller.state).toEqual({
+        expect(controller.state).toEqual({
           was_displaying: true,
           collection:     posts,
           page:           1,
@@ -232,14 +228,14 @@ define([
       });
     });
 
-    describe(".loadPreviousState", function() {
+    xdescribe(".loadPreviousState", function() {
       beforeEach(function() {
         this.posts      = new Posts();
-        this.appShow    = spyOn(App.main, 'show');
+        this.appShow    = spyOn(app.main, 'show');
         this.controller = new ArchiveController({
           posts: this.posts,
-          app:   App,
-          user:  this.user
+          app:   app,
+          user:  user
         });
 
         this.controller.state = {
@@ -257,68 +253,44 @@ define([
 
       it("should display the corresponding view", function() {
         var view = this.appShow.calls.mostRecent();
-        expect(view typeof ArchiveView).toBeTruthy();
+        expect(typeof view).toEqual('ArchiveView');
         expect(view.collection).toEqual(this.posts);
       });
     });
 
-    describe(".displayResults", function() {
+    xdescribe(".displayResults", function() {
       it("should display the given results", function() {
         this.posts      = new Posts();
-        this.appShow    = spyOn(App.main, 'show');
+        this.appShow    = spyOn(app.main, 'show');
         this.controller = new ArchiveController({
           posts: this.posts,
-          app:   App,
-          user:  this.user
+          app:   app,
+          user:  user
         });
 
         this.controller.displayResults({results: this.posts, filter: null});
 
         var view = this.appShow.calls.mostRecent();
-        expect(view typeof ArchiveView).toBeTruthy();
+        expect(typeof view).toEqual('ArchiveView');
         expect(view.collection).toEqual(this.posts);
       });
     });
 
-    describe(".displayNotFound", function() {
+    xdescribe(".displayNotFound", function() {
       it("should display a not found view", function() {
         this.posts      = new Posts();
-        this.appShow    = spyOn(App.main, 'show');
+        this.appShow    = spyOn(app.main, 'show');
         this.controller = new ArchiveController({
           posts: this.posts,
-          app:   App,
-          user:  this.user
+          app:   app,
+          user:  user
         });
 
         this.controller.displayResults();
 
         var view = this.appShow.calls.mostRecent();
-        expect(view typeof NotFoundView).toBeTruthy();
+        expect(typeof view).toEqual('NotFoundView');
       });
-    });
-
-    sharedBehaviourForPaging('.showNextPage', {
-      before: 1,
-      after:  2,
-      methodToTest: function (controller) {
-        controller.showNextPage();
-      }
-    });
-
-    sharedBehaviourForPaging('.showPreviousPage', {
-      before: 2,
-      after:  1,
-      methodToTest: function (controller) {
-        controller.showPreviousPage();
-      }
-    });
-
-    sharedBehaviourForPaging('.showPage', {
-      before: 2,
-      after:  1,
-      methodToTest: function (controller) {
-        controller.showPage({paged: 1});
-      }
     });
 
     sharedBehaviourForArchiveOfType('category', {
@@ -365,129 +337,80 @@ define([
   });
 
   function sharedBehaviourForArchiveOfType (type, options) {
-    describe(options.method, function() {
+    xdescribe(options.method, function() {
+      var controllerOptions, request, fetch, controller, navigate;
+
       beforeEach(function() {
-        this.request = spyOn(RequestBus, 'request').and.callFake(function () {
+        request = spyOn(RequestBus, 'request').and.callFake(function () {
           return new Taxonomy();
         });
+
+        navigate = spyOn(Navigator, 'navigateToTaxonomy');
+
+        controllerOptions = {
+          posts: new Posts(),
+          app:   jasmine.createSpyObj('main', ['show']),
+          user:  new User({ID: 1, email: 'email', name: 'name'})
+        }
       });
 
       if (options.taxonomy) {
         it("should request the given terms if not already loaded", function() {
-          var controller = new ArchiveController({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
-
+          controller = new ArchiveController(controllerOptions);
           options.runTestMethod(controller);
 
-          expect(this.request).toHaveBeenCalledWith('taxonomy:get', {taxonomy: type, term: options.calledWith});
+          expect(request).toHaveBeenCalledWith('taxonomy:get', {taxonomy: type, term: options.calledWith});
         });
       }
 
       it("should fetch the corresponding posts of a given " + type, function() {
-        this.fetch      = spyOn(Posts.prototype, 'fetch').and.callThrough();
-        this.controller = new ArchiveController({
-          posts: new Posts(),
-          app:   App,
-          user:  this.user
-        });
+        fetch      = spyOn(Posts.prototype, 'fetch').and.callThrough();
+        controller = new ArchiveController(controllerOptions);
+        options.runTestMethod(controller);
 
-        options.runTestMethod(this.controller);
-
-        expect(this.fetch).toHaveBeenCalled();
+        expect(fetch).toHaveBeenCalled();
       });
 
       describe("When fetching posts is successful", function() {
         it("should show the archive view", function() {
-          var response = new Post({ID: 1});
-
-          this.spy = spyOn(App.main, 'show');
-          this.server = stubServer({
+          var show = spyOn(ArchiveController.prototype, 'show'),
+              response = new Post({ID: 1}),
+              server = stubServer({
             url: options.request,
             code: 200,
             response: [response.toJSON()]
           });
 
-          this.controller = new ArchiveController({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user,
-          });
+          controller = new ArchiveController(controllerOptions);
+          options.runTestMethod(controller);
+          server.respond();
 
-          options.runTestMethod(this.controller);
-          this.server.respond();
-
-          var view = this.spy.calls.mostRecent();
-          expect(view typeof ArchiveView).toBeTruthy();
+          expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView));
         });
       });
 
       describe("When fetching posts fails", function() {
         it("should show a not found view", function() {
-          this.spy = spyOn(App.main, 'show');
-          this.server = stubServer({
+          var show = spyOn(ArchiveController.prototype, 'show'),
+              server = stubServer({
             url: options.request,
             code: 404,
             response: ''
           });
 
-          this.controller = new ArchiveController({
-            posts: new Posts(),
-            app:   App,
-            user:  this.user
-          });
+          controller = new ArchiveController(controllerOptions);
+          options.runTestMethod(controller);
+          server.respond();
 
-          options.runTestMethod(this.controller);
-          this.server.respond();
-
-          var view = this.spy.calls.mostRecent();
-          expect(view typeof NotFoundView).toBeTruthy();
+          expect(show).toHaveBeenCalledWith(jasmine.any(NotFoundView));
         });
       });
 
-      it("should navigate to the corresponding url", function() {
-        this.bus = spyOn(EventBus, 'trigger');
-        this.controller = new ArchiveController({
-          posts: new Posts(),
-          app:   App,
-          user:  this.user
-        });
-        options.runTestMethod(this.controller);
+      xit("should navigate to the corresponding url", function() {
+        controller = new ArchiveController(controllerOptions);
+        options.runTestMethod(controller);
 
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.route, options: {trigger: false}});
-      });
-    });
-  }
-
-  function sharedBehaviourForPaging (method, options) {
-    describe(method, function() {
-      beforeEach(function() {
-        this.fetch = spyOn(Posts.prototype, 'fetch').and.callThrough();
-        this.bus   = spyOn(EventBus, 'trigger');
-        spyOn(Navigator, 'getRoute').and.callFake(function () {
-          return 'url/page/' + options.before;
-        });
-        this.posts = [
-          new Post({ID: 1, title: 'post-1'}).toJSON(),
-          new Post({ID: 2, title: 'post-2'}).toJSON()
-        ];
-        this.controller = new ArchiveController({
-          posts: new Posts(this.posts),
-          app:   App,
-          user:  this.user,
-          page:  options.before
-        });
-        options.methodToTest(this.controller);
-      });
-
-      it("should request the next page", function() {
-        expect(this.fetch).toHaveBeenCalledWith({reset: true, data: 'page=' + options.after});
-      });
-
-      it("should navigate to page/<page_number> URL", function() {
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'url/page/' + options.after, options: {trigger: false}});
+        expect(navigate).toHaveBeenCalledWith(type, options.calledWith, 1, false);
       });
     });
   }

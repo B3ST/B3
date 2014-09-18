@@ -9,42 +9,38 @@ define([
   'models/settings-model',
   'collections/post-collection',
   'controllers/base-controller',
+  'controllers/pagination-controller',
   'buses/event-bus',
   'buses/request-bus',
-  'controllers/navigation/navigator',
+  'buses/navigator',
   'views/archive-view'
-], function ($, _, Backbone, Marionette, PostFilter, Settings, Posts, BaseController, EventBus, RequestBus, Navigator, ArchiveView) {
+], function ($, _, Backbone, Marionette, PostFilter, Settings, Posts, BaseController, PaginationController, EventBus, RequestBus, Navigator, ArchiveView) {
   'use strict';
 
   return BaseController.extend({
-    postInitialize: function (options) {
-      this.page       = options.page || 1;
-      this.filter     = options.filter || new PostFilter();
+    busEvents: {
+      'archive:show':                  'showArchive',
+      'archive:view:display:category': 'showPostByCategory',
+      'archive:view:display:tag':      'showPostByTag',
+      'archive:view:display:author':   'showPostByAuthor',
 
-      this._bindToArchiveEvents();
-      this._bindToSearchEvents();
+      'pagination:previous:page':      'showPage',
+      'pagination:next:page':          'showPage',
+      'pagination:select:page':        'showPage',
+
+      'search:start':                  'saveCurrentState',
+      'search:stop':                   'loadPreviousState',
+      'search:results:found':          'displayResults',
+      'search:results:not_found':      'displayResults'
     },
 
-    /**
-     * Binds to a set of events
-     */
-    _bindToArchiveEvents: function () {
-      _.bindAll(this, 'showArchive', 'showPostByCategory', 'showPostByTag', 'showPostByAuthor', 'showPreviousPage', 'showNextPage', 'showPage');
-      EventBus.bind('archive:show', this.showArchive);
-      EventBus.bind('archive:display:category', this.showPostByCategory);
-      EventBus.bind('archive:display:tag', this.showPostByTag);
-      EventBus.bind('archive:display:author', this.showPostByAuthor);
-      EventBus.bind('archive:display:previous:page', this.showPreviousPage);
-      EventBus.bind('archive:display:next:page', this.showNextPage);
-      EventBus.bind('archive:display:page', this.showPage);
+    childControllers: {
+      pagination: 'paginationController'
     },
 
-    _bindToSearchEvents: function () {
-      _.bindAll(this, 'saveCurrentState', 'loadPreviousState', 'displayResults');
-      EventBus.bind('search:start', this.saveCurrentState);
-      EventBus.bind('search:stop', this.loadPreviousState);
-      EventBus.bind('search:results:found', this.displayResults);
-      EventBus.bind('search:results:not_found', this.displayResults);
+    initialize: function (options) {
+      this.page   = options.page || 1;
+      this.filter = options.filter || new PostFilter();
     },
 
     /**
@@ -66,7 +62,7 @@ define([
      */
     showArchive: function (params) {
       this.taxonomy = null;
-      this.page     = params.paged || 1;
+      this.page     = parseInt(params.paged, 10) || 1;
       this.filter   = new PostFilter();
       this._fetchPostsOfPage(this.page);
     },
@@ -162,32 +158,12 @@ define([
     },
 
     /**
-     * Display the next page
-     */
-    showNextPage: function () {
-      if (!this._isLastPage()) {
-        this.page++;
-        this._displayPage(this.page, this.taxonomy);
-      }
-    },
-
-    /**
-     * Display the previous page
-     */
-    showPreviousPage: function () {
-      if (!this._isFirstPage()) {
-        this.page--;
-        this._displayPage(this.page, this.taxonomy);
-      }
-    },
-
-    /**
      * Displays a given page
      * @param  {Object} params Object containing the paged parameter
      */
-    showPage: function (params) {
-      if (this.page !== params.paged) {
-        this.page = params.paged;
+    showPage: function (options) {
+      if (this.page !== options.page) {
+        this.page = options.page;
         this._displayPage(this.page, this.taxonomy);
       }
     },
@@ -240,6 +216,10 @@ define([
       }
     },
 
+    paginationController: function () {
+      return new PaginationController();
+    },
+
     /**
      * Display a given page
      */
@@ -258,11 +238,12 @@ define([
 
       this.posts = new Posts();
       this.filter.onPage(page);
-      this.showLoading({region: this.app.main});
+      //this.show(this._archiveView(this.posts, this.page, ));
       this.posts.fetch(this._fetchParams())
           .done(function (collection, status, jqXHR) {
-            var totalPages = jqXHR.getResponseHeader('X-WP-TotalPages');
-            this.show(this._archiveView(this.posts, page, title, totalPages));
+            var totalPages = parseInt(jqXHR.getResponseHeader('X-WP-TotalPages'), 10);
+            this.show(this._archiveView(this.posts, title));
+            this.pagination.showPagination({ region: this.mainView.pagination, page: page, pages: totalPages, include: true });
           }.bind(this))
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
@@ -287,31 +268,14 @@ define([
     },
 
     /**
-     * Indicates if it is last page or not
-     * @return {boolean} true if it is last page, false otherwise
-     */
-    _isLastPage: function () {
-      return this.posts.length === 0;
-    },
-
-    /**
-     * Indicates if it is the first page or not
-     * @return {boolean} true if it is the first page, false otherwise
-     */
-    _isFirstPage: function () {
-      return this.page === 1;
-    },
-
-    /**
      * Creates a new ArchiveView instance for a post list.
      *
      * @param  {array}       posts Post collection to display.
-     * @param  {int}         page  Page number.
      * @param  {string}      title The title for the archive
      * @return {ArchiveView}       New archive view instance.
      */
-    _archiveView: function (posts, page, title, total) {
-      return new ArchiveView({collection: posts, page: page, title: title, total: total});
+    _archiveView: function (posts, title) {
+      return new ArchiveView({collection: posts, title: title});
     }
   });
 });
