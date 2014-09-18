@@ -1,0 +1,23 @@
+{@gt key=pages value=1}
+  <ul class="pagination">
+    <li class="previous {?prev_disabled}disabled{/prev_disabled}">
+      <a href="#">&laquo;</a>
+    </li>
+    {?include_pages}
+      {@pageIterator size="{pages}"}
+        <li class="number {?current}active{/current}" data-page="{page}">
+          <a href="{url}" data-page="{page}">
+            {page}
+            {?current}
+              {~s}
+              <span class="screen-reader-text">(current)</span>
+            {/current}
+          </a>
+        </li>
+      {/pageIterator}
+    {/include_pages}
+    <li class="next {?next_disabled}disabled{/next_disabled}">
+      <a href="#">&raquo;</a>
+    </li>
+  </ul>
+{/gt}
