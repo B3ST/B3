@@ -4,25 +4,8 @@
   'use strict';
 
   var root = "../../../..";
-  var templateDeps = [
-    "header-template",
-    "footer-template",
-    "loading-template",
-    "content/type-post-template",
-    "content/type-page-template",
-    "main-template",
-    "content/comments/comment-template",
-    "archive/posts-template",
-    "error/not-found-template",
-    "forms/searchform-template",
-    "forms/replyform-template",
-    "forms/navigation-search-template",
-    "navigation/menus/menu-item-template",
-    "widget-areas/sidebar-template"
-  ];
-
   var config = {
-    baseUrl: root + "/app",
+    baseUrl: root + "/dist",
     paths: {
       "jquery":               root + "/lib/jquery",
       "jqueryui":             root + "/lib/jquery-ui",
@@ -42,6 +25,8 @@
       "jasmine-html":         root + "/lib/jasmine-html",
       "boot":                 root + "/lib/boot",
       "sinon":                root + "/lib/sinon",
+
+      "templates":            "templates-compiled"
     },
 
     shim: {
@@ -90,13 +75,6 @@
       },
     }
   };
-
-  templateDeps.forEach(function(dep) {
-    config.paths[dep] = root + "/dist/templates/" + dep;
-    config.shim[dep] = {
-      "deps": ["dust", "dust.helpers"]
-    };
-  });
 
   require.config(config);
 
@@ -149,6 +127,7 @@
     specsRoot + 'core/views/sidebar-view.spec',
     specsRoot + 'core/views/search-view.spec',
     specsRoot + 'core/views/loading-view.spec',
+    specsRoot + 'core/views/pagination-view.spec',
 
     // helpers
     specsRoot + 'core/helpers/post-filter.spec',
@@ -160,6 +139,10 @@
     specsRoot + 'core/controllers/search-controller.spec',
     specsRoot + 'core/controllers/loading-controller.spec',
     specsRoot + 'core/controllers/taxonomy-controller.spec',
+    specsRoot + 'core/controllers/pagination-controller.spec',
+
+    specsRoot + 'core/apis/archive-api.spec',
+
     specsRoot + 'core/buses/navigator.spec',
 
     // app
@@ -179,6 +162,8 @@
     "bootstrap",
     "bootstrap.notify",
     "backbone.validateAll",
+
+    "helpers/page-iterator-helper",
 
     "../test/jasmine/config/using",
     "../test/jasmine/config/stub-server",
