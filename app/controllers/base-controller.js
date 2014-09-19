@@ -66,7 +66,7 @@ define([
 
     _manageView: function (view, options) {
       if (options.loading) {
-        Communicator.commands.execute('show:loading', options);
+        Communicator.commands.execute('show:loading', view, options);
       } else {
         options.region.show(view);
       }

@@ -113,7 +113,7 @@ define([
           loading: true
         });
 
-        expect(bus).toHaveBeenCalledWith('show:loading', {
+        expect(bus).toHaveBeenCalledWith('show:loading', view, {
           loading: true,
           region: region
         });
