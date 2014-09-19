@@ -33,26 +33,12 @@ define([
     },
 
     initialize: function (options) {
-      this.page  = options.page || 1;
-      this.limit = options.limit || 10;
       this.title = options.title || false;
-      this.total = options.total;
-
       EventBus.trigger('title:change');
     },
 
-    onRender: function () {
-      CommandBus.execute('loading:hide');
-    },
-
     serializeData: function () {
-      return { posts: this.getModels(), title: this.title };
-    },
-
-    getModels: function () {
-      return $.map(this.collection.models, function (post) {
-        return post.toJSON();
-      });
+      return { posts: this.collection.toJSON(), title: this.title };
     },
 
     onTitleClicked: function (event) {
@@ -62,21 +48,21 @@ define([
     },
 
     onCategoryClicked: function (event) {
-      this._displayType('archive:view:display:category', event);
+      this._triggerEvent('archive:view:display:category', event);
       event.preventDefault();
     },
 
     onTagClicked: function (event) {
-      this._displayType('archive:view:display:tag', event);
+      this._triggerEvent('archive:view:display:tag', event);
       event.preventDefault();
     },
 
     onAuthorClicked: function (event) {
-      this._displayType('archive:view:display:author', event);
+      this._triggerEvent('archive:view:display:author', event);
       event.preventDefault();
     },
 
-    _displayType: function (type, event) {
+    _triggerEvent: function (type, event) {
       var id   = parseInt(event.currentTarget.id, 10),
           slug = $(event.currentTarget).attr('slug');
 

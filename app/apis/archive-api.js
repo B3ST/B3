@@ -23,7 +23,7 @@ define([
       this.page     = params.paged || 1;
       this.filter   = new PostFilter();
 
-      new ArchiveController({ page: this.page, filter: this.filter }).showArchive(params);
+      new ArchiveController({ page: this.page, filter: this.filter }).showArchive();
     },
 
     showPostByCategory: function () {

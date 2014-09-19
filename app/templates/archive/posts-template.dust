@@ -22,6 +22,5 @@
       </div>
     </article>
   {/posts}
-
-  <div id="pagination-region"></div>
 </div>
+<div id="pagination-region"></div>
