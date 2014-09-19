@@ -67,6 +67,7 @@
     "app",
     "models/settings-model",
     "config/rewrite",
+    "config/fetch",
 
     "jqueryui",
     "bootstrap",
