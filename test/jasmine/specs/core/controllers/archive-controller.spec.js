@@ -23,16 +23,9 @@ define([
 
     beforeEach(function() {
       var post = new Post({ID: 1, slug: 'post'});
-
       user    = new User({ID: 1, email: 'email', name: 'name'}),
-      app     = jasmine.createSpyObj('main', ['show']);
       region  = jasmine.createSpyObj('region', ['show']);
-      options = {
-        region: region,
-        posts:  new Posts([this.post]),
-        app:    app,
-        user:   user
-      };
+      options = { region: region };
     });
 
     it("should inherit from BaseController", function() {
@@ -96,37 +89,21 @@ define([
     });
 
     describe(".showArchive", function() {
-      var server, bus, posts;
+      var server, bus, posts, show;
 
       beforeEach(function() {
-        var response = [
-          new Post({ID: 1, title: 'post-1'}).toJSON(),
-          new Post({ID: 2, title: 'post-2'}).toJSON()
-        ];
-
-        server = stubServer({
-          response: response,
-          url:      Settings.get('api_url') + '/posts',
-          code:     200
-        });
-
-        bus        = spyOn(CommandBus, 'execute');
-        posts      = spyOn(Posts.prototype, 'fetch').and.callThrough();
+        show = spyOn(ArchiveController.prototype, 'show');
         controller = new ArchiveController(options);
-
-        controller.showArchive({paged: 2});
-        server.respond();
       });
 
-      it("should fetch the collection of posts of a given page", function() {
-        expect(posts).toHaveBeenCalledWith({reset: true, data: $.param({ page: 2 })});
+      describe("When the view is not loaded", function() {
+        it("should execute a loading:show", function() {
+          controller.showArchive();
+          expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView), { loading: { done: jasmine.any(Function), fail: jasmine.any(Function) }});
+        });
       });
 
-      xit("should trigger a show:loading command", function() {
-        expect(bus).toHaveBeenCalledWith('show:loading', { region: region, loading: true });
-      });
-
-      describe("When fetching is successful", function() {
+      xdescribe("When fetching is successful", function() {
         var show;
 
         beforeEach(function() {
@@ -172,18 +149,27 @@ define([
           posts:  new Posts(posts),
           app:    jasmine.createSpyObj('main', ['show']),
           user:   new User({ID: 1, email: 'email', name: 'name'}),
-          page:   2,
+          paged:  2,
           region: jasmine.createSpyObj('region', ['show'])
         });
-        controller.showPage({page: 1});
       });
 
       it("should request the next page", function() {
+        controller.showPage({ page: 1 });
         expect(fetch).toHaveBeenCalledWith({reset: true, data: 'page=1'});
       });
 
-      it("should navigate to page/<page_number> URL", function() {
-        expect(bus).toHaveBeenCalledWith('router:nav', {route: 'url/page/1', options: {trigger: false}});
+      describe("When fetching is successful", function() {
+        it("should navigate to page/<page_number> URL", function() {
+          var server = stubServer({
+            url:      Settings.get('api_url') + '/posts?page=1',
+            code:     200,
+            response: []
+          });
+          controller.showPage({ page: 1 });
+          server.respond();
+          expect(bus).toHaveBeenCalledWith('router:nav', {route: 'url/page/1', options: {trigger: false}});
+        });
       });
     });
 

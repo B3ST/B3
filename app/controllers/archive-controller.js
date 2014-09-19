@@ -39,8 +39,10 @@ define([
     },
 
     initialize: function (options) {
-      this.page   = options.page || 1;
+      this.page   = options.paged || 1;
       this.filter = options.filter || new PostFilter();
+      this.posts  = options.posts || new Posts();
+      this.loaded = false;
     },
 
     /**
@@ -60,11 +62,40 @@ define([
      *
      * @param {int} page Page number.
      */
-    showArchive: function (params) {
-      this.taxonomy = null;
-      this.page     = parseInt(params.paged, 10) || 1;
-      this.filter   = new PostFilter();
-      this._fetchPostsOfPage(this.page);
+    showArchive: function () {
+      this.show(this._archiveView(this.posts), {
+        loading: {
+          done: function (collection, status, jqXHR) {
+            var totalPages = parseInt(jqXHR.getResponseHeader('X-WP-TotalPages'), 10);
+            if (!this.loaded) {
+              this.show(this._archiveView(this.posts), { region: this.region });
+              this.pagination.showPagination({ region: this.mainView.pagination, page: this.page, pages: totalPages, include: true });
+              this.loaded = true;
+            }
+          }.bind(this),
+
+          fail: function () {
+            this.show(this.notFoundView());
+          }.bind(this)
+        }
+      });
+    },
+
+    /**
+     * Displays a given page
+     * @param  {Object} params Object containing the paged parameter
+     */
+    showPage: function (options) {
+      var route;
+
+      if (this.page !== options.page) {
+        this.page = options.page;
+        route = Navigator.getPagedRoute(this.filter, this.page);
+        this.filter.onPage(this.page);
+        this.posts.fetch(this._fetchParams())
+                  .done(function () { Navigator.navigate(route, false); })
+                  .fail(function () { this.show(this.notFoundView()); }.bind(this));
+      }
     },
 
     /**
@@ -155,17 +186,6 @@ define([
      */
     showCustomTaxonomy: function (params) {
 
-    },
-
-    /**
-     * Displays a given page
-     * @param  {Object} params Object containing the paged parameter
-     */
-    showPage: function (options) {
-      if (this.page !== options.page) {
-        this.page = options.page;
-        this._displayPage(this.page, this.taxonomy);
-      }
     },
 
     /**
