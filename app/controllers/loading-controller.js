@@ -1,28 +1,23 @@
 /* global define */
 
 define([
-  'jquery',
   'underscore',
-  'backbone',
-  'marionette',
-  'buses/command-bus',
-  'views/loading-view'
-], function ($, _, Backbone, Marionette, CommandBus, LoadingView) {
+  'controllers/base-controller',
+  'views/loading-view',
+  'buses/command-bus'
+], function (_, BaseController, LoadingView, CommandBus) {
   'use strict';
 
-  return Marionette.Controller.extend({
+  var LoadingController = BaseController.extend({
     initialize: function (options) {
-      this.region = options.region;
-      this._bindToCommands();
-    },
+      var config = options.config === true ? {} : options.config;
 
-    /**
-     * Display a loading view in a given region
-     */
-    displayLoading: function () {
-      this.loading = this._loadingView();
-      this.region.show(this.loading);
-      this.isDisplaying = true;
+      this.view = options.view;
+      _.defaults(config, this._getDefaults(options.options));
+
+      this._bindCommand();
+      this._showLoading(options.options);
+      this._fetchEntities(this.view, config);
     },
 
     /**
@@ -30,22 +25,51 @@ define([
      * @param  {Object} data An object containing the current progress (total and loaded)
      */
     displayProgress: function (data) {
-      if (this.isDisplaying) {
-        this.loading.progress(data);
+      if (this.mainView) {
+        this.mainView.progress(data);
       }
     },
 
-    _bindToCommands: function () {
-      _.bindAll(this, 'displayProgress');
-      CommandBus.setHandler('loading:progress', this.displayProgress);
+    _bindCommand: function () {
+      CommandBus.setHandler('loading:progress', this.displayProgress, this);
     },
 
-    _loadingView: function () {
-      var loadingView = new LoadingView();
-      this.listenTo(loadingView, 'destroy', this.destroy);
+    _showLoading: function (options) {
+      this.show(new LoadingView({ title: options.title }), options);
+    },
 
-      loadingView.render();
-      return loadingView;
+    _fetchEntities: function (view, config) {
+      CommandBus.execute('when:fetched', config.entities, config.done, config.fail);
+    },
+
+    _getDefaults: function (options) {
+      return {
+        entities:  this._getEntities(this.view),
+        operation: 'fetch',
+
+        done: function () {
+          this.show(this.view, { region: options.region });
+        }.bind(this),
+
+        fail: function () {}
+      };
+    },
+
+    _getEntities: function (view) {
+      return _.chain(view).pick('model', 'collection')
+                          .toArray()
+                          .compact()
+                          .value();
     }
   });
+
+  CommandBus.setHandler('show:loading', function (view, options) {
+    new LoadingController({
+      view:    view,
+      options: { region: options.region, title: options.title },
+      config:  options.loading
+    });
+  });
+
+  return LoadingController;
 });
