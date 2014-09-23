@@ -29,13 +29,15 @@ function _onError (error) {
  * gulp build:styles
  */
 gulp.task('build:styles', function () {
-  return gulp.src(['app/styles/less/style.less'])
+  return gulp.src('app/styles/less/style.less')
     .pipe($.plumber())
-    .pipe($.less())
-      .on('error', _onError)
-    .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
-    .pipe($.minifyCss())
-    .pipe($.concat('style.css'))
+    .pipe($.sourcemaps.init())
+      .pipe($.less())
+        .on('error', _onError)
+      .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+      .pipe($.minifyCss())
+      .pipe($.concat('style.css'))
+    .pipe($.sourcemaps.write('./maps'))
     .pipe(gulp.dest('dist/assets/styles/'))
     .pipe($.size({title: 'styles'}));
 });
@@ -45,12 +47,12 @@ gulp.task('build:styles', function () {
  */
 gulp.task('build:scripts', function () {
   return gulp.src('app/**/*.js')
-    .pipe($.changed('dist/'))
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
+      .pipe($.changed('dist/'))
       .pipe($.uglify())
         .on('error', _onError)
-    .pipe($.sourcemaps.write())
+    .pipe($.sourcemaps.write('./maps'))
     .pipe(gulp.dest('dist/'))
     .pipe($.size({title: 'scripts'}));
 });
@@ -60,12 +62,10 @@ gulp.task('build:scripts', function () {
  */
 gulp.task('build:templates', function () {
   return gulp.src('app/templates/**/*.{html,dust}')
-    .pipe($.changed('dist/templates/'))
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
-      .pipe($.dust())
-        .on('error', _onError)
-    .pipe($.sourcemaps.write())
+    .pipe($.changed('dist/templates/'))
+    .pipe($.dust())
+      .on('error', _onError)
     .pipe(gulp.dest('dist/templates/'))
     .pipe($.size({title: 'templates'}));
 });
@@ -129,6 +129,7 @@ gulp.task('jasmine', function () {
   // var specRunner = require('./test/jasmine/config/test-init.js');
   //
   return gulp.src('test/jasmine/config/test-init.js')
+    .pipe($.plumber())
     .pipe($.coverage.instrument({
       pattern: ['**/*.spec.js'],
       debugDirectory: 'debug'

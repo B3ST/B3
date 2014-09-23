@@ -101,7 +101,7 @@
       ];
 
       App.appRouter = new AppRouter({
-        controller: controllers,
+        controller: controllers
       });
 
       if (Backbone.history) {
