@@ -74,19 +74,19 @@ define([
     sharedBehaviourFor('category', {
       click:     '.category > a',
       event:     'archive:view:display:category',
-      eventOpts: {id: 1, slug: 'post-1'}
+      eventOpts: { id: 1, slug: 'post-1', type: 'category' }
     });
 
     sharedBehaviourFor('tag', {
       click:     '.tag > a',
       event:     'archive:view:display:tag',
-      eventOpts: {id: 1, slug: 'tag-1'}
+      eventOpts: { id: 1, slug: 'tag-1', type: 'post_tag' }
     });
 
     sharedBehaviourFor('author', {
       click:     '.author > a',
       event:     'archive:view:display:author',
-      eventOpts: {id: 1, slug: 'author-1'}
+      eventOpts: { id: 1, slug: 'author-1', type: 'author' }
     });
   });
 
