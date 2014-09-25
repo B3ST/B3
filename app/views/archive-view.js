@@ -46,7 +46,7 @@ define([
     },
 
     onTitleClicked: function (event) {
-      var post = parseInt(event.currentTarget.id, 10);
+      var post = $(event.currentTarget).attr('slug');
       EventBus.trigger('archive:view:display:post', { post: post });
       event.preventDefault();
     },

@@ -67,7 +67,7 @@ define([
       it("should trigger a archive:view:display:post event", function() {
         var post = view.$('.title > a').first();
         post.click();
-        expect(trigger).toHaveBeenCalledWith('archive:view:display:post', {post: parseInt(post.attr('id'), 10)});
+        expect(trigger).toHaveBeenCalledWith('archive:view:display:post', { post: 'post-1' });
       });
     });
 
