@@ -1,14 +1,30 @@
 /* global define */
 
 define([
+  'jquery',
   'underscore',
   'controllers/base-controller',
   'views/loading-view',
   'buses/command-bus'
-], function (_, BaseController, LoadingView, CommandBus) {
+], function ($, _, BaseController, LoadingView, CommandBus) {
   'use strict';
 
   var LoadingController = BaseController.extend({
+    busEvents: {
+      'fetch:done': 'closeLoading',
+    },
+
+    style: {
+      loading: function (options) {
+        this.show(new LoadingView({ title: options.title }), options);
+      },
+
+      opacity: function (options) {
+        options.region.$el.addClass('opacity');
+        $('body,html').animate({ scrollTop: 0 }, 800);
+      }
+    },
+
     initialize: function (options) {
       var config = options.config === true ? {} : options.config;
 
@@ -16,8 +32,15 @@ define([
       _.defaults(config, this._getDefaults(options.options));
 
       this._bindCommand();
-      this._showLoading(options.options);
+      this._showLoading(config, options.options);
       this._fetchEntities(this.view, config);
+    },
+
+    closeLoading: function () {
+      this.region.$el.removeClass('opacity');
+      if (!this.view) {
+        this.unregister();
+      }
     },
 
     /**
@@ -34,8 +57,10 @@ define([
       CommandBus.setHandler('loading:progress', this.displayProgress, this);
     },
 
-    _showLoading: function (options) {
-      this.show(new LoadingView({ title: options.title }), options);
+    _showLoading: function (config, options) {
+      if (this.style.hasOwnProperty(config.style)) {
+        this.style[config.style].bind(this)(options);
+      }
     },
 
     _fetchEntities: function (view, config) {
@@ -46,6 +71,7 @@ define([
       return {
         entities:  this._getEntities(this.view),
         operation: 'fetch',
+        style:     'loading',
 
         done: function () {
           this.show(this.view, { region: options.region });
