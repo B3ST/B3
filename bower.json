@@ -18,7 +18,7 @@
     "jquery": "~2.1.0",
     "jqueryui": "~1.11.0",
     "lodash": "~2.4.1",
-    "marionette": "~2.0.1",
+    "marionette": "~2.2.1",
     "requirejs": "~2.1.14",
     "text": "~2.0.12",
     "marionette-dust": "~0.1.6",
