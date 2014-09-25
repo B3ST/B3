@@ -142,27 +142,13 @@ define([
       });
     });
 
-    xdescribe(".displayPost", function() {
-      var bus, post;
-
-      beforeEach(function() {
-        bus        = spyOn(EventBus, 'trigger');
+    describe("showPost", function() {
+      it("should navigate to the given post", function() {
+        var navigate = spyOn(Navigator, 'navigateToPost');
         controller = new ArchiveController(options);
 
-        controller.displayPost({post: 1});
-      });
-
-      it("should not be displaying and save it into the state", function() {
-        expect(controller.isDisplaying).toBeFalsy();
-        expect(controller.state.was_displaying).toBeFalsy();
-      });
-
-      it("should trigger a post:show event", function() {
-        expect(bus).toHaveBeenCalledWith('post:show', {post: this.post});
-      });
-
-      it("should navigate to the given post", function() {
-        expect(bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: false }});
+        controller.showPost({ post: 'post' });
+        expect(navigate).toHaveBeenCalledWith('post', 1, true);
       });
     });
 
@@ -247,126 +233,5 @@ define([
         expect(typeof view).toEqual('NotFoundView');
       });
     });
-
-    sharedBehaviourForArchiveOfType('category', {
-      method:        ".showPostByCategory",
-      calledWith:    "category",
-      runTestMethod: function  (controller) {
-        controller.showPostByCategory({category: 'category'});
-      },
-      request: Settings.get('api_url') + '/posts?filter[category_name]=category&page=1',
-      route:   'post/category/category',
-      taxonomy: true
-    });
-
-    sharedBehaviourForArchiveOfType('post_tag', {
-      method:        ".showPostByTag",
-      calledWith:    "tag",
-      runTestMethod: function (controller) {
-        controller.showPostByTag({post_tag: 'tag'});
-      },
-      request: Settings.get('api_url') + '/posts?filter[tag]=tag&page=1',
-      route:   'post/tag/tag',
-      taxonomy: true
-    });
-
-    sharedBehaviourForArchiveOfType('author', {
-      method:        ".showPostByAuthor",
-      runTestMethod: function  (controller) {
-        controller.showPostByAuthor({author: 'author'});
-      },
-      request: Settings.get('api_url') + '/posts?filter[author_name]=author&page=1',
-      route:   'post/author/author',
-      taxonomy: false
-    });
-
-    sharedBehaviourForArchiveOfType('date', {
-      method:        ".showPostByDate",
-      runTestMethod: function (controller) {
-        controller.showPostByDate({monthnum: '03', day: '12', year: '2014'});
-      },
-      request:  Settings.get('api_url') + '/posts?filter[year]=2014&filter[month]=03&filter[day]=12&page=1',
-      route:    'post/2014/03/12',
-      taxonomy: false
-    });
   });
-
-  function sharedBehaviourForArchiveOfType (type, options) {
-    xdescribe(options.method, function() {
-      var controllerOptions, request, fetch, controller, navigate;
-
-      beforeEach(function() {
-        request = spyOn(RequestBus, 'request').and.callFake(function () {
-          return new Taxonomy();
-        });
-
-        navigate = spyOn(Navigator, 'navigateToTaxonomy');
-
-        controllerOptions = {
-          posts: new Posts(),
-          app:   jasmine.createSpyObj('main', ['show']),
-          user:  new User({ID: 1, email: 'email', name: 'name'})
-        }
-      });
-
-      if (options.taxonomy) {
-        it("should request the given terms if not already loaded", function() {
-          controller = new ArchiveController(controllerOptions);
-          options.runTestMethod(controller);
-
-          expect(request).toHaveBeenCalledWith('taxonomy:get', {taxonomy: type, term: options.calledWith});
-        });
-      }
-
-      it("should fetch the corresponding posts of a given " + type, function() {
-        fetch      = spyOn(Posts.prototype, 'fetch').and.callThrough();
-        controller = new ArchiveController(controllerOptions);
-        options.runTestMethod(controller);
-
-        expect(fetch).toHaveBeenCalled();
-      });
-
-      describe("When fetching posts is successful", function() {
-        it("should show the archive view", function() {
-          var show = spyOn(ArchiveController.prototype, 'show'),
-              response = new Post({ID: 1}),
-              server = stubServer({
-            url: options.request,
-            code: 200,
-            response: [response.toJSON()]
-          });
-
-          controller = new ArchiveController(controllerOptions);
-          options.runTestMethod(controller);
-          server.respond();
-
-          expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView));
-        });
-      });
-
-      describe("When fetching posts fails", function() {
-        it("should show a not found view", function() {
-          var show = spyOn(ArchiveController.prototype, 'show'),
-              server = stubServer({
-            url: options.request,
-            code: 404,
-            response: ''
-          });
-
-          controller = new ArchiveController(controllerOptions);
-          options.runTestMethod(controller);
-          server.respond();
-
-          expect(show).toHaveBeenCalledWith(jasmine.any(NotFoundView));
-        });
-      });
-
-      xit("should navigate to the corresponding url", function() {
-        controller = new ArchiveController(controllerOptions);
-        options.runTestMethod(controller);
-
-        expect(navigate).toHaveBeenCalledWith(type, options.calledWith, 1, false);
-      });
-    });
-  }
 });
