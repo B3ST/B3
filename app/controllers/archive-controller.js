@@ -20,9 +20,11 @@ define([
   return BaseController.extend({
     busEvents: {
       'archive:show':                  'showArchive',
-      'archive:view:display:category': 'showPostByCategory',
-      'archive:view:display:tag':      'showPostByTag',
-      'archive:view:display:author':   'showPostByAuthor',
+
+      'archive:view:display:post':     'showPost',
+      'archive:view:display:category': 'showPostsByTaxonomy',
+      'archive:view:display:tag':      'showPostsByTaxonomy',
+      'archive:view:display:author':   'showPostsByType',
 
       'pagination:previous:page':      'showPage',
       'pagination:next:page':          'showPage',
@@ -39,22 +41,9 @@ define([
     },
 
     initialize: function (options) {
-      this.page   = options.paged || 1;
+      this.page   = options.page || 1;
       this.filter = options.filter || new PostFilter();
-      this.posts  = options.posts || new Posts();
-      this.loaded = false;
-    },
-
-    /**
-     * Display the home page.
-     */
-    showHome: function (params) {
-      var onFront = Settings.get('page_on_front');
-      if (onFront > 0) {
-        EventBus.trigger('page:show', {page: onFront});
-      } else {
-        this.showArchive(params);
-      }
+      this.posts  = options.posts || new Posts(this.filter);
     },
 
     /**
@@ -67,15 +56,11 @@ define([
         loading: {
           done: function (collection, status, jqXHR) {
             var totalPages = parseInt(jqXHR.getResponseHeader('X-WP-TotalPages'), 10);
-            if (!this.loaded) {
-              this.show(this._archiveView(this.posts), { region: this.region });
-              this.pagination.showPagination({ region: this.mainView.pagination, page: this.page, pages: totalPages, include: true });
-              this.loaded = true;
-            }
+            this.showView(totalPages);
           }.bind(this),
 
           fail: function () {
-            this.show(this.notFoundView());
+            this.show(this.notFoundView()); // we need to change this
           }.bind(this)
         }
       });
@@ -86,15 +71,23 @@ define([
      * @param  {Object} params Object containing the paged parameter
      */
     showPage: function (options) {
-      var route;
-
       if (this.page !== options.page) {
         this.page = options.page;
-        route = Navigator.getPagedRoute(this.filter, this.page);
         this.filter.onPage(this.page);
-        this.posts.fetch(this._fetchParams())
-                  .done(function () { Navigator.navigate(route, false); })
-                  .fail(function () { this.show(this.notFoundView()); }.bind(this));
+        this.show(null, {
+          loading: {
+            style:    'opacity',
+            entities: [this.posts],
+            done: function () {
+              var route = Navigator.getPagedRoute(this.filter, this.page);
+              Navigator.navigate(route, false);
+            }.bind(this),
+
+            fail: function () {
+              this.show(this.notFoundView()); // we need to change this
+            }.bind(this)
+          }
+        });
       }
     },
 
@@ -103,43 +96,14 @@ define([
      *
      * @param  {Object} params Object containing the category name and page number
      */
-    showPostByCategory: function (params) {
-      var category = params.category || params.id,
-          slug     = params.category || params.slug;
-
-      $.when(RequestBus.request('taxonomy:get', {taxonomy: 'category', term: slug}))
-       .then(function (taxonomy) {
-        this.taxonomy = taxonomy;
-        this.page     = params.paged || 1;
-        this.filter   = new PostFilter();
-        this.filter   = isNaN(category) ? this.filter.byCategory(category)
-                                        : this.filter.byCategoryId(category);
-
-        this._fetchPostsOfPage(this.page, this.taxonomy);
-        Navigator.navigateToTaxonomy('category', slug, this.page, false);
-      }.bind(this));
+    showPostsByTaxonomy: function (params) {
+      var slug = params.slug;
+      Navigator.navigateToTaxonomy(params.type, slug, 1, true);
     },
 
-    /**
-     * Display posts of a given tag
-     *
-     * @param  {Object} params Object containing the tag name and page number
-     */
-    showPostByTag: function (params) {
-      var tag      = params.post_tag || params.id,
-          slug     = params.post_tag || params.slug;
-
-      $.when(RequestBus.request('taxonomy:get', {taxonomy: 'post_tag', term: slug}))
-       .then(function (taxonomy) {
-        this.taxonomy = taxonomy;
-        this.page     = params.paged || 1;
-        this.filter   = new PostFilter();
-        this.filter   = isNaN(tag) ? this.filter.byTag(tag)
-                                 : this.filter.byTagId(tag);
-
-        this._fetchPostsOfPage(this.page, this.taxonomy);
-        Navigator.navigateToTaxonomy('post_tag', slug, this.page, false);
-      }.bind(this));
+    showView: function (pages) {
+      this.show(this._archiveView(this.posts), { region: this.region });
+      this.pagination.showPagination({ region: this.mainView.pagination, page: this.page, pages: pages, include: true });
     },
 
     /**

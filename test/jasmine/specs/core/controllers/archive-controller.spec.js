@@ -1,6 +1,7 @@
 /* global define */
 
 define([
+  'backbone',
   'controllers/archive-controller',
   'controllers/base-controller',
   'buses/command-bus',
@@ -15,7 +16,7 @@ define([
   'views/archive-view',
   'views/not-found-view',
   'sinon'
-], function (ArchiveController, BaseController, CommandBus, EventBus, RequestBus, Navigator, Post, Settings, User, Taxonomy, Posts, ArchiveView, NotFoundView) {
+], function (Backbone, ArchiveController, BaseController, CommandBus, EventBus, RequestBus, Navigator, Post, Settings, User, Taxonomy, Posts, ArchiveView, NotFoundView) {
   'use strict';
 
   describe("ArchiveController", function() {
@@ -36,9 +37,11 @@ define([
       controller = new ArchiveController({});
       expect(controller.busEvents).toEqual({
         'archive:show':                  'showArchive',
-        'archive:view:display:category': 'showPostByCategory',
-        'archive:view:display:tag':      'showPostByTag',
-        'archive:view:display:author':   'showPostByAuthor',
+
+        'archive:view:display:post':     'showPost',
+        'archive:view:display:category': 'showPostsByTaxonomy',
+        'archive:view:display:tag':      'showPostsByTaxonomy',
+        'archive:view:display:author':   'showPostsByType',
 
         'pagination:previous:page':      'showPage',
         'pagination:next:page':          'showPage',
@@ -58,36 +61,6 @@ define([
       });
     });
 
-    describe(".showHome", function() {
-      describe("When home is not a page", function() {
-        it("should display the archive", function() {
-          spyOn(Settings, 'get').and.callFake(function () {
-            return 0;
-          });
-          var archive = spyOn(ArchiveController.prototype, 'showArchive');
-
-          controller = new ArchiveController(options);
-          controller.showHome();
-
-          expect(archive).toHaveBeenCalled();
-        });
-      });
-
-      describe("When home is set to a page", function() {
-        it("should display that page", function() {
-          spyOn(Settings, 'get').and.callFake(function () {
-            return 100;
-          });
-          var bus = spyOn(EventBus, 'trigger');
-
-          controller = new ArchiveController(options);
-          controller.showHome();
-
-          expect(bus).toHaveBeenCalledWith('page:show', {page: 100});
-        });
-      });
-    });
-
     describe(".showArchive", function() {
       var server, bus, posts, show;
 
@@ -96,79 +69,75 @@ define([
         controller = new ArchiveController(options);
       });
 
-      describe("When the view is not loaded", function() {
-        it("should execute a loading:show", function() {
-          controller.showArchive();
-          expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView), { loading: { done: jasmine.any(Function), fail: jasmine.any(Function) }});
-        });
+      it("should request all posts", function() {
+        controller.showArchive();
+        expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView), { loading: { done: jasmine.any(Function), fail: jasmine.any(Function) }});
       });
 
-      xdescribe("When fetching is successful", function() {
-        var show;
-
+      describe("When fetching is successful", function() {
+        var showView;
         beforeEach(function() {
-          show = spyOn(ArchiveController.prototype, 'show');
-
-          var response = [
-            new Post({ID: 1, title: 'post-1'}).toJSON(),
-            new Post({ID: 2, title: 'post-2'}).toJSON()
-          ], server = stubServer({
-            url:      Settings.get('api_url') + '/posts?page=2',
-            code:     200,
-            response: response
+          showView = spyOn(ArchiveController.prototype, 'showView');
+          show.and.callFake(function (view, options) {
+            var jqXHR = jasmine.createSpyObj('jqXHR', ['getResponseHeader']);
+            jqXHR.getResponseHeader.and.callFake(function () {
+              return "10";
+            });
+            options.loading.done([], "", jqXHR);
           });
 
           controller = new ArchiveController(options);
-
-          controller.showArchive({paged: 2});
-          server.respond();
+          controller.showArchive();
         });
 
         it("should show the archive view", function() {
-          expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView));
+          expect(showView).toHaveBeenCalledWith(10);
         });
       });
     });
 
-    describe('.showPage', function() {
-      var fetch, bus, controller;
+    describe(".showPage", function() {
+      var show;
 
       beforeEach(function() {
-        fetch = spyOn(Posts.prototype, 'fetch').and.callThrough();
-        bus   = spyOn(EventBus, 'trigger');
-        spyOn(Navigator, 'getRoute').and.callFake(function () {
-          return 'url/page/2';
-        });
-
-        var posts = [
-          new Post({ID: 1, title: 'post-1'}).toJSON(),
-          new Post({ID: 2, title: 'post-2'}).toJSON()
-        ];
-
-        controller = new ArchiveController({
-          posts:  new Posts(posts),
-          app:    jasmine.createSpyObj('main', ['show']),
-          user:   new User({ID: 1, email: 'email', name: 'name'}),
-          paged:  2,
-          region: jasmine.createSpyObj('region', ['show'])
-        });
+        show = spyOn(ArchiveController.prototype, "show");
+        controller = new ArchiveController(options);
       });
 
-      it("should request the next page", function() {
-        controller.showPage({ page: 1 });
-        expect(fetch).toHaveBeenCalledWith({reset: true, data: 'page=1'});
+      it("should request all posts", function() {
+        controller.showPage({ page: 2 });
+        expect(show).toHaveBeenCalledWith(null, {
+          loading: {
+            style: "opacity",
+            entities: [controller.posts],
+            done: jasmine.any(Function),
+            fail: jasmine.any(Function)
+          }
+        });
       });
 
       describe("When fetching is successful", function() {
-        it("should navigate to page/<page_number> URL", function() {
-          var server = stubServer({
-            url:      Settings.get('api_url') + '/posts?page=1',
-            code:     200,
-            response: []
+        it("should navigate to the second page", function() {
+          var navigate = spyOn(Navigator, 'navigate');
+          Backbone.history.fragment = '/wordpress/page/1';
+          show.and.callFake(function (view, options) {
+            options.loading.done();
           });
-          controller.showPage({ page: 1 });
-          server.respond();
-          expect(bus).toHaveBeenCalledWith('router:nav', {route: 'url/page/1', options: {trigger: false}});
+
+          controller.showPage({ page: 2 });
+          expect(navigate).toHaveBeenCalledWith('/wordpress/page/2', false);
+        });
+      });
+    });
+
+    using('Taxonomy types', ['category', 'post_tag', 'author'], function (type) {
+      describe(".showPostsByTaxonomy", function() {
+        it("should navigate to the category taxonomy", function() {
+          var navigate = spyOn(Navigator, 'navigateToTaxonomy');
+          controller = new ArchiveController(options);
+
+          controller.showPostsByTaxonomy({ slug: 'slug', type: type });
+          expect(navigate).toHaveBeenCalledWith(type, 'slug', 1, true);
         });
       });
     });
