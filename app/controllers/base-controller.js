@@ -108,11 +108,11 @@ define([
 
       _.each(this.childControllers, function (controller, name) {
         controller = this[name];
-        controller.region.reset();
         // for controllers who load other controllers
-        if (!controller.mainView) {
-          this[name].unregister();
+        if (controller.mainView) {
+          controller.mainView.destroy();
         }
+        this[name].unregister();
       }.bind(this));
     },
 

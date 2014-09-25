@@ -124,7 +124,7 @@ define([
       var region, options;
 
       beforeEach(function() {
-        region = jasmine.createSpyObj('main', ['show', 'reset']);
+        region = jasmine.createSpyObj('main', ['show']);
         options = {
           region: region
         };
@@ -148,9 +148,10 @@ define([
 
       it("should tear down all child controllers", function() {
         controller = new Extend(options);
+        var unregister = spyOn(controller.child, 'unregister');
         controller.unregister();
 
-        expect(controller.child.region.reset).toHaveBeenCalled();
+        expect(unregister).toHaveBeenCalled();
       });
 
       it("should tear down all binded events", function() {
