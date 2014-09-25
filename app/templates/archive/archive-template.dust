@@ -1,0 +1,14 @@
+{?title}
+  <header class="jumbotron">
+    <div class="jumbotron-container">
+      <h1 class="archive-title">
+        Archive: {title|s}
+      </h1>
+    </div>
+  </header>
+{/title}
+
+<div class="entries">
+  {> "archive/posts-template.dust" /}
+</div>
+<div id="pagination"></div>
