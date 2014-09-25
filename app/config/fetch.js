@@ -18,9 +18,9 @@ define([
                 .value();
 
     EventBus.trigger('fetch:start');
-    $.when.apply($, xhrs).done(function (collection, status, jqXHR) {
+    $.when.apply($, xhrs).done(function (entities, status, jqXHR) {
       EventBus.trigger('fetch:done');
-      done(collection, status, jqXHR);
+      done(entities, status, jqXHR);
     }).fail(function () {
       EventBus.trigger('fetch:fail');
       fail();
