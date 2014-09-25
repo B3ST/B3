@@ -66,6 +66,11 @@ define([
       });
     },
 
+    showPost: function (params) {
+      var post = params.post, page = 1, trigger = true;
+      Navigator.navigateToPost(post, page, trigger);
+    },
+
     /**
      * Displays a given page
      * @param  {Object} params Object containing the paged parameter
@@ -97,8 +102,9 @@ define([
      * @param  {Object} params Object containing the category name and page number
      */
     showPostsByTaxonomy: function (params) {
-      var slug = params.slug;
-      Navigator.navigateToTaxonomy(params.type, slug, 1, true);
+      var slug = params.slug, type = params.type,
+          page = 1, trigger = true;
+      Navigator.navigateToTaxonomy(type, slug, page, trigger);
     },
 
     showView: function (pages) {
