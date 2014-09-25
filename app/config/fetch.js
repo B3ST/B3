@@ -17,13 +17,13 @@ define([
                 })
                 .value();
 
-    EventBus.trigger('disable:controls');
+    EventBus.trigger('fetch:start');
     $.when.apply($, xhrs).done(function (collection, status, jqXHR) {
+      EventBus.trigger('fetch:done');
       done(collection, status, jqXHR);
-      EventBus.trigger('enable:controls');
     }).fail(function () {
+      EventBus.trigger('fetch:fail');
       fail();
-      EventBus.trigger('enable:controls');
     });
   });
 });
