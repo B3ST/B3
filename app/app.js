@@ -32,9 +32,6 @@
     App.navigate = function(route, options){
       options = options || {};
       this.appRouter.navigate(route, options);
-      $('body,html').animate({
-        scrollTop: 0
-      }, 800);
     };
 
     App.titleChange = function(title) {
@@ -120,20 +117,6 @@
       });
     }
 
-    function initializeEvents () {
-      Communicator.events.on('router:nav', function (options) {
-        App.navigate(options.route, options.options);
-      });
-
-      Communicator.events.on('title:change', function (title) {
-        App.titleChange(title);
-      });
-
-      Communicator.requests.setHandler('default:region', function () {
-        return App.main;
-      });
-    }
-
     function initializeResources () {
       $.when(getSettings(), getMenus(), getSidebars(), getTaxonomies()).then(function (settings, menus, sidebars, taxonomies) {
         Settings.set(settings[0]);
@@ -142,7 +125,6 @@
         };
         user.fetch();
         initializeLayout(menus[0], sidebars[0]);
-        initializeEvents();
         initializeControllers(params);
         initializeRoutes(menus[0]);
       }); /* TODO: need a fail view on .fail() */
@@ -154,6 +136,18 @@
         footer:  '#footer'
       });
     }
+
+    Communicator.requests.setHandler('default:region', function () {
+      return App.main;
+    });
+
+    Communicator.events.on('router:nav', function (options) {
+      App.navigate(options.route, options.options);
+    });
+
+    Communicator.events.on('title:change', function (title) {
+      App.titleChange(title);
+    });
 
     App.mobile = isMobile();
 
