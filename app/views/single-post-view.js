@@ -14,9 +14,9 @@ define([
   'views/reply-form-view',
   'views/replyable-view',
   // Shims
-  'templates/main-template',
   'templates/content/type-post-template',
-  'templates/content/type-page-template'
+  'templates/content/type-page-template',
+  'templates/entry-meta-template'
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, Settings, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
   'use strict';
 
@@ -31,17 +31,15 @@ define([
     }
   }
 
-  var SinglePostView = ReplyableView.extend({
-    template:  'main-template.dust',
-    childView: CommentView,
-    tagName:   'div id="post"',
+  var SinglePostView = Backbone.Marionette.LayoutView.extend({
+    tagName: 'div id="post"',
+    regions: {
+      pagination: '#pagination',
+      comments:   '.comments'
+    },
+
     events: {
-      'click .b3-reply-post':                 'renderReplyBox', // from ReplyableView
-      'click .b3-pager-next':                 'displayNextPage',
-      'click .b3-pager-previous':             'displayPrevPage',
-      'click .b3-pagination .next a':         'displayNextPage',
-      'click .b3-pagination .previous a':     'displayPrevPage',
-      'click .b3-pagination .number a':       'displayPage',
+      'click .b3-reply-post': 'renderReplyBox', // from ReplyableView
       'click .b3-post-categories > span > a': function (event) {
         this.displayType('single:display:category', event);
       },
@@ -80,7 +78,9 @@ define([
     },
 
     serializeData: function () {
-      return _.extend(this._parseModel(), this._getDustTemplate());
+      var model = this._parseModel();
+      console.log(model);
+      return this._parseModel();
     },
 
     onDestroy: function () {
@@ -107,30 +107,6 @@ define([
       event.preventDefault();
     },
 
-    displayPrevPage: function (event) {
-      event.preventDefault();
-      if (this._hasPrevious()) {
-        this.page--;
-        this._renderPage();
-      }
-    },
-
-    displayNextPage: function (event) {
-      event.preventDefault();
-      if (this._hasNext()) {
-        this.page++;
-        this._renderPage();
-      }
-    },
-
-    displayPage: function (event) {
-      event.preventDefault();
-      if (this.page !== event.target.dataset.page) {
-        this.page = parseInt(event.target.dataset.page, 10);
-        this._renderPage();
-      }
-    },
-
     displayError: function () {
       this.$('.b3-comments').text('Could not retrieve comments.');
     },
@@ -143,53 +119,7 @@ define([
     _parseModel: function () {
       var model = this.model.toJSON();
       model.content = this.content[this.page - 1];
-      return _.extend(model, this._getPagination());
-    },
-
-    _getDustTemplate: function () {
-      var template = 'content/type-post-template.dust';
-      var type     = this.post.get('type');
-      var config   = Settings.get('require.config');
-
-      if (config.paths['content/type-' + type + '-template']) {
-        template = 'content/type-' + type + '-template.dust';
-      }
-
-      return { 'parent-template': template };
-    },
-
-    _getPagination: function () {
-      var view = this;
-
-      return {
-        'has_next':     this._hasNext(),
-        'has_previous': this._hasPrevious(),
-        'pages':        this.content.length,
-
-        'pageIterator': function (chunk, context, bodies) {
-          var pages = context.current();
-
-          _(pages).times(function (n) {
-            var page = n + 1;
-            chunk = chunk.render(bodies.block, context.push({
-              'page':    page,
-              'url':     view._getRoute(page),
-              'current': page === parseInt(view.page, 10)
-            }));
-          });
-
-          return chunk;
-        }
-      };
-    },
-
-    _hasNext: function () {
-      var total = this.content.length;
-      return (total > 1 && this.page < total);
-    },
-
-    _hasPrevious: function () {
-      return this.page > 1;
+      return model;
     },
 
     /**
