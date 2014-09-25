@@ -10,7 +10,7 @@
     'marionette',
     'routers/app-router',
     'apis/archive-api',
-    'controllers/single-controller',
+    'apis/single-api',
     'controllers/archive-controller',
     'controllers/search-controller',
     'controllers/loading-controller',
@@ -24,7 +24,7 @@
     'views/header-view',
     'views/sidebar-view',
     'views/footer-view'
-  ], function ($, _, Backbone, Marionette, AppRouter, ArchiveAPI, SingleController, ArchiveController, SearchController, LoadingController, TaxonomyController, Communicator, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, ArchiveController, SearchController, LoadingController, TaxonomyController, Communicator, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
 
     var App = new Backbone.Marionette.Application(),
         user = new User({ID: 'me'});
@@ -81,16 +81,8 @@
 
     function initializeRoutes () {
       var apis = [
-        new ArchiveAPI({ app: App }),
-        new SingleController({
-          app:  App,
-          user: user
-        }),
-        // new ArchiveController({
-        //   app:   App,
-        //   posts: new Posts(),
-        //   user:  user
-        // }),
+        new ArchiveAPI(),
+        new SingleAPI(),
         new SearchController({
           app:   App,
           posts: new Posts(),
