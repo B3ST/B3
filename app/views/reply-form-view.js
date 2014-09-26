@@ -5,30 +5,28 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'dust',
-  'dust.marionette',
   'buses/event-bus',
-  'models/comment-model',
   'models/user-model',
-  'models/post-model',
   'templates/forms/replyform-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, EventBus, Comment, User, Post) {
+], function ($, _, Backbone, Marionette, EventBus, User) {
   'use strict';
 
   var ReplyFormView = Backbone.Marionette.ItemView.extend({
-    template: "forms/replyform-template.dust",
-    tagName:  'div id="b3-replyform"',
+    template: 'forms/replyform-template.dust',
     events: {
-      'click #b3-cancel':          'cancelReply',
-      'click #b3-replybutton':     'sendReply',
-      'submit #b3-replyform form': 'sendReply'
+      'click .cancel':          'onCancelClicked',
+      'click .reply':           'onReplyClicked',
+      'submit #replyform form': 'onReplyClicked'
+    },
+
+    tagName: function () {
+      return 'div class="replyform"';
     },
 
     initialize: function (options) {
-      this.user       = options.user;
-      this.parentView = options.parentView;
-      this.parentId   = options.parentId;
-      this.post       = options.post || new Post();
+      this.user     = options.user;
+      this.parentId = options.parentId;
+      this.post     = options.post;
     },
 
     serializeData: function () {
@@ -40,74 +38,56 @@ define([
       };
     },
 
-    onRender: function () {
-      $(this.el).hide();
-      this.parentView.replyFormRendered();
+    onShow: function () {
+      this.$el.hide().slideDown('slow');
+      $(this.clickedReplyButton).fadeIn('fast');
     },
 
-    onDestroy: function () {
-      this.parentView.replyFormDestroyed();
+    onCancelClicked: function (ev) {
+      this._slideUp();
+      ev.preventDefault();
     },
 
-    sendReply: function (event) {
-      event.preventDefault();
+    onReplyClicked: function (ev) {
+      ev.preventDefault();
 
-      if (this.validateForm()) {
-        this.getComment().save()
-          .done(function (response) {
-            this.slideUpAndDestroy(response);
-          }.bind(this))
-          .fail(function (arg1, arg2, arg3) {
-            console.log(arg1, arg2, arg3);
-            this.displayWarning(arg2);
-          }.bind(this));
+      if (this._validateForm()) {
+        EventBus.trigger('replyform:view:reply', this._getComment());
       }
     },
 
-    slideUpAndHide: function () {
-      $(this.el).slideUp('slow', function() {
-        $(this).hide();
-      }.bind(this));
+    displayWarning: function (message) {
+      this.$('#warning').addClass('alert alert-danger').text(message);
+
+      if (_.isEmpty(message)) {
+        this._resetWarning();
+      }
     },
 
-    slideUpAndDestroy: function (response) {
-      $(this.el).slideUp('slow', function () {
+    _slideUp: function () {
+      this.$el.slideUp('slow', function() {
+        EventBus.trigger('replyform:view:cancel');
         this.destroy();
-        EventBus.trigger('comment:create', new Comment(response));
       }.bind(this));
     },
 
-    cancelReply: function (ev) {
-      ev.preventDefault();
-      this.slideUpAndHide();
-      this.parentView.replyFormCancelled();
-    },
-
-    validateForm: function () {
-      var valid = this.validateFormGroup();
+    _validateForm: function () {
+      var valid = this._validateFormGroup();
 
       if (!valid) {
         this.displayWarning('Please fill all required fields.');
       } else {
-        this.resetWarning();
+        this._resetWarning();
       }
 
       return valid;
     },
 
-    resetWarning: function () {
-      this.$('#b3-warning').removeClass('alert alert-danger').text('');
+    _resetWarning: function () {
+      this.$('#warning').removeClass('alert alert-danger').text('');
     },
 
-    displayWarning: function (message) {
-      this.$('#b3-warning').addClass('alert alert-danger').text(message);
-
-      if (_.isEmpty(message)) {
-        this.resetWarning();
-      }
-    },
-
-    validateFormGroup: function () {
+    _validateFormGroup: function () {
       var valid = true;
 
       this.$('.form-group').each(function (index, group) {
@@ -124,16 +104,16 @@ define([
       return valid;
     },
 
-    getComment: function () {
-      return new Comment({
+    _getComment: function () {
+      return {
         content:        this.$('[name="comment_content"]').val(),
         post:           this.post.get('ID'),
         parent_comment: this.parentId,
-        author:         this.getUser()
-      });
+        author:         this._getUser()
+      };
     },
 
-    getUser: function () {
+    _getUser: function () {
       if (this.user.isLoggedIn()) {
         return this.user;
       }
@@ -144,7 +124,6 @@ define([
         URL:   this.$('[name="author_url"]').val()
       });
     }
-
   });
 
   return ReplyFormView;

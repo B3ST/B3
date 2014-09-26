@@ -2,70 +2,70 @@
 
 define([
   'jquery',
+  'underscore',
   'backbone',
   'marionette',
-  'views/reply-form-view'
-], function ($, Backbone, Marionette, ReplyFormView) {
+  'buses/command-bus',
+  'buses/event-bus',
+  'models/settings-model'
+], function ($, _, Backbone, Marionette, CommandBus, EventBus, Settings) {
   'use strict';
 
   var ReplyableView = Backbone.Marionette.CompositeView.extend({
-    renderReplyBox: function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.clickedReplyButton = $(event.currentTarget);
-
-      if (!this.$(this.replyForm).length) {
-        this.renderReplyForm();
-      }
+    events: {
+      'click .reply': 'renderReplyBox',
     },
 
-    renderReplyForm: function () {
-      if (!this.previouslyRendered) {
-        this.renderNewForm();
-      } else {
-        this.replyFormRendered();
+    renderReplyBox: function (ev) {
+      var replyButton = $(ev.currentTarget),
+          id     = _.uniqueId('reply-form-container'),
+          region = new Marionette.Region({ el: '#' + id });
+
+      if (this.$('.reply-form').length === 0) {
+        this._displayReplyForm(replyButton, id, region);
+        this._bindToEvents();
+        this.triggerMethod('reply:clicked');
       }
-    },
 
-    renderNewForm: function () {
-      this.replyForm = new ReplyFormView({
-        post:       this.post,
-        user:       this.user,
-        parentView: this,
-        parentId:   this.parentId()
-      });
-
-      this.replyForm.render();
-      $(this.clickedReplyButton).after(this.replyForm.el);
-      this.previouslyRendered = true;
+      return false;
     },
 
     parentId: function () {
       return 0;
     },
 
-    replyFormCancelled: function () {
-      $(this.clickedReplyButton).fadeIn('fast');
+    getPost: function () {
+      return this.model;
     },
 
-    replyFormRendered: function () {
-      $(this.clickedReplyButton).fadeOut('fast', function () {
-        $(this.replyForm.el).slideDown('slow');
-      }.bind(this));
+    showButton: function (options) {
+      if (options.id === this.parentId()) {
+        this.button.fadeIn('fast');
+        this.$('.reply-form').remove();
+        EventBus.off('replyform:cancel', this.showButton, this);
+      }
     },
 
-    replyFormDestroyed: function () {
-      $(this.clickedReplyButton).fadeIn('fast');
-      $(this.replyForm.el).remove();
-      $('.notifications').notify({
-        closable: false,
-        message: {
-          html: '<b>Well done!</b> Reply posted with success'
-        }
-      }).show();
-      this.replyForm = null;
-      this.previouslyRendered = false;
+    _displayReplyForm: function (button, id, region) {
+      this.button = button;
+      $(this.button).after('<div id="' + id + '" class="reply-form"></div>');
+      CommandBus.execute('reply:form:show', this._getOptions(region));
+      $(this.button).fadeOut('fast');
     },
+
+    _bindToEvents: function () {
+      EventBus.on('replyform:cancel', this.showButton, this);
+    },
+
+    _getOptions: function (region) {
+      return {
+        region:     region,
+        post:       this.getPost(),
+        user:       Settings.get('me'),
+        parentView: this,
+        parentId:   this.parentId()
+      };
+    }
   });
 
   return ReplyableView;

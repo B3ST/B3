@@ -2,14 +2,14 @@
   <div class="panel-body">
 
     {?guest}
-      <div id="b3-author">
-        <div class="form-group" id="b3-author-name-group">
-          <label for="b3-author-name" class="control-label">Your name:</label>
+      <div id="author">
+        <div class="form-group" id="author-name-group">
+          <label for="author-name" class="control-label">Your name:</label>
           <input type="text" class="form-control required" name="author_name" value="{author.name}" required>
         </div>
 
-        <div class="form-group" id="b3-author-email-group">
-          <label for="b3-author-email" class="control-label">Your email:</label>
+        <div class="form-group" id="author-email-group">
+          <label for="author-email" class="control-label">Your email:</label>
           <input type="email" class="form-control required" name="author_email" value="{author.email}" required>
 
           <p class="form-help">
@@ -17,8 +17,8 @@
           </p>
         </div>
 
-        <div class="form-group" id="b3-author-url-group">
-          <label for="b3-author-url" class="control-label">Your site:</label>
+        <div class="form-group" id="author-url-group">
+          <label for="author-url" class="control-label">Your site:</label>
           <input type="url" class="form-control" name="author_url" value="{author.URL}">
         </div>
       </div>
@@ -29,8 +29,8 @@
       </div>
     {/guest}
 
-    <div class="form-group" id="b3-comment-content-group">
-      <label for="b3-comment-content" class="control-label">Your comment:</label>
+    <div class="form-group" id="comment-content-group">
+      <label for="comment-content" class="control-label">Your comment:</label>
       <textarea class="form-control required" rows="5" name="comment_content" required>{comment}</textarea>
 
       <p class="form-help">
@@ -41,11 +41,11 @@
       </p>
     </div>
 
-    <div id="b3-warning" role="alert"></div>
+    <div id="warning" role="alert"></div>
 
-    <div id="b3-replyactions">
-      <button class="reply" id="b3-replybutton"><span class="icon-send"></span>{~s}Publish Comment</button>
-      <a href="#" class="cancel" id="b3-cancel"><span class="icon-cancel"></span>{~s}Dismiss</a>
+    <div id="replyactions">
+      <button class="reply"><span class="icon-send"></span>{~s}Publish Comment</button>
+      <a href="#" class="cancel"><span class="icon-cancel"></span>{~s}Dismiss</a>
     </div>
 
   </div>
