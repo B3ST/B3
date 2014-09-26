@@ -28,7 +28,7 @@ define([
     },
 
     showPostByCategory: function (params) {
-      var page   = parseInt(params.pages, 10) || 1,
+      var page   = parseInt(params.paged, 10) || 1,
           catg   = params.category,
           filter = new PostFilter().byCategory(catg).onPage(page);
 
@@ -36,15 +36,19 @@ define([
     },
 
     showPostByTag: function (params) {
-      var page   = parseInt(params.pages, 10) || 1,
-          ptag   = params.category,
+      var page   = parseInt(params.paged, 10) || 1,
+          ptag   = params.post_tag,
           filter = new PostFilter().byTag(ptag).onPage(page);
 
       this._showArchive(page, filter);
     },
 
-    showPostByAuthor: function  () {
+    showPostByAuthor: function (params) {
+      var page   = parseInt(params.paged, 10) || 1,
+          author = params.author,
+          filter = new PostFilter().byAuthor(author).onPage(page);
 
+      this._showArchive(page, filter);
     },
 
     showPostByDate: function () {

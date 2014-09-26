@@ -51,6 +51,12 @@ define([
       runTest: function (api) {
         api.showPostByCategory({ category: 'category' });
       }
+    });
+
+    sharedArchiveAPIBehaviourFor(".showPostByAuthor", {
+      runTest: function (api) {
+        api.showPostByAuthor({ author: 'author' });
+      }
     })
   });
 
