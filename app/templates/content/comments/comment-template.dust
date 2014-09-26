@@ -7,7 +7,7 @@
     <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" class="comment-author">{author.name}</a>
     {~s} on {~s}
     <a href="{meta.links.self}">
-      <time datetime="{date}">{date}</time>
+      <time datetime="{date}">{@formatDate date="{date}" format="D/M/YYYY H:m" /}</time>
     </a>:
   </h4>
 
