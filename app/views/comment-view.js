@@ -3,36 +3,38 @@
 define([
   'jquery',
   'underscore',
-  'backbone',
-  'marionette',
-  'dust',
-  'dust.helpers',
-  'dust.marionette',
   'views/replyable-view',
   'buses/navigator',
   'templates/content/comments/comment-template'
-], function ($, _, Backbone, Marionette, dust, dustHelpers, dustMarionette, ReplyableView, Navigator) {
+], function ($, _, ReplyableView, Navigator) {
   'use strict';
 
   var CommentView = ReplyableView.extend({
     template: 'content/comments/comment-template.dust',
+    events: _.extend({}, ReplyableView.prototype.events, {
+      'click .comment-author': 'displayAuthor'
+    }),
 
     tagName:  function () {
       return 'li id="comment-' + this.model.get('ID') + '" class="media comment"';
     },
 
-    events: {
-      'click .b3-reply-comment':  'renderReplyBox', // from ReplyableView
-      'click .b3-comment-author': 'displayAuthor'
-    },
-
     initialize: function () {
       this.post = null;
-      this.user = null;
+    },
+
+    setPost: function (post) {
+      this.post = post;
+      this.render();
+    },
+
+    getPost: function () {
+      return this.post;
     },
 
     serializeData: function () {
-      return this.model.toJSON();
+      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON() })
+                       : this.model.toJSON();
     },
 
     parentId: function () {
