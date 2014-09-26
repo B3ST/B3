@@ -3,9 +3,10 @@
 define([
   'jquery',
   'underscore',
+  'backbone',
   'buses/command-bus',
   'buses/event-bus'
-], function ($, _, CommandBus, EventBus) {
+], function ($, _, Backbone, CommandBus, EventBus) {
   'use strict';
 
   CommandBus.setHandler('when:fetched', function (entities, done, fail) {
@@ -13,14 +14,16 @@ define([
                 .flatten()
                 .pluck('fetch')
                 .map(function (xhr, index) {
-                  return xhr.call(entities[index], { reset: true });
+                  var isCollection = entities[index] instanceof Backbone.Collection;
+                  return isCollection ? xhr.call(entities[index], { reset: true })
+                                      : xhr.call(entities[index]);
                 })
                 .value();
 
     EventBus.trigger('fetch:start');
-    $.when.apply($, xhrs).done(function (entities, status, jqXHR) {
+    $.when.apply($, xhrs).done(function () {
       EventBus.trigger('fetch:done');
-      done(entities, status, jqXHR);
+      done.apply(null, arguments);
     }).fail(function () {
       EventBus.trigger('fetch:fail');
       fail();
