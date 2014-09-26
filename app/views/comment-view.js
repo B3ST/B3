@@ -41,10 +41,14 @@ define([
       return this.model.get('ID');
     },
 
-    displayAuthor: function (event) {
-      var slug = $(event.currentTarget).attr('slug');
-      Navigator.navigateToAuthor(slug, null, true);
-      event.preventDefault();
+    displayAuthor: function (ev) {
+      var slug = $(ev.currentTarget).attr('slug'),
+          page = 1, trigger = true;
+
+      if (slug) {
+        Navigator.navigateToAuthor(slug, page, trigger);
+      }
+      ev.preventDefault();
     }
   });
 

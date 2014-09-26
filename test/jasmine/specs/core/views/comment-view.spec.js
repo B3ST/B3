@@ -31,7 +31,7 @@ define([
         view.render();
 
         view.$('.comment-author').click();
-        expect(bus).toHaveBeenCalledWith('author-slug', null, true);
+        expect(bus).toHaveBeenCalledWith('author-slug', 1, true);
       });
     });
   });
