@@ -1,86 +1,42 @@
 /* global define */
 
 define([
-  'jquery',
-  'underscore',
   'backbone',
   'marionette',
-  'dust',
-  'dust.marionette',
   'models/settings-model',
   'buses/event-bus',
   'buses/navigator',
-  'views/comment-view',
-  'views/reply-form-view',
-  'views/replyable-view',
   // Shims
   'templates/content/type-post-template',
   'templates/content/type-page-template',
   'templates/entry-meta-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, Settings, EventBus, Navigator, CommentView, ReplyFormView, ReplyableView) {
+], function (Backbone, Marionette, Settings, EventBus, Navigator) {
   'use strict';
-
-  function scrollToReply (id) {
-    var placeholder = "#comment-" + id,
-        offset      = $(placeholder).offset();
-    if (offset) {
-      $('html,body').animate({
-        scrollTop: offset.top - 100
-      }, 'slow');
-      $(placeholder).effect('highlight', {}, 1500);
-    }
-  }
 
   var SinglePostView = Backbone.Marionette.LayoutView.extend({
     tagName: 'div id="post"',
     regions: {
       pagination: '#pagination',
-      comments:   '.comments'
+      comments:   '#comments-section'
     },
 
     events: {
-      'click .b3-reply-post': 'renderReplyBox', // from ReplyableView
-      'click .b3-post-categories > span > a': function (event) {
-        this.displayType('single:display:category', event);
-      },
-      'click .b3-post-tags > span > a':       function (event) {
-        this.displayType('single:display:tag', event);
-      },
-      'click .b3-post-author > span > a':     function (event) {
-        this.displayType('single:display:author', event);
-      },
-      'click #b3-post-author > a':            function (event) {
-        this.displayType('single:display:author', event);
-      }
+      'click .category > a':  'onCategoryClicked',
+      'click .tag > a':       'onTagClicked',
+      'click .author > a':    'onAuthorClicked',
+      'click #author > a':    'onAuthorClicked'
     },
 
-    collectionEvents: {
-      'sort':  'scrollToComment',
-      'reset': 'render'
+    modelEvents: {
+      'change': 'renderContent'
     },
 
-    initialize: function (options) {
-      this.page    = parseInt(options.page, 10) || 1;
-      this.content = this.model.get('content').split(/<!--nextpage-->/);
-      this.post    = this.model;
-      this.user    = options.user;
-
+    initialize: function () {
       EventBus.trigger('title:change', this.model.get('title'));
     },
 
-    scrollToComment: function (comments) {
-      this.render();
-      scrollToReply(comments.last().get('ID'));
-    },
-
-    parentId: function () {
-      return 0;
-    },
-
-    serializeData: function () {
-      var model = this._parseModel();
-      console.log(model);
-      return this._parseModel();
+    renderContent: function () {
+      this.$('.entry-content').html(this.model.get('content'));
     },
 
     onDestroy: function () {
@@ -89,22 +45,24 @@ define([
       }
     },
 
-    attachHtml: function (collectionView, itemView) {
-      itemView.post = this.post;
-      itemView.user = this.user;
-
-      if (itemView.model.get('parent') > 0) {
-        collectionView.$('#comment-' + itemView.model.get('parent') + ' > .comment-body > ul.b3-comments').append(itemView.el);
-      } else {
-        var commentSection = collectionView.$('.b3-comments');
-        $(commentSection[0]).append(itemView.el);
-      }
+    onCategoryClicked: function (event) {
+      this._triggerEvent('category', event);
+      event.preventDefault();
     },
 
-    displayType: function (type, event) {
-      var slug = $(event.currentTarget).attr('slug');
-      EventBus.trigger(type, {slug: slug});
+    onTagClicked: function (event) {
+      this._triggerEvent('post_tag', event);
       event.preventDefault();
+    },
+
+    onAuthorClicked: function (event) {
+      this._triggerEvent('author', event);
+      event.preventDefault();
+    },
+
+    _triggerEvent: function (type, event) {
+      var slug = $(event.currentTarget).attr('slug');
+      EventBus.trigger('single:view:display:' + type, { slug: slug, type: type });
     },
 
     displayError: function () {
@@ -113,13 +71,7 @@ define([
 
     _renderPage: function () {
       this.render();
-      EventBus.trigger('single:display:page', {page: this.page});
-    },
-
-    _parseModel: function () {
-      var model = this.model.toJSON();
-      model.content = this.content[this.page - 1];
-      return model;
+      EventBus.trigger('single:display:page', { page: this.page });
     },
 
     /**
