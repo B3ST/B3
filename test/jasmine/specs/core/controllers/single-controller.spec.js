@@ -12,9 +12,10 @@ define([
   'views/not-found-view',
   'buses/event-bus',
   'buses/command-bus',
+  'buses/navigator',
   'app',
   'sinon'
-], function (SingleController, BaseController, Settings, User, Post, Page, Comment, Posts, Comments, SinglePostView, NotFoundView, EventBus, CommandBus, App) {
+], function (SingleController, BaseController, Settings, User, Post, Page, Comment, Posts, Comments, SinglePostView, NotFoundView, EventBus, CommandBus, Navigator, App) {
   'use strict';
 
   describe("SingleController", function() {
@@ -27,31 +28,40 @@ define([
     it("should bind to a given set of events", function() {
       controller = new SingleController();
       expect(controller.busEvents).toEqual({
-        'single:view:display:category': 'showCategories',
-        'single:view:display:tag':      'showTags',
+        'single:view:display:category': 'showTaxonomy',
+        'single:view:display:tag':      'showTaxonomy',
         'single:view:display:author':   'showAuthor',
-        'single:view:display:page':     'showPage'
+        'single:view:display:page':     'showPage',
+
+        'pagination:next:page':         'showPageContent',
+        'pagination:previous:page':     'showPageContent',
+        'pagination:select:page':       'showPageContent'
       });
     });
 
     it("should have a set of child controller", function() {
       controller = new SingleController();
       expect(controller.childControllers).toEqual({
-        pagination: 'paginationController'
+        pagination: 'paginationController',
+        comments:   'commentsController'
       });
     });
 
     describe(".showSingle", function() {
-      it("should display loading", function() {
-        var show = spyOn(SingleController.prototype, 'show'),
-            post = new Post();
+      var show, post
+
+      beforeEach(function() {
+        show = spyOn(SingleController.prototype, 'show');
+        post = new Post();
 
         controller = new SingleController({ model: post, template: '' });
-        controller.showSingle();
+      });
 
+      it("should display loading", function() {
+        controller.showSingle();
         expect(show).toHaveBeenCalledWith(null, {
-          entities: [post],
           loading: {
+            entities: [post],
             done: jasmine.any(Function),
             fail: jasmine.any(Function)
           }
@@ -59,46 +69,29 @@ define([
       });
     });
 
-    xdescribe(".initialize", function() {
-      beforeEach(function() {
-        this.bus = spyOn(EventBus, 'bind');
-        this.controller = new SingleController({ app: App });
-      });
+    describe(".showPageContent", function() {
+      it("should change the content of the model", function() {
+        var post = new Post({ content: 'page1<!--nextpage-->page2<!--nextpage-->page3'}),
+            split = post.get('content').split(/<!--nextpage-->/),
+            set   = spyOn(post, 'set');
 
-      it("should bind to single:display:category", function() {
-        expect(this.bus).toHaveBeenCalledWith('single:display:category', this.controller.navigateToCategories);
-      });
+        controller = new SingleController({ model: post, template: '', splitContent: split });
+        controller.showPageContent({ page: 2 });
 
-      it("should bind to single:display:tag", function() {
-        expect(this.bus).toHaveBeenCalledWith('single:display:tag', this.controller.navigateToTags);
+        expect(set).toHaveBeenCalledWith({ content: split[1] });
       });
+    });
 
-      it("should bind to single:display:author", function() {
-        expect(this.bus).toHaveBeenCalledWith('single:display:author', this.controller.navigateToAuthor);
-      });
+    using('Taxonomy values', ['category', 'post_tag'], function (value) {
+      describe(".showTaxonomy", function() {
+        it("should navigate to the given taxonomy", function() {
+          var navigate = spyOn(Navigator, 'navigateToTaxonomy');
 
-      it("should bind to single:display:page", function() {
-        expect(this.bus).toHaveBeenCalledWith('single:display:page', this.controller.navigateToPage);
-      });
+          controller = new SingleController({ template: '' });
+          controller.showTaxonomy({ type: 'category', slug: 'slug' });
 
-      it("should bind to post:show", function() {
-        expect(this.bus).toHaveBeenCalledWith('post:show', this.controller.showPost);
-      });
-
-      it("should bind to page:show", function() {
-        expect(this.bus).toHaveBeenCalledWith('page:show', this.controller.showPageById);
-      });
-
-      it("should bind to comment:create", function() {
-        expect(this.bus).toHaveBeenCalledWith('comment:create', this.controller.addComment);
-      });
-
-      it("should bind to search:start event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:start', this.controller.saveCurrentState);
-      });
-
-      it("should bind to search:stop event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:stop', this.controller.loadPreviousState);
+          expect(navigate).toHaveBeenCalledWith('category', 'slug', 1, true);
+        });
       });
     });
 
