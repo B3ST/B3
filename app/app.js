@@ -23,11 +23,15 @@
     'collections/taxonomy-collection',
     'views/header-view',
     'views/sidebar-view',
-    'views/footer-view'
+    'views/footer-view',
+
+    'config/application'
   ], function ($, _, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, ArchiveController, SearchController, LoadingController, TaxonomyController, Communicator, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
 
     var App = new Backbone.Marionette.Application(),
         user = new User({ID: 'me'});
+
+    Settings.set({ me: user });
 
     App.navigate = function(route, options){
       options = options || {};
@@ -139,6 +143,14 @@
 
     Communicator.events.on('title:change', function (title) {
       App.titleChange(title);
+    });
+
+    Communicator.commands.setHandler('register:controller', function (instance, id) {
+      App.register(instance, id);
+    });
+
+    Communicator.commands.setHandler('unregister:controller', function (instance, id) {
+      App.unregister(instance, id);
     });
 
     App.mobile = isMobile();

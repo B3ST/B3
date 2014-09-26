@@ -98,5 +98,7 @@
     }
 
     App.start();
+
+    window.App = App;
   });
 })();
