@@ -8,7 +8,7 @@ define([
   function stubServer (options) {
     var server = sinon.fakeServer.create();
     server.respondWith(
-      'GET',
+      options.verb || 'GET',
       options.url,
       [options.code, {'Content-Type': 'application/json'}, JSON.stringify(options.response)]
     );
