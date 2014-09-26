@@ -235,16 +235,6 @@ define([
           .fail(function () { this.show(this.notFoundView()); }.bind(this));
     },
 
-    _dateFilter: function (params) {
-      var filter = new PostFilter();
-
-      if (params.hasOwnProperty('year')) { filter.withYear(params.year); }
-      if (params.hasOwnProperty('monthnum')) { filter.withMonth(params.monthnum); }
-      if (params.hasOwnProperty('day')) { filter.withDay(params.day); }
-
-      return filter;
-    },
-
     /**
      * Return the fetch parameters for a collection
      * @param  {PostFilter} filter The filters to use in the fetching

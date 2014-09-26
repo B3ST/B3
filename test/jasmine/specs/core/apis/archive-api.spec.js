@@ -57,6 +57,12 @@ define([
       runTest: function (api) {
         api.showPostByAuthor({ author: 'author' });
       }
+    });
+
+    sharedArchiveAPIBehaviourFor(".showPostByData", {
+      runTest: function (api) {
+        api.showPostByDate({ year: '2013', monthnum: '05', day: '21' });
+      }
     })
   });
 

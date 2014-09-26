@@ -21,14 +21,14 @@ define([
     },
 
     showArchive: function (params) {
-      var page   = parseInt(params.paged, 10) || 1,
+      var page   = this._getPage(params),
           filter = new PostFilter().onPage(page);
 
       this._showArchive(page, filter);
     },
 
     showPostByCategory: function (params) {
-      var page   = parseInt(params.paged, 10) || 1,
+      var page   = this._getPage(params),
           catg   = params.category,
           filter = new PostFilter().byCategory(catg).onPage(page);
 
@@ -36,7 +36,7 @@ define([
     },
 
     showPostByTag: function (params) {
-      var page   = parseInt(params.paged, 10) || 1,
+      var page   = this._getPage(params),
           ptag   = params.post_tag,
           filter = new PostFilter().byTag(ptag).onPage(page);
 
@@ -44,15 +44,18 @@ define([
     },
 
     showPostByAuthor: function (params) {
-      var page   = parseInt(params.paged, 10) || 1,
+      var page   = this._getPage(params),
           author = params.author,
           filter = new PostFilter().byAuthor(author).onPage(page);
 
       this._showArchive(page, filter);
     },
 
-    showPostByDate: function () {
+    showPostByDate: function (params) {
+      var page   = this._getPage(params),
+          filter = this._getDateFilter(params).onPage(page);
 
+      this._showArchive(page, filter);
     },
 
     showCustomTaxonomy: function  () {
@@ -61,6 +64,20 @@ define([
 
     _showArchive: function (page, filter) {
       new ArchiveController({ page: page, filter: filter }).showArchive();
+    },
+
+    _getPage: function (params) {
+      return parseInt(params.paged, 10) || 1;
+    },
+
+    _getDateFilter: function (params) {
+      var filter = new PostFilter();
+
+      if (params.hasOwnProperty('year')) { filter.withYear(params.year); }
+      if (params.hasOwnProperty('monthnum')) { filter.withMonth(params.monthnum); }
+      if (params.hasOwnProperty('day')) { filter.withDay(params.day); }
+
+      return filter;
     }
   });
 
