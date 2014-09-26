@@ -88,10 +88,21 @@ define([
           var navigate = spyOn(Navigator, 'navigateToTaxonomy');
 
           controller = new SingleController({ template: '' });
-          controller.showTaxonomy({ type: 'category', slug: 'slug' });
+          controller.showTaxonomy({ type: value, slug: 'slug' });
 
-          expect(navigate).toHaveBeenCalledWith('category', 'slug', 1, true);
+          expect(navigate).toHaveBeenCalledWith(value, 'slug', 1, true);
         });
+      });
+    });
+
+    describe(".showAuthor", function() {
+      it("should navigate to the given author", function() {
+        var navigate = spyOn(Navigator, 'navigateToAuthor');
+
+        controller = new SingleController({ template: '' });
+        controller.showAuthor({ type: 'author', slug: 'slug' });
+
+        expect(navigate).toHaveBeenCalledWith('slug', 1, true);
       });
     });
 

@@ -71,6 +71,11 @@ define([
       Navigator.navigateToTaxonomy(taxonomy, slug, page, trigger);
     },
 
+    showAuthor: function (options) {
+      var author = options.slug, page = 1, trigger = true;
+      Navigator.navigateToAuthor(author, page, trigger);
+    },
+
     paginationController: function () {
       return new PaginationController();
     },
