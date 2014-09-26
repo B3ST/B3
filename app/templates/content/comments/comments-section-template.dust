@@ -1,0 +1,9 @@
+<aside class="post-comments">
+  {@eq key={comment_status} value="open"}
+    <a href="#reply" class="button reply" role="button">
+      <span class="icon-reply"></span> Reply
+    </a>
+  {/eq}
+
+  <ul class="comments"></ul>
+</aside>

@@ -118,7 +118,8 @@
     specsRoot + 'core/views/header-view.spec',
     specsRoot + 'core/views/footer-view.spec',
     specsRoot + 'core/views/archive-view.spec',
-    //specsRoot + 'core/views/single-post-view.spec',
+    specsRoot + 'core/views/single-post-view.spec',
+    specsRoot + 'core/views/comments-view.spec',
     specsRoot + 'core/views/comment-view.spec',
     specsRoot + 'core/views/not-found-view.spec',
     specsRoot + 'core/views/reply-form-view.spec',
@@ -140,6 +141,8 @@
     specsRoot + 'core/controllers/loading-controller.spec',
     specsRoot + 'core/controllers/taxonomy-controller.spec',
     specsRoot + 'core/controllers/pagination-controller.spec',
+    specsRoot + 'core/controllers/comments-controller.spec',
+    specsRoot + 'core/controllers/reply-form-controller.spec',
 
     specsRoot + 'core/apis/archive-api.spec',
     specsRoot + 'core/apis/single-api.spec',
