@@ -41,7 +41,7 @@ define([
         'archive:view:display:post':     'showPost',
         'archive:view:display:category': 'showPostsByTaxonomy',
         'archive:view:display:tag':      'showPostsByTaxonomy',
-        'archive:view:display:author':   'showPostsByType',
+        'archive:view:display:author':   'showPostsByAuthor',
 
         'pagination:previous:page':      'showPage',
         'pagination:next:page':          'showPage',
@@ -142,13 +142,23 @@ define([
       });
     });
 
-    describe("showPost", function() {
+    describe(".showPost", function() {
       it("should navigate to the given post", function() {
         var navigate = spyOn(Navigator, 'navigateToPost');
         controller = new ArchiveController(options);
 
         controller.showPost({ post: 'post' });
         expect(navigate).toHaveBeenCalledWith('post', 1, true);
+      });
+    });
+
+    describe(".showPostByAuthor", function() {
+      it("should navigate to the author's posts", function() {
+        var navigate = spyOn(Navigator, 'navigateToAuthor');
+        controller = new ArchiveController(options);
+
+        controller.showPostsByAuthor({ slug: 'author' });
+        expect(navigate).toHaveBeenCalledWith('author', 1, true);
       });
     });
 

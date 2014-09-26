@@ -24,7 +24,7 @@ define([
       'archive:view:display:post':     'showPost',
       'archive:view:display:category': 'showPostsByTaxonomy',
       'archive:view:display:tag':      'showPostsByTaxonomy',
-      'archive:view:display:author':   'showPostsByType',
+      'archive:view:display:author':   'showPostsByAuthor',
 
       'pagination:previous:page':      'showPage',
       'pagination:next:page':          'showPage',
@@ -66,11 +66,6 @@ define([
       });
     },
 
-    showPost: function (params) {
-      var post = params.post, page = 1, trigger = true;
-      Navigator.navigateToPost(post, page, trigger);
-    },
-
     /**
      * Displays a given page
      * @param  {Object} params Object containing the paged parameter
@@ -107,27 +102,29 @@ define([
       Navigator.navigateToTaxonomy(type, slug, page, trigger);
     },
 
-    showView: function (pages) {
-      this.show(this._archiveView(this.posts), { region: this.region });
-      this.pagination.showPagination({ region: this.mainView.pagination, page: this.page, pages: pages, include: true });
-    },
-
     /**
      * Display posts of a given author
      *
      * @param  {Object} params Object containing the author and page number
      */
-    showPostByAuthor: function (params) {
-      var author = params.author || params.id,
-          slug   = params.author || params.slug;
+    showPostsByAuthor: function (params) {
+      var slug = params.slug, page = 1, trigger = true;
+      Navigator.navigateToAuthor(slug, page, trigger);
+    },
 
-      this.page   = params.paged || 1;
-      this.filter = new PostFilter();
-      this.filter = isNaN(author) ? this.filter.byAuthor(author)
-                                  : this.filter.byAuthorId(author);
+    /**
+     * Display a given post
+     *
+     * @param  {Object} params Object containing the post
+     */
+    showPost: function (params) {
+      var post = params.post, page = 1, trigger = true;
+      Navigator.navigateToPost(post, page, trigger);
+    },
 
-      this._fetchPostsOfPage(this.page);
-      Navigator.navigateToAuthor(slug, this.page, false);
+    showView: function (pages) {
+      this.show(this._archiveView(this.posts), { region: this.region });
+      this.pagination.showPagination({ region: this.mainView.pagination, page: this.page, pages: pages, include: true });
     },
 
     /**
