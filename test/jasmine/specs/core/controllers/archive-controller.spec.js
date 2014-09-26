@@ -4,19 +4,13 @@ define([
   'backbone',
   'controllers/archive-controller',
   'controllers/base-controller',
-  'buses/command-bus',
-  'buses/event-bus',
-  'buses/request-bus',
-  'buses/navigator',
-  'models/post-model',
-  'models/settings-model',
-  'models/user-model',
-  'models/taxonomy-model',
-  'collections/post-collection',
   'views/archive-view',
-  'views/not-found-view',
-  'sinon'
-], function (Backbone, ArchiveController, BaseController, CommandBus, EventBus, RequestBus, Navigator, Post, Settings, User, Taxonomy, Posts, ArchiveView, NotFoundView) {
+  'buses/event-bus',
+  'buses/navigator',
+  'collections/post-collection',
+  'models/post-model',
+  'models/user-model'
+], function (Backbone, ArchiveController, BaseController, ArchiveView, EventBus, Navigator, Posts, Post, User) {
   'use strict';
 
   describe("ArchiveController", function() {
@@ -224,23 +218,6 @@ define([
         var view = this.appShow.calls.mostRecent();
         expect(typeof view).toEqual('ArchiveView');
         expect(view.collection).toEqual(this.posts);
-      });
-    });
-
-    xdescribe(".displayNotFound", function() {
-      it("should display a not found view", function() {
-        this.posts      = new Posts();
-        this.appShow    = spyOn(app.main, 'show');
-        this.controller = new ArchiveController({
-          posts: this.posts,
-          app:   app,
-          user:  user
-        });
-
-        this.controller.displayResults();
-
-        var view = this.appShow.calls.mostRecent();
-        expect(typeof view).toEqual('NotFoundView');
       });
     });
   });

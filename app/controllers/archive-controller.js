@@ -1,23 +1,17 @@
 /* global define */
 
 define([
-  'jquery',
-  'underscore',
-  'backbone',
-  'marionette',
-  'helpers/post-filter',
-  'models/settings-model',
-  'collections/post-collection',
   'controllers/base-controller',
   'controllers/pagination-controller',
+  'views/archive-view',
+  'helpers/post-filter',
+  'collections/post-collection',
   'buses/event-bus',
-  'buses/request-bus',
-  'buses/navigator',
-  'views/archive-view'
-], function ($, _, Backbone, Marionette, PostFilter, Settings, Posts, BaseController, PaginationController, EventBus, RequestBus, Navigator, ArchiveView) {
+  'buses/navigator'
+], function (BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, Navigator) {
   'use strict';
 
-  return BaseController.extend({
+  var ArchiveController = BaseController.extend({
     busEvents: {
       'archive:show':                  'showArchive',
 
@@ -128,25 +122,6 @@ define([
     },
 
     /**
-     * Display posts of a given date
-     *
-     * @param  {Object} params Object containing the date (year, month and/or day) and page number
-     */
-    showPostByDate: function (params) {
-      this.page   = params.paged || 1;
-      this.filter = this._dateFilter(params);
-
-      this._fetchPostsOfPage(this.page);
-      params = _.omit(params, 'paged');
-      _.each(params, function (value, key) {
-        if (!value) {
-          delete params[key];
-        }
-      });
-      Navigator.navigateToDate(params, this.page, false);
-    },
-
-    /**
      * Display posts of a given taxonomy
      *
      * @param  {Object} params Object containing the taxonomy and page number
@@ -208,43 +183,6 @@ define([
     },
 
     /**
-     * Display a given page
-     */
-    _displayPage: function (page, taxonomy) {
-      var route = Navigator.getPagedRoute(this.filter, page);
-      this._fetchPostsOfPage(page, taxonomy);
-      Navigator.navigate(route, false);
-    },
-
-    /**
-     * Fetch all posts using a set of filters and display the
-     * corresponding view on success or fail.
-     */
-    _fetchPostsOfPage: function (page, taxonomy) {
-      var title  = taxonomy ? taxonomy.get('name') : false;
-
-      this.posts = new Posts();
-      this.filter.onPage(page);
-      //this.show(this._archiveView(this.posts, this.page, ));
-      this.posts.fetch(this._fetchParams())
-          .done(function (collection, status, jqXHR) {
-            var totalPages = parseInt(jqXHR.getResponseHeader('X-WP-TotalPages'), 10);
-            this.show(this._archiveView(this.posts, title));
-            this.pagination.showPagination({ region: this.mainView.pagination, page: page, pages: totalPages, include: true });
-          }.bind(this))
-          .fail(function () { this.show(this.notFoundView()); }.bind(this));
-    },
-
-    /**
-     * Return the fetch parameters for a collection
-     * @param  {PostFilter} filter The filters to use in the fetching
-     * @return {Object}            The parameters to be used in the collection
-     */
-    _fetchParams: function () {
-      return { reset: true, data: this.filter.serialize() };
-    },
-
-    /**
      * Creates a new ArchiveView instance for a post list.
      *
      * @param  {array}       posts Post collection to display.
@@ -255,4 +193,6 @@ define([
       return new ArchiveView({collection: posts, title: title});
     }
   });
+
+  return ArchiveController;
 });
