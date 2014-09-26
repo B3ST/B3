@@ -1,13 +1,13 @@
-  {#posts}
-    <article class="post {post_class}">
-      <header>
-        <h1 class="title page-header">
-          <a id="{ID}" slug="{slug}" href="#">{title|s}</a>
-        </h1>
-        {> "entry-meta-template.dust" /}
-      </header>
-      <div class="excerpt">
-        {excerpt|s}
-      </div>
-    </article>
-  {/posts}
+{#posts}
+  <article class="post {post_class}">
+    <header>
+      <h1 class="title page-header">
+        <a id="{ID}" slug="{slug}" href="#">{title|s}</a>
+      </h1>
+      {> "entry-meta-template.dust" /}
+    </header>
+    <div class="excerpt">
+      {excerpt|s}
+    </div>
+  </article>
+{/posts}
