@@ -3,75 +3,76 @@
 (function() {
   'use strict';
 
-  var root = "../../../..";
+  var root = '../../../..';
   var config = {
-    baseUrl: root + "/dist",
+    baseUrl: root + '/dist',
     paths: {
-      "jquery":               root + "/lib/jquery",
-      "jqueryui":             root + "/lib/jquery-ui",
-      "underscore":           root + "/lib/lodash.compat",
-      "backbone":             root + "/lib/backbone",
-      "backbone.wreqr":       root + "/lib/backbone.wreqr",
-      "backbone.babysitter":  root + "/lib/backbone.babysitter",
-      "marionette":           root + "/lib/backbone.marionette",
-      "dust":                 root + "/lib/dust-full.min",
-      "dust.helpers":         root + "/lib/dust-helpers.min",
-      "dust.marionette":      root + "/lib/backbone.marionette.dust",
-      "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
-      "bootstrap":            root + "/lib/bootstrap",
-      "bootstrap.notify":     root + "/lib/bootstrap-notify",
-      "text":                 root + "/lib/text",
-      "jasmine":              root + "/lib/jasmine",
-      "jasmine-html":         root + "/lib/jasmine-html",
-      "boot":                 root + "/lib/boot",
-      "sinon":                root + "/lib/sinon",
+      'jquery':               root + '/lib/jquery',
+      'jqueryui':             root + '/lib/jquery-ui',
+      'underscore':           root + '/lib/lodash.compat',
+      'backbone':             root + '/lib/backbone',
+      'backbone.wreqr':       root + '/lib/backbone.wreqr',
+      'backbone.babysitter':  root + '/lib/backbone.babysitter',
+      'marionette':           root + '/lib/backbone.marionette',
+      'dust':                 root + '/lib/dust-full.min',
+      'dust.helpers':         root + '/lib/dust-helpers.min',
+      'dust.marionette':      root + '/lib/backbone.marionette.dust',
+      'backbone.validateAll': root + '/lib/Backbone.validateAll.min',
+      'bootstrap':            root + '/lib/bootstrap',
+      'bootstrap.notify':     root + '/lib/bootstrap-notify',
+      'text':                 root + '/lib/text',
+      'jasmine':              root + '/lib/jasmine',
+      'jasmine-html':         root + '/lib/jasmine-html',
+      'boot':                 root + '/lib/boot',
+      'sinon':                root + '/lib/sinon',
+      'moment':               root + '/lib/moment',
 
-      "templates":            "templates-compiled"
+      'templates':            'templates-compiled'
     },
 
     shim: {
-      "bootstrap": ["jquery"],
-      "jqueryui": ["jquery"],
-      "backbone": {
-        "deps": ["underscore"],
-        "exports": "Backbone"
+      'bootstrap': ['jquery'],
+      'jqueryui': ['jquery'],
+      'backbone': {
+        'deps': ['underscore'],
+        'exports': 'Backbone'
       },
 
-      "marionette": {
-        "deps": ["underscore", "backbone", "jquery"],
-        "exports": "Marionette"
+      'marionette': {
+        'deps': ['underscore', 'backbone', 'jquery'],
+        'exports': 'Marionette'
       },
 
-      "dust": {
-        "exports": "dust"
+      'dust': {
+        'exports': 'dust'
       },
 
-      "dust.marionette": {
-        "deps": ["marionette", "dust"],
-        "exports": "dustMarionette",
+      'dust.marionette': {
+        'deps': ['marionette', 'dust'],
+        'exports': 'dustMarionette',
       },
 
-      "dust.helpers": {
-        "deps": ["dust"],
-        "exports": "dustHelpers"
+      'dust.helpers': {
+        'deps': ['dust'],
+        'exports': 'dustHelpers'
       },
 
-      "bootstrap.notify": ["bootstrap"],
+      'bootstrap.notify': ['bootstrap'],
 
-      "backbone.validateAll": ["backbone"],
+      'backbone.validateAll': ['backbone'],
 
-      "jasmine": {
-        "exports": "jasmine"
+      'jasmine': {
+        'exports': 'jasmine'
       },
 
-      "jasmine-html": {
-        "deps": ["jasmine"],
-        "exports": "jasmine"
+      'jasmine-html': {
+        'deps': ['jasmine'],
+        'exports': 'jasmine'
       },
 
-      "boot": {
-        "deps": ["jasmine", "jasmine-html"],
-        "exports": "jasmine"
+      'boot': {
+        'deps': ['jasmine', 'jasmine-html'],
+        'exports': 'jasmine'
       },
     }
   };
@@ -156,22 +157,23 @@
 
   // Include Desktop Specific JavaScript files here (or inside of your Desktop router)
   require([
-    "jquery",
-    "underscore",
-    "backbone",
-    "marionette",
-    "boot",
-    "models/settings-model",
-    "config/rewrite",
-    "bootstrap",
-    "bootstrap.notify",
-    "backbone.validateAll",
+    'jquery',
+    'underscore',
+    'backbone',
+    'marionette',
+    'boot',
+    'models/settings-model',
+    'config/rewrite',
+    'bootstrap',
+    'bootstrap.notify',
+    'backbone.validateAll',
 
-    "helpers/page-iterator-helper",
+    'helpers/page-iterator-helper',
+    'helpers/format-date-helper',
 
-    "../test/jasmine/config/using",
-    "../test/jasmine/config/stub-server",
-    "../test/jasmine/config/inherits"
+    '../test/jasmine/config/using',
+    '../test/jasmine/config/stub-server',
+    '../test/jasmine/config/inherits'
   ], function ($, _, Backbone, Marionette, jasmine, Settings, Rewrite) {
 
     require(specs, function() {

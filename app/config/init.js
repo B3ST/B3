@@ -5,54 +5,55 @@
 
   var root = WP_API_SETTINGS.root_url;
   var config = {
-    //urlArgs: "bust=" + (new Date()).getTime(),
-    baseUrl: root + "/dist",
+    //urlArgs: 'bust=' + (new Date()).getTime(),
+    baseUrl: root + '/dist',
     paths: {
-      "jquery":               root + "/lib/jquery",
-      "jqueryui":             root + "/lib/jquery-ui",
-      "underscore":           root + "/lib/lodash.compat",
-      "backbone":             root + "/lib/backbone",
-      "backbone.wreqr":       root + "/lib/backbone.wreqr",
-      "backbone.babysitter":  root + "/lib/backbone.babysitter",
-      "marionette":           root + "/lib/backbone.marionette",
-      "dust":                 root + "/lib/dust-full.min",
-      "dust.helpers":         root + "/lib/dust-helpers.min",
-      "dust.marionette":      root + "/lib/backbone.marionette.dust",
-      "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
-      "bootstrap":            root + "/lib/bootstrap",
-      "bootstrap.notify":     root + "/lib/bootstrap-notify",
-      "text":                 root + "/lib/text",
+      'jquery':               root + '/lib/jquery',
+      'jqueryui':             root + '/lib/jquery-ui',
+      'underscore':           root + '/lib/lodash.compat',
+      'backbone':             root + '/lib/backbone',
+      'backbone.wreqr':       root + '/lib/backbone.wreqr',
+      'backbone.babysitter':  root + '/lib/backbone.babysitter',
+      'marionette':           root + '/lib/backbone.marionette',
+      'dust':                 root + '/lib/dust-full.min',
+      'dust.helpers':         root + '/lib/dust-helpers.min',
+      'dust.marionette':      root + '/lib/backbone.marionette.dust',
+      'backbone.validateAll': root + '/lib/Backbone.validateAll.min',
+      'bootstrap':            root + '/lib/bootstrap',
+      'bootstrap.notify':     root + '/lib/bootstrap-notify',
+      'text':                 root + '/lib/text',
+      'moment':               root + '/lib/moment',
 
-      "templates":            "templates-compiled"
+      'templates':            'templates-compiled'
     },
 
     shim: {
-      "bootstrap": ["jquery"],
-      "jqueryui": ["jquery"],
-      "backbone": {
-        "deps": ["underscore"],
-        "exports": "Backbone"
+      'bootstrap': ['jquery'],
+      'jqueryui': ['jquery'],
+      'backbone': {
+        'deps': ['underscore'],
+        'exports': 'Backbone'
       },
-      "marionette": {
-        "deps": ["underscore", "backbone", "jquery"],
-        "exports": "Marionette"
+      'marionette': {
+        'deps': ['underscore', 'backbone', 'jquery'],
+        'exports': 'Marionette'
       },
-      "dust": {
-        "exports": "dust"
+      'dust': {
+        'exports': 'dust'
       },
-      "dust.marionette": {
-        "deps": ["marionette", "dust"],
-        "exports": "dustMarionette",
+      'dust.marionette': {
+        'deps': ['marionette', 'dust'],
+        'exports': 'dustMarionette',
       },
 
-      "dust.helpers": {
-        "deps": ["dust"],
-        "exports": "dustHelpers"
+      'dust.helpers': {
+        'deps': ['dust'],
+        'exports': 'dustHelpers'
       },
 
       // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
-      "backbone.validateAll": ["backbone"],
-      "bootstrap.notify": ["bootstrap"]
+      'backbone.validateAll': ['backbone'],
+      'bootstrap.notify': ['bootstrap']
     }
   };
 
@@ -60,24 +61,25 @@
 
   // Includes Desktop Specific JavaScript files here (or inside of your Desktop router)
   require([
-    "jquery",
-    "underscore",
-    "backbone",
-    "marionette",
-    "app",
-    "models/settings-model",
-    "config/rewrite",
-    "config/fetch",
+    'jquery',
+    'underscore',
+    'backbone',
+    'marionette',
+    'app',
+    'models/settings-model',
+    'config/rewrite',
+    'config/fetch',
 
-    "jqueryui",
-    "bootstrap",
-    "bootstrap.notify",
-    "backbone.validateAll",
-    "dust",
-    "dust.marionette",
-    "dust.helpers",
+    'jqueryui',
+    'bootstrap',
+    'bootstrap.notify',
+    'backbone.validateAll',
+    'dust',
+    'dust.marionette',
+    'dust.helpers',
 
-    "helpers/page-iterator-helper"
+    'helpers/page-iterator-helper',
+    'helpers/format-date-helper'
   ], function ($, _, Backbone, Marionette, App, Settings, Rewrite) {
     Settings.set('require.config', config);
 
