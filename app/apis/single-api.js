@@ -4,8 +4,9 @@ define([
   'backbone',
   'marionette',
   'controllers/single-controller',
-  'models/post-model'
-], function (Backbone, Marionette, SingleController, Post) {
+  'models/post-model',
+  'models/page-model'
+], function (Backbone, Marionette, SingleController, Post, Page) {
   'use strict';
 
   var SingleAPI = Backbone.Marionette.Controller.extend({
@@ -14,16 +15,17 @@ define([
       this._showSingle(post, 'content/type-post-template.dust');
     },
 
+    showPageBySlug: function (params) {
+      var page = new Page({ slug: params.page });
+      this._showSingle(page, 'content/type-page-template.dust');
+    },
+
     showCustomPost: function (params) {
 
     },
 
-    showPageBySlug: function (params) {
-
-    },
-
-    _showSingle: function (post, template) {
-      new SingleController({ model: post, template: template }).showSingle();
+    _showSingle: function (model, template) {
+      new SingleController({ model: model, template: template }).showSingle();
     }
   });
 
