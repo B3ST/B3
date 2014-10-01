@@ -1,29 +1,25 @@
 /* global define */
 
 define([
-  'jquery',
   'backbone',
   'marionette',
   'buses/event-bus',
-  'buses/navigator',
   'templates/forms/navigation-search-template'
   /* jshint unused: false */
-], function ($, Backbone, Marionette, EventBus, Navigator) {
+], function (Backbone, Marionette, EventBus) {
   'use strict';
 
   var SearchView = Backbone.Marionette.ItemView.extend({
-    template:  "forms/navigation-search-template.dust",
-    tagName:   'div id=""',
-
+    template:  'forms/navigation-search-template.dust',
     events: {
-      'submit':                   'searchSite',
-      'keyup input#search-site':  'searchSite',
-      'change input#search-site': 'searchSite'
+      'submit':                   'onSubmitSearch',
+      'keyup input#search-site':  'onKeyupSearch',
+      'change input#search-site': 'onChangeSearch'
     },
 
     initialize: function (options) {
+      options             = options || {};
       this.searchId       = options.searchId || 'search-nav-bar';
-      this.previousRoute  = '';
       this.previousSearch = '';
       this.timeoutId      = 0;
     },
@@ -32,28 +28,38 @@ define([
       this.$el.attr('id', this.searchId);
     },
 
-    searchSite: function (event) {
+    onSubmitSearch: function (ev) {
       var search = this.$('#search-site').val();
-
-      event.preventDefault();
-
-      if (search.length === 0) {
-        this._triggerSearchStop();
-
-      } else if (this.previousSearch.length === 0) {
-        this._triggerSearchStart();
-
-      } else if (event.type === 'submit') {
-        this._triggerSubmitSearchTerm(search);
+      if (search.length > 2) {
+        EventBus.trigger('search:view:search:submit', { search: search });
       }
 
-      if (this._shouldTriggerSearch(event, search)) {
+      return false;
+    },
+
+    onKeyupSearch: function (ev) {
+      this._searchSite(this.$('#search-site').val(), ev);
+      ev.preventDefault();
+    },
+
+    onChangeSearch: function (ev) {
+      this._searchSite(this.$('#search-site').val(), ev);
+      ev.preventDefault();
+    },
+
+    _searchSite: function (search, ev) {
+      if (search.length === 0) {
+        EventBus.trigger('search:view:search:empty');
+      }
+
+      if (this._searchTermValid(ev, search)) {
         this._triggerAfterDelay(function () {
-          this._triggerSearchTerm(search);
-        }.bind(this), 500);
+          EventBus.trigger('search:view:search:term', { search: search });
+        }, 500);
       }
 
       this.previousSearch = search;
+      return false;
     },
 
     /**
@@ -69,23 +75,7 @@ define([
       this.timeoutId = window.setTimeout(callback, delay);
     },
 
-    _triggerSearchStart: function () {
-      EventBus.trigger('search:view:start');
-    },
-
-    _triggerSearchTerm: function (search) {
-      EventBus.trigger('search:view:term', {s: search});
-    },
-
-    _triggerSubmitSearchTerm: function (search) {
-      EventBus.trigger('search:view:submit', {s: search});
-    },
-
-    _triggerSearchStop: function () {
-      EventBus.trigger('search:view:stop');
-    },
-
-    _shouldTriggerSearch: function (event, search) {
+    _searchTermValid: function (event, search) {
       return search.length > 2              &&
              search !== this.previousSearch &&
              event.keyCode !== 8            && // backspace
