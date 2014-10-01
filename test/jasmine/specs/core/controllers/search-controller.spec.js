@@ -1,145 +1,102 @@
 /* global define */
 
 define([
-  'app',
-  'controllers/search-controller',
-  'buses/event-bus',
-  'buses/command-bus',
-  'models/settings-model',
-  'models/post-model',
-  'models/user-model',
-  'collections/post-collection',
-  'views/archive-view',
-  'views/not-found-view',
-  'sinon'
-], function (App, SearchController, EventBus, CommandBus, Settings, Post, User, Posts, ArchiveView, NotFoundView) {
-  'use strict';
+  "controllers/search-controller",
+  "controllers/base-controller",
+  "controllers/archive-controller",
+  "views/search-view",
+  "helpers/post-filter",
+  "buses/navigator"
+], function (SearchController, BaseController, ArchiveController, SearchView, PostFilter, Navigator) {
+  "use strict";
 
-  xdescribe("SearchController", function() {
-    describe(".initialize", function() {
-      beforeEach(function() {
-        this.bus = spyOn(EventBus, 'bind');
-        this.controller = getController();
-      });
+  describe("SearchController", function() {
+    var controller, options;
 
-      it("should bind to search:view:start event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:view:start', this.controller.searchStart);
-      });
-
-      it("should bind to search:view:term event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:view:term', this.controller.showSearchResults);
-      });
-
-      it("should bind to search:view:submit event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:view:submit', this.controller.displaySearchUrl);
-      });
-
-      it("should bind to search:view:stop event", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:view:stop', this.controller.searchStop);
-      });
+    beforeEach(function() {
+      var region = jasmine.createSpyObj('region', ['show']);
+      options = { region: region };
     });
 
-    describe(".searchStart", function() {
-      beforeEach(function() {
-        this.bus        = spyOn(EventBus, 'trigger');
-        this.command    = spyOn(CommandBus, 'execute');
-        this.controller = getController();
-        this.controller.searchStart();
-      });
-
-      it("should trigger an event of search:start", function() {
-        expect(this.bus).toHaveBeenCalledWith('search:start');
-      });
-
-      it("should trigger a command to display loading", function() {
-        expect(this.command).toHaveBeenCalledWith('loading:show', {region: App.main});
-      });
+    it("should extend from BaseController", function() {
+      expect(inherits(SearchController, BaseController)).toBeTruthy();
     });
 
-    describe(".showSearchResults", function() {
-      it("should query with the given term", function() {
-        this.fetch      = spyOn(Posts.prototype, 'fetch').and.callThrough();
-        this.controller = getController();
-
-        this.controller.showSearchResults({s: 'term'});
-        expect(this.fetch).toHaveBeenCalledWith({reset: true, data: 'filter[s]=term&page=1'});
-      });
-
-      describe("When fetching is successful", function() {
-        it("should trigger a search:results event with the obtained results", function() {
-          this.bus = spyOn(EventBus, 'trigger');
-          var response = [
-            new Post({ID: 1, title: 'post-1'}).toJSON(),
-            new Post({ID: 2, title: 'post-2'}).toJSON()
-          ];
-          this.server = stubServer({
-            response: response,
-            url:      Settings.get('api_url') + '/posts?filter[s]=term&page=1',
-            code:     200
-          });
-          this.controller = getController();
-
-          this.controller.showSearchResults({s: 'term'});
-          this.server.respond();
-
-          expect(this.bus).toHaveBeenCalledWith('search:results:found', {results: jasmine.any(Posts), filter: jasmine.any(Object)});
-        });
-      });
-
-      describe("When fetching fails", function() {
-        it("should display a not found view", function() {
-          this.bus = spyOn(EventBus, 'trigger');
-          this.server = stubServer({
-            response: '',
-            url:      Settings.get('api_url') + '/posts?filter[s]=term&page=1',
-            code:     404
-          });
-
-          this.controller = getController();
-
-          this.controller.showSearchResults({s: 'term'});
-          this.server.respond();
-
-          expect(this.bus).toHaveBeenCalledWith('search:results:not_found');
-        });
+    it("should bind to a given set of events", function() {
+      controller = new SearchController();
+      expect(controller.busEvents).toEqual({
+        "search:view:search:term":   "searchTerm",
+        "search:view:search:submit": "navigateSearchUrl",
+        "search:view:search:empty":  "teardownSearch"
       });
     });
 
     describe(".showSearch", function() {
-      it("should display the results of the given query", function() {
-        this.spy = spyOn(SearchController.prototype, 'showSearchResults');
-        this.controller = getController();
+      it("should display a SearchView", function() {
+        var show = spyOn(SearchController.prototype, "show");
 
-        this.controller.showSearch({search: 'term', paged: 2});
-        expect(this.spy).toHaveBeenCalledWith({s: 'term', page: 2});
+        controller = new SearchController();
+        controller.showSearch(options);
+
+        expect(show).toHaveBeenCalledWith(jasmine.any(SearchView), { region: options.region });
       });
     });
 
-    describe(".displaySearchUrl", function() {
-      it("should trigger a router:nav event to the corresponding url", function() {
-        this.bus        = spyOn(EventBus, 'trigger');
-        this.controller = getController();
+    describe(".searchTerm", function() {
+      var trigger, filter, show;
 
-        this.controller.displaySearchUrl({s: 'result'});
-        EventBus.trigger('router:nav', {route: 'search/result', options: { trigger: false }});
+      beforeEach(function() {
+        controller = new SearchController({ filter: new PostFilter() });
+        trigger = spyOn(ArchiveController.prototype, "triggerMethod");
+        filter = spyOn(controller.filter, "bySearchingFor");
+        show = spyOn(ArchiveController.prototype, "showArchive");
+      });
+
+      it("should setup the filter", function() {
+        controller.searchTerm({ search: "term" });
+        expect(filter).toHaveBeenCalledWith("term");
+      });
+
+      it("should call showArchive in archive controller if it was not previously loaded", function() {
+        controller.searchTerm({ search: "term" });
+        expect(show).toHaveBeenCalled();
+      });
+
+      it("should trigger a method in archive controller if it was previously loaded", function() {
+        controller.posts.length = 1;
+        controller.searchTerm({ search: "term" });
+        expect(trigger).toHaveBeenCalledWith("search:term");
       });
     });
 
-    describe(".searchStop", function() {
-      it("should display the view prior to the search", function() {
-        this.bus        = spyOn(EventBus, 'trigger');
-        this.controller = getController();
+    describe(".navigateSearchUrl", function() {
+      it("should navigate to the given search", function() {
+        var navigate = spyOn(Navigator, 'navigateToSearch');
 
-        this.controller.searchStop();
-        expect(this.bus).toHaveBeenCalledWith('search:stop');
+        controller = new SearchController();
+        controller.navigateSearchUrl({ search: 'search' });
+
+        expect(navigate).toHaveBeenCalledWith('search', null, false);
+      });
+    });
+
+    describe(".teardownSearch", function() {
+      var navigate, reset;
+
+      beforeEach(function() {
+        navigate = spyOn(Navigator, 'navigateToCurrent');
+        controller = new SearchController();
+        reset = spyOn(controller.posts, 'reset');
+        controller.teardownSearch();
+      });
+
+      it("should reset the posts", function() {
+        expect(reset).toHaveBeenCalled();
+      });
+
+      it("should navigate to the current URL", function() {
+        expect(navigate).toHaveBeenCalled();
       });
     });
   });
-
-  function getController() {
-    return new SearchController({
-      app:   App,
-      posts: new Posts()
-    });
-  }
 });

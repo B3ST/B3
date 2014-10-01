@@ -1,95 +1,63 @@
 /* global define */
 
 define([
-  'jquery',
-  'underscore',
-  'backbone',
-  'marionette',
   'controllers/base-controller',
+  'controllers/archive-controller',
+  'views/search-view',
   'collections/post-collection',
   'helpers/post-filter',
-  'buses/event-bus',
   'buses/navigator'
-], function ($, _, Backbone, Marionette, BaseController, Posts, PostFilter, EventBus, Navigator) {
+], function (BaseController, ArchiveController, SearchView, Posts, PostFilter, Navigator) {
   'use strict';
 
-  return BaseController.extend({
-    postInitialize: function() {
-      this._bindToEvents();
+  var SearchController = BaseController.extend({
+    busEvents: {
+      'search:view:search:term':   'searchTerm',
+      'search:view:search:submit': 'navigateSearchUrl',
+      'search:view:search:empty':  'teardownSearch'
     },
 
-    _bindToEvents: function () {
-      _.bindAll(this, 'searchStart', 'showSearchResults', 'displaySearchUrl', 'searchStop');
-      EventBus.bind('search:view:start', this.searchStart);
-      EventBus.bind('search:view:term', this.showSearchResults);
-      EventBus.bind('search:view:submit', this.displaySearchUrl);
-      EventBus.bind('search:view:stop', this.searchStop);
+    initialize: function (options) {
+      options     = options || {};
+      this.filter = options.filter || new PostFilter();
+      this.posts  = options.posts || new Posts(null, { filter: this.filter });
     },
 
-    /**
-     * Warn other controllers that the user is starting search
-     */
-    searchStart: function () {
-      EventBus.trigger('search:start');
-      this._displayLoading();
+    showSearch: function (options) {
+      this.show(new SearchView(), { region: options.region });
     },
 
-    /**
-     * Warn about the results of a given search
-     *
-     * @param  {Object} options The search terms
-     */
-    showSearchResults: function (options) {
-      var page   = options.page || 1,
-          filter = new PostFilter();
-
-      filter.bySearchingFor(options.s).onPage(page);
-
-      this._displayLoading();
-      this.posts.fetch(this._fetchParams(filter))
-                 .done(function () { EventBus.trigger('search:results:found', {results: this.posts, filter: filter}); }.bind(this))
-                 .fail(function () { EventBus.trigger('search:results:not_found'); }.bind(this));
+    onBeforeDestroy: function () {
+      this.archive.mainView.destroy();
     },
 
-    /**
-     * Displays the search url with the corresponding search term
-     *
-     * @param  {Object} options Object containing the search term s
-     */
-    displaySearchUrl: function (options) {
-      Navigator.navigateToSearch(options.s, null, false);
+    searchTerm: function (options) {
+      this.filter.bySearchingFor(options.search);
+      if (this.posts.length > 0) {
+        this.archiveController().triggerMethod('search:term');
+      } else {
+        this.archiveController().showArchive();
+      }
     },
 
-    /**
-     * Get the search results
-     *
-     * @param {String} query The query string
-     */
-    showSearch: function (params) {
-      this.showSearchResults({s: params.search, page: params.paged});
+    navigateSearchUrl: function (options) {
+      var page = null, trigger = false;
+      Navigator.navigateToSearch(options.search, page, trigger);
     },
 
-    /**
-     * Warn other controllers that the search has stopped
-     */
-    searchStop: function () {
-      EventBus.trigger('search:stop');
+    teardownSearch: function () {
+      this.posts.reset();
+      Navigator.navigateToCurrent();
     },
 
-    /**
-     * Return the fetch parameters for a collection
-     * @param  {PostFilter} filter The filters to use in the fetching
-     * @return {Object}            The parameters to be used in the collection
-     */
-    _fetchParams: function (filter) {
-      return { reset: true, data: filter.serialize() };
-    },
+    archiveController: function () {
+      if (!this.archive) {
+        this.archive = new ArchiveController({ posts: this.posts, filter: this.filter });
+      }
 
-    /**
-     * Displays the loading view in the main region
-     */
-    _displayLoading: function () {
-      this.showLoading({region: this.app.main});
+      return this.archive;
     }
   });
+
+  return SearchController;
 });
