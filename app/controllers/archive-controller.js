@@ -1,6 +1,7 @@
 /* global define */
 
 define([
+  'marionette',
   'controllers/base-controller',
   'controllers/pagination-controller',
   'views/archive-view',
@@ -8,7 +9,7 @@ define([
   'collections/post-collection',
   'buses/event-bus',
   'buses/navigator'
-], function (BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, Navigator) {
+], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, Navigator) {
   'use strict';
 
   var ArchiveController = BaseController.extend({
@@ -22,12 +23,7 @@ define([
 
       'pagination:previous:page':      'showPage',
       'pagination:next:page':          'showPage',
-      'pagination:select:page':        'showPage',
-
-      'search:start':                  'saveCurrentState',
-      'search:stop':                   'loadPreviousState',
-      'search:results:found':          'displayResults',
-      'search:results:not_found':      'displayResults'
+      'pagination:select:page':        'showPage'
     },
 
     childControllers: {
@@ -37,7 +33,7 @@ define([
     initialize: function (options) {
       this.page   = options.page || 1;
       this.filter = options.filter || new PostFilter();
-      this.posts  = options.posts || new Posts(this.filter);
+      this.posts  = options.posts || new Posts(null, { filter: this.filter });
     },
 
     /**
@@ -118,7 +114,9 @@ define([
 
     showView: function (pages) {
       this.show(this._archiveView(this.posts), { region: this.region });
-      this.pagination.showPagination({ region: this.mainView.pagination, page: this.page, pages: pages, include: true });
+      // there's some weird bug in this region, haven't figured it out yet.
+      var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
+      this.pagination.showPagination({ region: region, page: this.page, pages: pages, include: true });
     },
 
     /**
@@ -136,46 +134,20 @@ define([
      */
     onDisplayPost: function (params) {
       var post = this.posts.get(params.post);
-      EventBus.trigger('post:show', {post: post});
+      EventBus.trigger('post:show', { post: post });
       Navigator.navigateToPost(post.get('slug'), null, false);
-    },
-
-    /**
-     * Saves the current state (posts, page and filter)
-     */
-    saveCurrentState: function () {
-      this.state = {
-        collection:     this.posts,
-        page:           this.page,
-        filter:         this.filter,
-        was_displaying: this.isDisplaying
-      };
-    },
-
-    /**
-     * Loads the previously saved state
-     */
-    loadPreviousState: function () {
-      if (this.state.was_displaying) {
-        this.posts  = this.state.collection;
-        this.page   = this.state.page || 1;
-        this.filter = this.state.filter;
-        this.show(this._archiveView(this.posts, this.page));
-      }
     },
 
     /**
      * Displays the given results
      */
-    displayResults: function (params) {
-      if (params) {
-        this.posts  = params.results;
-        this.filter = params.filter;
-        this.page   = 1;
-        this.show(this._archiveView(this.posts, this.page));
-      } else {
-        this.show(this.notFoundView());
-      }
+    onSearchTerm: function () {
+      this.show(null, {
+        loading: {
+          style: 'opacity',
+          entities: [this.posts]
+        }
+      });
     },
 
     paginationController: function () {

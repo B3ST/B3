@@ -39,12 +39,7 @@ define([
 
         'pagination:previous:page':      'showPage',
         'pagination:next:page':          'showPage',
-        'pagination:select:page':        'showPage',
-
-        'search:start':                  'saveCurrentState',
-        'search:stop':                   'loadPreviousState',
-        'search:results:found':          'displayResults',
-        'search:results:not_found':      'displayResults'
+        'pagination:select:page':        'showPage'
       });
     });
 
@@ -156,68 +151,19 @@ define([
       });
     });
 
-    xdescribe(".saveCurrentState", function() {
-      it("should save the current displaying options", function() {
-        var posts = new Posts();
+    describe("When triggering search:term", function() {
+      it("should fetch the new posts", function() {
+        var show = spyOn(ArchiveController.prototype, 'show');
+
         controller = new ArchiveController(options);
+        controller.triggerMethod('search:term');
 
-        controller.show(controller._archiveView(posts, null, jasmine.any(Object)));
-        controller.saveCurrentState();
-
-        expect(controller.state).toEqual({
-          was_displaying: true,
-          collection:     posts,
-          page:           1,
-          filter:         jasmine.any(Object)
+        expect(show).toHaveBeenCalledWith(null, {
+          loading: {
+            style: "opacity",
+            entities: [jasmine.any(Posts)]
+          }
         });
-      });
-    });
-
-    xdescribe(".loadPreviousState", function() {
-      beforeEach(function() {
-        this.posts      = new Posts();
-        this.appShow    = spyOn(app.main, 'show');
-        this.controller = new ArchiveController({
-          posts: this.posts,
-          app:   app,
-          user:  user
-        });
-
-        this.controller.state = {
-          was_displaying: true,
-          collection:     this.posts
-        };
-
-        this.controller.loadPreviousState();
-      });
-
-      it("should load the previous displaying options", function() {
-        this.controller.posts = this.posts;
-        this.controller.page  = 1;
-      });
-
-      it("should display the corresponding view", function() {
-        var view = this.appShow.calls.mostRecent();
-        expect(typeof view).toEqual('ArchiveView');
-        expect(view.collection).toEqual(this.posts);
-      });
-    });
-
-    xdescribe(".displayResults", function() {
-      it("should display the given results", function() {
-        this.posts      = new Posts();
-        this.appShow    = spyOn(app.main, 'show');
-        this.controller = new ArchiveController({
-          posts: this.posts,
-          app:   app,
-          user:  user
-        });
-
-        this.controller.displayResults({results: this.posts, filter: null});
-
-        var view = this.appShow.calls.mostRecent();
-        expect(typeof view).toEqual('ArchiveView');
-        expect(view.collection).toEqual(this.posts);
       });
     });
   });
