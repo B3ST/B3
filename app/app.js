@@ -11,8 +11,8 @@
     'routers/app-router',
     'apis/archive-api',
     'apis/single-api',
-    'controllers/archive-controller',
-    'controllers/search-controller',
+    'apis/search-api',
+    'controllers/header-controller',
     'controllers/loading-controller',
     'controllers/taxonomy-controller',
     'buses/communicator',
@@ -26,7 +26,7 @@
     'views/footer-view',
 
     'config/application'
-  ], function ($, _, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, ArchiveController, SearchController, LoadingController, TaxonomyController, Communicator, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
+  ], function ($, _, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, SearchAPI, HeaderController, LoadingController, TaxonomyController, Communicator, Settings, User, Sidebar, Posts, Taxonomies, HeaderView, SidebarView, FooterView) {
 
     var App = new Backbone.Marionette.Application(),
         user = new User({ID: 'me'});
@@ -74,7 +74,8 @@
     }
 
     function initializeLayout (menus, sidebars) {
-      App.header.show(new HeaderView({menus: menus}));
+      new HeaderController({ menus: menus, region: App.header }).showHeader();
+      //App.header.show(new HeaderView({menus: menus}));
 
       if (sidebars && sidebars.sidebar) {
         App.sidebar.show(new SidebarView({model: new Sidebar(sidebars.sidebar)}));
@@ -87,11 +88,7 @@
       var apis = [
         new ArchiveAPI(),
         new SingleAPI(),
-        new SearchController({
-          app:   App,
-          posts: new Posts(),
-          user:  user
-        })
+        new SearchAPI()
       ];
 
       App.appRouter = new AppRouter({
