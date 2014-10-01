@@ -57,6 +57,10 @@ define([
       this.routes = this._processRoutes(Settings.get('routes'));
     },
 
+    navigateToCurrent: function () {
+      Backbone.history.loadUrl();
+    },
+
     navigate: function (route, trigger) {
       route = this._routeFromAbsoluteUrl(route);
       EventBus.trigger('router:nav', {route: route, options: {trigger: trigger}});
