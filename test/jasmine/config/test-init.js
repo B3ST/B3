@@ -144,6 +144,8 @@
     specsRoot + 'core/controllers/pagination-controller.spec',
     specsRoot + 'core/controllers/comments-controller.spec',
     specsRoot + 'core/controllers/reply-form-controller.spec',
+    specsRoot + 'core/controllers/header-controller.spec',
+    specsRoot + 'core/controllers/menu-controller.spec',
 
     specsRoot + 'core/apis/archive-api.spec',
     specsRoot + 'core/apis/single-api.spec',
