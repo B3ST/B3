@@ -16,8 +16,6 @@ define([
       this.region = options.region || Communicator.requests.request('default:region');
       this.instanceId = _.uniqueId('controller');
 
-      this._setupOptions(options);
-
       if (typeof(this.initialize) === 'function') {
         this.initialize(options);
       }
@@ -48,13 +46,6 @@ define([
      */
     notFoundView: function () {
       return new NotFoundView();
-    },
-
-    _setupOptions: function (options) {
-      this.app   = options.app;
-      this.posts = options.posts;
-      this.user  = options.user;
-      this.state = {};
     },
 
     _setMainView: function (view, options) {
@@ -132,62 +123,4 @@ define([
   });
 
   return BaseController;
-  // return Marionette.Controller.extend({
-  //   initialize: function(options) {
-  //     this.app   = options.app;
-  //     this.posts = options.posts;
-  //     this.user  = options.user;
-  //     this.state = {};
-
-  //     if (this.postInitialize) {
-  //       this.postInitialize(options);
-  //     }
-
-  //     this.bindToEvents();
-  //   },
-
-  //   bindToEvents: function () {
-  //     _.bindAll(this, 'displayPost');
-  //     EventBus.bind('archive:display:post', this.displayPost);
-  //   },
-
-  //   onDestroy: function () {
-  //     EventBus.unbind('archive:display:post', this.displayPost);
-  //   },
-
-  //   /**
-  //    * Resets the displaying state
-  //    * @param  {Object} params The object containing the post
-  //    */
-  //   displayPost: function (params) {
-  //     this.isDisplaying = false;
-  //     this.state.was_displaying = false;
-  //     if (this.onDisplayPost) {
-  //       this.onDisplayPost(params);
-  //     }
-  //   },
-
-  //   /**
-  //    * Display view.
-  //    *
-  //    * @param {Object} view View to display.
-  //    */
-  //   show: function (view) {
-  //     this.listenTo(view, 'destroy', function () {
-  //       this.isDisplaying = false;
-  //     }.bind(this));
-  //     this.app.main.show(view);
-  //     this.isDisplaying = true;
-  //   },
-
-  //   /**
-  //    * Triggers a command to display the loading view
-  //    * @param {Region} region The region to display loading
-  //    */
-  //   showLoading: function (region) {
-  //     CommandBus.execute('loading:show', region);
-  //   },
-
-  //
-  // });
 });
