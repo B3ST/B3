@@ -14,8 +14,9 @@ define([
       return Settings.get('api_url') + '/posts?' + this.filter.serialize();
     },
 
-    initialize: function (filter) {
-      this.filter = filter;
+    initialize: function (models, options) {
+      options     = options || {};
+      this.filter = options.filter;
     },
   });
 
