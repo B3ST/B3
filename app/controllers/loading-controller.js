@@ -15,6 +15,10 @@ define([
     },
 
     style: {
+      'no-style': function () {
+        // do nothing
+      },
+
       loading: function (options) {
         this.show(new LoadingView({ title: options.title }), options);
       },
@@ -74,7 +78,9 @@ define([
         style:     'loading',
 
         done: function () {
-          this.show(this.view, { region: options.region });
+          if (this.view) {
+            this.show(this.view, { region: options.region });
+          }
         }.bind(this),
 
         fail: function () {}
