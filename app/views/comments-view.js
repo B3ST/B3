@@ -9,6 +9,7 @@ define([
 
   var CommentsView = ReplyableView.extend({
     template:       'content/comments/comments-section-template.dust',
+    tagName:        'div id="comments-container"',
     childView:      CommentView,
     childContainer: '.comments',
 

@@ -9,6 +9,7 @@ define([
 
   var PaginationView = Backbone.Marionette.ItemView.extend({
     template: 'pagination-template.dust',
+    tagName: 'div id="paginated"',
     events: {
       'click .next:not(.disabled) > a':       'onNextClicked',
       'click .previous:not(.disabled) > a':   'onPrevClicked',

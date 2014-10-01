@@ -15,6 +15,7 @@ define([
 
   var LoadingView = Backbone.Marionette.ItemView.extend({
     template: 'loading-template.dust',
+    tagName:  'div id="progress-loading"',
 
     progress: function (options) {
       var progress = options.loaded / options.total * 100;
