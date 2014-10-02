@@ -23,6 +23,17 @@ define([
       expect(inherits(LoadingController, BaseController)).toBeTruthy();
     });
 
+    it("should bind to a given set of events", function() {
+      controller = new LoadingController(options);
+      expect(controller.busEvents).toEqual({
+        'fetch:done': 'closeLoading',
+        'fetch:fail': 'closeLoading',
+
+        'save:done':  'closeLoading',
+        'save:fail':  'closeLoading'
+      });
+    });
+
     describe("When initializing", function() {
       var bus, show;
 
@@ -53,6 +64,22 @@ define([
           controller = new LoadingController(options);
 
           expect(bus).toHaveBeenCalledWith('when:fetched', [], done, fail);
+        });
+      });
+
+      using("Operations", [
+        { operation: 'fetch', command: 'when:fetched' },
+        { operation: 'save', command: 'when:saved' }
+      ], function (input) {
+        describe("When specifying operation " + input.operation, function() {
+          it("should execute " + input.command + " command", function() {
+            bus = spyOn(CommandBus, 'execute');
+
+            options.config.operation = input.operation;
+            controller = new LoadingController(options);
+
+            expect(bus).toHaveBeenCalledWith(input.command, [], jasmine.any(Function), jasmine.any(Function));
+          });
         });
       });
     });

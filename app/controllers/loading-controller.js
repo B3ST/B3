@@ -12,6 +12,15 @@ define([
   var LoadingController = BaseController.extend({
     busEvents: {
       'fetch:done': 'closeLoading',
+      'fetch:fail': 'closeLoading',
+
+      'save:done':  'closeLoading',
+      'save:fail':  'closeLoading'
+    },
+
+    operations: {
+      fetch: 'when:fetched',
+      save: 'when:saved'
     },
 
     style: {
@@ -26,7 +35,6 @@ define([
       opacity: function (options) {
         this.opacityRegion = options.region.$el;
         this.opacityRegion.addClass('opacity');
-        $('body,html').animate({ scrollTop: 0 }, 800);
       }
     },
 
@@ -72,7 +80,9 @@ define([
     },
 
     _fetchEntities: function (view, config) {
-      CommandBus.execute('when:fetched', config.entities, config.done, config.fail);
+      if (this.operations.hasOwnProperty(config.operation)) {
+        CommandBus.execute(this.operations[config.operation], config.entities, config.done, config.fail);
+      }
     },
 
     _getDefaults: function (options) {

@@ -81,6 +81,7 @@
     'config/backbone/routes',
     'config/utils/supplant',
     'config/fetch',
+    'config/save',
 
     'helpers/page-iterator-helper',
     'helpers/format-date-helper',
