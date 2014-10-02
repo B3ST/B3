@@ -28,10 +28,16 @@ define([
     },
 
     sendReply: function (options) {
-      this.comment = new Comment();
-      this.comment.save(options)
-                  .done(this.onDone.bind(this))
-                  .fail(this.onFail.bind(this));
+      this.comment = new Comment(options);
+      this.show(null, {
+        loading: {
+          operation: 'save',
+          entities:  [this.comment],
+          style:     'opacity',
+          done:      this.onDone.bind(this),
+          fail:      this.onFail.bind(this)
+        }
+      });
     },
 
     onDone: function () {

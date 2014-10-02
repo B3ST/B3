@@ -1,15 +1,13 @@
 /* global define */
 
 define([
-  'jquery',
   'controllers/reply-form-controller',
   'controllers/base-controller',
   'views/reply-form-view',
   'buses/event-bus',
   'models/comment-model',
-  'models/settings-model',
-  'sinon'
-], function ($, ReplyFormController, BaseController, ReplyFormView, EventBus, Comment, Settings) {
+  'models/settings-model'
+], function (ReplyFormController, BaseController, ReplyFormView, EventBus, Comment, Settings) {
   'use strict';
 
   describe("ReplyFormController", function() {
@@ -55,7 +53,7 @@ define([
     });
 
     describe(".sendReply", function() {
-      var defer = $.Deferred(), save, comment, server;
+      var comment, show;
 
       beforeEach(function() {
         comment = {
@@ -65,50 +63,49 @@ define([
           author:         null
         };
 
-        save = spyOn(Comment.prototype, 'save').and.callThrough();
+        show = spyOn(ReplyFormController.prototype, 'show');
         controller = new ReplyFormController(options);
         controller.mainView = jasmine.createSpyObj('view', ['destroy', 'displayWarning']);
       });
 
-      it("should create a comment", function() {
+      it("should save the comment", function() {
         controller.sendReply(comment);
-        expect(save).toHaveBeenCalledWith(comment);
+        expect(show).toHaveBeenCalledWith(null, {
+          loading: {
+            operation: 'save',
+            entities:  [jasmine.any(Comment)],
+            style:     'opacity',
+            done:      jasmine.any(Function),
+            fail:      jasmine.any(Function)
+          }
+        });
       });
 
       describe("When it is successful", function() {
         beforeEach(function() {
-          server = stubServer({
-            verb:     'POST',
-            url:      Settings.get('api_url') + '/posts/1/b3:replies/',
-            code:     200,
-            response: {}
+          show.and.callFake(function (view, options) {
+            options.loading.done();
           });
         });
 
         it("should trigger a comment:create event with the newly create comment", function() {
           var trigger = spyOn(EventBus, 'trigger');
           controller.sendReply(comment);
-          server.respond();
           expect(trigger).toHaveBeenCalledWith('comment:create', jasmine.any(Comment));
         });
 
         it("should destroy its mainView", function() {
           controller.sendReply(comment);
-          server.respond();
           expect(controller.mainView.destroy).toHaveBeenCalled();
         });
       });
 
       describe("When it fails", function() {
         it("should display a warning", function() {
-          server = stubServer({
-            verb:     'POST',
-            url:      Settings.get('api_url') + '/posts/1/b3:replies/',
-            code:     400,
-            response: {}
+          show.and.callFake(function (view, options) {
+            options.loading.fail();
           });
           controller.sendReply(comment);
-          server.respond();
           expect(controller.mainView.displayWarning).toHaveBeenCalledWith('Could not reply to comment');
         });
       });
