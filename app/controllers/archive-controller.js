@@ -69,6 +69,7 @@ define([
             style:    'opacity',
             entities: [this.posts],
             done: function () {
+              $('body,html').animate({ scrollTop: 0 }, 800);
               var route = Navigator.getPagedRoute(this.filter, this.page);
               Navigator.navigate(route, false);
             }.bind(this),
