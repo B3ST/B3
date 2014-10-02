@@ -166,34 +166,22 @@
     'marionette',
     'boot',
     'models/settings-model',
-    'config/rewrite',
     'bootstrap',
     'bootstrap.notify',
     'backbone.validateAll',
 
+    'config/backbone/models',
+    'config/utils/supplant',
     'helpers/page-iterator-helper',
     'helpers/format-date-helper',
 
     '../test/jasmine/config/using',
     '../test/jasmine/config/stub-server',
     '../test/jasmine/config/inherits'
-  ], function ($, _, Backbone, Marionette, jasmine, Settings, Rewrite) {
+  ], function ($, _, Backbone, Marionette, jasmine, Settings) {
 
     require(specs, function() {
       Settings.set('require.config', config);
-
-      Backbone.Model.prototype.toJSON = Rewrite.toJSON;
-      Backbone.Model.prototype.parse = Rewrite.parse;
-
-      if (!String.prototype.supplant) {
-        String.prototype.supplant = function(o) {
-          return this.replace(/\{([^{}]*)\}/g, function(a, b) {
-            var r = o[b];
-            return typeof r === 'string' || typeof r === 'number' ? r : a;
-          });
-        };
-      }
-
       window.onload();
       // jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
       // jasmine.getEnv().execute();

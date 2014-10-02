@@ -67,7 +67,6 @@
     'marionette',
     'app',
     'models/settings-model',
-    'config/rewrite',
     'config/fetch',
 
     'jqueryui',
@@ -78,29 +77,15 @@
     'dust.marionette',
     'dust.helpers',
 
+    'config/backbone/models',
+    'config/backbone/routes',
+    'config/utils/supplant',
     'helpers/page-iterator-helper',
     'helpers/format-date-helper'
-  ], function ($, _, Backbone, Marionette, App, Settings, Rewrite) {
+  ], function ($, _, Backbone, Marionette, App, Settings) {
     Settings.set('require.config', config);
 
-    Backbone.Model.prototype.toJSON = Rewrite.toJSON;
-    Backbone.Model.prototype.parse  = Rewrite.parse;
-    Backbone.Model.prototype.sync   = Rewrite.sync;
-
-    Backbone.Router.prototype._extractParameters    = Rewrite.extractParameters;
-    Marionette.AppRouter.prototype.processAppRoutes = Rewrite.processAppRoutes;
-
-    if (!String.prototype.supplant) {
-      String.prototype.supplant = function(o) {
-        return this.replace(/\{([^{}]*)\}/g, function(a, b) {
-          var r = o[b];
-          return typeof r === 'string' || typeof r === 'number' ? r : a;
-        });
-      };
-    }
-
     App.start();
-
     window.App = App;
   });
 })();
