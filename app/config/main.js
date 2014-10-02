@@ -66,8 +66,8 @@
     'backbone',
     'marionette',
     'app',
+    'config/initializer',
     'models/settings-model',
-    'config/fetch',
 
     'jqueryui',
     'bootstrap',
@@ -80,14 +80,14 @@
     'config/backbone/models',
     'config/backbone/routes',
     'config/utils/supplant',
+    'config/fetch',
 
     'helpers/page-iterator-helper',
     'helpers/format-date-helper',
     'helpers/sidebar-widgets-helper',
-  ], function ($, _, Backbone, Marionette, App, Settings) {
+  ], function ($, _, Backbone, Marionette, App, Initializer, Settings) {
     Settings.set('require.config', config);
-
-    App.start();
+    new Initializer({ app: App }).init();
     window.App = App;
   });
 })();

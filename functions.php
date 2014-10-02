@@ -39,7 +39,7 @@ class B3Theme {
     public function __construct () {
         $this->settings_uri   = get_template_directory_uri() . '/settings.js';
         $this->require_uri    = get_template_directory_uri() . '/lib/require.js';
-        $this->loader_uri     = get_template_directory_uri() . '/dist/config/init.js';
+        $this->loader_uri     = get_template_directory_uri() . '/dist/config/main.js';
         $this->stylesheet_uri = get_template_directory_uri() . '/dist/assets/styles/style.css';
 
         $this->setup();
