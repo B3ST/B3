@@ -17,43 +17,25 @@ define([
     });
 
     describe("When searching, ", function() {
-
       describe("starting to type any term", function () {
-
-        xit("should trigger a search:view:search:start event", function() {
-          view.$('input#search-site').val('t');
-          view.$('input#search-site').keyup();
-          expect(trigger).toHaveBeenCalledWith('search:view:search:start');
-        });
-
         it("should save the previously typed term", function() {
           view.$('input#search-site').val('b');
           view.$('input#search-site').keyup();
           view.$('input#search-site').val('a');
           expect(view.previousSearch).toEqual('b');
         });
-
       });
 
       describe("pasting a term", function () {
-
-        xit("should trigger a search:view:search:start", function() {
-          view.$('input#search-site').val('pasted term');
-          view.$('input#search-site').keyup();
-          expect(trigger).toHaveBeenCalledWith('search:view:search:start');
-        });
-
         it("should save the previously typed term", function() {
           view.$('input#search-site').val('before');
           view.$('input#search-site').keyup();
           view.$('input#search-site').val('after');
           expect(view.previousSearch).toEqual('before');
         });
-
       });
 
       describe("deleting all terms", function() {
-
         it("should trigger a search:view:search:empty when term is empty", function() {
           view.$('input#search-site').val('');
           view.$('input#search-site').keyup();
@@ -66,17 +48,9 @@ define([
           view.$('input#search-site').val('');
           expect(view.previousSearch).toEqual('before');
         });
-
       });
 
       describe("typing a term that is more than 3 characters", function() {
-
-        xit("should trigger a search:start event", function() {
-          view.$('input#search-site').val('term');
-          view.$('input#search-site').keyup();
-          expect(trigger).toHaveBeenCalledWith('search:view:search:start');
-        });
-
         it("should trigger a search:view:search:term event after 500ms", function() {
           var clock = sinon.useFakeTimers();
           view.$('input#search-site').val('term');
@@ -88,7 +62,6 @@ define([
       });
 
       describe("pressing the enter key", function() {
-
         it("should trigger a search:view:search:submit event", function() {
           var e = $.Event("keyup");
           e.type = 'submit';

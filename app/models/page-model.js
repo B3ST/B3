@@ -1,16 +1,13 @@
 /* global define */
 
 define([
-  'jquery',
-  'underscore',
   'backbone',
   'models/user-model',
   'models/settings-model',
-  'models/commentable-model'
-], function ($, _, Backbone, User, Settings, Commentable) {
+], function (Backbone, User, Settings) {
   'use strict';
 
-  var Page = Commentable.extend({
+  var Page = Backbone.Model.extend({
     defaults: {
       ID             : null,
       title          : '',

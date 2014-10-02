@@ -28,10 +28,6 @@ define([
       it("should render the template", function() {
         expect(view.$('.post').length).toEqual(2);
       });
-
-      xit("should trigger a loading:hide command", function() {
-        expect(cbus).toHaveBeenCalledWith('loading:hide');
-      });
     });
 
     describe("When the collection changes", function() {
