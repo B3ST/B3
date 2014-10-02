@@ -149,6 +149,7 @@
 
     specsRoot + 'core/apis/archive-api.spec',
     specsRoot + 'core/apis/single-api.spec',
+    specsRoot + 'core/apis/search-api.spec',
 
     specsRoot + 'core/buses/navigator.spec',
 

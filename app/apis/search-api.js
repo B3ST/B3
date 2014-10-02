@@ -2,13 +2,14 @@
 
 define([
   'backbone',
-  'marionette'
-], function (Backbone, Marionette) {
+  'marionette',
+  'buses/command-bus'
+], function (Backbone, Marionette, CommandBus) {
   'use strict';
 
   var SearchAPI = Backbone.Marionette.Controller.extend({
-    showSearch: function () {
-
+    showSearch: function (params) {
+      CommandBus.execute('search:term', params);
     }
   });
 
