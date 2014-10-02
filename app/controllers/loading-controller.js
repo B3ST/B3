@@ -24,7 +24,8 @@ define([
       },
 
       opacity: function (options) {
-        options.region.$el.addClass('opacity');
+        this.opacityRegion = options.region.$el;
+        this.opacityRegion.addClass('opacity');
         $('body,html').animate({ scrollTop: 0 }, 800);
       }
     },
@@ -41,7 +42,10 @@ define([
     },
 
     closeLoading: function () {
-      this.region.$el.removeClass('opacity');
+      if (this.opacityRegion) {
+        this.opacityRegion.removeClass('opacity');
+      }
+
       if (!this.view) {
         this.unregister();
       }
