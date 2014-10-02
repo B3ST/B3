@@ -154,9 +154,6 @@
     specsRoot + 'core/apis/search-api.spec',
 
     specsRoot + 'core/buses/navigator.spec',
-
-    // app
-    specsRoot + 'core/app.spec'
   ];
 
 
