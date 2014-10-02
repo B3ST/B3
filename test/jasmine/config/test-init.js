@@ -147,6 +147,7 @@
     specsRoot + 'core/controllers/header-controller.spec',
     specsRoot + 'core/controllers/menu-controller.spec',
     specsRoot + 'core/controllers/sidebar-controller.spec',
+    specsRoot + 'core/controllers/footer-controller.spec',
 
     specsRoot + 'core/apis/archive-api.spec',
     specsRoot + 'core/apis/single-api.spec',
