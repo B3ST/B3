@@ -80,8 +80,10 @@
     'config/backbone/models',
     'config/backbone/routes',
     'config/utils/supplant',
+
     'helpers/page-iterator-helper',
-    'helpers/format-date-helper'
+    'helpers/format-date-helper',
+    'helpers/sidebar-widgets-helper',
   ], function ($, _, Backbone, Marionette, App, Settings) {
     Settings.set('require.config', config);
 

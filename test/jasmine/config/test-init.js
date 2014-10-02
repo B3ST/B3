@@ -146,6 +146,7 @@
     specsRoot + 'core/controllers/reply-form-controller.spec',
     specsRoot + 'core/controllers/header-controller.spec',
     specsRoot + 'core/controllers/menu-controller.spec',
+    specsRoot + 'core/controllers/sidebar-controller.spec',
 
     specsRoot + 'core/apis/archive-api.spec',
     specsRoot + 'core/apis/single-api.spec',
@@ -174,6 +175,7 @@
     'config/utils/supplant',
     'helpers/page-iterator-helper',
     'helpers/format-date-helper',
+    'helpers/sidebar-widgets-helper',
 
     '../test/jasmine/config/using',
     '../test/jasmine/config/stub-server',
