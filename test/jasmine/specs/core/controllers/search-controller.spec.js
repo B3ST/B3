@@ -6,8 +6,9 @@ define([
   "controllers/archive-controller",
   "views/search-view",
   "helpers/post-filter",
+  "buses/command-bus",
   "buses/navigator"
-], function (SearchController, BaseController, ArchiveController, SearchView, PostFilter, Navigator) {
+], function (SearchController, BaseController, ArchiveController, SearchView, PostFilter, CommandBus, Navigator) {
   "use strict";
 
   describe("SearchController", function() {
@@ -31,6 +32,15 @@ define([
       });
     });
 
+    describe("When initializing", function() {
+      it("should bind to a search:term command", function() {
+        var handler = spyOn(CommandBus, "setHandler");
+
+        controller = new SearchController();
+        expect(handler).toHaveBeenCalledWith("search:term", controller.searchTerm, controller);
+      });
+    });
+
     describe(".showSearch", function() {
       it("should display a SearchView", function() {
         var show = spyOn(SearchController.prototype, "show");
@@ -48,7 +58,7 @@ define([
       beforeEach(function() {
         controller = new SearchController({ filter: new PostFilter() });
         trigger = spyOn(ArchiveController.prototype, "triggerMethod");
-        filter = spyOn(controller.filter, "bySearchingFor");
+        filter = spyOn(controller.filter, "bySearchingFor").and.callThrough();
         show = spyOn(ArchiveController.prototype, "showArchive");
       });
 

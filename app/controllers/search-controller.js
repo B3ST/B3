@@ -6,8 +6,9 @@ define([
   'views/search-view',
   'collections/post-collection',
   'helpers/post-filter',
+  'buses/command-bus',
   'buses/navigator'
-], function (BaseController, ArchiveController, SearchView, Posts, PostFilter, Navigator) {
+], function (BaseController, ArchiveController, SearchView, Posts, PostFilter, CommandBus, Navigator) {
   'use strict';
 
   var SearchController = BaseController.extend({
@@ -21,6 +22,7 @@ define([
       options     = options || {};
       this.filter = options.filter || new PostFilter();
       this.posts  = options.posts || new Posts(null, { filter: this.filter });
+      this._handleCommands();
     },
 
     showSearch: function (options) {
@@ -32,11 +34,13 @@ define([
     },
 
     searchTerm: function (options) {
-      this.filter.bySearchingFor(options.search);
+      var page = options.paged || 1;
+
+      this.filter.bySearchingFor(options.search).onPage(page);
       if (this.posts.length > 0) {
-        this.archiveController().triggerMethod('search:term');
+        this._archiveController().triggerMethod('search:term');
       } else {
-        this.archiveController().showArchive();
+        this._archiveController().showArchive();
       }
     },
 
@@ -50,12 +54,16 @@ define([
       Navigator.navigateToCurrent();
     },
 
-    archiveController: function () {
+    _archiveController: function () {
       if (!this.archive) {
         this.archive = new ArchiveController({ posts: this.posts, filter: this.filter });
       }
 
       return this.archive;
+    },
+
+    _handleCommands: function () {
+      CommandBus.setHandler('search:term', this.searchTerm, this);
     }
   });
 
