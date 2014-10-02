@@ -26,7 +26,7 @@ define([
       return {
         region: options.region,
         loading: {
-          style: 'no-style'
+          style: 'none'
         }
       };
     },

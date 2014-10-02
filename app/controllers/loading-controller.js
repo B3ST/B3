@@ -15,7 +15,7 @@ define([
     },
 
     style: {
-      'no-style': function () {
+      none: function () {
         // do nothing
       },
 

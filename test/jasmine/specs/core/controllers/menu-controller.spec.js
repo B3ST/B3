@@ -37,7 +37,7 @@ define([
         expect(show).toHaveBeenCalledWith(jasmine.any(MenuView), {
           region: options.region,
           loading: {
-            style: 'no-style'
+            style: 'none'
           }
         });
       });
