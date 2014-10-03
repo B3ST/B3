@@ -130,6 +130,10 @@ define([
      * @return {String}     Route.
      */
     _routeFromAbsoluteUrl: function (url) {
+      if (Settings.get('site_url') + '/' === url) {
+        return '';
+      }
+
       var re = new RegExp('^' + Settings.get('site_url') + '/(.+?)/?$', 'g');
       return url.replace(re, '$1');
     },
