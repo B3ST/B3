@@ -23,6 +23,7 @@
       'text':                 root + '/lib/text',
       'jasmine':              root + '/lib/jasmine',
       'jasmine-html':         root + '/lib/jasmine-html',
+      'jasmine-jquery':       root + '/lib/jasmine-jquery',
       'boot':                 root + '/lib/boot',
       'sinon':                root + '/lib/sinon',
       'moment':               root + '/lib/moment',
@@ -68,6 +69,11 @@
       'jasmine-html': {
         'deps': ['jasmine'],
         'exports': 'jasmine'
+      },
+
+      'jasmine-jquery': {
+        'deps': ['jasmine-html'],
+        'exports': 'JasmineJquery'
       },
 
       'boot': {
@@ -165,6 +171,8 @@
     'marionette',
     'boot',
     'models/settings-model',
+
+    'jasmine-jquery',
     'bootstrap',
     'bootstrap.notify',
     'backbone.validateAll',
@@ -181,6 +189,7 @@
   ], function ($, _, Backbone, Marionette, jasmine, Settings) {
 
     require(specs, function() {
+      jasmine.getJSONFixtures().fixturesPath = 'fixtures/json';
       Settings.set('require.config', config);
       window.onload();
       // jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
