@@ -1,0 +1,70 @@
+{
+    "ID": 1241,
+    "title": "Sticky",
+    "status": "publish",
+    "type": "post",
+    "author": {
+        "ID": 2,
+        "username": "manovotny",
+        "name": "Michael Novotny",
+        "first_name": "Michael",
+        "last_name": "Novotny",
+        "nickname": "manovotny",
+        "slug": "manovotny",
+        "URL": "",
+        "avatar": "http:\/\/0.gravatar.com\/avatar\/60cb31e323d15f1c0fc1a59ac17ba484?s=96",
+        "description": "",
+        "registered": "2014-07-21T13:51:25+00:00",
+        "meta": {
+            "links": {
+                "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/users\/2",
+                "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/users\/2\/posts"
+            }
+        }
+    },
+    "content": "<p>This is a sticky post.<\/p>\n<p>There are a few things to verify:<\/p>\n<ul>\n<li>The sticky post should be distinctly\u00a0recognizable\u00a0in some way in comparison to normal posts. You can style the <code>.sticky<\/code> class if you are using the <a title=\"WordPress Codex post_class() Function\" href=\"http:\/\/codex.wordpress.org\/Function_Reference\/post_class\" target=\"_blank\">post_class()<\/a> function to generate your post classes, which is a best practice.<\/li>\n<li>They should show at the very top of the blog index page, even though they could be several posts back chronologically.<\/li>\n<li>They should still show up again in their chronologically correct postion in time, but without the sticky indicator.<\/li>\n<li>If you have a plugin or widget that lists popular posts or comments, make sure that this sticky post is not always at the top of those lists unless it really is popular.<\/li>\n<\/ul>\n",
+    "parent": 0,
+    "link": "http:\/\/localhost:8888\/wordpress\/post\/sticky",
+    "date": "2013-01-07T07:07:21+00:00",
+    "modified": "2014-07-31T15:36:27+00:00",
+    "format": "standard",
+    "slug": "sticky",
+    "guid": "http:\/\/wptest.io\/demo\/?p=1241",
+    "excerpt": "<p>This is a sticky post. There are a few things to verify: The sticky post should be distinctly\u00a0recognizable\u00a0in some way in comparison to normal posts. You can style the .sticky class if you are using the post_class() function to generate your post classes, which is a best practice. They should show at the very top [&hellip;]<\/p>\n",
+    "menu_order": 0,
+    "comment_status": "open",
+    "ping_status": "open",
+    "sticky": true,
+    "date_tz": "UTC",
+    "date_gmt": "2013-01-07T13:07:21+00:00",
+    "modified_tz": "UTC",
+    "modified_gmt": "2014-07-31T15:36:27+00:00",
+    "meta": {
+        "links": {
+            "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/1241",
+            "author": "http:\/\/localhost:8888\/wordpress\/wp-json\/users\/2",
+            "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts",
+            "replies": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/1241\/comments",
+            "version-history": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/1241\/revisions",
+            "b3:replies": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/1241\/b3:replies"
+        }
+    },
+    "featured_image": null,
+    "terms": {
+        "category": [{
+            "ID": 30,
+            "name": "Sticky",
+            "slug": "sticky",
+            "description": "",
+            "parent": null,
+            "count": 1,
+            "link": "http:\/\/localhost:8888\/wordpress\/post\/category\/sticky",
+            "meta": {
+                "links": {
+                    "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/category\/terms",
+                    "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/category\/terms\/30"
+                }
+            }
+        }]
+    }
+}

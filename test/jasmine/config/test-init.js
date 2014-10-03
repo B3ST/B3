@@ -177,7 +177,6 @@
     'bootstrap.notify',
     'backbone.validateAll',
 
-    'config/backbone/models',
     'config/utils/supplant',
     'helpers/page-iterator-helper',
     'helpers/format-date-helper',
@@ -190,6 +189,7 @@
 
     require(specs, function() {
       jasmine.getJSONFixtures().fixturesPath = 'fixtures/json';
+      loadJSONFixtures('routes.json', 'post.json');
       Settings.set('require.config', config);
       window.onload();
       // jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
