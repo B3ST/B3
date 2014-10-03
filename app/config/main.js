@@ -77,7 +77,7 @@
     'dust.marionette',
     'dust.helpers',
 
-    'config/backbone/models',
+    'config/backbone/sync',
     'config/backbone/routes',
     'config/utils/supplant',
     'config/fetch',
