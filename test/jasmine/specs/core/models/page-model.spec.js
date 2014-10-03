@@ -1,10 +1,17 @@
+/* global define */
+
 define([
   "models/page-model",
-], function (Page) {
+  "models/base-model"
+], function (Page, BaseModel) {
   "use strict";
 
   describe("Page", function() {
     var model;
+
+    it("should extend from BaseModel", function() {
+      expect(inherits(Page, BaseModel)).toBeTruthy();
+    });
 
     describe("When initializing a Page", function() {
       beforeEach(function() {

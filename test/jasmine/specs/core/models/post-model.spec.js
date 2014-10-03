@@ -1,10 +1,17 @@
+/* global define */
+
 define([
   "models/post-model",
-], function (Post) {
+  "models/base-model"
+], function (Post, BaseModel) {
   "use strict";
 
   describe("Post", function() {
     var model;
+
+    it("should inherit from BaseModel", function() {
+      expect(inherits(Post, BaseModel)).toBeTruthy();
+    });
 
     describe("When instantiating a Post", function() {
       beforeEach(function() {

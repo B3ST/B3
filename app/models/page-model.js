@@ -2,12 +2,13 @@
 
 define([
   'backbone',
+  'models/base-model',
   'models/user-model',
   'models/settings-model',
-], function (Backbone, User, Settings) {
+], function (Backbone, BaseModel, User, Settings) {
   'use strict';
 
-  var Page = Backbone.Model.extend({
+  var Page = BaseModel.extend({
     defaults: {
       ID             : null,
       title          : '',

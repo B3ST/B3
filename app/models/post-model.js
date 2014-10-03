@@ -1,13 +1,15 @@
 /* global define */
 
 define([
+  'underscore',
   'backbone',
+  'models/base-model',
   'models/user-model',
   'models/settings-model',
-], function (Backbone, User, Settings) {
+], function (_, Backbone, BaseModel, User, Settings) {
   'use strict';
 
-  var Post = Backbone.Model.extend({
+  var Post = BaseModel.extend({
     defaults: {
       ID             : null,
       title          : '',
