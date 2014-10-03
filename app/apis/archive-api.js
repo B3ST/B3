@@ -53,12 +53,12 @@ define([
 
     showPostByDate: function (params) {
       var page   = this._getPage(params),
-          filter = this._getDateFilter(params).onPage(page);
+          filter = new PostFilter().withDate(params).onPage(page);
 
       this._showArchive(page, filter);
     },
 
-    showCustomTaxonomy: function  () {
+    showPostByTaxonomy: function  () {
 
     },
 
@@ -68,16 +68,6 @@ define([
 
     _getPage: function (params) {
       return parseInt(params.paged, 10) || 1;
-    },
-
-    _getDateFilter: function (params) {
-      var filter = new PostFilter();
-
-      if (params.hasOwnProperty('year')) { filter.withYear(params.year); }
-      if (params.hasOwnProperty('monthnum')) { filter.withMonth(params.monthnum); }
-      if (params.hasOwnProperty('day')) { filter.withDay(params.day); }
-
-      return filter;
     }
   });
 

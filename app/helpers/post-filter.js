@@ -127,6 +127,27 @@ define([
     },
 
     /**
+     * Search filter using the specified parameters
+     * @param  {Object} options Object containing the day, monthnum and/or year
+     * @return {PostFilter}            returns self
+     */
+    withDate: function (options) {
+      if (options.hasOwnProperty('year')) {
+        this.withYear(options.year);
+      }
+
+      if (options.hasOwnProperty('monthnum')) {
+        this.withMonth(options.monthnum);
+      }
+
+      if (options.hasOwnProperty('day')) {
+        this.withDay(options.day);
+      }
+
+      return this;
+    },
+
+    /**
      * Search filter for searching terms
      * @param  {string} term Term to search for
      * @return {PostFilter}  returns self
