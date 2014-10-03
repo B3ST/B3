@@ -4,15 +4,14 @@ define([
   'backbone',
   'models/settings-model',
   'buses/event-bus',
-  'buses/navigator',
   'templates/header-template'
-], function (Backbone, Settings, EventBus, Navigator) {
+], function (Backbone, Settings, EventBus) {
   'use strict';
 
   var HeaderView = Backbone.Marionette.LayoutView.extend({
     template: 'header-template.dust',
     events: {
-      'click .navbar-brand': 'index',
+      'click .navbar-brand': 'onIndexClicked',
     },
 
     regions: {
@@ -24,9 +23,8 @@ define([
       return { name: Settings.get('name') };
     },
 
-    index: function (ev) {
-      Navigator.navigateToHome('', null, true);
-      EventBus.trigger('menu-item:select', {id: -1});
+    onIndexClicked: function (ev) {
+      EventBus.trigger('header:view:index', { id: -1 });
       ev.preventDefault();
     }
   });
