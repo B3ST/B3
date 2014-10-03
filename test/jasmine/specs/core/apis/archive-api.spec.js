@@ -11,33 +11,12 @@ define([
   describe("ArchiveAPI", function() {
     var api;
 
-    describe(".showHome", function() {
-      describe("When home is not a page", function() {
-        it("should display the archive", function() {
-          spyOn(Settings, 'get').and.callFake(function () {
-            return 0;
-          });
-          var archive = spyOn(ArchiveAPI.prototype, 'showArchive');
+    describe("When initializing", function() {
+      it("should bind to a given set of events", function() {
+        var bus = spyOn(EventBus, "on");
 
-          api = new ArchiveAPI();
-          api.showHome();
-
-          expect(archive).toHaveBeenCalled();
-        });
-      });
-
-      describe("When home is set to a page", function() {
-        it("should display that page", function() {
-          spyOn(Settings, 'get').and.callFake(function () {
-            return 100;
-          });
-          var bus = spyOn(EventBus, 'trigger');
-
-          api = new ArchiveAPI();
-          api.showHome();
-
-          expect(bus).toHaveBeenCalledWith('page:show', {page: 100});
-        });
+        api = new ArchiveAPI();
+        expect(bus).toHaveBeenCalledWith("archive:show", api.showArchive, api);
       });
     });
 

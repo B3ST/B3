@@ -11,13 +11,8 @@ define([
   'use strict';
 
   var ArchiveAPI = Backbone.Marionette.Controller.extend({
-    showHome: function (params) {
-      var onFront = Settings.get('page_on_front');
-      if (onFront > 0) {
-        EventBus.trigger('page:show', {page: onFront});
-      } else {
-        this.showArchive(params);
-      }
+    initialize: function () {
+      EventBus.on('archive:show', this.showArchive, this);
     },
 
     showArchive: function (params) {
