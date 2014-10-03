@@ -6,8 +6,10 @@ define([
   'controllers/comments-controller',
   'controllers/reply-form-controller',
   'views/single-post-view',
+  'models/settings-model',
+  'buses/event-bus',
   'buses/navigator'
-], function (BaseController, PaginationController, CommentsController, ReplyFormController, SinglePostView, Navigator) {
+], function (BaseController, PaginationController, CommentsController, ReplyFormController, SinglePostView, Settings, EventBus, Navigator) {
   'use strict';
 
   var SingleController = BaseController.extend({
@@ -46,6 +48,11 @@ define([
     },
 
     onFetchDone: function () {
+      if (Settings.get('page_for_posts') === this.model.get('ID')) {
+        EventBus.trigger('archive:show', {});
+        return;
+      }
+
       var content = this.model.get('content').split(/<!--nextpage-->/),
           pages   = content.length;
 
