@@ -19,12 +19,12 @@ define([
       'post':       'showPostBySlug',
       'page':       'showPageBySlug',
       'attachment': '',
-      'default':    'showCustomPost'
+      'default':    'showPostTypeBySlug'
     },
     'taxonomy': {
       'category': 'showPostByCategory',
       'post_tag': 'showPostByTag',
-      'default' : 'showCustomTaxonomy'
+      'default' : 'showPostByTaxonomy'
     },
     'author'  : {
       'author': 'showPostByAuthor',

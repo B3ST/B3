@@ -20,7 +20,7 @@ define([
       this._showSingle(page, 'content/type-page-template.dust');
     },
 
-    showCustomPost: function (params) {
+    showPostTypeBySlug: function (params) {
 
     },
 
