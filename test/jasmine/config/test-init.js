@@ -158,6 +158,7 @@
     specsRoot + 'core/apis/archive-api.spec',
     specsRoot + 'core/apis/single-api.spec',
     specsRoot + 'core/apis/search-api.spec',
+    specsRoot + 'core/apis/home-api.spec',
 
     specsRoot + 'core/buses/navigator.spec',
   ];
@@ -189,7 +190,7 @@
 
     require(specs, function() {
       jasmine.getJSONFixtures().fixturesPath = 'fixtures/json';
-      loadJSONFixtures('routes.json', 'post.json');
+      loadJSONFixtures('routes.json', 'post.json', 'menu_item.json');
       Settings.set('require.config', config);
       window.onload();
       // jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
