@@ -31,23 +31,6 @@ define([
     }
   };
 
-  function getWordPressRoutes () {
-    var routes    = Settings.get('routes'),
-        fragments = _.keys(routes),
-        appRoutes = {};
-
-    _.each(fragments, function (fragment) {
-      var route = routes[fragment];
-      if (methodNames.hasOwnProperty(route.object)) {
-        var methods = methodNames[route.object],
-            method = methods[route.type] || methods['default'];
-        appRoutes[fragment] = method;
-      }
-    });
-
-    return appRoutes;
-  }
-
   Backbone.Router.prototype._extractParameters = function (route, fragment) {
     var params = route.exec(fragment).slice(1),
         paramsObj = {};
@@ -60,7 +43,7 @@ define([
   };
 
   Marionette.AppRouter.prototype.processAppRoutes = function (controllers, appRoutes) {
-    var routes = getWordPressRoutes();
+    var routes = Settings.getRoutes(methodNames);
 
     if (appRoutes) {
       appRoutes = _.extend(routes, appRoutes);

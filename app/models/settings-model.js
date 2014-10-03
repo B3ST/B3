@@ -1,10 +1,9 @@
 /* global define, WP_API_SETTINGS */
 
 define([
-  'jquery',
   'underscore',
   'backbone'
-], function ($, _, Backbone) {
+], function (_, Backbone) {
   'use strict';
 
   var Settings = Backbone.Model.extend({
@@ -19,6 +18,23 @@ define([
 
     url: function () {
       return this.attributes.api_url + '/b3:settings';
+    },
+
+    getRoutes: function (methodNames) {
+      var routes    = this.get('routes'),
+          fragments = _.keys(routes),
+          appRoutes = {};
+
+      _.each(fragments, function (fragment) {
+        var route = routes[fragment];
+        if (methodNames.hasOwnProperty(route.object)) {
+          var methods = methodNames[route.object],
+              method = methods[route.type] || methods['default'];
+          appRoutes[fragment] = method;
+        }
+      });
+
+      return appRoutes;
     }
   });
 
