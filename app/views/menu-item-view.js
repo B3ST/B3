@@ -25,10 +25,12 @@ define([
     initialize: function () {
       this.dropdown = false;
       EventBus.on('menu-item:view:select', this.itemSelected, this);
+      EventBus.on('header:view:index', this.itemSelected, this);
     },
 
     onDestroy: function () {
       EventBus.off('menu-item:view:select', this.itemSelected, this);
+      EventBus.off('header:view:index', this.itemSelected, this);
     },
 
     serializeData: function () {

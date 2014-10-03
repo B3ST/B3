@@ -12,30 +12,8 @@ define([
   describe("MenuItemView", function() {
     var item, view;
     beforeEach(function() {
-      item = new MenuItem({
-        ID: 1257,
-        parent: 0,
-        order: 1,
-        type: "nav_menu_item",
-        guid: "http://localhost:8888/wordpress/post/1257",
-        object: 1149,
-        object_parent: 0,
-        object_type: 'page',
-        link: "http://wordpress.example.org/about",
-        title: "About",
-        attr_title: "",
-        description: "",
-        classes: [
-          ""
-        ],
-        target: "",
-        xfn: "",
-        meta: {
-          links: {
-            object: "http://localhost:8888/wordpress/wp-json/pages/about"
-          }
-        }
-      });
+      var json = getJSONFixture("menu_item.json");
+      item = new MenuItem(json);
     });
 
     describe(".initialize", function() {
@@ -44,6 +22,7 @@ define([
         view = new MenuItemView({model: item});
 
         expect(bus).toHaveBeenCalledWith('menu-item:view:select', view.itemSelected, view);
+        expect(bus).toHaveBeenCalledWith('header:view:index', view.itemSelected, view);
       });
     });
 
