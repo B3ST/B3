@@ -4,11 +4,16 @@ define([
   'controllers/base-controller',
   'controllers/search-controller',
   'controllers/menu-controller',
-  'views/header-view'
-], function (BaseController, SearchController, MenuController, HeaderView) {
+  'views/header-view',
+  'buses/navigator'
+], function (BaseController, SearchController, MenuController, HeaderView, Navigator) {
   'use strict';
 
   var HeaderController = BaseController.extend({
+    busEvents: {
+      "header:view:index": "navigateHome"
+    },
+
     childControllers: {
       'search': 'searchController',
       'menu':   'menuController'
@@ -22,6 +27,10 @@ define([
       this.show(this._getView(this.model));
       this.search.showSearch({ region: this.mainView.search });
       this.menu.showMenu({ region: this.mainView.menu, menus: this.options.menus });
+    },
+
+    navigateHome: function () {
+      Navigator.navigateToHome('', null, true);
     },
 
     searchController: function () {
