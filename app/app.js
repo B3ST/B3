@@ -8,6 +8,7 @@ define([
   'apis/archive-api',
   'apis/single-api',
   'apis/search-api',
+  'apis/home-api',
   'controllers/header-controller',
   'controllers/sidebar-controller',
   'controllers/footer-controller',
@@ -16,7 +17,7 @@ define([
 
   'config/marionette/application',
   'controllers/loading-controller'
-], function (_, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, SearchAPI, HeaderController, SidebarController, FooterController, Communicator, Settings) {
+], function (_, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, SearchAPI, HomeAPI, HeaderController, SidebarController, FooterController, Communicator, Settings) {
   'use strict';
 
   var App = new Backbone.Marionette.Application();
@@ -85,7 +86,8 @@ define([
       controller: [
         new ArchiveAPI(),
         new SingleAPI(),
-        new SearchAPI()
+        new SearchAPI(),
+        new HomeAPI()
       ],
     });
 
