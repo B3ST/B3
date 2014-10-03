@@ -72,7 +72,7 @@
       },
 
       'jasmine-jquery': {
-        'deps': ['jasmine-html'],
+        'deps': ['jasmine', 'jasmine-html'],
         'exports': 'JasmineJquery'
       },
 
