@@ -34,34 +34,6 @@ define([
       });
     });
 
-    xdescribe("Replying to the post", function() {
-      it("should display a comment box", function() {
-        this.post = new Post({ID: 1, comment_status: 'open'});
-        this.view = new SinglePostView({model: this.post, collection: new Comments(), user: this.user});
-        this.view.render();
-
-        $.fx.off;
-
-        var template = new ReplyFormView({
-          parentView: this.view,
-          user:       this.user,
-          model:      this.post,
-          parentId:   0
-        }).render().el;
-
-        $(template).slideDown();
-
-        var button = this.view.$('.b3-reply-post');
-        var box;
-
-        button.click();
-
-        box = $(button).next('#b3-replyform');
-        expect(box.length).toEqual(1);
-        expect(box[0].isEqualNode(template)).toBeTruthy();
-      });
-    });
-
     sharedClickBehaviourFor('category', {
       click: '.category > a',
       route: 'post/category/post-1'
