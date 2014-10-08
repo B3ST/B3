@@ -33,8 +33,8 @@ define([
       },
 
       opacity: function (options) {
-        this.opacityRegion = options.region.$el;
-        this.opacityRegion.addClass('opacity');
+        this.loadingRegion = options.region.$el;
+        this.loadingRegion.addClass('loading');
       }
     },
 
@@ -50,8 +50,8 @@ define([
     },
 
     closeLoading: function () {
-      if (this.opacityRegion) {
-        this.opacityRegion.removeClass('opacity');
+      if (this.loadingRegion) {
+        this.loadingRegion.removeClass('loading');
       }
 
       if (!this.view) {
