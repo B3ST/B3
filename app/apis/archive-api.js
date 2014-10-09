@@ -36,7 +36,7 @@ define([
           ptag   = params.post_tag,
           filter = new PostFilter().byTag(ptag).onPage(page);
 
-      this._showArchive(page, filter);
+      this._showArchive(page, filter, { taxonomy: 'post_tag', term: ptag });
     },
 
     showPostByAuthor: function (params) {
