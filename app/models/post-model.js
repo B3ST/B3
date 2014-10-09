@@ -6,7 +6,8 @@ define([
   'models/base-model',
   'models/user-model',
   'models/settings-model',
-], function (_, Backbone, BaseModel, User, Settings) {
+  'models/term-model'
+], function (_, Backbone, BaseModel, User, Settings, Term) {
   'use strict';
 
   var Post = BaseModel.extend({
@@ -51,6 +52,15 @@ define([
       }
 
       return this.urlRoot + query;
+    },
+
+    getTerm: function (taxonomy, term) {
+      var terms = this.get('terms')[taxonomy],
+          index = _.findIndex(terms, function (elem) {
+            return elem.slug === term;
+          });
+
+      return index > -1 ? new Term(terms[index]) : new Term();
     }
   });
 
