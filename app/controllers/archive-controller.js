@@ -60,8 +60,6 @@ define([
       options = options || {};
       this.show(null, {
         loading: {
-          // we could just fetch the default entities from the view,
-          // but using entities option, we will save 1 needless request
           entities: [this.posts],
           done: function (collection, status, jqXHR) {
             var totalPages = parseInt(jqXHR.getResponseHeader('X-WP-TotalPages'), 10);
@@ -171,7 +169,7 @@ define([
      * Creates a new ArchiveView instance for a post list.
      *
      * @param  {array}       posts Post collection to display.
-     * @param  {Taxonomy}    model The model with the term that this is being filtered
+     * @param  {Object}      model The model containing the information about the header
      * @return {ArchiveView}       New archive view instance.
      */
     _archiveView: function (posts, model) {
