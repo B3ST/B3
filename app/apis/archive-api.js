@@ -5,10 +5,9 @@ define([
   'marionette',
   'controllers/archive-controller',
   'buses/event-bus',
-  'buses/command-bus',
   'models/settings-model',
   'helpers/post-filter'
-], function (Backbone, Marionette, ArchiveController, EventBus, CommandBus, Settings, PostFilter) {
+], function (Backbone, Marionette, ArchiveController, EventBus, Settings, PostFilter) {
   'use strict';
 
   var ArchiveAPI = Backbone.Marionette.Controller.extend({
@@ -24,9 +23,9 @@ define([
     },
 
     showPostByCategory: function (params) {
-      var page     = this._getPage(params),
-          catg     = params.category,
-          filter   = new PostFilter().byCategory(catg).onPage(page);
+      var page   = this._getPage(params),
+          catg   = params.category,
+          filter = new PostFilter().byCategory(catg).onPage(page);
 
       this._showArchive(page, filter, { archiveBy: 'taxonomy', taxonomy: 'category', term: catg });
     },
