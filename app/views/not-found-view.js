@@ -3,7 +3,7 @@
 define([
   'backbone',
   'marionette',
-  'error/not-found-template'
+  'templates/error/not-found-template'
   /*jshint unused: false*/
 ], function (Backbone, Marionette) {
   'use strict';

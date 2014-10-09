@@ -1,16 +1,13 @@
-define([
-  'views/footer-view'
-], function (FooterView) {
-  describe("FooterView", function() {
-    beforeEach(function() {
-      this.view = new FooterView();
-    });
+/* global define */
 
-    describe(".render", function() {
-      it("should render the template", function() {
-        this.view.render();
-        expect(this.view.el).toBeDefined();
-      });
+define([
+  "views/footer-view"
+], function (FooterView) {
+  "use strict";
+
+  describe("FooterView", function() {
+    it("should be defined", function() {
+      expect(new FooterView()).toBeDefined();
     });
   });
 });

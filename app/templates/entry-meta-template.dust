@@ -1,0 +1,27 @@
+<div class="post-author">
+  Published on <time class="published" datetime="{date}">{@formatDate date="{date}" format="D/M/YYYY H:m" /}</time>
+    {~n}
+    by <span class="byline author vcard">
+        <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" rel="author" class="fn">{author.name}</a>
+      </span>
+  </div>
+
+  {! Categories !}
+  <div class="post-categories">
+  {#terms.category}
+    <span class="label-category category">
+      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
+    </span>
+    {~s}
+  {/terms.category}
+  </div>
+
+  {! Tags !}
+  <div class="post-tags">
+  {#terms.post_tag}
+    <span class="label label-primary tag">
+      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
+    </span>
+    {~s}
+  {/terms.post_tag}
+</div>

@@ -5,7 +5,7 @@ define([
   'underscore',
   'backbone',
   'marionette',
-  'controllers/bus/event-bus',
+  'buses/event-bus',
   'models/settings-model'
 ], function ($, _, Backbone, Marionette, EventBus, Settings) {
   'use strict';
@@ -55,6 +55,10 @@ define([
   var Navigator = Backbone.Model.extend({
     initialize: function () {
       this.routes = this._processRoutes(Settings.get('routes'));
+    },
+
+    navigateToCurrent: function () {
+      Backbone.history.loadUrl();
     },
 
     navigate: function (route, trigger) {
@@ -126,6 +130,10 @@ define([
      * @return {String}     Route.
      */
     _routeFromAbsoluteUrl: function (url) {
+      if (Settings.get('site_url') + '/' === url) {
+        return '';
+      }
+
       var re = new RegExp('^' + Settings.get('site_url') + '/(.+?)/?$', 'g');
       return url.replace(re, '$1');
     },

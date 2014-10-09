@@ -2,10 +2,10 @@
 
   <header class="jumbotron">
     <div class="jumbotron-container">
-      <h1 class="b3-post-title post-title entry-title">
+      <h1 class="post-title entry-title">
         {title|s}
       </h1>
-      <h2 class="byline author vcard" id="b3-post-author">
+      <h2 class="byline author vcard" id="author">
         By <a id="{author.ID}" slug="{author.slug}" href="{author.URL}" rel="author" class="fn">{author.name}</a></small>
       </h2>
       <p class="lead">
@@ -15,25 +15,16 @@
   </header>
 
   <div class="entry">
-    <div class="b3-post-content entry-content post-content">
+    <div class="entry-content post-content">
       {content|s}
     </div>
 
-    {+ pagination /}
+    <div id="pagination"></div>
 
     <footer>
-      {+ entry-meta /}
+      {> "entry-meta-template.dust" /}
     </footer>
 
-    <aside class="post-comments">
-      {@eq key=comment_status value="open"}
-        <a href="#reply" class="b3-reply-post button reply" role="button">
-          <span class="icon-reply"></span> Reply
-        </a>
-      {/eq}
-
-      <ul class="comments b3-comments"></ul>
-    </aside>
+    <div id="comments-section"></div>
   </div>
-
 </article>

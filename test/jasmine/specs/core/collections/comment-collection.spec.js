@@ -3,7 +3,7 @@ define([
 ], function (Comments) {
   describe("Comments", function() {
     beforeEach(function() {
-      this.comments = new Comments();
+      this.comments = new Comments({ uri: '' });
     });
 
     it("should be defined", function() {

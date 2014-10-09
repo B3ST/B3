@@ -1,68 +1,31 @@
 /* global define */
 
 define([
-  'jquery',
-  'underscore',
   'backbone',
-  'dust',
-  'dust.marionette',
   'models/settings-model',
-  'models/menu-model',
-  'views/menu-view',
-  'views/search-view',
-  'controllers/bus/event-bus',
-  'controllers/navigation/navigator',
-  'header-template'
-], function ($, _, Backbone, dust, dustMarionette, Settings, Menu, MenuView, SearchView, EventBus, Navigator) {
+  'buses/event-bus',
+  'templates/header-template'
+], function (Backbone, Settings, EventBus) {
   'use strict';
 
-  var HeaderView = Backbone.Marionette.ItemView.extend({
+  var HeaderView = Backbone.Marionette.LayoutView.extend({
     template: 'header-template.dust',
-    tagName:  'div',
     events: {
-      'click #b3-home': 'index',
+      'click .navbar-brand': 'onIndexClicked',
     },
 
-    modelEvents: {
-      'change': 'render'
-    },
-
-    initialize: function (options) {
-      this.model = new Menu(options.menus.primary);
-      this.model.fetch();
-    },
-
-    onRender: function () {
-      this.menuView   = new MenuView({collection: this.model.getItems()});
-      this.searchView = new SearchView({});
-
-      this.menuView.render();
-      this.searchView.render();
-
-      this.$('#b3-header-nav').append(this.menuView.el)
-                              .append(this.searchView.el);
-    },
-
-    onDestroy: function () {
-      this.menuView.destroy();
-      this.searchView.destroy();
+    regions: {
+      search: '#search-region',
+      menu:   '#menu-region'
     },
 
     serializeData: function () {
-      return {name: Settings.get('name')};
+      return { name: Settings.get('name') };
     },
 
-    index: function (ev) {
-      Navigator.navigateToHome('', null, true);
-      EventBus.trigger('menu-item:select', {id: -1});
+    onIndexClicked: function (ev) {
+      EventBus.trigger('header:view:index', { id: -1 });
       ev.preventDefault();
-    },
-
-    getItems: function () {
-      var menus = this.model.getItems();
-      return menus.map(function (menu) {
-        return menu.attributes;
-      });
     }
   });
 

@@ -1,0 +1,147 @@
+{
+    "routes": {
+        "value": {
+            "(page\/:paged)": {
+                "object": "archive",
+                "type": "root",
+                "tokens": ["paged"]
+            },
+            "attachment\/:attachment": {
+                "object": "post",
+                "type": "attachment",
+                "tokens": ["attachment"]
+            },
+            "search\/:search(\/page\/:paged)": {
+                "object": "archive",
+                "type": "search",
+                "tokens": ["search", "paged"]
+            },
+            "post\/author\/:author(\/page\/:paged)": {
+                "object": "author",
+                "type": "author",
+                "tokens": ["author", "paged"]
+            },
+            "post\/:post(\/page\/:paged)": {
+                "object": "post",
+                "type": "post",
+                "tokens": ["post", "paged"]
+            },
+            "post\/:post\/attachment\/:attachment": {
+                "object": "post",
+                "type": "attachment",
+                "tokens": ["post", "attachment"]
+            },
+            "post\/:post\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "post",
+                "tokens": ["post", "paged"]
+            },
+            "post\/:post\/attachment\/:attachment\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "attachment",
+                "tokens": ["post", "attachment", "paged"]
+            },
+            ":page(\/page\/:paged)": {
+                "object": "post",
+                "type": "page",
+                "tokens": ["page", "paged"]
+            },
+            ":page\/attachment\/:attachment": {
+                "object": "post",
+                "type": "attachment",
+                "tokens": ["page", "attachment"]
+            },
+            ":page\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "page",
+                "tokens": ["page", "paged"]
+            },
+            ":page\/attachment\/:attachment\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "attachment",
+                "tokens": ["page", "attachment", "paged"]
+            },
+            "post\/qualquer-coisa\/:qualquer_coisa(\/page\/:paged)": {
+                "object": "post",
+                "type": "qualquer_coisa",
+                "tokens": ["qualquer_coisa", "paged"]
+            },
+            "post\/qualquer-coisa\/:qualquer_coisa\/attachment\/:attachment": {
+                "object": "post",
+                "type": "attachment",
+                "tokens": ["qualquer_coisa", "attachment"]
+            },
+            "post\/qualquer-coisa\/:qualquer_coisa\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "qualquer_coisa",
+                "tokens": ["qualquer_coisa", "paged"]
+            },
+            "post\/qualquer-coisa\/:qualquer_coisa\/attachment\/:attachment\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "attachment",
+                "tokens": ["qualquer_coisa", "attachment", "paged"]
+            },
+            "post\/cena\/:cena(\/page\/:paged)": {
+                "object": "post",
+                "type": "cena",
+                "tokens": ["cena", "paged"]
+            },
+            "post\/cena\/:cena\/attachment\/:attachment": {
+                "object": "post",
+                "type": "attachment",
+                "tokens": ["cena", "attachment"]
+            },
+            "post\/cena\/:cena\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "cena",
+                "tokens": ["cena", "paged"]
+            },
+            "post\/cena\/:cena\/attachment\/:attachment\/comments(\/page\/:paged)": {
+                "object": "comments",
+                "type": "attachment",
+                "tokens": ["cena", "attachment", "paged"]
+            },
+            "post\/category\/:category(\/page\/:paged)": {
+                "object": "taxonomy",
+                "type": "category",
+                "tokens": ["category", "paged"]
+            },
+            "post\/tag\/:post_tag(\/page\/:paged)": {
+                "object": "taxonomy",
+                "type": "post_tag",
+                "tokens": ["post_tag", "paged"]
+            },
+            "post\/type\/:post_format(\/page\/:paged)": {
+                "object": "taxonomy",
+                "type": "post_format",
+                "tokens": ["post_format", "paged"]
+            },
+            "post\/nome-qualquer\/:nome_qualquer(\/page\/:paged)": {
+                "object": "taxonomy",
+                "type": "nome_qualquer",
+                "tokens": ["nome_qualquer", "paged"]
+            },
+            "post\/:year\/:monthnum\/:day(\/page\/:paged)": {
+                "object": "archive",
+                "type": "date",
+                "tokens": ["year", "monthnum", "day", "paged"]
+            },
+            "post\/:year\/:monthnum(\/page\/:paged)": {
+                "object": "archive",
+                "type": "date",
+                "tokens": ["year", "monthnum", "paged"]
+            },
+            "post\/:year(\/page\/:paged)": {
+                "object": "archive",
+                "type": "date",
+                "tokens": ["year", "paged"]
+            }
+        },
+        "meta": {
+            "links": {
+                "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/b3:settings\/routes",
+                "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/b3:settings"
+            }
+        }
+    }
+}

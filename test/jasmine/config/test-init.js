@@ -3,100 +3,85 @@
 (function() {
   'use strict';
 
-  var root = "../../../..";
-  var templateDeps = [
-    "header-template",
-    "footer-template",
-    "loading-template",
-    "content/type-post-template",
-    "content/type-page-template",
-    "main-template",
-    "content/comments/comment-template",
-    "archive/posts-template",
-    "error/not-found-template",
-    "forms/searchform-template",
-    "forms/replyform-template",
-    "forms/navigation-search-template",
-    "navigation/menus/menu-item-template",
-    "widget-areas/sidebar-template"
-  ];
-
+  var root = '../../../..';
   var config = {
-    baseUrl: root + "/app",
+    baseUrl: root + '/dist',
     paths: {
-      "jquery":               root + "/lib/jquery",
-      "jqueryui":             root + "/lib/jquery-ui",
-      "underscore":           root + "/lib/lodash.compat",
-      "backbone":             root + "/lib/backbone",
-      "backbone.wreqr":       root + "/lib/backbone.wreqr",
-      "backbone.babysitter":  root + "/lib/backbone.babysitter",
-      "marionette":           root + "/lib/backbone.marionette",
-      "dust":                 root + "/lib/dust-full.min",
-      "dust.helpers":         root + "/lib/dust-helpers.min",
-      "dust.marionette":      root + "/lib/backbone.marionette.dust",
-      "backbone.validateAll": root + "/lib/Backbone.validateAll.min",
-      "bootstrap":            root + "/lib/bootstrap",
-      "bootstrap.notify":     root + "/lib/bootstrap-notify",
-      "text":                 root + "/lib/text",
-      "jasmine":              root + "/lib/jasmine",
-      "jasmine-html":         root + "/lib/jasmine-html",
-      "boot":                 root + "/lib/boot",
-      "sinon":                root + "/lib/sinon",
+      'jquery':               root + '/lib/jquery',
+      'jqueryui':             root + '/lib/jquery-ui',
+      'underscore':           root + '/lib/lodash.compat',
+      'backbone':             root + '/lib/backbone',
+      'backbone.wreqr':       root + '/lib/backbone.wreqr',
+      'backbone.babysitter':  root + '/lib/backbone.babysitter',
+      'marionette':           root + '/lib/backbone.marionette',
+      'dust':                 root + '/lib/dust-full.min',
+      'dust.helpers':         root + '/lib/dust-helpers.min',
+      'dust.marionette':      root + '/lib/backbone.marionette.dust',
+      'backbone.validateAll': root + '/lib/Backbone.validateAll.min',
+      'bootstrap':            root + '/lib/bootstrap',
+      'bootstrap.notify':     root + '/lib/bootstrap-notify',
+      'text':                 root + '/lib/text',
+      'jasmine':              root + '/lib/jasmine',
+      'jasmine-html':         root + '/lib/jasmine-html',
+      'jasmine-jquery':       root + '/lib/jasmine-jquery',
+      'boot':                 root + '/lib/boot',
+      'sinon':                root + '/lib/sinon',
+      'moment':               root + '/lib/moment',
+
+      'templates':            'templates-compiled'
     },
 
     shim: {
-      "bootstrap": ["jquery"],
-      "jqueryui": ["jquery"],
-      "backbone": {
-        "deps": ["underscore"],
-        "exports": "Backbone"
+      'bootstrap': ['jquery'],
+      'jqueryui': ['jquery'],
+      'backbone': {
+        'deps': ['underscore'],
+        'exports': 'Backbone'
       },
 
-      "marionette": {
-        "deps": ["underscore", "backbone", "jquery"],
-        "exports": "Marionette"
+      'marionette': {
+        'deps': ['underscore', 'backbone', 'jquery'],
+        'exports': 'Marionette'
       },
 
-      "dust": {
-        "exports": "dust"
+      'dust': {
+        'exports': 'dust'
       },
 
-      "dust.marionette": {
-        "deps": ["marionette", "dust"],
-        "exports": "dustMarionette",
+      'dust.marionette': {
+        'deps': ['marionette', 'dust'],
+        'exports': 'dustMarionette',
       },
 
-      "dust.helpers": {
-        "deps": ["dust"],
-        "exports": "dustHelpers"
+      'dust.helpers': {
+        'deps': ['dust'],
+        'exports': 'dustHelpers'
       },
 
-      "bootstrap.notify": ["bootstrap"],
+      'bootstrap.notify': ['bootstrap'],
 
-      "backbone.validateAll": ["backbone"],
+      'backbone.validateAll': ['backbone'],
 
-      "jasmine": {
-        "exports": "jasmine"
+      'jasmine': {
+        'exports': 'jasmine'
       },
 
-      "jasmine-html": {
-        "deps": ["jasmine"],
-        "exports": "jasmine"
+      'jasmine-html': {
+        'deps': ['jasmine'],
+        'exports': 'jasmine'
       },
 
-      "boot": {
-        "deps": ["jasmine", "jasmine-html"],
-        "exports": "jasmine"
+      'jasmine-jquery': {
+        'deps': ['jasmine', 'jasmine-html'],
+        'exports': 'JasmineJquery'
+      },
+
+      'boot': {
+        'deps': ['jasmine', 'jasmine-html'],
+        'exports': 'jasmine'
       },
     }
   };
-
-  templateDeps.forEach(function(dep) {
-    config.paths[dep] = root + "/dist/templates/" + dep;
-    config.shim[dep] = {
-      "deps": ["dust", "dust.helpers"]
-    };
-  });
 
   require.config(config);
 
@@ -141,6 +126,7 @@
     specsRoot + 'core/views/footer-view.spec',
     specsRoot + 'core/views/archive-view.spec',
     specsRoot + 'core/views/single-post-view.spec',
+    specsRoot + 'core/views/comments-view.spec',
     specsRoot + 'core/views/comment-view.spec',
     specsRoot + 'core/views/not-found-view.spec',
     specsRoot + 'core/views/reply-form-view.spec',
@@ -149,55 +135,63 @@
     specsRoot + 'core/views/sidebar-view.spec',
     specsRoot + 'core/views/search-view.spec',
     specsRoot + 'core/views/loading-view.spec',
+    specsRoot + 'core/views/pagination-view.spec',
 
     // helpers
     specsRoot + 'core/helpers/post-filter.spec',
 
     // controllers
+    specsRoot + 'core/controllers/base-controller.spec',
     specsRoot + 'core/controllers/single-controller.spec',
     specsRoot + 'core/controllers/archive-controller.spec',
     specsRoot + 'core/controllers/search-controller.spec',
     specsRoot + 'core/controllers/loading-controller.spec',
     specsRoot + 'core/controllers/taxonomy-controller.spec',
-    specsRoot + 'core/controllers/navigation/navigator.spec',
+    specsRoot + 'core/controllers/pagination-controller.spec',
+    specsRoot + 'core/controllers/comments-controller.spec',
+    specsRoot + 'core/controllers/reply-form-controller.spec',
+    specsRoot + 'core/controllers/header-controller.spec',
+    specsRoot + 'core/controllers/menu-controller.spec',
+    specsRoot + 'core/controllers/sidebar-controller.spec',
+    specsRoot + 'core/controllers/footer-controller.spec',
 
-    // app
-    specsRoot + 'core/app.spec'
+    specsRoot + 'core/apis/archive-api.spec',
+    specsRoot + 'core/apis/single-api.spec',
+    specsRoot + 'core/apis/search-api.spec',
+    specsRoot + 'core/apis/home-api.spec',
+
+    specsRoot + 'core/buses/navigator.spec',
   ];
 
 
   // Include Desktop Specific JavaScript files here (or inside of your Desktop router)
   require([
-    "jquery",
-    "underscore",
-    "backbone",
-    "marionette",
-    "boot",
-    "models/settings-model",
-    "config/rewrite",
-    "bootstrap",
-    "bootstrap.notify",
-    "backbone.validateAll",
+    'jquery',
+    'underscore',
+    'backbone',
+    'marionette',
+    'boot',
+    'models/settings-model',
 
-    "../test/jasmine/config/using",
-    "../test/jasmine/config/stub-server"
-  ], function ($, _, Backbone, Marionette, jasmine, Settings, Rewrite) {
+    'jasmine-jquery',
+    'bootstrap',
+    'bootstrap.notify',
+    'backbone.validateAll',
+
+    'config/utils/supplant',
+    'helpers/page-iterator-helper',
+    'helpers/format-date-helper',
+    'helpers/sidebar-widgets-helper',
+
+    '../test/jasmine/config/using',
+    '../test/jasmine/config/stub-server',
+    '../test/jasmine/config/inherits'
+  ], function ($, _, Backbone, Marionette, jasmine, Settings) {
 
     require(specs, function() {
+      jasmine.getJSONFixtures().fixturesPath = 'fixtures/json';
+      loadJSONFixtures('routes.json', 'post.json', 'menu_item.json');
       Settings.set('require.config', config);
-
-      Backbone.Model.prototype.toJSON = Rewrite.toJSON;
-      Backbone.Model.prototype.parse = Rewrite.parse;
-
-      if (!String.prototype.supplant) {
-        String.prototype.supplant = function(o) {
-          return this.replace(/\{([^{}]*)\}/g, function(a, b) {
-            var r = o[b];
-            return typeof r === 'string' || typeof r === 'number' ? r : a;
-          });
-        };
-      }
-
       window.onload();
       // jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
       // jasmine.getEnv().execute();

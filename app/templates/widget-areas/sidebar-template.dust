@@ -1,4 +1,4 @@
-{#sidebar:widgets}
+{@sidebarWidgets widgets=widgets}
 <aside class="widget panel">
   {?title}
   <header class="panel-heading">
@@ -9,4 +9,4 @@
     {content|s}
   </div>
 </aside>
-{/sidebar}
+{/sidebarWidgets}

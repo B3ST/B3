@@ -1,40 +1,50 @@
+/* global define */
+
 define([
-  'backbone',
-  'models/user-model'
-], function (Backbone, User) {
-  describe("Backbone.Model", function() {
+  "models/base-model",
+  "models/settings-model"
+], function (BaseModel, Settings) {
+  "use strict";
+
+  describe("BaseModel", function() {
+    var server, response, model;
+
     beforeEach(function() {
-      this.date = new Date();
-      this.user = new User();
-
-      var Model = Backbone.Model.extend({
-        defaults: {
-          ID: 1,
-          date: this.date,
-          modified: this.date,
-          date_gmt: this.date,
-          modified_gmt: this.date,
-          author: this.user
-        }
+      var Extended = BaseModel.extend({
+        url: Settings.get('api_url') + '/posts/1'
       });
 
-      this.model = new Model();
+      model = new Extended({ ID: 1 });
+      response = getJSONFixture("post.json");
+
+      server = stubServer({
+        url:      Settings.get('api_url') + '/posts/1',
+        code:     200,
+        response: response
+      });
+
+      model.fetch();
+      server.respond();
     });
 
-    describe(".toJSON", function() {
-      it("should return a JSON representation of the model", function() {
-        var iso  = this.date.toISOString(),
-            json = {ID: 1, date: iso, modified: iso, date_gmt: iso, modified_gmt: iso, author: this.user.attributes };
-        expect(this.model.toJSON()).toEqual(json);
+    afterEach(function() {
+      server.restore();
+    });
+
+    describe("When parsing a BaseModel", function() {
+      it("should set its attributes if successful", function() {
+        expect(model.get('content')).toEqual(response.content);
+        expect(model.get('author').get('username')).toEqual(response.author.username);
+        expect(model.get('author').get('ID')).toEqual(response.author.ID);
+        expect(model.get('date')).toEqual(new Date(response.date));
       });
     });
 
-    describe(".parse", function() {
-      it("should parse the response", function() {
-        var iso  = this.date.toISOString(),
-            obj  = {ID: 1, date: iso, modified: iso, date_gmt: iso, modified_gmt: iso, author: this.user.attributes},
-            json = JSON.stringify(obj);
-        expect(this.model.parse(json)).toEqual(json);
+    describe("When converting to JSON", function() {
+      it("should convert to JSON format", function() {
+        expect(model.toJSON().content).toEqual(response.content);
+        expect(model.toJSON().author.username).toEqual(response.author.username);
+        expect(model.toJSON().author.ID).toEqual(response.author.ID);
       });
     });
   });

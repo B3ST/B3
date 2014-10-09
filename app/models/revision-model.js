@@ -1,13 +1,14 @@
 /* global define */
 
 define([
-  'jquery',
   'backbone',
+  'models/base-model',
   'models/user-model',
   'models/settings-model'
-], function ($, Backbone, User, Settings) {
+], function (Backbone, BaseModel, User, Settings) {
   'use strict';
-  var Revision = Backbone.Model.extend({
+
+  var Revision = BaseModel.extend({
     defaults: {
       ID           : null,
       post         : null,

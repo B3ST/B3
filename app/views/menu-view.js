@@ -14,16 +14,24 @@ define([
   var MenuView = Backbone.Marionette.CollectionView.extend({
     childView: MenuItemView,
     tagName:   function() {
-      return 'ul id="" class="nav navbar-nav"';
+      return 'ul class="nav navbar-nav"';
+    },
+
+    modelEvents: {
+      'change': 'getItems'
     },
 
     initialize: function (options) {
-      this.menuId = options.menuId || 'menu-primary';
-      this.collection.sort();
+      this.id = options.menuId || 'menu-primary';
+    },
+
+    getItems: function () {
+      this.collection = this.model.getItems();
+      this.render();
     },
 
     onRender: function () {
-      this.$el.attr('id', this.menuId);
+      this.$el.attr('id', this.id);
     },
 
     attachHtml: function (collectionView, itemView) {

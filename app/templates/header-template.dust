@@ -8,10 +8,12 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a class="navbar-brand" id="b3-home" href="#">{name}</a>
+      <a class="navbar-brand" href="#">{name}</a>
     </div>
 
-    <nav id="b3-header-nav" class="navbar-collapse collapse">
+    <nav class="navbar-collapse collapse">
+      <div id="menu-region"></div>
+      <div id="search-region"></div>
     </nav>
   </div>
 </div>

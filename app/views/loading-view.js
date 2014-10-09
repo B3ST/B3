@@ -7,15 +7,15 @@ define([
   'marionette',
   'dust',
   'dust.marionette',
-  'controllers/bus/command-bus',
-  'loading-template'
+  'buses/command-bus',
+  'templates/loading-template'
   /* jshint unused: false */
 ], function ($, _, Backbone, Marionette, dust, dustMarionette, CommandBus) {
   'use strict';
 
   var LoadingView = Backbone.Marionette.ItemView.extend({
     template: 'loading-template.dust',
-    tagName:  'div id="loading"',
+    tagName:  'div id="progress-loading"',
 
     progress: function (options) {
       var progress = options.loaded / options.total * 100;

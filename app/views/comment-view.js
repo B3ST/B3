@@ -3,46 +3,52 @@
 define([
   'jquery',
   'underscore',
-  'backbone',
-  'marionette',
-  'dust',
-  'dust.helpers',
-  'dust.marionette',
   'views/replyable-view',
-  'controllers/navigation/navigator',
-  'content/comments/comment-template'
-], function ($, _, Backbone, Marionette, dust, dustHelpers, dustMarionette, ReplyableView, Navigator) {
+  'buses/navigator',
+  'templates/content/comments/comment-template'
+], function ($, _, ReplyableView, Navigator) {
   'use strict';
 
   var CommentView = ReplyableView.extend({
     template: 'content/comments/comment-template.dust',
+    events: _.extend({}, ReplyableView.prototype.events, {
+      'click .comment-author': 'displayAuthor'
+    }),
 
     tagName:  function () {
       return 'li id="comment-' + this.model.get('ID') + '" class="media comment"';
     },
 
-    events: {
-      'click .b3-reply-comment':  'renderReplyBox', // from ReplyableView
-      'click .b3-comment-author': 'displayAuthor'
-    },
-
     initialize: function () {
       this.post = null;
-      this.user = null;
+    },
+
+    setPost: function (post) {
+      this.post = post;
+      this.render();
+    },
+
+    getPost: function () {
+      return this.post;
     },
 
     serializeData: function () {
-      return this.model.toJSON();
+      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON() })
+                       : this.model.toJSON();
     },
 
     parentId: function () {
       return this.model.get('ID');
     },
 
-    displayAuthor: function (event) {
-      var slug = $(event.currentTarget).attr('slug');
-      Navigator.navigateToAuthor(slug, null, true);
-      event.preventDefault();
+    displayAuthor: function (ev) {
+      var slug = $(ev.currentTarget).attr('slug'),
+          page = 1, trigger = true;
+
+      if (slug) {
+        Navigator.navigateToAuthor(slug, page, trigger);
+      }
+      ev.preventDefault();
     }
   });
 

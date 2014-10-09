@@ -1,43 +1,40 @@
 /* global define */
 
 define([
-  'jquery',
   'underscore',
   'backbone',
   'marionette',
-  'dust',
-  'dust.marionette',
   'models/menu-item-model',
   'models/settings-model',
-  'controllers/bus/event-bus',
-  'controllers/navigation/navigator',
-  'navigation/menus/menu-item-template'
-], function ($, _, Backbone, Marionette, dust, dustMarionette, MenuItem, Settings, EventBus, Navigator) {
+  'buses/event-bus',
+  'templates/navigation/menus/menu-item-template'
+], function (_, Backbone, Marionette, MenuItem, Settings, EventBus) {
   'use strict';
 
-  var ItemView = Backbone.Marionette.ItemView.extend({
-    template: "navigation/menus/menu-item-template.dust",
+  var MenuItemView = Backbone.Marionette.ItemView.extend({
+    template: 'navigation/menus/menu-item-template.dust',
     model:    MenuItem,
     tagName:  function () {
       return 'li id="menu-item-' + this.model.get('ID') + '"';
     },
 
     events: {
-      'click .b3-menu-item': 'selectMenu'
+      'click .menu-item': 'selectMenu'
     },
 
     initialize: function () {
       this.dropdown = false;
-      _.bindAll(this, 'itemSelected');
-      EventBus.bind('menu-item:select', this.itemSelected);
+      EventBus.on('menu-item:view:select', this.itemSelected, this);
+      EventBus.on('header:view:index', this.itemSelected, this);
     },
 
     onDestroy: function () {
-      EventBus.unbind('menu-item:select', this.itemSelected);
+      EventBus.off('menu-item:view:select', this.itemSelected, this);
+      EventBus.off('header:view:index', this.itemSelected, this);
     },
 
     serializeData: function () {
-      return _.extend(this.model.attributes, {dropdown: this.dropdown});
+      return _.extend(this.model.toJSON(), { dropdown: this.dropdown });
     },
 
     /**
@@ -46,8 +43,8 @@ define([
      * @param {Event} ev Click event.
      */
     selectMenu: function (ev) {
-      var link     = ev.currentTarget.href;
-      var baseUrl  = Settings.get('site_url');
+      var link    = ev.currentTarget.href,
+          baseUrl = Settings.get('site_url');
 
       // Do not handle external links:
       if (link.indexOf(baseUrl) !== 0) {
@@ -57,34 +54,34 @@ define([
       ev.preventDefault();
 
       if (!this.dropdown) {
-        Navigator.navigate(link, true);
-        this.activateMenu();
-        this.triggerMenuSelected(this.model.get('ID'), this.model.get('parent'));
+        EventBus.trigger('menu-item:view:navigate', { link: link });
+        this._activateMenu();
+        this._triggerMenuSelected(this.model.get('ID'), this.model.get('parent'));
       }
     },
 
     itemSelected: function (item) {
       if (item.parent === this.model.get('ID')) {
         this.itemId = item.id;
-        this.activateMenu();
-        this.triggerMenuSelected(item.id, this.model.get('parent'));
+        this._activateMenu();
+        this._triggerMenuSelected(item.id, this.model.get('parent'));
       } else {
-        this.deactivateMenu(item.id);
+        this._deactivateMenu(item.id);
       }
     },
 
-    activateMenu: function () {
+    _activateMenu: function () {
       this.$el.addClass('active');
     },
 
-    deactivateMenu: function (id) {
+    _deactivateMenu: function (id) {
       if (this.itemId !== id && this.model.get('ID') !== id) {
         this.$el.removeClass('active');
       }
     },
 
-    triggerMenuSelected: function (id, parent) {
-      EventBus.trigger('menu-item:select', {id: id, parent: parent});
+    _triggerMenuSelected: function (id, parent) {
+      EventBus.trigger('menu-item:view:select', {id: id, parent: parent});
     },
 
     toggleDropdown: function () {
@@ -96,5 +93,5 @@ define([
     }
   });
 
-  return ItemView;
+  return MenuItemView;
 });

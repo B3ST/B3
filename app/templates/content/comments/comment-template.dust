@@ -1,13 +1,13 @@
 <div class="avatar pull-left">
-  <img class="b3-avatar" src="{author.avatar}">
+  <img class="avatar" src="{author.avatar}">
 </div>
 
-<div class="comment-body media-body b3-comment-content">
+<div class="comment-body media-body">
   <h4 class="comment-meta media-heading">
-    <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" class="b3-comment-author">{author.name}</a>
+    <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" class="comment-author">{author.name}</a>
     {~s} on {~s}
     <a href="{meta.links.self}">
-      <time datetime="{date}">{date}</time>
+      <time datetime="{date}">{@formatDate date="{date}" format="D/M/YYYY H:m" /}</time>
     </a>:
   </h4>
 
@@ -19,13 +19,11 @@
 
   {content|s}
 
-  {@eq key=post.comment_status value="open"}
-    <div>
-      <a href="#reply" class="b3-reply-comment button reply" role="button">
-        <span class="icon-comment"></span> Reply
-      </a>
-    </div>
+  {@eq key="{post.comment_status}" value="open"}
+    <a href="#reply" class="button reply" role="button">
+      <span class="icon-comment"></span> Reply
+    </a>
   {/eq}
 
-  <ul class="comments b3-comments"></ul>
+  <ul class="comments"></ul>
 </div>
