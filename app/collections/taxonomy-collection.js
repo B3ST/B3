@@ -7,9 +7,22 @@ define([
   'models/settings-model'
 ], function ($, Backbone, Taxonomy, Settings) {
   'use strict';
+
   var Taxonomies = Backbone.Collection.extend({
     model: Taxonomy,
-    url: Settings.get('api_url') + '/taxonomies'
+
+    initialize: function (options) {
+      options  = options || {};
+      this.uri = options.uri || this._defaultUrl();
+    },
+
+    url: function () {
+      return this.uri;
+    },
+
+    _defaultUrl: function () {
+      return Settings.get('api_url') + '/taxonomies';
+    }
   });
 
   return Taxonomies;
