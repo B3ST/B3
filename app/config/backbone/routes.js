@@ -36,7 +36,7 @@ define([
         paramsObj = {};
 
     _.each(this.appParams[route], function (key, index) {
-      paramsObj[key.replace(':', '')] = params[index] ? params[index] : null;
+      paramsObj[key.replace(':', '').replace('*', '')] = params[index] ? params[index] : null;
     });
 
     return [paramsObj];
@@ -57,7 +57,7 @@ define([
         return controller[routes[route]] ? true : false;
       });
 
-      this.appParams[this._routeToRegExp(route)] = route.match(/:([^\/:()*]+)/g);
+      this.appParams[this._routeToRegExp(route)] = route.match(/(:([^\/:()*]+)|(\*([^\/:()*]+)))/g);
       this._addAppRoute(controller, route, routes[route]);
     }, this);
 
