@@ -121,15 +121,6 @@ define([
     },
 
     /**
-     * Display posts of a given taxonomy
-     *
-     * @param  {Object} params Object containing the taxonomy and page number
-     */
-    showCustomTaxonomy: function (params) {
-
-    },
-
-    /**
      * Navigates to a given post
      * @param  {Object} params The object containing the post
      */

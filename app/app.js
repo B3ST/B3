@@ -22,12 +22,20 @@ define([
 
   var App = new Backbone.Marionette.Application();
 
-  App.navigate = function(route, options){
-    options = options || {};
-    this.appRouter.navigate(route, options);
-  };
+  Communicator.requests.setHandler('default:region', function () {
+    return App.main;
+  });
 
-  App.titleChange = function(title) {
+  Communicator.requests.setHandler('is:mobile', function () {
+    var ua = (navigator.userAgent || navigator.vendor || window.opera, window, window.document);
+    return (/iPhone|iPod|iPad|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
+  });
+
+  Communicator.events.on('router:nav', function (options) {
+    App.appRouter.navigate(options.route, options.options);
+  });
+
+  Communicator.events.on('title:change', function (title) {
     var separator = ' | ';
     var newTitle  = '';
 
@@ -39,23 +47,6 @@ define([
     }
 
     document.title = newTitle + Settings.get('name');
-  };
-
-  function isMobile() {
-    var ua = (navigator.userAgent || navigator.vendor || window.opera, window, window.document);
-    return (/iPhone|iPod|iPad|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
-  }
-
-  Communicator.requests.setHandler('default:region', function () {
-    return App.main;
-  });
-
-  Communicator.events.on('router:nav', function (options) {
-    App.navigate(options.route, options.options);
-  });
-
-  Communicator.events.on('title:change', function (title) {
-    App.titleChange(title);
   });
 
   Communicator.commands.setHandler('register:controller', function (instance, id) {
@@ -66,16 +57,14 @@ define([
     App.unregister(instance, id);
   });
 
-  App.mobile = isMobile();
-
-  App.addRegions({
-    header:  '#header',
-    main:    '#main',
-    sidebar: '#sidebar',
-    footer:  '#footer'
-  });
-
   App.addInitializer(function (options) {
+    App.addRegions({
+      header:  '#header',
+      main:    '#main',
+      sidebar: '#sidebar',
+      footer:  '#footer'
+    });
+
     new HeaderController({ menus: options.menus, region: App.header }).showHeader();
     new SidebarController({ sidebar: options.sidebars.sidebar, template: 'widget-areas/sidebar-template.dust', region: App.sidebar }).showSidebar();
     new FooterController({ region: App.footer }).showFooter();

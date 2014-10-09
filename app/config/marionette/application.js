@@ -4,7 +4,7 @@ define([
   'underscore',
   'backbone',
   'marionette'
-], function (_, Backbone, Marionette) {
+], function (_, Backbone) {
   'use strict';
 
   _.extend(Backbone.Marionette.Application.prototype, {
