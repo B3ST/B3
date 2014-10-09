@@ -115,7 +115,7 @@ gulp.task('bower', function () {
  * gulp jshint
  */
 gulp.task('jshint', function () {
-  return gulp.src('app/**/*.js')
+  return gulp.src(['app/**/*.js', '!app/templates-compiled/**/*'])
     .pipe(reload({stream: true, once: true}))
     .pipe($.plumber())
     .pipe($.jshint())
