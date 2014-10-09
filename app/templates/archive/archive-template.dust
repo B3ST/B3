@@ -1,12 +1,13 @@
-{?title}
+{?hasHeader}
   <header class="jumbotron">
     <div class="jumbotron-container">
       <h1 class="archive-title">
-        Archive: {title|s}
+        Archive: <span>{header.name|s}</span>
       </h1>
+      <h4>{header.description|s} {?header.count}(Total: {header.count}){/header.count}</h4>
     </div>
   </header>
-{/title}
+{/hasHeader}
 
 <div class="entries">
   {> "archive/posts-template.dust" /}

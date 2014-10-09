@@ -32,13 +32,15 @@ define([
       'reset': 'renderPosts'
     },
 
-    initialize: function (options) {
-      this.title = options.title || false;
-      EventBus.trigger('title:change');
+    initialize: function () {
+      var title = this.model ? this.model.get('name') : '';
+      EventBus.trigger('title:change', title);
     },
 
     serializeData: function () {
-      return { posts: this.collection.toJSON(), title: this.title };
+      var hasHeader = this.model ? this.model.get('ID') !== null : false,
+          header    = this.model ? this.model.toJSON() : {};
+      return { posts: this.collection.toJSON(), hasHeader: hasHeader, header: header };
     },
 
     renderPosts: function () {
