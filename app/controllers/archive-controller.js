@@ -27,6 +27,20 @@ define([
       'pagination:select:page':        'showPage'
     },
 
+    archiveBy: {
+      taxonomy: function (options) {
+        return this.posts.at(0).getTerm(options.taxonomy, options.term);
+      },
+
+      author: function () {
+        return this.posts.at(0).get('author');
+      },
+
+      date: function () {
+        return new Date();
+      }
+    },
+
     childControllers: {
       pagination: 'paginationController'
     },
@@ -119,8 +133,8 @@ define([
     },
 
     showView: function (pages, options) {
-      var term = this.posts.at(0).getTerm(options.taxonomy, options.term);
-      this.show(this._archiveView(this.posts, term), { region: this.region });
+      var model = this._getModel(options);
+      this.show(this._archiveView(this.posts, model), { region: this.region });
 
       // there's some weird bug in this region, haven't figured it out yet.
       var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
@@ -162,6 +176,15 @@ define([
      */
     _archiveView: function (posts, model) {
       return new ArchiveView({ collection: posts, model: model });
+    },
+
+    _getModel: function (options) {
+      var model;
+      if (options.archiveBy && this.archiveBy.hasOwnProperty(options.archiveBy)) {
+        model = this.archiveBy[options.archiveBy].bind(this)(options);
+      }
+
+      return model;
     }
   });
 
