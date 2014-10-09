@@ -60,7 +60,13 @@ define([
 
       it("should request all posts", function() {
         controller.showArchive();
-        expect(show).toHaveBeenCalledWith(jasmine.any(ArchiveView), { loading: { done: jasmine.any(Function), fail: jasmine.any(Function) }});
+        expect(show).toHaveBeenCalledWith(null, {
+          loading: {
+            entities: [controller.posts],
+            done: jasmine.any(Function),
+            fail: jasmine.any(Function)
+          }
+        });
       });
 
       describe("When fetching is successful", function() {
@@ -80,7 +86,7 @@ define([
         });
 
         it("should show the archive view", function() {
-          expect(showView).toHaveBeenCalledWith(10);
+          expect(showView).toHaveBeenCalledWith(10, {});
         });
       });
     });
