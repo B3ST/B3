@@ -5,7 +5,7 @@
 
   var root = '../../../..';
   var config = {
-    baseUrl: root + '/dist',
+    baseUrl: root + '/app',
     paths: {
       'jquery':               root + '/lib/jquery',
       'jqueryui':             root + '/lib/jquery-ui',
@@ -146,7 +146,6 @@
     specsRoot + 'core/controllers/archive-controller.spec',
     specsRoot + 'core/controllers/search-controller.spec',
     specsRoot + 'core/controllers/loading-controller.spec',
-    specsRoot + 'core/controllers/taxonomy-controller.spec',
     specsRoot + 'core/controllers/pagination-controller.spec',
     specsRoot + 'core/controllers/comments-controller.spec',
     specsRoot + 'core/controllers/reply-form-controller.spec',
@@ -185,12 +184,13 @@
 
     '../test/jasmine/config/using',
     '../test/jasmine/config/stub-server',
-    '../test/jasmine/config/inherits'
+    '../test/jasmine/config/inherits',
+    '../test/jasmine/config/is-promise'
   ], function ($, _, Backbone, Marionette, jasmine, Settings) {
 
     require(specs, function() {
       jasmine.getJSONFixtures().fixturesPath = 'fixtures/json';
-      loadJSONFixtures('routes.json', 'post.json', 'menu_item.json');
+      loadJSONFixtures('routes.json', 'post.json', 'menu_item.json', 'taxonomies.json');
       Settings.set('require.config', config);
       window.onload();
       // jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
