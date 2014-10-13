@@ -16,17 +16,16 @@ define([
 
     beforeEach(function() {
       cbus  = spyOn(CommandBus, 'execute');
-      posts = new Posts([
-        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1'}),
-        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
-      ]);
-
       model = new Taxonomy({ name: 'Title', slug: 'title' });
+      posts = new Posts([
+        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1', terms: { category: [model] } }),
+        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', terms: { category: [model] }})
+      ]);
     });
 
     describe(".render", function() {
       it("should render the template", function() {
-        view = new ArchiveView({ collection: posts, model: model });
+        view = new ArchiveView({ collection: posts, options: model });
         view.render();
 
         expect(view.$('.post').length).toEqual(2);
@@ -35,20 +34,11 @@ define([
 
     describe("When the collection changes", function() {
       it("should re-render the view", function() {
-        view = new ArchiveView({ collection: posts, model: model });
+        view = new ArchiveView({ collection: posts, options: model });
         view.render();
         posts.reset();
 
         expect(view.$('.post').length).toEqual(0);
-      });
-    });
-
-    describe("When specifying a type", function() {
-      it("should display the type", function() {
-        view = new ArchiveView({collection: posts, model: model });
-        view.render();
-
-        expect(view.$('.archive-title').text()).toContain('Archive: Title');
       });
     });
 
@@ -62,7 +52,7 @@ define([
           new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
         ]);
 
-        view = new ArchiveView({ collection: posts, model: model });
+        view = new ArchiveView({ collection: posts, options: model });
         view.render();
       });
 
@@ -103,7 +93,7 @@ define([
         ]);
         bus   = spyOn(EventBus, 'trigger');
         model = new Taxonomy({ name: 'Title', slug: 'title' });
-        view  = new ArchiveView({collection: posts, model: model});
+        view  = new ArchiveView({collection: posts, options: model});
 
         view.render();
         view.$(options.click).first().click();

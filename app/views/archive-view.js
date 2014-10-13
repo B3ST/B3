@@ -5,12 +5,13 @@ define([
   'backbone',
   'marionette',
   'helpers/renderer-helper',
+  'helpers/archive-header',
   'buses/event-bus',
   // Shims
   'templates/archive/archive-template',
   'templates/archive/posts-template',
   'templates/entry-meta-template'
-], function ($, Backbone, Marionette, Renderer, EventBus) {
+], function ($, Backbone, Marionette, Renderer, ArchiveHeader, EventBus) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.LayoutView.extend({
@@ -32,14 +33,14 @@ define([
       'reset': 'renderPosts'
     },
 
-    initialize: function () {
-      var title = this.model ? this.model.get('name') : '';
-      EventBus.trigger('title:change', title);
+    initialize: function (options) {
+      options = options || {};
+      this.archive = ArchiveHeader.archiveBy(this.collection, options.options);
+      EventBus.trigger('title:change', this.archive || this.archive.name || this.archive.date);
     },
 
     serializeData: function () {
-      var archive = this.model ? this.model.toJSON() : false;
-      return { posts: this.collection.toJSON(), archive: archive };
+      return { posts: this.collection.toJSON(), archive: this.archive };
     },
 
     renderPosts: function () {

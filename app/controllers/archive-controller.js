@@ -6,12 +6,11 @@ define([
   'controllers/pagination-controller',
   'views/archive-view',
   'helpers/post-filter',
-  'helpers/archive-header',
   'collections/post-collection',
   'buses/event-bus',
   'buses/request-bus',
   'buses/navigator'
-], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, ArchiveHeader, Posts, EventBus, RequestBus, Navigator) {
+], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, RequestBus, Navigator) {
   'use strict';
 
   var ArchiveController = BaseController.extend({
@@ -118,8 +117,7 @@ define([
     },
 
     showView: function (pages, options) {
-      var archiveBy = ArchiveHeader.archiveBy(this.posts, options);
-      this.show(this._archiveView(this.posts, archiveBy), { region: this.region });
+      this.show(this._archiveView(this.posts, options), { region: this.region });
 
       // there's some weird bug in this region, haven't figured it out yet.
       var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
@@ -156,11 +154,11 @@ define([
      * Creates a new ArchiveView instance for a post list.
      *
      * @param  {array}       posts Post collection to display.
-     * @param  {Object}      model The model containing the information about the header
+     * @param  {Object}      model The model containing the information about the archive
      * @return {ArchiveView}       New archive view instance.
      */
-    _archiveView: function (posts, model) {
-      return new ArchiveView({ collection: posts, model: model });
+    _archiveView: function (posts, options) {
+      return new ArchiveView({ collection: posts, options: options });
     }
   });
 
