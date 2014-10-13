@@ -38,9 +38,8 @@ define([
     },
 
     serializeData: function () {
-      var hasHeader = this.model ? this.model.get('ID') !== null : false,
-          header    = this.model ? this.model.toJSON() : {};
-      return { posts: this.collection.toJSON(), hasHeader: hasHeader, header: header };
+      var archive = this.model ? this.model.toJSON() : false;
+      return { posts: this.collection.toJSON(), archive: archive };
     },
 
     renderPosts: function () {
