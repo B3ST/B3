@@ -6,11 +6,12 @@ define([
   'controllers/pagination-controller',
   'views/archive-view',
   'helpers/post-filter',
+  'helpers/archive-header',
   'collections/post-collection',
   'buses/event-bus',
   'buses/request-bus',
   'buses/navigator'
-], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, RequestBus, Navigator) {
+], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, ArchiveHeader, Posts, EventBus, RequestBus, Navigator) {
   'use strict';
 
   var ArchiveController = BaseController.extend({
@@ -27,28 +28,14 @@ define([
       'pagination:select:page':        'showPage'
     },
 
-    archiveBy: {
-      taxonomy: function (options) {
-        return this.posts.at(0).getTerm(options.taxonomy, options.term);
-      },
-
-      author: function () {
-        return this.posts.at(0).get('author');
-      },
-
-      date: function () {
-        return new Date();
-      }
-    },
-
     childControllers: {
       pagination: 'paginationController'
     },
 
     initialize: function (options) {
-      this.page   = options.page || 1;
-      this.filter = options.filter || new PostFilter();
-      this.posts  = options.posts || new Posts(null, { filter: this.filter });
+      this.page    = options.page || 1;
+      this.filter  = options.filter || new PostFilter();
+      this.posts   = options.posts || new Posts(null, { filter: this.filter });
     },
 
     /**
@@ -131,8 +118,8 @@ define([
     },
 
     showView: function (pages, options) {
-      var model = this._getModel(options);
-      this.show(this._archiveView(this.posts, model), { region: this.region });
+      var archiveBy = ArchiveHeader.archiveBy(this.posts, options);
+      this.show(this._archiveView(this.posts, archiveBy), { region: this.region });
 
       // there's some weird bug in this region, haven't figured it out yet.
       var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
@@ -174,15 +161,6 @@ define([
      */
     _archiveView: function (posts, model) {
       return new ArchiveView({ collection: posts, model: model });
-    },
-
-    _getModel: function (options) {
-      var model;
-      if (options.archiveBy && this.archiveBy.hasOwnProperty(options.archiveBy)) {
-        model = this.archiveBy[options.archiveBy].bind(this)(options);
-      }
-
-      return model;
     }
   });
 
