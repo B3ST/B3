@@ -5,12 +5,13 @@ define([
   'backbone',
   'marionette',
   'helpers/renderer-helper',
+  'helpers/archive-header',
   'buses/event-bus',
   // Shims
   'templates/archive/archive-template',
   'templates/archive/posts-template',
   'templates/entry-meta-template'
-], function ($, Backbone, Marionette, Renderer, EventBus) {
+], function ($, Backbone, Marionette, Renderer, ArchiveHeader, EventBus) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.LayoutView.extend({
@@ -33,12 +34,13 @@ define([
     },
 
     initialize: function (options) {
-      this.title = options.title || false;
-      EventBus.trigger('title:change');
+      options = options || {};
+      this.archive = ArchiveHeader.archiveBy(this.collection, options.options);
+      EventBus.trigger('title:change', this.archive || this.archive.name || this.archive.date);
     },
 
     serializeData: function () {
-      return { posts: this.collection.toJSON(), title: this.title };
+      return { posts: this.collection.toJSON(), archive: this.archive };
     },
 
     renderPosts: function () {

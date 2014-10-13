@@ -1,0 +1,303 @@
+[{
+    "name": "Categories",
+    "slug": "category",
+    "labels": {
+        "name": "Categories",
+        "singular_name": "Category",
+        "search_items": "Search Categories",
+        "popular_items": null,
+        "all_items": "All Categories",
+        "parent_item": "Parent Category",
+        "parent_item_colon": "Parent Category:",
+        "edit_item": "Edit Category",
+        "view_item": "View Category",
+        "update_item": "Update Category",
+        "add_new_item": "Add New Category",
+        "new_item_name": "New Category Name",
+        "separate_items_with_commas": null,
+        "add_or_remove_items": null,
+        "choose_from_most_used": null,
+        "not_found": null,
+        "menu_name": "Categories",
+        "name_admin_bar": "category"
+    },
+    "types": {
+        "post": {
+            "name": "Posts",
+            "slug": "post",
+            "description": "",
+            "labels": {
+                "name": "Posts",
+                "singular_name": "Post",
+                "add_new": "Add New",
+                "add_new_item": "Add New Post",
+                "edit_item": "Edit Post",
+                "new_item": "New Post",
+                "view_item": "View Post",
+                "search_items": "Search Posts",
+                "not_found": "No posts found.",
+                "not_found_in_trash": "No posts found in Trash.",
+                "parent_item_colon": null,
+                "all_items": "All Posts",
+                "menu_name": "Posts",
+                "name_admin_bar": "Post"
+            },
+            "queryable": true,
+            "searchable": true,
+            "hierarchical": false,
+            "meta": {
+                "links": {
+                    "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types\/post",
+                    "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types",
+                    "http:\/\/wp-api.org\/1.1\/collections\/taxonomy\/": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies?type=post",
+                    "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts"
+                }
+            }
+        },
+        "qualquer_coisa": {
+            "name": "Quaisquer coisas",
+            "slug": "qualquer_coisa",
+            "description": "",
+            "labels": {
+                "name": "Quaisquer coisas",
+                "singular_name": "Qualquer coisa",
+                "add_new": "Add New",
+                "add_new_item": "Add New Qualquer coisa",
+                "edit_item": "Edit Qualquer coisa",
+                "new_item": "New Qualquer coisa",
+                "view_item": "View Qualquer coisa",
+                "search_items": "Search Quaisquer coisas",
+                "not_found": "No Quaisquer coisas Found",
+                "not_found_in_trash": "No Quaisquer coisas Found in Trash",
+                "parent_item_colon": "Parent Qualquer coisa:",
+                "all_items": "All Quaisquer coisas",
+                "menu_name": "Quaisquer coisas",
+                "edit": "Edit",
+                "view": "View Qualquer coisa",
+                "parent": "Parent Qualquer coisa",
+                "name_admin_bar": "Qualquer coisa"
+            },
+            "queryable": true,
+            "searchable": true,
+            "hierarchical": false,
+            "meta": {
+                "links": {
+                    "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types\/qualquer_coisa",
+                    "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types",
+                    "http:\/\/wp-api.org\/1.1\/collections\/taxonomy\/": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies?type=qualquer_coisa",
+                    "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts?type=qualquer_coisa"
+                }
+            }
+        }
+    },
+    "show_cloud": true,
+    "hierarchical": true,
+    "meta": {
+        "links": {
+            "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/category\/terms",
+            "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies",
+            "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/category"
+        }
+    }
+}, {
+    "name": "Tags",
+    "slug": "post_tag",
+    "labels": {
+        "name": "Tags",
+        "singular_name": "Tag",
+        "search_items": "Search Tags",
+        "popular_items": "Popular Tags",
+        "all_items": "All Tags",
+        "parent_item": null,
+        "parent_item_colon": null,
+        "edit_item": "Edit Tag",
+        "view_item": "View Tag",
+        "update_item": "Update Tag",
+        "add_new_item": "Add New Tag",
+        "new_item_name": "New Tag Name",
+        "separate_items_with_commas": "Separate tags with commas",
+        "add_or_remove_items": "Add or remove tags",
+        "choose_from_most_used": "Choose from the most used tags",
+        "not_found": "No tags found.",
+        "menu_name": "Tags",
+        "name_admin_bar": "post_tag"
+    },
+    "types": {
+        "post": {
+            "name": "Posts",
+            "slug": "post",
+            "description": "",
+            "labels": {
+                "name": "Posts",
+                "singular_name": "Post",
+                "add_new": "Add New",
+                "add_new_item": "Add New Post",
+                "edit_item": "Edit Post",
+                "new_item": "New Post",
+                "view_item": "View Post",
+                "search_items": "Search Posts",
+                "not_found": "No posts found.",
+                "not_found_in_trash": "No posts found in Trash.",
+                "parent_item_colon": null,
+                "all_items": "All Posts",
+                "menu_name": "Posts",
+                "name_admin_bar": "Post"
+            },
+            "queryable": true,
+            "searchable": true,
+            "hierarchical": false,
+            "meta": {
+                "links": {
+                    "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types\/post",
+                    "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types",
+                    "http:\/\/wp-api.org\/1.1\/collections\/taxonomy\/": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies?type=post",
+                    "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts"
+                }
+            }
+        }
+    },
+    "show_cloud": true,
+    "hierarchical": false,
+    "meta": {
+        "links": {
+            "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/post_tag\/terms",
+            "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies",
+            "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/post_tag"
+        }
+    }
+}, {
+    "name": "Format",
+    "slug": "post_format",
+    "labels": {
+        "name": "Format",
+        "singular_name": "Format",
+        "search_items": "Search Tags",
+        "popular_items": "Popular Tags",
+        "all_items": "Format",
+        "parent_item": null,
+        "parent_item_colon": null,
+        "edit_item": "Edit Tag",
+        "view_item": "View Tag",
+        "update_item": "Update Tag",
+        "add_new_item": "Add New Tag",
+        "new_item_name": "New Tag Name",
+        "separate_items_with_commas": "Separate tags with commas",
+        "add_or_remove_items": "Add or remove tags",
+        "choose_from_most_used": "Choose from the most used tags",
+        "not_found": "No tags found.",
+        "menu_name": "Format",
+        "name_admin_bar": "Format"
+    },
+    "types": {
+        "post": {
+            "name": "Posts",
+            "slug": "post",
+            "description": "",
+            "labels": {
+                "name": "Posts",
+                "singular_name": "Post",
+                "add_new": "Add New",
+                "add_new_item": "Add New Post",
+                "edit_item": "Edit Post",
+                "new_item": "New Post",
+                "view_item": "View Post",
+                "search_items": "Search Posts",
+                "not_found": "No posts found.",
+                "not_found_in_trash": "No posts found in Trash.",
+                "parent_item_colon": null,
+                "all_items": "All Posts",
+                "menu_name": "Posts",
+                "name_admin_bar": "Post"
+            },
+            "queryable": true,
+            "searchable": true,
+            "hierarchical": false,
+            "meta": {
+                "links": {
+                    "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types\/post",
+                    "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types",
+                    "http:\/\/wp-api.org\/1.1\/collections\/taxonomy\/": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies?type=post",
+                    "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts"
+                }
+            }
+        }
+    },
+    "show_cloud": false,
+    "hierarchical": false,
+    "meta": {
+        "links": {
+            "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/post_format\/terms",
+            "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies",
+            "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/post_format"
+        }
+    }
+}, {
+    "name": "Nomes quaisquer",
+    "slug": "nome_qualquer",
+    "labels": {
+        "name": "Nomes quaisquer",
+        "singular_name": "Nome qualquer",
+        "search_items": "Search Nomes quaisquer",
+        "popular_items": "Popular Nomes quaisquer",
+        "all_items": "All Nomes quaisquer",
+        "parent_item": "Parent Nome qualquer",
+        "parent_item_colon": "Parent Nome qualquer :",
+        "edit_item": "Edit Nome qualquer",
+        "view_item": "View Tag",
+        "update_item": "Update Nome qualquer",
+        "add_new_item": "Add New Nome qualquer",
+        "new_item_name": "New Nome qualquer Name",
+        "separate_items_with_commas": "Separate Nomes quaisquer with commas",
+        "add_or_remove_items": "Add or remove Nomes quaisquer",
+        "choose_from_most_used": "Choose from the most used Nomes quaisquer",
+        "not_found": "No tags found.",
+        "menu_name": "Nomes quaisquer",
+        "name_admin_bar": "Nome qualquer"
+    },
+    "types": {
+        "qualquer_coisa": {
+            "name": "Quaisquer coisas",
+            "slug": "qualquer_coisa",
+            "description": "",
+            "labels": {
+                "name": "Quaisquer coisas",
+                "singular_name": "Qualquer coisa",
+                "add_new": "Add New",
+                "add_new_item": "Add New Qualquer coisa",
+                "edit_item": "Edit Qualquer coisa",
+                "new_item": "New Qualquer coisa",
+                "view_item": "View Qualquer coisa",
+                "search_items": "Search Quaisquer coisas",
+                "not_found": "No Quaisquer coisas Found",
+                "not_found_in_trash": "No Quaisquer coisas Found in Trash",
+                "parent_item_colon": "Parent Qualquer coisa:",
+                "all_items": "All Quaisquer coisas",
+                "menu_name": "Quaisquer coisas",
+                "edit": "Edit",
+                "view": "View Qualquer coisa",
+                "parent": "Parent Qualquer coisa",
+                "name_admin_bar": "Qualquer coisa"
+            },
+            "queryable": true,
+            "searchable": true,
+            "hierarchical": false,
+            "meta": {
+                "links": {
+                    "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types\/qualquer_coisa",
+                    "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts\/types",
+                    "http:\/\/wp-api.org\/1.1\/collections\/taxonomy\/": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies?type=qualquer_coisa",
+                    "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/posts?type=qualquer_coisa"
+                }
+            }
+        }
+    },
+    "show_cloud": true,
+    "hierarchical": false,
+    "meta": {
+        "links": {
+            "archives": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/nome_qualquer\/terms",
+            "collection": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies",
+            "self": "http:\/\/localhost:8888\/wordpress\/wp-json\/taxonomies\/nome_qualquer"
+        }
+    }
+}]

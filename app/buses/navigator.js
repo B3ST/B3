@@ -44,9 +44,9 @@ define([
   }
 
   function getCurlyKey (key) {
-    var attrs = key.match(/(:[^\/:()*]+)/g);
+    var attrs = key.match(/([:*]([^\/:()*]+))/g);
     _.each(attrs, function (attr) {
-      key = key.replace(attr, '{' + attr.replace(':', '') + '}');
+      key = key.replace(attr, '{' + attr.replace(/(:)|(\*)/g, '') + '}');
     });
 
     return key;

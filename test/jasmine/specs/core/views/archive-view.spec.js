@@ -1,48 +1,44 @@
 define([
   'views/archive-view',
   'models/settings-model',
+  'models/taxonomy-model',
   'models/post-model',
   'models/user-model',
   'collections/post-collection',
   'buses/event-bus',
   'buses/command-bus',
   'sinon'
-], function (ArchiveView, Settings, Post, User, Posts, EventBus, CommandBus) {
+], function (ArchiveView, Settings, Taxonomy, Post, User, Posts, EventBus, CommandBus) {
   'use strict';
 
   describe("ArchiveView", function() {
-    var cbus, view, posts
+    var cbus, view, posts, model;
 
     beforeEach(function() {
       cbus  = spyOn(CommandBus, 'execute');
+      model = new Taxonomy({ name: 'Title', slug: 'title' });
       posts = new Posts([
-        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1'}),
-        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2'})
+        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1', terms: { category: [model] } }),
+        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', terms: { category: [model] }})
       ]);
-
-      view = new ArchiveView({collection: posts});
-      view.render();
     });
 
     describe(".render", function() {
       it("should render the template", function() {
+        view = new ArchiveView({ collection: posts, options: model });
+        view.render();
+
         expect(view.$('.post').length).toEqual(2);
       });
     });
 
     describe("When the collection changes", function() {
       it("should re-render the view", function() {
-        posts.reset();
-        expect(view.$('.post').length).toEqual(0);
-      });
-    });
-
-    describe("When specifying a type", function() {
-      it("should display the type", function() {
-        view = new ArchiveView({collection: posts, title: 'Category'});
+        view = new ArchiveView({ collection: posts, options: model });
         view.render();
+        posts.reset();
 
-        expect(view.$('.archive-title').text()).toContain('Category');
+        expect(view.$('.post').length).toEqual(0);
       });
     });
 
@@ -56,7 +52,7 @@ define([
           new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
         ]);
 
-        view = new ArchiveView({collection: posts});
+        view = new ArchiveView({ collection: posts, options: model });
         view.render();
       });
 
@@ -88,15 +84,16 @@ define([
 
   function sharedBehaviourFor (action, options) {
     describe("When clicking in a " + action, function() {
-      var posts, bus, view;
+      var posts, bus, view, model;
 
       beforeEach(function() {
         posts = new Posts([
           new Post({ID: 1, title: 'Sticky', excerpt: 'Excerpt 1', author: new User({ID: 1, slug: 'author-1', name: 'author-name'}), terms: {category: {ID: 1, slug: 'post-1', link: "http://localhost:8888/wordpress/post/category/content"}, post_tag: {ID: 1, slug: 'tag-1', link: "http://localhost:8888/wordpress/post/tag/content"}}}),
           new Post({ID: 2, title: 'Oh post', excerpt: 'Excerpt 2', author: new User({ID: 1, slug: 'author-2', name: 'author-name'}), terms: {category: {ID: 1, slug: 'post-2', link: "http://localhost:8888/wordpress/post/category/content"}, post_tag: {ID: 2, slug: 'tag-2', link: "http://localhost:8888/wordpress/post/tag/content"}}})
         ]);
-        bus  = spyOn(EventBus, 'trigger');
-        view = new ArchiveView({collection: posts, limit: 2, total: 2});
+        bus   = spyOn(EventBus, 'trigger');
+        model = new Taxonomy({ name: 'Title', slug: 'title' });
+        view  = new ArchiveView({collection: posts, options: model});
 
         view.render();
         view.$(options.click).first().click();

@@ -8,8 +8,9 @@ define([
   'helpers/post-filter',
   'collections/post-collection',
   'buses/event-bus',
+  'buses/request-bus',
   'buses/navigator'
-], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, Navigator) {
+], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, RequestBus, Navigator) {
   'use strict';
 
   var ArchiveController = BaseController.extend({
@@ -31,22 +32,24 @@ define([
     },
 
     initialize: function (options) {
-      this.page   = options.page || 1;
-      this.filter = options.filter || new PostFilter();
-      this.posts  = options.posts || new Posts(null, { filter: this.filter });
+      this.page    = options.page || 1;
+      this.filter  = options.filter || new PostFilter();
+      this.posts   = options.posts || new Posts(null, { filter: this.filter });
     },
 
     /**
-     * Display the home page post archive.
+     * Display the posts archive.
      *
-     * @param {int} page Page number.
+     * @param {params} Object Object containing a given taxonomy.
      */
-    showArchive: function () {
-      this.show(this._archiveView(this.posts), {
+    showArchive: function (options) {
+      options = options || {};
+      this.show(null, {
         loading: {
+          entities: [this.posts],
           done: function (collection, status, jqXHR) {
             var totalPages = parseInt(jqXHR.getResponseHeader('X-WP-TotalPages'), 10);
-            this.showView(totalPages);
+            this.showView(totalPages, options);
           }.bind(this),
 
           fail: function () {
@@ -113,8 +116,9 @@ define([
       Navigator.navigateToPost(post, page, trigger);
     },
 
-    showView: function (pages) {
-      this.show(this._archiveView(this.posts), { region: this.region });
+    showView: function (pages, options) {
+      this.show(this._archiveView(this.posts, options), { region: this.region });
+
       // there's some weird bug in this region, haven't figured it out yet.
       var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
       this.pagination.showPagination({ region: region, page: this.page, pages: pages, include: true });
@@ -150,11 +154,11 @@ define([
      * Creates a new ArchiveView instance for a post list.
      *
      * @param  {array}       posts Post collection to display.
-     * @param  {string}      title The title for the archive
+     * @param  {Object}      model The model containing the information about the archive
      * @return {ArchiveView}       New archive view instance.
      */
-    _archiveView: function (posts, title) {
-      return new ArchiveView({collection: posts, title: title});
+    _archiveView: function (posts, options) {
+      return new ArchiveView({ collection: posts, options: options });
     }
   });
 

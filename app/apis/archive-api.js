@@ -27,7 +27,7 @@ define([
           catg   = params.category,
           filter = new PostFilter().byCategory(catg).onPage(page);
 
-      this._showArchive(page, filter);
+      this._showArchive(page, filter, { archiveBy: 'taxonomy', taxonomy: 'category', term: catg });
     },
 
     showPostByTag: function (params) {
@@ -35,7 +35,7 @@ define([
           ptag   = params.post_tag,
           filter = new PostFilter().byTag(ptag).onPage(page);
 
-      this._showArchive(page, filter);
+      this._showArchive(page, filter, { archiveBy: 'taxonomy', taxonomy: 'post_tag', term: ptag });
     },
 
     showPostByAuthor: function (params) {
@@ -43,22 +43,22 @@ define([
           author = params.author,
           filter = new PostFilter().byAuthor(author).onPage(page);
 
-      this._showArchive(page, filter);
+      this._showArchive(page, filter, { archiveBy: 'author', author: author });
     },
 
     showPostByDate: function (params) {
       var page   = this._getPage(params),
           filter = new PostFilter().withDate(params).onPage(page);
 
-      this._showArchive(page, filter);
+      this._showArchive(page, filter, { archiveBy: 'date', date: params });
     },
 
     showPostByTaxonomy: function  () {
 
     },
 
-    _showArchive: function (page, filter) {
-      new ArchiveController({ page: page, filter: filter }).showArchive();
+    _showArchive: function (page, filter, options) {
+      new ArchiveController({ page: page, filter: filter }).showArchive(options);
     },
 
     _getPage: function (params) {

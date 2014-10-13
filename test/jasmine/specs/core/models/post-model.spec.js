@@ -2,8 +2,9 @@
 
 define([
   "models/post-model",
-  "models/base-model"
-], function (Post, BaseModel) {
+  "models/base-model",
+  "models/term-model"
+], function (Post, BaseModel, Term) {
   "use strict";
 
   describe("Post", function() {
@@ -76,6 +77,13 @@ define([
 
       it("should have no menu_order", function() {
         expect(model.get('menu_order')).toBe(0);
+      });
+    });
+
+    describe(".getTerm", function() {
+      it("should return a given term", function() {
+        model = new Post({ terms: { category: [{ slug: 'term' }] } } );
+        expect(model.getTerm('category', 'term').attributes).toEqual(new Term({ slug: 'term' }).attributes);
       });
     });
   });
