@@ -1,11 +1,13 @@
+{@section key="b3.notfound.warning"}
 <div class="alert alert-warning">
-  Sorry, but the page you were trying to view does not exist.
+{nls1}
 </div>
 
-<p>It looks like this was the result of either:</p>
+<p>{nls2}</p>
 <ul>
-  <li>a mistyped address</li>
-  <li>an out-of-date link</li>
+  <li>{nls3}</li>
+  <li>{nls4}</li>
 </ul>
+{/section}
 
 {! {+ search-form /} !}

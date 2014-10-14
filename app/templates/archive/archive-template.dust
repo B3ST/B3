@@ -2,7 +2,7 @@
 <header class="jumbotron">
   <div class="jumbotron-container">
     <h1 class="archive-title">
-      Archive: <span>
+      {@nls key="b3.archive.title"} <span>
       {?archive.name}
         {archive.name|s}
       {:else}
@@ -10,7 +10,7 @@
       {/archive.name}
       </span>
     </h1>
-    <h4>{archive.description|s} {?archive.count}(Total: {archive.count}){/archive.count}</h4>
+    <h4>{archive.description|s} {?archive.count}({@nls key="b3.archive.total"} {archive.count}){/archive.count}</h4>
   </div>
 </header>
 {/archive}
