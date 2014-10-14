@@ -116,6 +116,11 @@ define([
       Navigator.navigateToPost(post, page, trigger);
     },
 
+    /**
+     * Display the archive view and the pagination
+     * @param  {int} pages   the number of pages to display
+     * @param  {Object} options the options indicating information about the archive
+     */
     showView: function (pages, options) {
       this.show(this._archiveView(this.posts, options), { region: this.region });
 
