@@ -4,7 +4,7 @@ define([
   'jquery',
   'backbone',
   'marionette',
-  'helpers/renderer-helper',
+  'helpers/dust/renderer-helper',
   'helpers/archive-header',
   'buses/event-bus',
   // Shims
