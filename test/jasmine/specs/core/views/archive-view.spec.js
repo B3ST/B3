@@ -59,7 +59,7 @@ define([
       it("should trigger a archive:view:display:post event", function() {
         var post = view.$('.title > a').first();
         post.click();
-        expect(trigger).toHaveBeenCalledWith('archive:view:display:post', { post: 'post-1' });
+        expect(trigger).toHaveBeenCalledWith('archive:view:display:post', { slug: 'post-1', post: posts.first() });
       });
     });
 

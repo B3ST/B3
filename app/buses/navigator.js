@@ -84,7 +84,8 @@ define([
     },
 
     navigateToPost: function (post, paged, trigger) {
-      this.navigateToPostType('post', post, paged, trigger);
+      var routeParams = _.extend({}, { paged: paged, post: post.get('slug') }, post.getFormattedDate());
+      this._navigateToType(this.routes.post[0], routeParams, trigger);
     },
 
     navigateToPage: function (page, paged, trigger) {
