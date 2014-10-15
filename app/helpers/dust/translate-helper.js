@@ -10,7 +10,7 @@ define([
 
   dust.helpers.nls = function(chunk, context, bodies, params) {
     var key = dust.helpers.tap(params.key, chunk, context);
-    return nls.i18n(key);
+    return chunk.write(nls.i18n(key));
   };
 
   dust.helpers.section = function (chunk, context, bodies, params) {
