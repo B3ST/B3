@@ -5,7 +5,7 @@
 <div class="comment-body media-body">
   <h4 class="comment-meta media-heading">
     <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" class="comment-author">{author.name}</a>
-    {~s} {@nls key="b3.meta.on"} {~s}
+    {~s} {@nls key="b3.meta.on" /} {~s}
     <a href="{meta.links.self}">
       <time datetime="{date}">{@formatDate date="{date}" format="D/M/YYYY H:m" /}</time>
     </a>:
@@ -13,7 +13,7 @@
 
   {@neq key=status value="approved"}
     <div class="alert alert-info">
-      {@nls key="b3.comments.moderation"}
+      {@nls key="b3.comments.moderation" /}
     </div>
   {/neq}
 
@@ -21,7 +21,7 @@
 
   {@eq key="{post.comment_status}" value="open"}
     <a href="#reply" class="button reply" role="button">
-      <span class="icon-comment"></span> {@nls key="b3.comments.reply"}
+      <span class="icon-comment"></span> {@nls key="b3.comments.reply" /}
     </a>
   {/eq}
 

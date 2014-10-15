@@ -1,12 +1,12 @@
 {@section key="b3.notfound.warning"}
 <div class="alert alert-warning">
-{nls1}
+{nls1|s}
 </div>
 
-<p>{nls2}</p>
+<p>{nls2|s}</p>
 <ul>
-  <li>{nls3}</li>
-  <li>{nls4}</li>
+  <li>{nls3|s}</li>
+  <li>{nls4|s}</li>
 </ul>
 {/section}
 

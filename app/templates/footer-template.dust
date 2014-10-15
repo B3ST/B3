@@ -12,17 +12,13 @@
   </ul>
 
   {@section key="b3.footer.disclaimer"}
-  <p>{nls1} <a href="http://wordpress.org/">{nls2}</a> {nls3} <a href="http://backbonejs.org/">{nls4}</a> {nls5} <a href="http://getbootstrap.com/">{nls6}</a>.</p>
-
-  <p>{nls7} <a href="https://twitter.com/goblindegook">{nls8}</a>, <a href="https://github.com/pcruz7">{nls9}</a>{nls10} <a href="https://twitter.com/log_oscon">{nls11}</a>.</p>
-
-  <p>{nls12} <a href="https://github.com/b3st/b3/blob/master/LICENSE">{nls13}</a>.</p>
+  <p>{nls1|s}</p>
+  <p>{nls2|s}</p>
+  <p>{nls3|s}</p>
 
   <ul class="footer-links muted">
-    <li>{nls14}</li>
-    <li><a href="https://github.com/b3st">{nls15}</a></li>
-    <li><a href="https://bitbucket.com/goblindegook/b3">{nls16}</a></li>
-    <li><a href="https://trello.com/b3st">{nls17}</a></li>
+    <li>{nls4|s}</li>
+    <li><a href="https://github.com/b3st">{nls5|s}</a></li>
   </ul>
   {/section}
 </div>

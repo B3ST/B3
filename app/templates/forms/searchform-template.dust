@@ -5,5 +5,5 @@
 
 {< search-form }
 <input id="s" class="search" name="s">
-<button>{@nls key="b3.search.submit"}</button>
+<button>{@nls key="b3.search.submit" /}</button>
 {/ search-form }
