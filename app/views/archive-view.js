@@ -26,7 +26,8 @@ define([
       'click .title > a':    'onTitleClicked',
       'click .category > a': 'onCategoryClicked',
       'click .tag > a':      'onTagClicked',
-      'click .author > a':   'onAuthorClicked'
+      'click .author > a':   'onAuthorClicked',
+      'click .excerpt > a':  'onLinkClicked'
     },
 
     collectionEvents: {
@@ -65,6 +66,12 @@ define([
 
     onAuthorClicked: function (event) {
       this._triggerEvent('archive:view:display:author', event, 'author');
+      event.preventDefault();
+    },
+
+    onLinkClicked: function (event) {
+      var link = $(event.currentTarget).attr('href');
+      EventBus.trigger('archive:view:link:clicked', { href: link });
       event.preventDefault();
     },
 
