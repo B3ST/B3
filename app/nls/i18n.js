@@ -34,8 +34,11 @@ define({
         dismiss:    'Dismiss',
         reply:      'Reply',
         moderation: 'Your comment is awaiting moderation.',
-        warning:    ['You are commenting as', 'Not', '?'],
-        comment:    ['You comment:', 'You may use these', 'tags and attributes']
+        warning:    ['You are commenting as', 'Not'],
+        comment:    [
+          'Your comment:',
+          'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:'
+        ]
       },
 
       pagination: {
@@ -44,7 +47,8 @@ define({
 
       navigation: {
         search: 'Search for:',
-        toggle: 'Toggle navigation'
+        toggle: 'Toggle navigation',
+        terms:  'Enter search terms'
       },
 
       search: {
@@ -53,13 +57,11 @@ define({
 
       footer: {
         disclaimer: [
-          'B3 is a', 'Wordpress', 'starter theme based on', 'Backbone.js', 'and', 'Bootstrap',
-          'Assembled in Portugal by', '@goblindegook', '@pcruz7', ' and', '@log_oscon',
-          'Licensed under', 'MIT',
+          'B3 is a <a href="http://wordpress.org/">Wordpress</a> starter theme based on <a href="http://backbonejs.org/">Backbone.js</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.',
+          'Assembled in Portugal by <a href="https://twitter.com/goblindegook">@goblindegook</a>, <a href="https://github.com/pcruz7">@pcruz7</a> and <a href="https://twitter.com/log_oscon">@log_oscon</a>.',
+          'Licensed under <a href="https://github.com/b3st/b3/blob/master/LICENSE">MIT</a>.',
           'Alpa',
-          'GitHub',
-          'Bitbucket',
-          'Trello'
+          'GitHub'
         ]
       }
     }
