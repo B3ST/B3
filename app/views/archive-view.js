@@ -49,8 +49,11 @@ define([
     },
 
     onTitleClicked: function (event) {
-      var post = $(event.currentTarget).attr('slug');
-      EventBus.trigger('archive:view:display:post', { post: post });
+      var slug = $(event.currentTarget).attr('slug'),
+          id   = parseInt(event.currentTarget.id, 10),
+          post = this.collection.findWhere({ ID: id });
+
+      EventBus.trigger('archive:view:display:post', { slug: slug, post: post });
       event.preventDefault();
     },
 

@@ -86,5 +86,16 @@ define([
         expect(model.getTerm('category', 'term').attributes).toEqual(new Term({ slug: 'term' }).attributes);
       });
     });
+
+    describe(".getFormattedDate", function() {
+      it("should return a object with the date", function() {
+        model = new Post({ date: new Date(2013, 7, 21, 13, 19, 20, 21) });
+        expect(model.getFormattedDate()).toEqual({
+          year:     2013,
+          monthnum: 8,
+          day:      21
+        });
+      });
+    });
   });
 });

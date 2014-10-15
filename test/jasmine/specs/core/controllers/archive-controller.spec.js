@@ -14,10 +14,10 @@ define([
   'use strict';
 
   describe("ArchiveController", function() {
-    var app, controller, options, user, region;
+    var app, controller, options, user, region, post;
 
     beforeEach(function() {
-      var post = new Post({ID: 1, slug: 'post'});
+      post    = new Post({ID: 1, slug: 'post'});
       user    = new User({ID: 1, email: 'email', name: 'name'}),
       region  = jasmine.createSpyObj('region', ['show']);
       options = { region: region };
@@ -143,8 +143,8 @@ define([
         var navigate = spyOn(Navigator, 'navigateToPost');
         controller = new ArchiveController(options);
 
-        controller.showPost({ post: 'post' });
-        expect(navigate).toHaveBeenCalledWith('post', 1, true);
+        controller.showPost({ slug: 'post', post: post });
+        expect(navigate).toHaveBeenCalledWith(post, 1, true);
       });
     });
 

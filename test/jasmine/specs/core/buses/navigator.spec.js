@@ -3,13 +3,16 @@
 define([
   'buses/navigator',
   'buses/event-bus',
-  'models/settings-model'
-], function (Navigator, EventBus, Settings) {
+  'models/settings-model',
+  'models/post-model'
+], function (Navigator, EventBus, Settings, Post) {
   'use strict';
 
   var bus;
+
   describe("Navigator", function() {
     beforeEach(function() {
+      var routes = getJSONFixture('route.json');
       Settings.set('routes', routes);
       bus = spyOn(EventBus, 'trigger');
     });
@@ -70,7 +73,7 @@ define([
       type:         'post',
       url:          'post/',
       methodToTest: function (content, page) {
-        Navigator.navigateToPost(content, page, false);
+        Navigator.navigateToPost(new Post({ slug: 'post', date: new Date(2013, 7, 21, 13, 19, 20, 21) }), page, false);
       }
     });
 
@@ -114,156 +117,6 @@ define([
       }
     });
   });
-
-  var routes = {
-    "(/page/:paged)":{
-      "object":"archive",
-      "type":"root",
-      "tokens":[
-        "paged"
-      ]
-    },
-    ":page(/page/:paged)":{
-      "object":"post",
-      "type":"page",
-      "tokens":[
-        "page",
-        "paged"
-      ]
-    },
-    ":page/attachment/:attachment":{
-      "object":"post",
-      "type":"attachment",
-      "tokens":[
-        "page",
-        "attachment"
-      ]
-    },
-    ":page/attachment/:attachment/comments(/page/:paged)":{
-      "object":"comments",
-      "type":"attachment",
-      "tokens":[
-        "page",
-        "attachment",
-        "paged"
-      ]
-    },
-    ":page/comments(/page/:paged)":{
-      "object":"comments",
-      "type":"page",
-      "tokens":[
-        "page",
-        "paged"
-      ]
-    },
-    "attachment/:attachment":{
-      "object":"post",
-      "type":"attachment",
-      "tokens":[
-        "attachment"
-      ]
-    },
-    "post/:post(/page/:paged)":{
-      "object":"post",
-      "type":"post",
-      "tokens":[
-        "post",
-        "paged"
-      ]
-    },
-    "post/:post/attachment/:attachment":{
-      "object":"post",
-      "type":"attachment",
-      "tokens":[
-        "post",
-        "attachment"
-      ]
-    },
-    "post/:post/attachment/:attachment/comments(/page/:paged)":{
-      "object":"comments",
-      "type":"attachment",
-      "tokens":[
-        "post",
-        "attachment",
-        "paged"
-      ]
-    },
-    "post/:post/comments(/page/:paged)":{
-      "object":"comments",
-      "type":"post",
-      "tokens":[
-        "post",
-        "paged"
-      ]
-    },
-    "post/:year(/page/:paged)":{
-      "object":"archive",
-      "type":"date",
-      "tokens":[
-        "year",
-        "paged"
-      ]
-    },
-    "post/:year/:monthnum(/page/:paged)":{
-      "object":"archive",
-      "type":"date",
-      "tokens":[
-        "year",
-        "monthnum",
-        "paged"
-      ]
-    },
-    "post/:year/:monthnum/:day(/page/:paged)":{
-      "object":"archive",
-      "type":"date",
-      "tokens":[
-        "year",
-        "monthnum",
-        "day",
-        "paged"
-      ]
-    },
-    "post/author/:author(/page/:paged)":{
-      "object":"author",
-      "type":"author",
-      "tokens":[
-        "author",
-        "paged"
-      ]
-    },
-    "post/category/:category(/page/:paged)":{
-      "object":"taxonomy",
-      "type":"category",
-      "tokens":[
-        "category",
-        "paged"
-      ]
-    },
-    "post/tag/:post_tag(/page/:paged)":{
-      "object":"taxonomy",
-      "type":"post_tag",
-      "tokens":[
-        "post_tag",
-        "paged"
-      ]
-    },
-    "post/type/:post_format(/page/:paged)":{
-      "object":"taxonomy",
-      "type":"post_format",
-      "tokens":[
-        "post_format",
-        "paged"
-      ]
-    },
-    "search/:search(/page/:paged)":{
-      "object":"archive",
-      "type":"search",
-      "tokens":[
-        "search",
-        "paged"
-      ]
-    }
-  };
 
   function sharedNavigationBehaviour (navigator, options) {
     describe(navigator, function() {

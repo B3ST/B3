@@ -3,6 +3,7 @@
 'use strict';
 
 var gulp        = require('gulp'),
+    del         = require('del'),
     gutil       = require('gulp-util'),
     $           = require('gulp-load-plugins')(),
     bowerFiles  = require('bower-files')({'dev': true}),
@@ -219,9 +220,8 @@ gulp.task('watch:server', function () {
 /**
  * gulp clean
  */
-gulp.task('clean', function () {
-  return gulp.src(['dist/', 'lib/'], { read: false })
-    .pipe($.rimraf());
+gulp.task('clean', function (cb) {
+  return del(['dist/', 'lib/'], cb);
 });
 
 /**

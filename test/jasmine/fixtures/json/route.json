@@ -1,0 +1,149 @@
+{
+  "(/page/:paged)": {
+    "object": "archive",
+    "type": "root",
+    "tokens": [
+      "paged"
+    ]
+  },
+  ":page(/page/:paged)": {
+    "object": "post",
+    "type": "page",
+    "tokens": [
+      "page",
+      "paged"
+    ]
+  },
+  ":page/attachment/:attachment": {
+    "object": "post",
+    "type": "attachment",
+    "tokens": [
+      "page",
+      "attachment"
+    ]
+  },
+  ":page/attachment/:attachment/comments(/page/:paged)": {
+    "object": "comments",
+    "type": "attachment",
+    "tokens": [
+      "page",
+      "attachment",
+      "paged"
+    ]
+  },
+  ":page/comments(/page/:paged)": {
+    "object": "comments",
+    "type": "page",
+    "tokens": [
+      "page",
+      "paged"
+    ]
+  },
+  "attachment/:attachment": {
+    "object": "post",
+    "type": "attachment",
+    "tokens": [
+      "attachment"
+    ]
+  },
+  "post/:post(/page/:paged)": {
+    "object": "post",
+    "type": "post",
+    "tokens": [
+      "post",
+      "paged"
+    ]
+  },
+  "post/:post/attachment/:attachment": {
+    "object": "post",
+    "type": "attachment",
+    "tokens": [
+      "post",
+      "attachment"
+    ]
+  },
+  "post/:post/attachment/:attachment/comments(/page/:paged)": {
+    "object": "comments",
+    "type": "attachment",
+    "tokens": [
+      "post",
+      "attachment",
+      "paged"
+    ]
+  },
+  "post/:post/comments(/page/:paged)": {
+    "object": "comments",
+    "type": "post",
+    "tokens": [
+      "post",
+      "paged"
+    ]
+  },
+  "post/:year(/page/:paged)": {
+    "object": "archive",
+    "type": "date",
+    "tokens": [
+      "year",
+      "paged"
+    ]
+  },
+  "post/:year/:monthnum(/page/:paged)": {
+    "object": "archive",
+    "type": "date",
+    "tokens": [
+      "year",
+      "monthnum",
+      "paged"
+    ]
+  },
+  "post/:year/:monthnum/:day(/page/:paged)": {
+    "object": "archive",
+    "type": "date",
+    "tokens": [
+      "year",
+      "monthnum",
+      "day",
+      "paged"
+    ]
+  },
+  "post/author/:author(/page/:paged)": {
+    "object": "author",
+    "type": "author",
+    "tokens": [
+      "author",
+      "paged"
+    ]
+  },
+  "post/category/:category(/page/:paged)": {
+    "object": "taxonomy",
+    "type": "category",
+    "tokens": [
+      "category",
+      "paged"
+    ]
+  },
+  "post/tag/:post_tag(/page/:paged)": {
+    "object": "taxonomy",
+    "type": "post_tag",
+    "tokens": [
+      "post_tag",
+      "paged"
+    ]
+  },
+  "post/type/:post_format(/page/:paged)": {
+    "object": "taxonomy",
+    "type": "post_format",
+    "tokens": [
+      "post_format",
+      "paged"
+    ]
+  },
+  "search/:search(/page/:paged)": {
+    "object": "archive",
+    "type": "search",
+    "tokens": [
+      "search",
+      "paged"
+    ]
+  }
+}

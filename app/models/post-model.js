@@ -3,11 +3,12 @@
 define([
   'underscore',
   'backbone',
+  'moment',
   'models/base-model',
   'models/user-model',
   'models/settings-model',
   'models/term-model'
-], function (_, Backbone, BaseModel, User, Settings, Term) {
+], function (_, Backbone, moment, BaseModel, User, Settings, Term) {
   'use strict';
 
   var Post = BaseModel.extend({
@@ -61,6 +62,15 @@ define([
           });
 
       return index > -1 ? new Term(terms[index]) : new Term();
+    },
+
+    getFormattedDate: function () {
+      var date = moment(this.get('date'));
+      return {
+        year:     date.year(),
+        monthnum: date.months() + 1,
+        day:      date.date()
+      };
     }
   });
 
