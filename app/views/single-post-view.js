@@ -5,12 +5,11 @@ define([
   'marionette',
   'models/settings-model',
   'buses/event-bus',
-  'buses/navigator',
   // Shims
   'templates/content/type-post-template',
   'templates/content/type-page-template',
   'templates/entry-meta-template'
-], function (Backbone, Marionette, Settings, EventBus, Navigator) {
+], function (Backbone, Marionette, Settings, EventBus) {
   'use strict';
 
   var SinglePostView = Backbone.Marionette.LayoutView.extend({
