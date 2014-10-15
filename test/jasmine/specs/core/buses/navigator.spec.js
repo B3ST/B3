@@ -7,10 +7,11 @@ define([
 ], function (Navigator, EventBus, Settings) {
   'use strict';
 
+  var bus;
   describe("Navigator", function() {
     beforeEach(function() {
       Settings.set('routes', routes);
-      this.bus = spyOn(EventBus, 'trigger');
+      bus = spyOn(EventBus, 'trigger');
     });
 
     describe(".initialize", function() {
@@ -36,20 +37,23 @@ define([
     describe(".navigate", function() {
       it("should trigger an event of router:nav", function() {
         Navigator.navigate('route', false);
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: 'route', options: {trigger: false}});
+        expect(bus).toHaveBeenCalledWith('router:nav', {route: 'route', options: {trigger: false}});
       });
     });
 
-    describe(".getRouteOfType", function() {
-      it("should return the route of the corresponding type", function() {
-        var route = Navigator.getRouteOfType('post', 'slug');
-        expect(route).toEqual('post/slug');
+    describe(".navigateToLink", function() {
+      describe("When link is internal", function() {
+        it("should navigate to that link", function() {
+          Navigator.navigateToLink(Settings.get('site_url') + '/post/post', true);
+          expect(bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: true }});
+        });
       });
 
-      describe("When page is specified", function() {
-        it("should return the route with corresponding page", function() {
-          var route = Navigator.getRouteOfType('post', 'slug', 2);
-          expect(route).toEqual('post/slug/page/2');
+      describe("When link is external", function() {
+        it("should open a new window", function() {
+          var open = spyOn(window, 'open');
+          Navigator.navigateToLink('http://local.pt/', true);
+          expect(open).toHaveBeenCalledWith('http://local.pt/');
         });
       });
     });
@@ -265,13 +269,13 @@ define([
     describe(navigator, function() {
       it("should trigger an event of router:nav to a " + options.type + " route", function() {
         options.methodToTest(options.type, null);
-        expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.url +  options.type, options: {trigger: false}});
+        expect(bus).toHaveBeenCalledWith('router:nav', {route: options.url +  options.type, options: {trigger: false}});
       });
 
       describe("When specifying a page", function() {
         it("should trigger an event of router:nav to a " + options.type + " route", function() {
           options.methodToTest(options.type, 2);
-          expect(this.bus).toHaveBeenCalledWith('router:nav', {route: options.url + options.type + '/page/2', options: {trigger: false}});
+          expect(bus).toHaveBeenCalledWith('router:nav', {route: options.url + options.type + '/page/2', options: {trigger: false}});
         });
       });
     });
