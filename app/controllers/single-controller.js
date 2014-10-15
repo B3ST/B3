@@ -18,6 +18,7 @@ define([
       'single:view:display:tag':      'showTaxonomy',
       'single:view:display:author':   'showAuthor',
       'single:view:display:page':     'showPage',
+      'single:view:link:clicked':     'navigateToLink',
 
       'pagination:next:page':         'showPageContent',
       'pagination:previous:page':     'showPageContent',
@@ -81,6 +82,10 @@ define([
     showAuthor: function (options) {
       var author = options.slug, page = 1, trigger = true;
       Navigator.navigateToAuthor(author, page, trigger);
+    },
+
+    navigateToLink: function (options) {
+      Navigator.navigateToLink(options.href, true);
     },
 
     paginationController: function () {

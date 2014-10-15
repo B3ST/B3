@@ -21,10 +21,11 @@ define([
     },
 
     events: {
-      'click .category > a':  'onCategoryClicked',
-      'click .tag > a':       'onTagClicked',
-      'click .author > a':    'onAuthorClicked',
-      'click #author > a':    'onAuthorClicked'
+      'click .category > a':     'onCategoryClicked',
+      'click .tag > a':          'onTagClicked',
+      'click .author > a':       'onAuthorClicked',
+      'click #author > a':       'onAuthorClicked',
+      'click .post-content > a': 'onLinkClicked'
     },
 
     modelEvents: {
@@ -60,35 +61,19 @@ define([
       event.preventDefault();
     },
 
-    _triggerEvent: function (type, event) {
-      var slug = $(event.currentTarget).attr('slug');
-      EventBus.trigger('single:view:display:' + type, { slug: slug, type: type });
+    onLinkClicked: function (event) {
+      var link = $(event.currentTarget).attr('href');
+      EventBus.trigger('single:view:link:clicked', { href: link });
+      event.preventDefault();
     },
 
     displayError: function () {
       this.$('.b3-comments').text('Could not retrieve comments.');
     },
 
-    _renderPage: function () {
-      this.render();
-      EventBus.trigger('single:display:page', { page: this.page });
-    },
-
-    /**
-     * Get route for this view instance.
-     *
-     * @param  {int}   page Page number.
-     * @return {route}      Route.
-     */
-    _getRoute: function (page) {
-      var type = this.model.get('type'),
-          slug = this.model.get('slug');
-
-      if (page === 1) {
-        page = null;
-      }
-
-      return Navigator.getRouteOfType(type, slug, page);
+    _triggerEvent: function (type, event) {
+      var slug = $(event.currentTarget).attr('slug');
+      EventBus.trigger('single:view:display:' + type, { slug: slug, type: type });
     }
   });
 
