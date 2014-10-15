@@ -46,7 +46,7 @@ define([
     describe(".navigateToLink", function() {
       it("should navigate to the given link", function() {
         var link = 'http://wordpress.example.org/about',
-            navigate = spyOn(Navigator, 'navigate');
+            navigate = spyOn(Navigator, 'navigateToLink');
 
         controller = new MenuController();
         controller.navigateToLink({ link: link });

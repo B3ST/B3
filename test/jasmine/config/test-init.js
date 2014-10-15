@@ -178,6 +178,8 @@
     'backbone.validateAll',
 
     'config/utils/supplant',
+    'config/utils/startsWith',
+    'config/utils/endsWith',
     'helpers/page-iterator-helper',
     'helpers/format-date-helper',
     'helpers/sidebar-widgets-helper',

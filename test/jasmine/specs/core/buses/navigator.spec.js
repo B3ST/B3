@@ -44,16 +44,19 @@ define([
       });
     });
 
-    describe(".getRouteOfType", function() {
-      it("should return the route of the corresponding type", function() {
-        var route = Navigator.getRouteOfType('post', 'slug');
-        expect(route).toEqual('post/slug');
+    describe(".navigateToLink", function() {
+      describe("When link is internal", function() {
+        it("should navigate to that link", function() {
+          Navigator.navigateToLink(Settings.get('site_url') + '/post/post', true);
+          expect(bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: true }});
+        });
       });
 
-      describe("When page is specified", function() {
-        it("should return the route with corresponding page", function() {
-          var route = Navigator.getRouteOfType('post', 'slug', 2);
-          expect(route).toEqual('post/slug/page/2');
+      describe("When link is external", function() {
+        it("should open a new window", function() {
+          var open = spyOn(window, 'open');
+          Navigator.navigateToLink('http://local.pt/', true);
+          expect(open).toHaveBeenCalledWith('http://local.pt/');
         });
       });
     });

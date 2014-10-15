@@ -9,8 +9,9 @@ define([
   'collections/post-collection',
   'buses/event-bus',
   'buses/request-bus',
-  'buses/navigator'
-], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, RequestBus, Navigator) {
+  'buses/navigator',
+  'config/routes'
+], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, RequestBus, Navigator, Routes) {
   'use strict';
 
   var ArchiveController = BaseController.extend({
@@ -21,6 +22,7 @@ define([
       'archive:view:display:category': 'showPostsByTaxonomy',
       'archive:view:display:tag':      'showPostsByTaxonomy',
       'archive:view:display:author':   'showPostsByAuthor',
+      'archive:view:link:clicked':     'navigateToLink',
 
       'pagination:previous:page':      'showPage',
       'pagination:next:page':          'showPage',
@@ -73,7 +75,7 @@ define([
             entities: [this.posts],
             done: function () {
               $('body,html').animate({ scrollTop: 0 }, 800);
-              var route = Navigator.getPagedRoute(this.filter, this.page);
+              var route = Routes.getPagedRoute(this.filter, this.page);
               Navigator.navigate(route, false);
             }.bind(this),
 
@@ -149,6 +151,13 @@ define([
           entities: [this.posts]
         }
       });
+    },
+
+    /**
+     * It navigates to an external or internal link
+     */
+    navigateToLink: function (params) {
+      Navigator.navigateToLink(params.href, true);
     },
 
     paginationController: function () {

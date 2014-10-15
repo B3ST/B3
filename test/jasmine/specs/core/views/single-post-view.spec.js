@@ -34,6 +34,20 @@ define([
       });
     });
 
+    describe("When clicking in a link", function() {
+      it("should trigger a single:view:link:clicked event", function() {
+        var trigger = spyOn(EventBus, 'trigger'),
+            post    = new Post({ID: 1, title: 'Title', content: '<a href="link">link</a>', author: new User({ID: 1, slug: 'author-1', name: 'author-name'}), terms: {category: {ID: 1, slug: 'post-1', link: "http://localhost:8888/wordpress/post/category/content"}, post_tag: {ID: 1, slug: 'tag-1', link: "http://localhost:8888/wordpress/post/tag/content"}}}),
+            view    = new SinglePostView({ model: post, template: 'content/type-post-template.dust' }), link;
+
+        view.render();
+        link = view.$('.post-content > a');
+        link.click();
+
+        expect(trigger).toHaveBeenCalledWith('single:view:link:clicked', { href: link.attr('href') });
+      });
+    });
+
     sharedClickBehaviourFor('category', {
       click: '.category > a',
       route: 'post/category/post-1'

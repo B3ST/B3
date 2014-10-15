@@ -19,7 +19,7 @@ define([
     },
 
     navigateToLink: function (options) {
-      Navigator.navigate(options.link, true);
+      Navigator.navigateToLink(options.link, true);
     },
 
     _getLoadingOptions: function (options) {

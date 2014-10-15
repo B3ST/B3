@@ -80,6 +80,8 @@
     'config/backbone/sync',
     'config/backbone/routes',
     'config/utils/supplant',
+    'config/utils/startsWith',
+    'config/utils/endsWith',
     'config/fetch',
     'config/save',
 
