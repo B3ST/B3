@@ -63,6 +63,27 @@ define([
       });
     });
 
+    describe("When clicking in a taxonomy link", function() {
+      var trigger;
+
+      beforeEach(function() {
+        trigger = spyOn(EventBus, 'trigger');
+        posts = new Posts([
+          new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1 <a href="some-href">link</a>', slug: 'post-1', terms: {portfolio: [{ID: 1, slug: 'post-1', link: "http://localhost:8888/wordpress/post/portfolio/content"}]}}),
+          new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
+        ]);
+
+        view = new ArchiveView({ collection: posts, options: model });
+        view.render();
+      });
+
+      it("should trigger a archive:view:link:clicked event", function() {
+        var link = view.$('.taxonomy > a').first();
+        link.click();
+        expect(trigger).toHaveBeenCalledWith('archive:view:display:taxonomy', { href: link.attr('href') });
+      });
+    });
+
     describe("When clicking in a link", function() {
       var trigger;
 

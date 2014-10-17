@@ -24,6 +24,7 @@ define([
       'click .tag > a':          'onTagClicked',
       'click .author > a':       'onAuthorClicked',
       'click #author > a':       'onAuthorClicked',
+      'click .taxonomy > a':     'onTaxonomyClicked',
       'click .post-content > a': 'onLinkClicked'
     },
 
@@ -57,6 +58,12 @@ define([
 
     onAuthorClicked: function (event) {
       this._triggerEvent('author', event);
+      event.preventDefault();
+    },
+
+    onTaxonomyClicked: function (event) {
+      var link = $(event.currentTarget).attr('href');
+      EventBus.trigger('single:view:display:taxonomy', { href: link });
       event.preventDefault();
     },
 
