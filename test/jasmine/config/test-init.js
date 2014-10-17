@@ -180,9 +180,10 @@
     'config/utils/supplant',
     'config/utils/startsWith',
     'config/utils/endsWith',
-    'helpers/page-iterator-helper',
-    'helpers/format-date-helper',
-    'helpers/sidebar-widgets-helper',
+    'helpers/dust/page-iterator-helper',
+    'helpers/dust/format-date-helper',
+    'helpers/dust/sidebar-widgets-helper',
+    'helpers/dust/terms-helper',
 
     '../test/jasmine/config/using',
     '../test/jasmine/config/stub-server',

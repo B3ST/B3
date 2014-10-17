@@ -85,9 +85,10 @@
     'config/fetch',
     'config/save',
 
-    'helpers/page-iterator-helper',
-    'helpers/format-date-helper',
-    'helpers/sidebar-widgets-helper',
+    'helpers/dust/page-iterator-helper',
+    'helpers/dust/format-date-helper',
+    'helpers/dust/sidebar-widgets-helper',
+    'helpers/dust/terms-helper'
   ], function ($, _, Backbone, Marionette, App, Initializer, Settings) {
     Settings.set('require.config', config);
     new Initializer({ app: App }).init();
