@@ -2,8 +2,9 @@
 
 define([
   'jquery',
+  'underscore',
   'backbone'
-], function ($, Backbone) {
+], function ($, _, Backbone) {
   'use strict';
 
   function checkStringType (input) {
@@ -144,6 +145,31 @@ define([
         this.withDay(options.day);
       }
 
+      return this;
+    },
+
+    /**
+     * Search filter using the specified taxonomy and term
+     * @param  {Object} options Object containing the taxonomy (key) and term (value)
+     * @return {PostFilter}            returns self
+     */
+    withTaxonomy: function (options) {
+      _(options).keys().each(function (key) {
+        this.filter.filter.taxonomy = key;
+        this.filter.filter.term     = options[key];
+      }.bind(this));
+
+      return this;
+    },
+
+    /**
+     * Search filter using type
+     * @param  {string} type A string containing the type
+     * @return {PostFilter}  returns self
+     */
+    byType: function (type) {
+      checkStringType(type);
+      this.filter.type = type;
       return this;
     },
 
