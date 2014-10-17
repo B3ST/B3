@@ -1,13 +1,14 @@
 /* global define */
 
 define([
+  'underscore',
   'backbone',
   'marionette',
   'controllers/single-controller',
   'models/post-model',
   'models/page-model',
   'buses/event-bus'
-], function (Backbone, Marionette, SingleController, Post, Page, EventBus) {
+], function (_, Backbone, Marionette, SingleController, Post, Page, EventBus) {
   'use strict';
 
   var SingleAPI = Backbone.Marionette.Controller.extend({
@@ -30,8 +31,16 @@ define([
       this._showSingle(page, 'content/type-page-template.dust');
     },
 
-    showPostTypeBySlug: function () {
+    showPostTypeBySlug: function (params) {
+      var post, slug, key;
 
+      params = _.omit(params, 'paged');
+      key    = _(params).keys().each(function (key) {
+        slug = params[key];
+      });
+
+      post = new Post({ slug: slug });
+      this._showSingle(post, 'content/type-post-template.dust');
     },
 
     _showSingle: function (model, template) {
