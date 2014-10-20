@@ -24,7 +24,7 @@ This brief guide assumes you have at least some familiarity with WordPress and J
     $ git clone https://github.com/B3ST/B3.git b3
     ```
 
-5. We're not done yet, first we need to install required Node dependencies and build the theme using Gulp:
+5. We're not done yet, we still need to install required Node dependencies and build the theme:
 
     ```
     $ cd b3
