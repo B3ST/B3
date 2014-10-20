@@ -12,20 +12,26 @@ This brief guide assumes you have at least some familiarity with WordPress and J
 2. Make sure [pretty permalinks are enabled](http://codex.wordpress.org/Using_Permalinks) on your WordPress install. They are required for the REST API to work.
 3. Clone the [B3 REST API Extensions](https://github.com/B3ST/B3-REST-API) repository into your plugins folder and activate the plugin:
 
+    ```
     $ cd your/wordpress/install/wp-content/plugins
     $ git clone https://github.com/B3ST/B3-REST-API.git b3-rest-api
+    ```
 
 4. Clone this repository into your themes folder:
 
+    ```
     $ cd your/wordpress/install/wp-content/themes
     $ git clone https://github.com/B3ST/B3.git b3
+    ```
 
 5. We're not done yet, first we need to install required Node dependencies and build the theme using Gulp:
 
+    ```
     $ cd b3
     $ npm install -g gulp bower
     $ npm install
     $ gulp build
+    ```
 
 6. Activate the theme. You're ready to start hacking!
 
