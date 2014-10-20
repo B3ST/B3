@@ -4,6 +4,8 @@ B3 is a Backbone.js starter theme for WordPress.
 
 It is designed as a launchpad for your own cutting edge themes: so clone it, rename it, hack it and republish it.
 
+Please bear in mind that B3 is a work in progress and can't (yet) be considered ready for production use.
+
 ## Getting Started
 
 This brief guide assumes you have at least some familiarity with WordPress and JavaScript development.  We fully intend to make this process as painless as possible, but we still have a few critical features taking precedence.
@@ -34,8 +36,6 @@ This brief guide assumes you have at least some familiarity with WordPress and J
     ```
 
 6. Activate the theme. You're ready to start hacking!
-
-Please bear in mind that B3 is a work in progress and can't (yet) be considered ready for production use.
 
 ## Build Automation
 
