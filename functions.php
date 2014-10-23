@@ -150,6 +150,8 @@ class B3Theme {
 		wp_localize_script( $this->slug . '-settings', 'WP_API_SETTINGS', $settings );
 		wp_enqueue_script( $this->slug . '-settings' );
 
+		wp_enqueue_script( 'heartbeat' );
+
 		wp_enqueue_style( $this->slug . '-style', $this->stylesheet_uri, NULL, $this->version, 'screen' );
 	}
 
