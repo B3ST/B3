@@ -22,6 +22,7 @@ define([
       'archive:view:display:category': 'showPostsByTaxonomy',
       'archive:view:display:tag':      'showPostsByTaxonomy',
       'archive:view:display:author':   'showPostsByAuthor',
+      'archive:view:display:taxonomy': 'navigateToLink',
       'archive:view:link:clicked':     'navigateToLink',
 
       'pagination:previous:page':      'showPage',
@@ -34,9 +35,10 @@ define([
     },
 
     initialize: function (options) {
-      this.page    = options.page || 1;
-      this.filter  = options.filter || new PostFilter();
-      this.posts   = options.posts || new Posts(null, { filter: this.filter });
+      this.page     = options.page || 1;
+      this.filter   = options.filter || new PostFilter();
+      this.posts    = options.posts || new Posts(null, { filter: this.filter });
+      this.template = options.template || 'archive/archive-template.dust';
     },
 
     /**
@@ -124,7 +126,7 @@ define([
      * @param  {Object} options the options indicating information about the archive
      */
     showView: function (pages, options) {
-      this.show(this._archiveView(this.posts, options), { region: this.region });
+      this.show(this._archiveView(this.posts, options, this.template), { region: this.region });
 
       // there's some weird bug in this region, haven't figured it out yet.
       var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
@@ -169,10 +171,11 @@ define([
      *
      * @param  {array}       posts Post collection to display.
      * @param  {Object}      model The model containing the information about the archive
+     * @param  {String}      template The template for the view
      * @return {ArchiveView}       New archive view instance.
      */
-    _archiveView: function (posts, options) {
-      return new ArchiveView({ collection: posts, options: options });
+    _archiveView: function (posts, options, template) {
+      return new ArchiveView({ collection: posts, options: options, template: template });
     }
   });
 

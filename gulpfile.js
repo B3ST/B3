@@ -32,13 +32,14 @@ function _onError (error) {
 gulp.task('build:styles', function () {
   return gulp.src('app/styles/less/style.less')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
+    //.pipe($.sourcemaps.init())
+    //.pipe($.recess())
       .pipe($.less())
         .on('error', _onError)
-      .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+      .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
       .pipe($.minifyCss())
       .pipe($.concat('style.css'))
-    .pipe($.sourcemaps.write('./maps'))
+    //.pipe($.sourcemaps.write('./maps'))
     .pipe(gulp.dest('dist/assets/styles/'))
     .pipe($.size({title: 'styles'}));
 });

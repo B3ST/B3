@@ -18,6 +18,7 @@ define([
       'single:view:display:tag':      'showTaxonomy',
       'single:view:display:author':   'showAuthor',
       'single:view:display:page':     'showPage',
+      'single:view:display:taxonomy': 'navigateToLink',
       'single:view:link:clicked':     'navigateToLink',
 
       'pagination:next:page':         'showPageContent',

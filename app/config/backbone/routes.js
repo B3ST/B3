@@ -42,6 +42,26 @@ define([
     return [paramsObj];
   };
 
+  // Nothing was changed, except for the namedParams and the splatParam.
+  // The Backbone regex  did not capture named params like :some-thing or *some-thing
+  // because this regex does not include non-word characters like - or _.
+  // With the new regex, we capture word characters, - and _.
+  Backbone.Router.prototype._routeToRegExp = function (route) {
+    var optionalParam = /\((.*?)\)/g,
+        namedParam    = /(\(\?)?:[\w\-\_\\]+/g,
+        splatParam    = /\*[\w\-\_\\]+/g,
+        escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
+
+
+    route = route.replace(escapeRegExp, '\\$&')
+                 .replace(optionalParam, '(?:$1)?')
+                 .replace(namedParam, function(match, optional) {
+                    return optional ? match : '([^/?]+)';
+                  })
+                 .replace(splatParam, '([^?]*?)');
+    return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$');
+  };
+
   Marionette.AppRouter.prototype.processAppRoutes = function (controllers, appRoutes) {
     var routes = Settings.getRoutes(methodNames);
 

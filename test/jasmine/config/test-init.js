@@ -184,6 +184,7 @@
     'helpers/dust/page-iterator-helper',
     'helpers/dust/format-date-helper',
     'helpers/dust/sidebar-widgets-helper',
+    'helpers/dust/terms-helper',
     'helpers/dust/translate-helper',
 
     '../test/jasmine/config/using',

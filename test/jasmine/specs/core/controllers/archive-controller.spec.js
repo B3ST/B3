@@ -36,6 +36,7 @@ define([
         'archive:view:display:category': 'showPostsByTaxonomy',
         'archive:view:display:tag':      'showPostsByTaxonomy',
         'archive:view:display:author':   'showPostsByAuthor',
+        'archive:view:display:taxonomy': 'navigateToLink',
         'archive:view:link:clicked':     'navigateToLink',
 
         'pagination:previous:page':      'showPage',

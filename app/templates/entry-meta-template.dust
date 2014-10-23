@@ -24,4 +24,13 @@
     </span>
     {~s}
   {/terms.post_tag}
+
+  <div class="taxonomies">
+  {@terms terms=terms}
+    <span class="label label-primary taxonomy">
+      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
+    </span>
+    {~s}
+  {/terms}
+  </div>
 </div>

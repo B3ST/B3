@@ -89,6 +89,7 @@
     'helpers/dust/page-iterator-helper',
     'helpers/dust/format-date-helper',
     'helpers/dust/sidebar-widgets-helper',
+    'helpers/dust/terms-helper',
     'helpers/dust/translate-helper'
   ], function ($, _, Backbone, Marionette, App, Initializer, Settings) {
     Settings.set('require.config', config);

@@ -38,7 +38,7 @@ define([
       return {
         sidebars: sidebars[0],
         menus: menus[0],
-        taxonomies: taxonomies[0]
+        taxonomies: new Taxonomies(taxonomies[0])
       };
     },
 
