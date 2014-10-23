@@ -10,7 +10,7 @@
             {page}
             {?current}
               {~s}
-              <span class="screen-reader-text">(current)</span>
+              <span class="screen-reader-text">{@nls key="b3.pagination.current" /}</span>
             {/current}
           </a>
         </li>
