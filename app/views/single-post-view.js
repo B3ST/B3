@@ -5,12 +5,11 @@ define([
   'marionette',
   'models/settings-model',
   'buses/event-bus',
-  'buses/navigator',
   // Shims
   'templates/content/type-post-template',
   'templates/content/type-page-template',
   'templates/entry-meta-template'
-], function (Backbone, Marionette, Settings, EventBus, Navigator) {
+], function (Backbone, Marionette, Settings, EventBus) {
   'use strict';
 
   var SinglePostView = Backbone.Marionette.LayoutView.extend({
@@ -21,10 +20,12 @@ define([
     },
 
     events: {
-      'click .category > a':  'onCategoryClicked',
-      'click .tag > a':       'onTagClicked',
-      'click .author > a':    'onAuthorClicked',
-      'click #author > a':    'onAuthorClicked'
+      'click .category > a':     'onCategoryClicked',
+      'click .tag > a':          'onTagClicked',
+      'click .author > a':       'onAuthorClicked',
+      'click #author > a':       'onAuthorClicked',
+      'click .taxonomy > a':     'onTaxonomyClicked',
+      'click .post-content > a': 'onLinkClicked'
     },
 
     modelEvents: {
@@ -60,35 +61,25 @@ define([
       event.preventDefault();
     },
 
-    _triggerEvent: function (type, event) {
-      var slug = $(event.currentTarget).attr('slug');
-      EventBus.trigger('single:view:display:' + type, { slug: slug, type: type });
+    onTaxonomyClicked: function (event) {
+      var link = $(event.currentTarget).attr('href');
+      EventBus.trigger('single:view:display:taxonomy', { href: link });
+      event.preventDefault();
+    },
+
+    onLinkClicked: function (event) {
+      var link = $(event.currentTarget).attr('href');
+      EventBus.trigger('single:view:link:clicked', { href: link });
+      event.preventDefault();
     },
 
     displayError: function () {
       this.$('.b3-comments').text('Could not retrieve comments.');
     },
 
-    _renderPage: function () {
-      this.render();
-      EventBus.trigger('single:display:page', { page: this.page });
-    },
-
-    /**
-     * Get route for this view instance.
-     *
-     * @param  {int}   page Page number.
-     * @return {route}      Route.
-     */
-    _getRoute: function (page) {
-      var type = this.model.get('type'),
-          slug = this.model.get('slug');
-
-      if (page === 1) {
-        page = null;
-      }
-
-      return Navigator.getRouteOfType(type, slug, page);
+    _triggerEvent: function (type, event) {
+      var slug = $(event.currentTarget).attr('slug');
+      EventBus.trigger('single:view:display:' + type, { slug: slug, type: type });
     }
   });
 

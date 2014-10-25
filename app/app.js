@@ -70,10 +70,10 @@ define([
     new FooterController({ region: App.footer }).showFooter();
   });
 
-  App.addInitializer(function () {
+  App.addInitializer(function (options) {
     App.appRouter = new AppRouter({
       controller: [
-        new ArchiveAPI(),
+        new ArchiveAPI(options),
         new SingleAPI(),
         new SearchAPI(),
         new HomeAPI()

@@ -27,6 +27,7 @@
       'boot':                 root + '/lib/boot',
       'sinon':                root + '/lib/sinon',
       'moment':               root + '/lib/moment',
+      'i18n':                 root + '/lib/i18n',
 
       'templates':            'templates-compiled'
     },
@@ -178,9 +179,13 @@
     'backbone.validateAll',
 
     'config/utils/supplant',
-    'helpers/page-iterator-helper',
-    'helpers/format-date-helper',
-    'helpers/sidebar-widgets-helper',
+    'config/utils/startsWith',
+    'config/utils/endsWith',
+    'helpers/dust/page-iterator-helper',
+    'helpers/dust/format-date-helper',
+    'helpers/dust/sidebar-widgets-helper',
+    'helpers/dust/terms-helper',
+    'helpers/dust/translate-helper',
 
     '../test/jasmine/config/using',
     '../test/jasmine/config/stub-server',

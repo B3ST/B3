@@ -35,7 +35,13 @@ define([
       runTest: function (api) {
         api.showPageBySlug({ page: "page" });
       }
-    })
+    });
+
+    sharedSingleAPIBehaviourFor(".showPostTypeBySlug", {
+      runTest: function (api) {
+        api.showPostTypeBySlug({ "jetpack-portfolio": "jetpacked", "paged": null} );
+      }
+    });
   });
 
   function sharedSingleAPIBehaviourFor (method, options) {

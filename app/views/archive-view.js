@@ -4,7 +4,7 @@ define([
   'jquery',
   'backbone',
   'marionette',
-  'helpers/renderer-helper',
+  'helpers/dust/renderer-helper',
   'helpers/archive-header',
   'buses/event-bus',
   // Shims
@@ -16,7 +16,7 @@ define([
 
   var ArchiveView = Backbone.Marionette.LayoutView.extend({
     tagName:  'div id="archive"',
-    template: 'archive/archive-template.dust',
+    template: false,
 
     regions: {
       pagination: '#pagination'
@@ -26,7 +26,9 @@ define([
       'click .title > a':    'onTitleClicked',
       'click .category > a': 'onCategoryClicked',
       'click .tag > a':      'onTagClicked',
-      'click .author > a':   'onAuthorClicked'
+      'click .author > a':   'onAuthorClicked',
+      'click .taxonomy > a': 'onTaxonomyClicked',
+      'click .excerpt > a':  'onLinkClicked'
     },
 
     collectionEvents: {
@@ -34,8 +36,9 @@ define([
     },
 
     initialize: function (options) {
-      options = options || {};
-      this.archive = ArchiveHeader.archiveBy(this.collection, options.options);
+      options       = options || {};
+      this.archive  = ArchiveHeader.archiveBy(this.collection, options.options);
+      this.template = options.template || 'archive/archive-template.dust';
       EventBus.trigger('title:change', this.archive || this.archive.name || this.archive.date);
     },
 
@@ -68,6 +71,18 @@ define([
 
     onAuthorClicked: function (event) {
       this._triggerEvent('archive:view:display:author', event, 'author');
+      event.preventDefault();
+    },
+
+    onTaxonomyClicked: function (event) {
+      var link = $(event.currentTarget).attr('href');
+      EventBus.trigger('archive:view:display:taxonomy', { href: link });
+      event.preventDefault();
+    },
+
+    onLinkClicked: function (event) {
+      var link = $(event.currentTarget).attr('href');
+      EventBus.trigger('archive:view:link:clicked', { href: link });
       event.preventDefault();
     },
 

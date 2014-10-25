@@ -9,8 +9,9 @@ define([
   'collections/post-collection',
   'buses/event-bus',
   'buses/request-bus',
-  'buses/navigator'
-], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, RequestBus, Navigator) {
+  'buses/navigator',
+  'config/routes'
+], function (Marionette, BaseController, PaginationController, ArchiveView, PostFilter, Posts, EventBus, RequestBus, Navigator, Routes) {
   'use strict';
 
   var ArchiveController = BaseController.extend({
@@ -21,6 +22,8 @@ define([
       'archive:view:display:category': 'showPostsByTaxonomy',
       'archive:view:display:tag':      'showPostsByTaxonomy',
       'archive:view:display:author':   'showPostsByAuthor',
+      'archive:view:display:taxonomy': 'navigateToLink',
+      'archive:view:link:clicked':     'navigateToLink',
 
       'pagination:previous:page':      'showPage',
       'pagination:next:page':          'showPage',
@@ -32,9 +35,10 @@ define([
     },
 
     initialize: function (options) {
-      this.page    = options.page || 1;
-      this.filter  = options.filter || new PostFilter();
-      this.posts   = options.posts || new Posts(null, { filter: this.filter });
+      this.page     = options.page || 1;
+      this.filter   = options.filter || new PostFilter();
+      this.posts    = options.posts || new Posts(null, { filter: this.filter });
+      this.template = options.template || 'archive/archive-template.dust';
     },
 
     /**
@@ -73,7 +77,7 @@ define([
             entities: [this.posts],
             done: function () {
               $('body,html').animate({ scrollTop: 0 }, 800);
-              var route = Navigator.getPagedRoute(this.filter, this.page);
+              var route = Routes.getPagedRoute(this.filter, this.page);
               Navigator.navigate(route, false);
             }.bind(this),
 
@@ -122,7 +126,7 @@ define([
      * @param  {Object} options the options indicating information about the archive
      */
     showView: function (pages, options) {
-      this.show(this._archiveView(this.posts, options), { region: this.region });
+      this.show(this._archiveView(this.posts, options, this.template), { region: this.region });
 
       // there's some weird bug in this region, haven't figured it out yet.
       var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
@@ -151,6 +155,13 @@ define([
       });
     },
 
+    /**
+     * It navigates to an external or internal link
+     */
+    navigateToLink: function (params) {
+      Navigator.navigateToLink(params.href, true);
+    },
+
     paginationController: function () {
       return new PaginationController();
     },
@@ -160,10 +171,11 @@ define([
      *
      * @param  {array}       posts Post collection to display.
      * @param  {Object}      model The model containing the information about the archive
+     * @param  {String}      template The template for the view
      * @return {ArchiveView}       New archive view instance.
      */
-    _archiveView: function (posts, options) {
-      return new ArchiveView({ collection: posts, options: options });
+    _archiveView: function (posts, options, template) {
+      return new ArchiveView({ collection: posts, options: options, template: template });
     }
   });
 

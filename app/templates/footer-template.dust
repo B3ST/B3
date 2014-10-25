@@ -11,16 +11,14 @@
     </li>
   </ul>
 
-  <p>B3 is a <a href="http://wordpress.org/">WordPress</a> starter theme based on <a href="http://backbonejs.org/">Backbone.js</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
-
-  <p>Assembled in Portugal by <a href="https://twitter.com/goblindegook">@goblindegook</a>, <a href="https://github.com/pcruz7">@pcruz7</a>, and <a href="https://twitter.com/log_oscon">@log_oscon</a>.</p>
-
-  <p>Licensed under <a href="https://github.com/b3st/b3/blob/master/LICENSE">MIT</a>.</p>
+  {@section key="b3.footer.disclaimer"}
+  <p>{nls1|s}</p>
+  <p>{nls2|s}</p>
+  <p>{nls3|s}</p>
 
   <ul class="footer-links muted">
-    <li>Alpha</li>
-    <li><a href="https://github.com/b3st">GitHub</a></li>
-    <li><a href="https://bitbucket.com/goblindegook/b3">Bitbucket</a></li>
-    <li><a href="https://trello.com/b3st">Trello</a></li>
+    <li>{nls4|s}</li>
+    <li><a href="https://github.com/b3st">{nls5|s}</a></li>
   </ul>
+  {/section}
 </div>

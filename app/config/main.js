@@ -23,6 +23,7 @@
       'bootstrap.notify':     root + '/lib/bootstrap-notify',
       'text':                 root + '/lib/text',
       'moment':               root + '/lib/moment',
+      'i18n':                 root + '/lib/i18n',
 
       'templates':            'templates-compiled'
     },
@@ -80,12 +81,16 @@
     'config/backbone/sync',
     'config/backbone/routes',
     'config/utils/supplant',
+    'config/utils/startsWith',
+    'config/utils/endsWith',
     'config/fetch',
     'config/save',
 
-    'helpers/page-iterator-helper',
-    'helpers/format-date-helper',
-    'helpers/sidebar-widgets-helper',
+    'helpers/dust/page-iterator-helper',
+    'helpers/dust/format-date-helper',
+    'helpers/dust/sidebar-widgets-helper',
+    'helpers/dust/terms-helper',
+    'helpers/dust/translate-helper'
   ], function ($, _, Backbone, Marionette, App, Initializer, Settings) {
     Settings.set('require.config', config);
     new Initializer({ app: App }).init();

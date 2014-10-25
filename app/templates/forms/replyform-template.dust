@@ -4,48 +4,52 @@
     {?guest}
       <div id="author">
         <div class="form-group" id="author-name-group">
-          <label for="author-name" class="control-label">Your name:</label>
+          <label for="author-name" class="control-label">{@nls key="b3.comments.name" /}</label>
           <input type="text" class="form-control required" name="author_name" value="{author.name}" required>
         </div>
 
         <div class="form-group" id="author-email-group">
-          <label for="author-email" class="control-label">Your email:</label>
+          <label for="author-email" class="control-label">{@nls key="b3.comments.email" /}</label>
           <input type="email" class="form-control required" name="author_email" value="{author.email}" required>
 
           <p class="form-help">
-            Your email address will not be published.
+            {@nls key="b3.comments.disclaimer" /}
           </p>
         </div>
 
         <div class="form-group" id="author-url-group">
-          <label for="author-url" class="control-label">Your site:</label>
+          <label for="author-url" class="control-label">{@nls key="b3.comments.site" /}</label>
           <input type="url" class="form-control" name="author_url" value="{author.URL}">
         </div>
       </div>
     {:else}
       <div class="alert alert-info" role="alert">
         <span class="icon-info"></span>
-        {~s} You are commenting as <strong>{author.name}</strong>. (<a href="#" class="logout">Not {author.name}?</a>)
+        {@section key="b3.comments.warning"}
+        {~s} {nls1|s} <strong>{author.name}</strong>. (<a href="#" class="logout">{nls2|s} {author.name}?</a>)
+        {/section}
       </div>
     {/guest}
 
     <div class="form-group" id="comment-content-group">
-      <label for="comment-content" class="control-label">Your comment:</label>
+      {@section key="b3.comments.comment"}
+      <label for="comment-content" class="control-label">{nls1|s}</label>
       <textarea class="form-control required" rows="5" name="comment_content" required>{comment}</textarea>
 
       <p class="form-help">
-        You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:
+        {nls2|s}
         {~s} <code>&lt;a href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt;
         {~s} &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt;
         {~s} &lt;i&gt; &lt;q cite=""&gt; &lt;strike&gt; &lt;strong&gt;</code>.
       </p>
+      {/section}
     </div>
 
     <div id="warning" role="alert"></div>
 
     <div id="replyactions">
-      <button class="reply"><span class="icon-send"></span>{~s}Publish Comment</button>
-      <a href="#" class="cancel"><span class="icon-cancel"></span>{~s}Dismiss</a>
+      <button class="reply"><span class="icon-send"></span>{~s}{@nls key="b3.comments.publish" /}</button>
+      <a href="#" class="cancel"><span class="icon-cancel"></span>{~s}}{@nls key="b3.comments.dismiss" /}</a>
     </div>
 
   </div>

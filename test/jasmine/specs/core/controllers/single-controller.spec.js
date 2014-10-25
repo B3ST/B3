@@ -22,6 +22,8 @@ define([
         'single:view:display:tag':      'showTaxonomy',
         'single:view:display:author':   'showAuthor',
         'single:view:display:page':     'showPage',
+        'single:view:display:taxonomy': 'navigateToLink',
+        'single:view:link:clicked':     'navigateToLink',
 
         'pagination:next:page':         'showPageContent',
         'pagination:previous:page':     'showPageContent',
@@ -93,6 +95,17 @@ define([
         controller.showAuthor({ type: 'author', slug: 'slug' });
 
         expect(navigate).toHaveBeenCalledWith('slug', 1, true);
+      });
+    });
+
+    describe(".navigateToLink", function() {
+      it("should navigate to the given link", function() {
+        var navigate = spyOn(Navigator, 'navigateToLink');
+
+        controller = new SingleController({ template: '' });
+        controller.navigateToLink({ href: 'link' });
+
+        expect(navigate).toHaveBeenCalledWith('link', true);
       });
     });
   });

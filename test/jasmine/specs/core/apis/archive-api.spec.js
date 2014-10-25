@@ -3,9 +3,11 @@
 define([
   'apis/archive-api',
   'controllers/archive-controller',
+  'collections/taxonomy-collection',
+  'models/taxonomy-model',
   'models/settings-model',
   'buses/event-bus'
-], function (ArchiveAPI, ArchiveController, Settings, EventBus) {
+], function (ArchiveAPI, ArchiveController, Taxonomies, Taxonomy, Settings, EventBus) {
   'use strict';
 
   describe("ArchiveAPI", function() {
@@ -42,14 +44,21 @@ define([
       runTest: function (api) {
         api.showPostByDate({ year: '2013', monthnum: '05', day: '21' });
       }
-    })
+    });
+
+    sharedArchiveAPIBehaviourFor(".showPostByTaxonomy", {
+      runTest: function (api) {
+        api.showPostByTaxonomy({ "jetpack-portfolio-tag": "tagged", "paged": null });
+      }
+    });
   });
 
   function sharedArchiveAPIBehaviourFor (method, options) {
     describe(".showArchive", function() {
       it("should call showArchive from ArchiveController", function() {
-        var show = spyOn(ArchiveController.prototype, 'showArchive'),
-            api  = new ArchiveAPI();
+        var show     = spyOn(ArchiveController.prototype, 'showArchive'),
+            taxonomy = new Taxonomy({ slug: 'jetpack-portfolio-tag', types: { 'jetpack-portfolio': {} } }),
+            api      = new ArchiveAPI({ taxonomies: new Taxonomies([taxonomy]) });
 
         options.runTest(api);
         expect(show).toHaveBeenCalled();

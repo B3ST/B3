@@ -62,31 +62,45 @@ define([
       });
     });
 
-    describe("withYear", function() {
+    describe(".withYear", function() {
       it("should encode using the year parameter", function() {
         filter.withYear('2013');
         expect(filter.serialize()).toEqual('filter[year]=2013');
       });
     });
 
-    describe("withMonth", function() {
+    describe(".withMonth", function() {
       it("should encode using the month parameter", function() {
         filter.withMonth('03');
         expect(filter.serialize()).toEqual('filter[month]=03');
       });
     });
 
-    describe("withDay", function() {
+    describe(".withDay", function() {
       it("should encode using the day parameter", function() {
         filter.withDay('12');
         expect(filter.serialize()).toEqual('filter[day]=12') ;
       });
     });
 
-    describe("withDate", function() {
+    describe(".withDate", function() {
       it("should encode using the given parameters", function() {
         filter.withDate({ year: '2014', monthnum: '02', day: '12' });
         expect(filter.serialize()).toEqual('filter[year]=2014&filter[month]=02&filter[day]=12');
+      });
+    });
+
+    describe(".withTaxonomy", function() {
+      it("should encode using the given parameters", function() {
+        filter.withTaxonomy({ 'jetpack-portfolio-tag': 'tagged' });
+        expect(filter.serialize()).toEqual('filter[taxonomy]=jetpack-portfolio-tag&filter[term]=tagged');
+      });
+    });
+
+    describe(".byType", function() {
+      it("should encode using the given type", function() {
+        filter.byType('jetpack-portfolio');
+        expect(filter.serialize()).toEqual('type=jetpack-portfolio');
       });
     });
 

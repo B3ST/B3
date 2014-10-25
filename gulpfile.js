@@ -3,6 +3,7 @@
 'use strict';
 
 var gulp        = require('gulp'),
+    del         = require('del'),
     gutil       = require('gulp-util'),
     $           = require('gulp-load-plugins')(),
     bowerFiles  = require('bower-files')({'dev': true}),
@@ -31,13 +32,14 @@ function _onError (error) {
 gulp.task('build:styles', function () {
   return gulp.src('app/styles/less/style.less')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
+    //.pipe($.sourcemaps.init())
+    //.pipe($.recess())
       .pipe($.less())
         .on('error', _onError)
-      .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+      .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
       .pipe($.minifyCss())
       .pipe($.concat('style.css'))
-    .pipe($.sourcemaps.write('./maps'))
+    //.pipe($.sourcemaps.write('./maps'))
     .pipe(gulp.dest('dist/assets/styles/'))
     .pipe($.size({title: 'styles'}));
 });
@@ -219,9 +221,8 @@ gulp.task('watch:server', function () {
 /**
  * gulp clean
  */
-gulp.task('clean', function () {
-  return gulp.src(['dist/', 'lib/'], { read: false })
-    .pipe($.rimraf());
+gulp.task('clean', function (cb) {
+  return del(['dist/', 'lib/'], cb);
 });
 
 /**

@@ -36,6 +36,8 @@ define([
         'archive:view:display:category': 'showPostsByTaxonomy',
         'archive:view:display:tag':      'showPostsByTaxonomy',
         'archive:view:display:author':   'showPostsByAuthor',
+        'archive:view:display:taxonomy': 'navigateToLink',
+        'archive:view:link:clicked':     'navigateToLink',
 
         'pagination:previous:page':      'showPage',
         'pagination:next:page':          'showPage',
@@ -170,6 +172,17 @@ define([
             entities: [jasmine.any(Posts)]
           }
         });
+      });
+    });
+
+    describe(".navigateToLink", function() {
+      it("should call navigateToLink of Navigator", function() {
+        var navigate = spyOn(Navigator, 'navigateToLink');
+
+        controller = new ArchiveController(options);
+        controller.navigateToLink({ href: 'link' });
+
+        expect(navigate).toHaveBeenCalledWith('link', true);
       });
     });
   });
