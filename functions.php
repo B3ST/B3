@@ -85,7 +85,10 @@ class B3Theme {
 			'caption',
 		) );
 
-		add_filter( 'script_loader_src', array( $this, 'script_loader_src' ), 10, 2 );
+		if ( ! is_admin() ) {
+			// Prevent all scripts from being printed to HTML.
+			add_filter( 'script_loader_src', '__return_false' );
+		}
 
 		add_action( 'widgets_init'      , array( $this, 'setup_widgets' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'setup_scripts' ), 9999, 0 );
@@ -130,6 +133,8 @@ class B3Theme {
 	 * - `url`:   RESTful WP API endpoint prefix.
 	 * - `name`:  Site name.
 	 * - `nonce`: Nonce string.
+	 *
+	 * @todo Find a way to enqueue JS data without having to register a script URI.
 	 */
 	public function setup_scripts() {
 		if ( ! $this->is_wp_api_active() ) {
@@ -161,19 +166,6 @@ class B3Theme {
 		wp_enqueue_script( $this->slug . '-settings' );
 
 		wp_enqueue_style( $this->slug . '-style', $this->stylesheet_uri, null, $this->version, 'screen' );
-	}
-
-	/**
-	 * Prevents all scripts from being printed to HTML.
-	 *
-	 * Runs on `script_loader_src`.
-	 *
-	 * @param  string $src    Script URI.
-	 * @param  string $handle Script registration handle.
-	 * @return string         Always empty.
-	 */
-	public function script_loader_src( $src, $handle ) {
-		return '';
 	}
 
 	/**
