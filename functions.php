@@ -89,7 +89,7 @@ class B3Theme {
 
 		add_action( 'widgets_init'      , array( $this, 'setup_widgets' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'setup_scripts' ), 9999, 0 );
-		add_action( 'wp_head'           , array( $this, 'enqueue_require_script' ), 20, 0 );
+		add_action( 'wp_head'           , array( $this, 'print_require_script' ), 20, 0 );
 	}
 
 	/**
@@ -144,9 +144,6 @@ class B3Theme {
 			$routes        = $routes_helper->get_routes();
 		}
 
-		// Dequeue plugin scripts:
-		$require_scripts = $this->require_scripts();
-
 		$settings = array(
 			'name'      => get_bloginfo( 'name' ),
 			'api'       => home_url( json_get_url_prefix() ),
@@ -156,10 +153,10 @@ class B3Theme {
 			'root_url'  => get_stylesheet_directory_uri(),
 			'site_url'  => site_url(),
 			'routes'    => $routes,
-			'scripts'	=> $require_scripts,
+			'scripts'	=> $this->require_scripts(),
 			);
 
-		wp_register_script( $this->slug . '-settings', 'settings.js' );
+		wp_register_script( $this->slug . '-settings', 'settings.js', null, $this->version );
 		wp_localize_script( $this->slug . '-settings', 'WP_API_SETTINGS', $settings );
 		wp_enqueue_script( $this->slug . '-settings' );
 
@@ -204,10 +201,12 @@ class B3Theme {
 	}
 
 	/**
-	 * [enqueue_require_script description]
-	 * @return [type] [description]
+	 * Print our RequireJS loader to the document head.
+	 *
+	 * We couldn't find a way to print a `data-main` attribute when enqueuing
+	 * the script so we're printing it directly.
 	 */
-	public function enqueue_require_script() {
+	public function print_require_script() {
 		if ( ! $this->is_wp_api_active() ) {
 			return;
 		}
