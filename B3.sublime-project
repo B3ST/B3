@@ -2,6 +2,10 @@
 	"folders":
 	[
 		{
+			"folder_exclude_patterns":
+			[
+				".idea"
+			],
 			"follow_symlinks": true,
 			"path": "."
 		},
