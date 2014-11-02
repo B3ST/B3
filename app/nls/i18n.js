@@ -60,7 +60,7 @@ define({
           'B3 is a <a href="http://wordpress.org/">WordPress</a> starter theme based on <a href="http://backbonejs.org/">Backbone.js</a> and <a href="http://getbootstrap.com/">Bootstrap</a>.',
           'Assembled in Portugal by <a href="https://twitter.com/goblindegook">@goblindegook</a>, <a href="https://github.com/pcruz7">@pcruz7</a> and <a href="https://twitter.com/log_oscon">@log_oscon</a>.',
           'Licensed under <a href="https://github.com/b3st/b3/blob/master/LICENSE">MIT</a>.',
-          'Alpa',
+          'Site',
           'GitHub'
         ]
       }

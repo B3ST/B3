@@ -7,6 +7,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+require_once 'inc/scripts.php';
+
 class B3Theme {
 
 	/**
@@ -142,7 +144,7 @@ class B3Theme {
 		}
 
 		$site_url = parse_url( site_url() );
-		$routes              = array();
+		$routes   = array();
 
 		if ( class_exists( 'B3_RoutesHelper' ) ) {
 			$routes_helper = new B3_RoutesHelper();
@@ -158,7 +160,7 @@ class B3Theme {
 			'root_url'  => get_stylesheet_directory_uri(),
 			'site_url'  => site_url(),
 			'routes'    => $routes,
-			'scripts'	=> $this->require_scripts(),
+			'scripts'   => $this->require_scripts(),
 			);
 
 		wp_register_script( $this->slug . '-settings', 'settings.js', null, $this->version );
@@ -178,16 +180,33 @@ class B3Theme {
 
 		$scripts = array();
 
+		// Prefix handles to minimize conflicts when requiring scripts:
+		$handle_prefix = 'wp.script.';
+
 		// Update script dependencies:
 		$wp_scripts->all_deps( $wp_scripts->queue );
 
-		// Fetch enqueued and dependency scripts URIs:
+		// Fetch enqueued and dependency script URIs:
 		foreach ( $wp_scripts->to_do as $handle ) {
-			$src = $wp_scripts->registered[ $handle ]->src;
-			if ( ! empty( $src ) ) {
-				$scripts[ $handle ] = $src;
+			$src    = $wp_scripts->registered[ $handle ]->src;
+			$deps   = (array) $wp_scripts->registered[ $handle ]->deps;
+			$handle = $handle_prefix . $handle;
+
+			// RequireJS: The path that is used should NOT include an extension.
+			$src  = preg_replace( '/\.js$/i', '', $src );
+
+			// Prepend prefix to each dependency handle:
+			foreach ( $deps as $index => $dep ) {
+				$deps[ $index ] = $handle_prefix . $dep;
 			}
+
+			$scripts[ $handle ] = array(
+				'src'  => $src,
+				'deps' => $deps,
+			);
 		}
+
+		cleanup_script_dependencies( $scripts );
 
 		return $scripts;
 	}
