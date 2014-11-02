@@ -141,11 +141,6 @@ class B3_Theme {
 			'caption',
 		) );
 
-		if ( ! is_admin() ) {
-			// Prevent all scripts from being printed to HTML.
-			add_filter( 'script_loader_src', '__return_false' );
-		}
-
 		add_action( 'widgets_init', array( $this, 'setup_widgets' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}

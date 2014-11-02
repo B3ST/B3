@@ -43,6 +43,11 @@ class B3_Scripts {
 		$this->loader_uri  = get_template_directory_uri() . '/dist/config/main.js';
 		$this->scripts     = array();
 
+		if ( ! is_admin() ) {
+			// Prevent all scripts from being printed to HTML.
+			add_filter( 'script_loader_src', '__return_false' );
+		}
+
 		add_action( 'wp_enqueue_scripts', array( $this, 'setup' ), 999, 0 );
 		add_action( 'wp_head'           , array( $this, 'print_loader' ), 20, 0 );
 	}
@@ -69,6 +74,8 @@ class B3_Scripts {
 			$routes        = $routes_helper->get_routes();
 		}
 
+		$this->require_scripts();
+
 		$settings = array(
 			'name'      => get_bloginfo( 'name' ),
 			'api'       => home_url( json_get_url_prefix() ),
@@ -78,7 +85,7 @@ class B3_Scripts {
 			'root_url'  => get_stylesheet_directory_uri(),
 			'site_url'  => site_url(),
 			'routes'    => $routes,
-			'scripts'   => $this->require_scripts(),
+			'scripts'   => $this->scripts,
 			);
 
 		wp_register_script( $this->theme->get_slug() . '-settings', 'settings.js', null, $this->theme->get_version() );
