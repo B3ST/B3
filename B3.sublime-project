@@ -2,6 +2,14 @@
 	"folders":
 	[
 		{
+			"folder_exclude_patterns":
+			[
+				".idea",
+				"app/templates-compiled",
+        "bower_components",
+        "dist",
+				"node_modules"
+			],
 			"follow_symlinks": true,
 			"path": "."
 		},

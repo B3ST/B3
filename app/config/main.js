@@ -4,9 +4,11 @@
   'use strict';
 
   var root = WP_API_SETTINGS.root_url;
+
   var config = {
     //urlArgs: 'bust=' + (new Date()).getTime(),
     baseUrl: root + '/dist',
+
     paths: {
       'jquery':               root + '/lib/jquery',
       'jqueryui':             root + '/lib/jquery-ui',
@@ -29,8 +31,8 @@
     },
 
     shim: {
-      'bootstrap': ['jquery'],
       'jqueryui': ['jquery'],
+      'bootstrap': ['jquery'],
       'backbone': {
         'deps': ['underscore'],
         'exports': 'Backbone'
@@ -42,21 +44,31 @@
       'dust': {
         'exports': 'dust'
       },
+      'dust.helpers': {
+        'deps': ['dust'],
+        'exports': 'dustHelpers'
+      },
       'dust.marionette': {
         'deps': ['marionette', 'dust'],
         'exports': 'dustMarionette',
       },
 
-      'dust.helpers': {
-        'deps': ['dust'],
-        'exports': 'dustHelpers'
-      },
+      'app': [],
 
       // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
       'backbone.validateAll': ['backbone'],
-      'bootstrap.notify': ['bootstrap']
+      'bootstrap.notify': ['bootstrap'],
     }
   };
+
+  // Includes WordPress scripts
+  for (var handle in WP_API_SETTINGS.scripts) {
+    if (WP_API_SETTINGS.scripts[handle]) {
+      config.paths[handle] = WP_API_SETTINGS.scripts[handle].src;
+      config.shim[handle]  = {deps: WP_API_SETTINGS.scripts[handle].deps || []};
+      config.shim.app      = config.shim.app.concat(handle);
+    }
+  }
 
   require.config(config);
 

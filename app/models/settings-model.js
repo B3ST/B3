@@ -13,7 +13,8 @@ define([
       site_path: WP_API_SETTINGS.site_path,
       api_url:   WP_API_SETTINGS.api_url,
       nonce:     WP_API_SETTINGS.nonce,
-      routes:    WP_API_SETTINGS.routes
+      routes:    WP_API_SETTINGS.routes,
+      scripts:   WP_API_SETTINGS.scripts
     },
 
     url: function () {

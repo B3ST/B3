@@ -17,7 +17,7 @@
   <p>{nls3|s}</p>
 
   <ul class="footer-links muted">
-    <li>{nls4|s}</li>
+    <li><a href="http://beebeebee.be">{nls4|s}</a></li>
     <li><a href="https://github.com/b3st">{nls5|s}</a></li>
   </ul>
   {/section}
