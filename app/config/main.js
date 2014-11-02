@@ -53,8 +53,6 @@
         'exports': 'dustMarionette',
       },
 
-      'app': [],
-
       // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
       'backbone.validateAll': ['backbone'],
       'bootstrap.notify': ['bootstrap'],
@@ -64,9 +62,9 @@
   // Includes WordPress scripts
   for (var handle in WP_API_SETTINGS.scripts) {
     if (WP_API_SETTINGS.scripts[handle]) {
-      config.paths[handle] = WP_API_SETTINGS.scripts[handle].src;
-      config.shim[handle]  = {deps: WP_API_SETTINGS.scripts[handle].deps || []};
-      config.shim.app      = config.shim.app.concat(handle);
+      var script           = WP_API_SETTINGS.scripts[handle];
+      config.paths[handle] = script.src;
+      config.shim[handle]  = ['app'].concat(script.deps || []);
     }
   }
 
@@ -108,4 +106,16 @@
     new Initializer({ app: App }).init();
     window.App = App;
   });
+
+  /**
+   * Require WordPress scripts separately so that missing or slow files don't
+   * affect application initialization.
+   */
+  require([
+    'jquery', 'underscore', 'backbone'
+  ].concat(Object.keys(WP_API_SETTINGS.scripts)), function () {
+    // TODO: Consider loading WordPress script data here?
+    // TODO: Consider requiring these scripts only after some event?
+  });
+
 })();
