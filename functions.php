@@ -7,9 +7,10 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-require_once 'inc/scripts.php';
+require_once 'inc/class-permalinks.php';
+require_once 'inc/class-scripts.php';
 
-class B3Theme {
+class B3_Theme {
 
 	/**
 	 * Theme slug.
@@ -24,33 +25,86 @@ class B3Theme {
 	protected $version = '0.1.0';
 
 	/**
-	 * [$require description]
-	 * @var string
+	 * Permalinks handler.
+	 * @var B3_Permalinks
 	 */
-	protected $require_uri = '';
+	protected $permalinks;
 
 	/**
-	 * [$loader description]
-	 * @var string
+	 * Scripts handler.
+	 * @var B3_Scripts
 	 */
-	protected $loader_uri = '';
+	protected $scripts;
 
 	/**
 	 * [__construct description]
 	 */
-	public function __construct() {
-		$this->require_uri    = get_template_directory_uri() . '/lib/require.js';
-		$this->loader_uri     = get_template_directory_uri() . '/dist/config/main.js';
+	public function __construct( $slug ) {
+		$this->slug           = $slug;
 		$this->stylesheet_uri = get_template_directory_uri() . '/dist/assets/styles/style.css';
 
+		$this->wp_api_check();
+
 		$this->setup();
+	}
+
+	/**
+	 * Obtain theme slug.
+	 * @return string Theme slug.
+	 */
+	public function get_slug() {
+		return $this->slug;
+	}
+
+	/**
+	 * Obtain theme version.
+	 * @return string Theme version.
+	 */
+	public function get_version() {
+		return $this->version;
+	}
+
+	/**
+	 * Obtain permalinks handler.
+	 *
+	 * @return B3_Permalinks Permalinks handler.
+	 */
+	public function get_permalinks() {
+		return $this->permalinks;
+	}
+
+	/**
+	 * Set permalinks handler.
+	 *
+	 * @param B3_Permalinks $permalinks Permalinks handler.
+	 */
+	public function set_permalinks( $permalinks ) {
+		$this->permalinks = $permalinks;
+	}
+
+	/**
+	 * Obtain B3 scripts handler.
+	 *
+	 * @return B3_Scripts Scripts handler.
+	 */
+	public function get_scripts() {
+		return $this->scripts;
+	}
+
+	/**
+	 * Set scripts instance.
+	 *
+	 * @param B3_Scripts $scripts Scripts handler.
+	 */
+	public function set_scripts( $scripts ) {
+		$this->scripts = $scripts;
 	}
 
 	/**
 	 * [is_wp_api_active description]
 	 * @return boolean [description]
 	 */
-	protected function is_wp_api_active() {
+	public function is_wp_api_active() {
 		return function_exists( 'json_get_url_prefix' );
 	}
 
@@ -63,7 +117,7 @@ class B3Theme {
 	 *       enable pretty permalinks.
 	 */
 	public function wp_api_check() {
-		if ( ! $this->is_wp_api_active() ) {
+		if ( ! is_admin() && ! $this->is_wp_api_active() ) {
 			wp_die( __( 'The WordPress API is unavailable. Please install and enable the WP API plugin to use this theme.', 'b3' ),
 				__( 'Error: WP API Unavailable', 'b3' ) );
 		}
@@ -92,9 +146,17 @@ class B3Theme {
 			add_filter( 'script_loader_src', '__return_false' );
 		}
 
-		add_action( 'widgets_init'      , array( $this, 'setup_widgets' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'setup_scripts' ), 9999, 0 );
-		add_action( 'wp_head'           , array( $this, 'print_require_script' ), 20, 0 );
+		add_action( 'widgets_init', array( $this, 'setup_widgets' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+	}
+
+	/**
+	 * Enqueue theme assets.
+	 *
+	 * Executed by the `wp_enqueue_scripts` action.
+	 */
+	public function enqueue_assets() {
+		wp_enqueue_style( $this->get_slug() . '-style', $this->stylesheet_uri, null, $this->get_version(), 'screen' );
 	}
 
 	/**
@@ -124,119 +186,19 @@ class B3Theme {
 		) );
 
 	}
-
-	/**
-	 * Inject client application scripts.
-	 *
-	 * This action is called on `wp_enqueue_scripts` and injects required client
-	 * application settings from the backend, such as:
-	 *
-	 * - `root`:  Theme root URI.
-	 * - `url`:   RESTful WP API endpoint prefix.
-	 * - `name`:  Site name.
-	 * - `nonce`: Nonce string.
-	 *
-	 * @todo Find a way to enqueue JS data without having to register a script URI.
-	 */
-	public function setup_scripts() {
-		if ( ! $this->is_wp_api_active() ) {
-			return;
-		}
-
-		$site_url = parse_url( site_url() );
-		$routes   = array();
-
-		if ( class_exists( 'B3_RoutesHelper' ) ) {
-			$routes_helper = new B3_RoutesHelper();
-			$routes        = $routes_helper->get_routes();
-		}
-
-		$settings = array(
-			'name'      => get_bloginfo( 'name' ),
-			'api'       => home_url( json_get_url_prefix() ),
-			'nonce'     => wp_create_nonce( 'wp_json' ),
-			'api_url'   => home_url( json_get_url_prefix() ),
-			'site_path' => (string) isset( $site_url['path'] ) ? $site_url['path'] : '',
-			'root_url'  => get_stylesheet_directory_uri(),
-			'site_url'  => site_url(),
-			'routes'    => $routes,
-			'scripts'   => $this->require_scripts(),
-			);
-
-		wp_register_script( $this->slug . '-settings', 'settings.js', null, $this->version );
-		wp_localize_script( $this->slug . '-settings', 'WP_API_SETTINGS', $settings );
-		wp_enqueue_script( $this->slug . '-settings' );
-
-		wp_enqueue_style( $this->slug . '-style', $this->stylesheet_uri, null, $this->version, 'screen' );
-	}
-
-	/**
-	 * Dequeue all scripts from WordPress and return them.
-	 *
-	 * @return array List of all dequeued scripts.
-	 */
-	protected function require_scripts() {
-		global $wp_scripts;
-
-		$scripts = array();
-
-		// Prefix handles to minimize conflicts when requiring scripts:
-		$handle_prefix = 'wp.script.';
-
-		// Update script dependencies:
-		$wp_scripts->all_deps( $wp_scripts->queue );
-
-		// Fetch enqueued and dependency script URIs:
-		foreach ( $wp_scripts->to_do as $handle ) {
-			$src    = $wp_scripts->registered[ $handle ]->src;
-			$deps   = (array) $wp_scripts->registered[ $handle ]->deps;
-			$handle = $handle_prefix . $handle;
-
-			// RequireJS: The path that is used should NOT include an extension.
-			$src  = preg_replace( '/\.js$/i', '', $src );
-
-			// Prepend prefix to each dependency handle:
-			foreach ( $deps as $index => $dep ) {
-				$deps[ $index ] = $handle_prefix . $dep;
-			}
-
-			$scripts[ $handle ] = array(
-				'src'  => $src,
-				'deps' => $deps,
-			);
-		}
-
-		cleanup_script_dependencies( $scripts );
-
-		return $scripts;
-	}
-
-	/**
-	 * Print our RequireJS loader to the document head.
-	 *
-	 * We couldn't find a way to print a `data-main` attribute when enqueuing
-	 * the script so we're printing it directly.
-	 */
-	public function print_require_script() {
-		if ( ! $this->is_wp_api_active() ) {
-			return;
-		}
-
-		printf( '<script src="%s" data-main="%s"></script>',
-			esc_attr( $this->require_uri ),
-			esc_attr( $this->loader_uri ) );
-	}
-
 }
 
-function B3() {
-	global $GLOBALS;
+add_action( 'after_setup_theme',
+	function () {
+		global $GLOBALS;
 
-	if ( ! isset( $GLOBALS['b3'] ) ) {
-		$GLOBALS['b3'] = new B3Theme();
+		// Setup theme:
+		$b3 = new B3_Theme( 'b3' );
+
+		// Set theme handlers:
+		$b3->set_permalinks( new B3_Permalinks( $b3 ) );
+		$b3->set_scripts( new B3_Scripts( $b3 ) );
+
+		$GLOBALS['b3'] = $b3;
 	}
-
-	return $GLOBALS['b3'];
-}
-
-add_action( 'after_setup_theme', 'B3' );
+);
