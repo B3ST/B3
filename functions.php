@@ -25,10 +25,16 @@ class B3_Theme {
 	protected $version = '0.1.0';
 
 	/**
-	 * [$permalinks description]
-	 * @var [type]
+	 * Permalinks handler.
+	 * @var B3_Permalinks
 	 */
 	protected $permalinks;
+
+	/**
+	 * Scripts handler.
+	 * @var B3_Scripts
+	 */
+	protected $scripts;
 
 	/**
 	 * [__construct description]
@@ -59,21 +65,39 @@ class B3_Theme {
 	}
 
 	/**
-	 * Obtain permalinks instance.
+	 * Obtain permalinks handler.
 	 *
-	 * @return B3_Permalinks Permalinks instance.
+	 * @return B3_Permalinks Permalinks handler.
 	 */
 	public function get_permalinks() {
 		return $this->permalinks;
 	}
 
 	/**
-	 * Set permalinks instance.
+	 * Set permalinks handler.
 	 *
-	 * @param B3_Permalinks $permalinks Permalinks instance.
+	 * @param B3_Permalinks $permalinks Permalinks handler.
 	 */
 	public function set_permalinks( $permalinks ) {
 		$this->permalinks = $permalinks;
+	}
+
+	/**
+	 * Obtain B3 scripts handler.
+	 *
+	 * @return B3_Scripts Scripts handler.
+	 */
+	public function get_scripts() {
+		return $this->scripts;
+	}
+
+	/**
+	 * Set scripts instance.
+	 *
+	 * @param B3_Scripts $scripts Scripts handler.
+	 */
+	public function set_scripts( $scripts ) {
+		$this->scripts = $scripts;
 	}
 
 	/**
@@ -123,9 +147,15 @@ class B3_Theme {
 		}
 
 		add_action( 'widgets_init', array( $this, 'setup_widgets' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 	}
 
-	protected function enqueue() {
+	/**
+	 * Enqueue theme assets.
+	 *
+	 * Executed by the `wp_enqueue_scripts` action.
+	 */
+	public function enqueue_assets() {
 		wp_enqueue_style( $this->get_slug() . '-style', $this->stylesheet_uri, null, $this->get_version(), 'screen' );
 	}
 
@@ -158,19 +188,17 @@ class B3_Theme {
 	}
 }
 
-function B3() {
-	global $GLOBALS;
+add_action( 'after_setup_theme',
+	function () {
+		global $GLOBALS;
 
-	if ( ! isset( $GLOBALS['b3'] ) ) {
+		// Setup theme:
 		$b3 = new B3_Theme( 'b3' );
 
+		// Set theme handlers:
 		$b3->set_permalinks( new B3_Permalinks( $b3 ) );
 		$b3->set_scripts( new B3_Scripts( $b3 ) );
 
 		$GLOBALS['b3'] = $b3;
 	}
-
-	return $GLOBALS['b3'];
-}
-
-add_action( 'after_setup_theme', 'B3' );
+);
