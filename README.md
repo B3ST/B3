@@ -4,7 +4,13 @@ B3 is a Backbone.js starter theme for WordPress.
 
 It is designed as a launchpad for your own cutting edge themes: so clone it, rename it, hack it and republish it.
 
-Please bear in mind that B3 is a work in progress and can't (yet) be considered ready for production use.
+## Warning
+
+**The official WP API is undergoing substantial changes and may break compatibility with B3 at any time.**
+
+It is recommended that you either use [the version on WordPress.org](https://wordpress.org/plugins/json-rest-api/) or at the very least stick to the [master branch](https://github.com/WP-API/WP-API) in order to minimize issues.
+
+Also, please bear in mind that B3 is a work in progress and can't (yet) be considered ready for production use. Do so at your own risk.
 
 ## Getting Started
 
