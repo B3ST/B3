@@ -57,5 +57,8 @@
     "requirejs": "^2.1.14"
   },
   "main": "./server/server",
+  "scripts": {
+    "prepublish": "gulp build"
+  },
   "keywords": []
 }

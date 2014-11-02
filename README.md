@@ -26,13 +26,12 @@ This brief guide assumes you have at least some familiarity with WordPress and J
     $ git clone https://github.com/B3ST/B3.git b3
     ```
 
-5. We're not done yet, we still need to install required Node dependencies and build the theme:
+5. We're not done yet, we still need to install required Node dependencies (the theme is built automatically at the end):
 
     ```
     $ cd b3
     $ npm install -g gulp bower
     $ npm install
-    $ gulp build
     ```
 
 6. Activate the theme. You're ready to start hacking!
