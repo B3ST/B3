@@ -58,7 +58,7 @@ define([
     getTerm: function (taxonomy, term) {
       var terms = this.get('terms')[taxonomy],
           index = _.findIndex(terms, function (elem) {
-            return elem.slug === term;
+            return term.indexOf(elem.slug) > -1;
           });
 
       return index > -1 ? new Term(terms[index]) : new Term();
