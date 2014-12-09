@@ -33,7 +33,7 @@ define([
     },
 
     serializeData: function () {
-      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON(), byauthor: this._isAuthor() })
+      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON(), byauthor: this._isByPostAuthor() })
                        : _.extend({}, this.model.toJSON(), { byauthor: false });
     },
 
@@ -51,7 +51,7 @@ define([
       ev.preventDefault();
     },
 
-    _isAuthor: function () {
+    _isByPostAuthor: function () {
       return this.post.get('author').get('ID') === this.model.get('author').get('ID');
     }
   });
