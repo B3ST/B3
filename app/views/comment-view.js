@@ -33,8 +33,8 @@ define([
     },
 
     serializeData: function () {
-      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON(), byauthor: this._isByPostAuthor() })
-                       : _.extend({}, this.model.toJSON(), { byauthor: false });
+      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON(), isPostAuthor: this._isByPostAuthor() })
+                       : _.extend({}, this.model.toJSON(), { isPostAuthor: false });
     },
 
     parentId: function () {
