@@ -6,7 +6,7 @@
   <h4 class="comment-meta media-heading {?isPostAuthor}bypostauthor{/isPostAuthor}">
     <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" class="comment-author">{author.name}</a>
     {~s} {@nls key="b3.meta.on" /} {~s}
-    <a href="{meta.links.self}">
+    <a href="{post.link}#comment-{ID}">
       <time datetime="{date}">{@formatDate date="{date}" format="D/M/YYYY H:m" /}</time>
     </a>:
   </h4>
