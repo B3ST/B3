@@ -14,7 +14,9 @@ define([
     },
 
     _commentsFromPost: function (model) {
-      return new Comments({ uri: model.get('meta').links['b3:replies'] });
+      var links = model.get('meta').links,
+          uri   = links['b3:replies'] || links.replies;
+      return new Comments({ uri: uri });
     },
 
     _commentsView: function (collection, model) {

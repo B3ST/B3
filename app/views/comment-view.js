@@ -33,8 +33,8 @@ define([
     },
 
     serializeData: function () {
-      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON() })
-                       : this.model.toJSON();
+      return this.post ? _.extend({}, this.model.toJSON(), { post: this.post.toJSON(), isPostAuthor: this._isByPostAuthor() })
+                       : _.extend({}, this.model.toJSON(), { isPostAuthor: false });
     },
 
     parentId: function () {
@@ -49,6 +49,10 @@ define([
         Navigator.navigateToAuthor(slug, page, trigger);
       }
       ev.preventDefault();
+    },
+
+    _isByPostAuthor: function () {
+      return this.post.get('author').get('ID') === this.model.get('author').get('ID');
     }
   });
 
