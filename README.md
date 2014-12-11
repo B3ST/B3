@@ -38,6 +38,7 @@ This brief guide assumes you have at least some familiarity with WordPress and J
     $ cd b3
     $ npm install -g gulp bower
     $ npm install
+    $ bower install
     ```
 
 6. Activate the theme. You're ready to start hacking!

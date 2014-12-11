@@ -39,7 +39,7 @@ define([
       options       = options || {};
       this.archive  = ArchiveHeader.archiveBy(this.collection, options.options);
       this.template = options.template || 'archive/archive-template.dust';
-      EventBus.trigger('title:change', this.archive || this.archive.name || this.archive.date);
+      EventBus.trigger('title:change', this.archive.name || this.archive.date);
     },
 
     serializeData: function () {
