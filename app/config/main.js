@@ -63,7 +63,7 @@
   for (var handle in WP_API_SETTINGS.scripts) {
     if (WP_API_SETTINGS.scripts[handle]) {
       var script           = WP_API_SETTINGS.scripts[handle];
-      config.paths[handle] = script.src;
+      config.paths[handle] = WP_API_SETTINGS.site_url + script.src;
       config.shim[handle]  = ['app'].concat(script.deps || []);
     }
   }
@@ -103,19 +103,18 @@
     'helpers/dust/translate-helper'
   ], function ($, _, Backbone, Marionette, App, Initializer, Settings) {
     Settings.set('require.config', config);
+
+    var scripts = Object.keys(WP_API_SETTINGS.scripts);
+
     new Initializer({ app: App }).init();
+
+    require(scripts, function () {
+      $(document).on('heartbeat-tick', function (e, data) {
+        // Update your models and collections and views and gewgaws here!
+        console.log(data);
+      });
+    });
+
     window.App = App;
   });
-
-  /**
-   * Require WordPress scripts separately so that missing or slow files don't
-   * affect application initialization.
-   */
-  require([
-    'jquery', 'underscore', 'backbone'
-  ].concat(Object.keys(WP_API_SETTINGS.scripts)), function () {
-    // TODO: Consider loading WordPress script data here?
-    // TODO: Consider requiring these scripts only after some event?
-  });
-
 })();
