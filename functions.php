@@ -117,7 +117,9 @@ class B3_Theme {
 	 *       enable pretty permalinks.
 	 */
 	public function wp_api_check() {
-		if ( ! is_admin() && ! $this->is_wp_api_active() ) {
+		$is_admin = is_admin() || in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) );
+
+		if ( ! $is_admin && ! $this->is_wp_api_active() ) {
 			wp_die( __( 'The WordPress API is unavailable. Please install and enable the WP API plugin to use this theme.', 'b3' ),
 				__( 'Error: WP API Unavailable', 'b3' ) );
 		}
