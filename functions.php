@@ -9,6 +9,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 require_once 'inc/class-permalinks.php';
 require_once 'inc/class-scripts.php';
+require_once 'inc/class-heartbeat.php';
 
 class B3_Theme {
 
