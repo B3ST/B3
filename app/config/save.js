@@ -24,7 +24,7 @@ define([
       done.apply(null, arguments);
     }).fail(function () {
       EventBus.trigger('save:fail');
-      fail();
+      fail.apply(null, arguments);
     });
   });
 });

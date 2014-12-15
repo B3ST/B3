@@ -26,7 +26,7 @@ define([
       done.apply(null, arguments);
     }).fail(function () {
       EventBus.trigger('fetch:fail');
-      fail();
+      fail.apply(null, arguments);
     });
   });
 });
