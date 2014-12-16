@@ -31,9 +31,9 @@ class B3_Heartbeat {
             $data = array(
                 'b3' => array(
                     'live' => array(
-                        'heartbeat:comments'       => $this->filter_by_comments_ids( $comments ),
+                        'heartbeat:comments'       => $this->filter_comments( $comments ),
                         'heartbeat:comments_posts' => $this->filter_by_comments_post_ids( $comments ),
-                        'heartbeat:posts'          => $this->filter_by_posts_ids( $posts ),
+                        'heartbeat:posts'          => $this->filter_posts( $posts ),
                         'heartbeat:taxonomies'     => array_unique( $this->array_flatten( $taxonomies ) )
                     ),
 
@@ -54,10 +54,13 @@ class B3_Heartbeat {
         return $response;
     }
 
-    private function filter_by_comments_ids( $comments ) {
+    private function filter_comments( $comments ) {
         $result = array();
         foreach ( $comments as $comment ) {
-            array_push( $result, (int) $comment->comment_ID );
+            array_push( $result, array(
+                'ID'       => (int) $comment->comment_ID ,
+                'modified' => $comment->comment_date_gmt
+            ));
         }
 
         return $result;
@@ -66,16 +69,21 @@ class B3_Heartbeat {
     private function filter_by_comments_post_ids( $comments ) {
         $result = array();
         foreach ( $comments as $comment ) {
-            array_push( $result, (int) $comment->comment_post_ID );
+            array_push( $result, array(
+                'ID' => (int) $comment->comment_post_ID
+            ));
         }
 
         return $result;
     }
 
-    private function filter_by_posts_ids( $posts ) {
+    private function filter_posts( $posts ) {
         $result = array();
         foreach ( $posts as $post ) {
-            array_push( $result, $post->ID );
+            array_push( $result, array(
+                'ID'       => $post->ID,
+                'modified' => $post->post_modified
+            ));
         }
 
         return $result;
@@ -91,7 +99,7 @@ class B3_Heartbeat {
             if (is_array($value)) {
                 $result = array_merge($result, $this->array_flatten($value));
             } else {
-              $result[$key] = $value;
+              $result[$key] = array( 'ID' => $value );
             }
         }
 
