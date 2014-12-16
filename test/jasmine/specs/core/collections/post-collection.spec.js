@@ -1,13 +1,18 @@
 define([
-  'collections/post-collection'
-], function (Posts) {
+  'collections/post-collection',
+  'collections/base-collection'
+], function (Posts, BaseCollection) {
+
   describe("Posts", function() {
-    beforeEach(function() {
-      this.posts = new Posts();
+    var posts;
+
+    it("should extend from BaseCollection", function() {
+      expect(inherits(Posts, BaseCollection)).toBeTruthy();
     });
 
-    it("should be defined", function() {
-      expect(this.posts).toBeDefined();
+    it("should bind to heartbeat:posts", function() {
+      posts = new Posts();
+      expect(posts.heartbeat).toEqual('heartbeat:posts');
     });
   });
 });

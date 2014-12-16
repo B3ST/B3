@@ -1,15 +1,16 @@
 /* global define */
 
 define([
-  'jquery',
-  'backbone',
+  'collections/base-collection',
   'models/post-model',
   'models/settings-model'
-], function ($, Backbone, Post, Settings) {
+], function (BaseCollection, Post, Settings) {
   'use strict';
 
-  var Posts = Backbone.Collection.extend({
+  var Posts = BaseCollection.extend({
     model: Post,
+    heartbeat: 'heartbeat:posts',
+
     url: function () {
       return Settings.get('api_url') + '/posts?' + this.filter.serialize();
     },
