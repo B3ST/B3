@@ -25,10 +25,18 @@ define([
       EventBus.off(this.heartbeat, this.onHeartbeat, this);
     },
 
-    hasAll: function (values) {
-      return _.all(values, function (value) {
-        return !_.isEmpty(this.findWhere({ ID: value }));
+    hasAll: function (data) {
+      return _.all(data, function (el) {
+        return !_.isEmpty(this.findWhere(this._findFilter(el)));
       }.bind(this));
+    },
+
+    _findFilter: function (el) {
+      if (_.isUndefined(el.modified)) {
+        return { ID: el.ID };
+      }
+
+      return _.isUndefined(this.model.prototype.defaults.modified) ? { ID: el.ID } : { ID: el.ID, modified: el.modified };
     }
   });
 
