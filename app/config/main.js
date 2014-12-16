@@ -78,6 +78,7 @@
     'marionette',
     'app',
     'config/initializer',
+    'config/heartbeat',
     'models/settings-model',
 
     'jqueryui',
@@ -101,18 +102,13 @@
     'helpers/dust/sidebar-widgets-helper',
     'helpers/dust/terms-helper',
     'helpers/dust/translate-helper'
-  ], function ($, _, Backbone, Marionette, App, Initializer, Settings) {
+  ], function ($, _, Backbone, Marionette, App, Initializer, Heartbeat, Settings) {
     Settings.set('require.config', config);
-
-    var scripts = Object.keys(WP_API_SETTINGS.scripts);
-
     new Initializer({ app: App }).init();
 
+    var scripts = Object.keys(WP_API_SETTINGS.scripts);
     require(scripts, function () {
-      $(document).on('heartbeat-tick', function (e, data) {
-        // Update your models and collections and views and gewgaws here!
-        console.log(data);
-      });
+      new Heartbeat();
     });
 
     window.App = App;
