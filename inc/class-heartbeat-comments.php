@@ -23,7 +23,7 @@ class B3_Heartbeat_Comments {
     private function filter_comments( $comments ) {
         $result = array();
         foreach ($comments as $comment) {
-            array_push($result, $comment->comment_ID);
+            array_push($result, (int)$comment->comment_ID);
         }
 
         return $result;
