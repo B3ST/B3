@@ -19,15 +19,16 @@ class B3_Heartbeat {
         $data = null;
 
         if ( empty( $data ) ) {
-            $data = array();
+            $data = array(
+                'b3' => array(
+                    'live' => array(
+                        'heartbeat:comments' => $this->comments->get_last_updated(),
+                        'heartbeat:posts'    => array()
+                    ),
 
-            $data['b3.send.screen_id'] = $screen_id;
-
-            // TODO: Get posts since last heartbeat
-            // TODO: Get comments since last heartbeat
-
-            $data['b3.live.comments'] = $this->comments->get_last_updated();
-            $data['b3.live.posts']    = array();
+                    'send.screen_id' => $screen_id
+                )
+            );
 
             //set_transient( 'b3.heartbeat', $data, 30 );
         }
