@@ -10,7 +10,7 @@ class B3_Heartbeat {
         add_filter( 'heartbeat_received', array( $this, 'received' ), 10, 2 );
         add_filter( 'heartbeat_nopriv_received', array( $this, 'received' ), 10, 2 );
 
-        $this->comments = new B3_Heartbeat_Comments;
+        $this->heartbeat_comments = new B3_Heartbeat_Comments;
     }
 
     public function send( $response, $screen_id ) {
@@ -19,11 +19,13 @@ class B3_Heartbeat {
         $data = null;
 
         if ( empty( $data ) ) {
+            $comments = $this->heartbeat_comments->get_last_updated('15 minutes ago');
             $data = array(
                 'b3' => array(
                     'live' => array(
-                        'heartbeat:comments' => $this->comments->get_last_updated(),
-                        'heartbeat:posts'    => array()
+                        'heartbeat:comments'       => $this->filter_by_comments_ids( $comments ),
+                        'heartbeat:comments_posts' => $this->filter_by_comments_post_ids( $comments ),
+                        'heartbeat:posts'          => array()
                     ),
 
                     'send.screen_id' => $screen_id
@@ -43,6 +45,23 @@ class B3_Heartbeat {
         return $response;
     }
 
+    private function filter_by_comments_ids( $comments ) {
+        $result = array();
+        foreach ($comments as $comment) {
+            array_push($result, (int)$comment->comment_ID);
+        }
+
+        return $result;
+    }
+
+    private function filter_by_comments_post_ids( $comments ) {
+        $result = array();
+        foreach ($comments as $comment) {
+            array_push($result, (int)$comment->comment_post_ID);
+        }
+
+        return $result;
+    }
 }
 
 $b3_heartbeat = new B3_Heartbeat;
