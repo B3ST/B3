@@ -18,7 +18,6 @@ define([
     onHeartbeat: function (options) {
       if (!this.hasAll(options)) {
         this.fetch({ reset: true });
-        console.log('refreshing');
       }
     },
 
