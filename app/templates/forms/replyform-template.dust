@@ -49,7 +49,7 @@
 
     <div id="replyactions">
       <button class="reply"><span class="icon-send"></span>{~s}{@nls key="b3.comments.publish" /}</button>
-      <a href="#" class="cancel"><span class="icon-cancel"></span>{~s}}{@nls key="b3.comments.dismiss" /}</a>
+      <a href="#" class="cancel"><span class="icon-cancel"></span>{~s}{@nls key="b3.comments.dismiss" /}</a>
     </div>
 
   </div>
