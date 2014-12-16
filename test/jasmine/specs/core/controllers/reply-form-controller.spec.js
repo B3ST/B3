@@ -82,14 +82,16 @@ define([
       });
 
       describe("When it is successful", function() {
+        var trigger;
         beforeEach(function() {
+          trigger = spyOn(EventBus, 'trigger');
           show.and.callFake(function (view, options) {
             options.loading.done();
           });
         });
 
         it("should trigger a comment:create event with the newly create comment", function() {
-          var trigger = spyOn(EventBus, 'trigger');
+
           controller.sendReply(comment);
           expect(trigger).toHaveBeenCalledWith('comment:create', jasmine.any(Comment));
         });

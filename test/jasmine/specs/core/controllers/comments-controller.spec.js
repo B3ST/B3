@@ -4,8 +4,9 @@ define([
   'controllers/comments-controller',
   'controllers/base-controller',
   'views/comments-view',
-  'models/post-model'
-], function (CommentsController, BaseController, CommentsView, Post) {
+  'models/post-model',
+  'collections/comment-collection'
+], function (CommentsController, BaseController, CommentsView, Post, Comments) {
   'use strict';
 
   describe("CommentsController", function() {
@@ -18,6 +19,13 @@ define([
 
     it("should extend from BaseController", function() {
       expect(inherits(CommentsController, BaseController)).toBeTruthy();
+    });
+
+    it("should bind to a given set of events", function() {
+      controller = new CommentsController({ collection: new Comments() });
+      expect(controller.busEvents).toEqual({
+        'comment:create': 'addComment'
+      });
     });
 
     describe(".showComments", function() {

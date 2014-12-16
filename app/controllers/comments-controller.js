@@ -8,9 +8,18 @@ define([
   'use strict';
 
   var CommentsController = BaseController.extend({
+    busEvents: {
+      'comment:create': 'addComment'
+    },
+
     showComments: function (options) {
       this.collection = this._commentsFromPost(options.model);
       this.show(this._commentsView(this.collection, options.model), { loading: true, region: options.region });
+    },
+
+    addComment: function (comment) {
+      this.collection.add(comment);
+      this.collection.sort();
     },
 
     _commentsFromPost: function (model) {
