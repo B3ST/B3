@@ -24,8 +24,8 @@ class B3_Heartbeat {
 
         if ( empty( $data ) ) {
             $time       = '15 minutes ago';
-            $comments   = $this->heartbeat_comments->get_last_updated( $time );
-            $posts      = $this->heartbeat_posts->get_last_updated( $time );
+            $comments   = $this->heartbeat_comments->get_modified_since( $time );
+            $posts      = $this->heartbeat_posts->get_modified_since( $time );
             $taxonomies = $this->heartbeat_taxonomies->get_taxonomies( $posts );
 
             $data = array(
@@ -34,7 +34,7 @@ class B3_Heartbeat {
                         'heartbeat:comments'       => $this->filter_comments( $comments ),
                         'heartbeat:comments_posts' => $this->filter_by_comments_post_ids( $comments ),
                         'heartbeat:posts'          => $this->filter_posts( $posts ),
-                        'heartbeat:taxonomies'     => array_unique( $this->array_flatten( $taxonomies ) )
+                        'heartbeat:taxonomies'     => $taxonomies
                     ),
 
                     'send.screen_id' => $screen_id
@@ -88,24 +88,4 @@ class B3_Heartbeat {
 
         return $result;
     }
-
-    private function array_flatten($array) {
-        if (!is_array($array)) {
-            return FALSE;
-        }
-        $result = array();
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $result = array_merge($result, $this->array_flatten($value));
-            } else {
-              $result[$key] = array( 'ID' => $value );
-            }
-        }
-
-        return $result;
-    }
 }
-
-$b3_heartbeat = new B3_Heartbeat;
-$b3_heartbeat->ready();

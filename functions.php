@@ -144,6 +144,9 @@ class B3_Theme {
 
 		add_action( 'widgets_init', array( $this, 'setup_widgets' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+
+		$b3_heartbeat = new B3_Heartbeat;
+		$b3_heartbeat->ready();
 	}
 
 	/**
