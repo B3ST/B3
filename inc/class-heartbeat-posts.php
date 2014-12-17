@@ -1,7 +1,7 @@
 <?php
 
 class B3_Heartbeat_Posts {
-    public function get_last_updated( $time ) {
+    public function get_modified_since( $time ) {
         $posts = get_posts(
             array(
                 'date_query'          => $this->get_date_query( $time ),
@@ -18,7 +18,7 @@ class B3_Heartbeat_Posts {
         return array(
              array(
                 'column' => 'post_date_gmt',
-                'before' => $time
+                'after'  => $time
             ),
             array(
                 'column' => 'post_modified_gmt',

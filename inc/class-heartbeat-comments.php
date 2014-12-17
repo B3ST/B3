@@ -2,7 +2,7 @@
 
 class B3_Heartbeat_Comments {
 
-    public function get_last_updated( $time ) {
+    public function get_modified_since( $time ) {
         $comments = get_comments(
             array(
                 'number'     => 20,
