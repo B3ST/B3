@@ -22,7 +22,13 @@ define([
 
     onHeartbeat: function (options) {
       if (!this.hasAll(options)) {
-        this.fetch({ reset: true });
+        this.fetch({ reset: true }).done(function () {
+          var entry;
+          _.each(options, function (el) {
+            entry = this.findWhere({ ID: el.ID });
+            entry.set({ 'new': true });
+          }.bind(this));
+        }.bind(this));
       }
     },
 
@@ -34,16 +40,20 @@ define([
 
     hasAll: function (data) {
       return _.all(data, function (el) {
-        return !_.isEmpty(this.findWhere(this._findFilter(el)));
+        return !_.isEmpty(this.find(function (model) {
+          if (_.isUndefined(el.modified)) {
+            return el.ID === model.get('ID');
+          }
+
+          if (_.isUndefined(model.get('modified'))) {
+            return el.ID === model.get('ID');
+          } else {
+            var modified = new Date(Date.parse(el.modified)).toISOString();
+            return el.ID === model.get('ID') &&
+                    modified === model.get('modified').toISOString();
+          }
+        }));
       }.bind(this));
-    },
-
-    _findFilter: function (el) {
-      if (_.isUndefined(el.modified)) {
-        return { ID: el.ID };
-      }
-
-      return _.isUndefined(this.model.prototype.defaults.modified) ? { ID: el.ID } : { ID: el.ID, modified: new Date(el.modified) };
     }
   });
 
