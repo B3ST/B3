@@ -10,6 +10,11 @@ define([
   var BaseCollection = Backbone.Collection.extend({
     constructor: function () {
       Backbone.Collection.prototype.constructor.apply(this, arguments);
+      this.startHeartbeat(this.heartbeat);
+    },
+
+    startHeartbeat: function (heartbeat) {
+      this.heartbeat = heartbeat;
       if (this.heartbeat) {
         EventBus.on(this.heartbeat, this.onHeartbeat, this);
       }
@@ -21,8 +26,10 @@ define([
       }
     },
 
-    dismissHeartbeat: function () {
-      EventBus.off(this.heartbeat, this.onHeartbeat, this);
+    stopHeartbeat: function () {
+      if (this.heartbeat) {
+        EventBus.off(this.heartbeat, this.onHeartbeat, this);
+      }
     },
 
     hasAll: function (data) {
@@ -36,7 +43,7 @@ define([
         return { ID: el.ID };
       }
 
-      return _.isUndefined(this.model.prototype.defaults.modified) ? { ID: el.ID } : { ID: el.ID, modified: el.modified };
+      return _.isUndefined(this.model.prototype.defaults.modified) ? { ID: el.ID } : { ID: el.ID, modified: new Date(el.modified) };
     }
   });
 

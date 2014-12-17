@@ -32,12 +32,12 @@ define([
       });
     });
 
-    describe(".dismissHeartbeat", function() {
+    describe(".stopHeartbeat", function() {
       it("should disable the heartbeat", function() {
         var bus = spyOn(EventBus, 'off');
 
         test = new Test();
-        test.dismissHeartbeat();
+        test.stopHeartbeat();
 
         expect(bus).toHaveBeenCalledWith(test.heartbeat, test.onHeartbeat, test);
       });

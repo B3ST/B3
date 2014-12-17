@@ -30,7 +30,7 @@ define([
     },
 
     onBeforeDestroy: function () {
-      this.collection.dismissHeartbeat();
+      this.collection.stopHeartbeat();
     },
 
     scroll: function (comments) {

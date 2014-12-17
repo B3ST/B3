@@ -51,7 +51,7 @@ define([
     },
 
     onBeforeDestroy: function () {
-      this.collection.dismissHeartbeat();
+      this.collection.stopHeartbeat();
     },
 
     onTitleClicked: function (event) {
