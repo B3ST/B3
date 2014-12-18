@@ -49,7 +49,7 @@ define([
     },
 
     _setMainView: function (view, options) {
-      if (!this.mainView && !options.loading) {
+      if (!this.mainView && view !== null) {
         this.mainView = view;
         this.listenTo(view, 'destroy', this.unregister);
       }
