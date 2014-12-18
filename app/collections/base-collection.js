@@ -26,7 +26,14 @@ define([
           var entry;
           _.each(options, function (el) {
             entry = this.findWhere({ ID: el.ID });
-            entry.set({ 'new': true });
+            // The heartbeat can have information about another post/comment
+            // and might not be in the collection.
+            // POSSIBLE ISSUE: At this context level, we have no idea
+            // if the heartbeat is referring to the displaying view or not,
+            // so we always fetch regardless of it.
+            if (entry) {
+              entry.set({ 'new': true });
+            }
           }.bind(this));
         }.bind(this));
       }
