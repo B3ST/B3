@@ -23,7 +23,9 @@ define([
 
     describe(".onHeartbeat", function() {
       it("should refresh the collection", function() {
-        var fetch = spyOn(Test.prototype, 'fetch');
+        var fetch = spyOn(Test.prototype, 'fetch').and.callFake(function () {
+          return { done: function() {} };
+        });
 
         test = new Test();
         test.onHeartbeat({ 'heartbeat:comments': [101] });
