@@ -50,6 +50,10 @@ define([
       this.$('.entries').html(this._getPosts());
     },
 
+    onBeforeDestroy: function () {
+      this.collection.stopHeartbeat();
+    },
+
     onTitleClicked: function (event) {
       var slug = $(event.currentTarget).attr('slug'),
           id   = parseInt(event.currentTarget.id, 10),

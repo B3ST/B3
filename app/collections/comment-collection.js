@@ -1,13 +1,15 @@
 /* global define */
 
 define([
-  'jquery',
-  'backbone',
+  'collections/base-collection',
   'models/comment-model'
-], function ($, Backbone, Comment) {
+], function (BaseCollection, Comment) {
   'use strict';
-  var Comments = Backbone.Collection.extend({
-    model: Comment,
+
+  var Comments = BaseCollection.extend({
+    model:     Comment,
+    heartbeat: 'heartbeat:comments',
+
     url: function () {
       return this.uri;
     },

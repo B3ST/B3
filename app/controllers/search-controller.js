@@ -30,7 +30,9 @@ define([
     },
 
     onBeforeDestroy: function () {
-      this.archive.mainView.destroy();
+      if (this.archive) {
+        this.archive.mainView.destroy();
+      }
     },
 
     searchTerm: function (options) {

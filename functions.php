@@ -9,6 +9,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 require_once 'inc/class-permalinks.php';
 require_once 'inc/class-scripts.php';
+require_once 'inc/class-heartbeat.php';
 
 class B3_Theme {
 
@@ -145,6 +146,9 @@ class B3_Theme {
 
 		add_action( 'widgets_init', array( $this, 'setup_widgets' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+
+		$b3_heartbeat = new B3_Heartbeat;
+		$b3_heartbeat->ready();
 	}
 
 	/**

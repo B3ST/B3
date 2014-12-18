@@ -108,6 +108,7 @@
     specsRoot + 'core/models/widget-model.spec',
 
     // collections
+    specsRoot + 'core/collections/base-collection.spec',
     specsRoot + 'core/collections/user-collection.spec',
     specsRoot + 'core/collections/post-collection.spec',
     specsRoot + 'core/collections/post-status-collection.spec',

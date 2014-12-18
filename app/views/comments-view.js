@@ -29,6 +29,10 @@ define([
       }
     },
 
+    onBeforeDestroy: function () {
+      this.collection.stopHeartbeat();
+    },
+
     scroll: function (comments) {
       this.render();
       this._scrollToReply(comments.last().get('ID'));

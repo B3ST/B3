@@ -9,6 +9,15 @@
 class B3_Scripts {
 
 	/**
+	 * [$script_replacements description]
+	 * @var array
+	 */
+	protected $script_replacements = array(
+		'wp.script.jquery-core' => '',
+		'wp.script.backbone'    => '',
+	);
+
+	/**
 	 * Theme instance.
 	 * @var B3_Theme
 	 */
@@ -74,6 +83,8 @@ class B3_Scripts {
 			$routes        = $routes_helper->get_routes();
 		}
 
+		wp_enqueue_script( 'heartbeat' );
+
 		$this->require_scripts();
 
 		$settings = array(
@@ -114,7 +125,7 @@ class B3_Scripts {
 			$handle = $handle_prefix . $handle;
 
 			// RequireJS: The path that is used should NOT include an extension.
-			$src  = preg_replace( '/\.js$/i', '', $src );
+			$src  = preg_replace( '/(\.min)?\.js$/i', '', $src );
 
 			// Prepend prefix to each dependency handle:
 			foreach ( $deps as $index => $dep ) {
@@ -154,7 +165,11 @@ class B3_Scripts {
 	 * @todo Unmet dependencies should be removed to minimize loading errors.
 	 */
 	protected function cleanup_dependencies() {
-		foreach ( $this->scripts as $handle => $script ) {
+		foreach ( $this->scripts as $handle => &$script ) {
+			if ( isset( $this->script_replacements[ $handle ] ) ) {
+				$script['src'] = $this->script_replacements[ $handle ];
+			}
+
 			if ( empty( $script['src'] ) ) {
 				$this->replace_dependency( $handle, $script['deps'] );
 				unset( $this->scripts[ $handle ] );
