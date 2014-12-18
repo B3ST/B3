@@ -52,6 +52,7 @@ define([
     onFetchDone: function () {
       if (Settings.get('page_for_posts') === this.model.get('ID')) {
         EventBus.trigger('archive:show', {});
+        this.unregister();
         return;
       }
 
@@ -64,7 +65,7 @@ define([
     },
 
     onFetchFail: function () {
-
+      this.unregister();
     },
 
     showPageContent: function (options) {
