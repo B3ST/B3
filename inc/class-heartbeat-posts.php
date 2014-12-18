@@ -16,14 +16,10 @@ class B3_Heartbeat_Posts {
 
     private function get_date_query( $time ) {
         return array(
-             array(
-                'column' => 'post_date_gmt',
-                'after'  => $time
-            ),
             array(
                 'column' => 'post_modified_gmt',
                 'after'  => $time
-            ),
+            )
         );
     }
 }
