@@ -48,7 +48,7 @@ define([
       return new NotFoundView();
     },
 
-    _setMainView: function (view, options) {
+    _setMainView: function (view) {
       if (!this.mainView && view !== null) {
         this.mainView = view;
         this.listenTo(view, 'destroy', this.unregister);
