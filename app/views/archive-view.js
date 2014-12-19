@@ -7,6 +7,7 @@ define([
   'helpers/dust/renderer-helper',
   'helpers/archive-header',
   'buses/event-bus',
+  'behaviors/display-post-behavior',
   // Shims
   'templates/archive/archive-template',
   'templates/archive/posts-template',
@@ -22,8 +23,16 @@ define([
       pagination: '#pagination'
     },
 
+    ui: {
+      'title': '.title > a'
+    },
+
+    behaviors: {
+      DisplayPost: { event: 'archive:view:display:post' }
+    },
+
     events: {
-      'click .title > a':    'onTitleClicked',
+      //'click .title > a':    'onTitleClicked',
       'click .category > a': 'onCategoryClicked',
       'click .tag > a':      'onTagClicked',
       'click .author > a':   'onAuthorClicked',
@@ -54,14 +63,14 @@ define([
       this.collection.stopHeartbeat();
     },
 
-    onTitleClicked: function (event) {
-      var slug = $(event.currentTarget).attr('slug'),
-          id   = parseInt(event.currentTarget.id, 10),
-          post = this.collection.findWhere({ ID: id });
+    // onTitleClicked: function (event) {
+    //   var slug = $(event.currentTarget).attr('slug'),
+    //       id   = parseInt(event.currentTarget.id, 10),
+    //       post = this.collection.findWhere({ ID: id });
 
-      EventBus.trigger('archive:view:display:post', { slug: slug, post: post });
-      event.preventDefault();
-    },
+    //   EventBus.trigger('archive:view:display:post', { slug: slug, post: post });
+    //   event.preventDefault();
+    // },
 
     onCategoryClicked: function (event) {
       this._triggerEvent('archive:view:display:category', event, 'category');
