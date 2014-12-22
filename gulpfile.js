@@ -70,6 +70,7 @@ gulp.task('build:templates', function () {
         .on('error', _onError)
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('app/templates-compiled/'))
+    .pipe(gulp.dest('dist/templates-compiled/'))
     .pipe($.size({title: 'templates'}));
 });
 
@@ -222,7 +223,7 @@ gulp.task('watch:server', function () {
  * gulp clean
  */
 gulp.task('clean', function (cb) {
-  return del(['dist/', 'lib/'], cb);
+  return del(['app/templates-compiled', 'dist/', 'lib/'], cb);
 });
 
 /**
