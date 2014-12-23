@@ -15,8 +15,8 @@ define([
     },
 
     childControllers: {
-      'search': 'searchController',
-      'menu':   'menuController'
+      search: 'searchController',
+      menu:   'menuController'
     },
 
     initialize: function (options) {
