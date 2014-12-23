@@ -32,14 +32,13 @@ function _onError (error) {
 gulp.task('build:styles', function () {
   return gulp.src('app/styles/less/style.less')
     .pipe($.plumber())
-    //.pipe($.sourcemaps.init())
-    //.pipe($.recess())
+    .pipe($.sourcemaps.init())
       .pipe($.less())
         .on('error', _onError)
       .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
       .pipe($.minifyCss())
       .pipe($.concat('style.css'))
-    //.pipe($.sourcemaps.write('./maps'))
+    .pipe($.sourcemaps.write('maps'))
     .pipe(gulp.dest('dist/assets/styles/'))
     .pipe($.size({title: 'styles'}));
 });
@@ -54,7 +53,7 @@ gulp.task('build:scripts', function () {
       .pipe($.changed('dist/'))
       .pipe($.uglify())
         .on('error', _onError)
-    .pipe($.sourcemaps.write('./maps'))
+    .pipe($.sourcemaps.write('maps'))
     .pipe(gulp.dest('dist/'))
     .pipe($.size({title: 'scripts'}));
 });
@@ -65,12 +64,12 @@ gulp.task('build:scripts', function () {
 gulp.task('build:templates', function () {
   return gulp.src('app/templates/**/*.{html,dust}')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
+    .pipe($.sourcemaps.init('maps'))
       .pipe($.dust())
         .on('error', _onError)
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('app/templates-compiled/'))
+    .pipe($.sourcemaps.write('maps'))
     .pipe(gulp.dest('dist/templates-compiled/'))
+    .pipe(gulp.dest('app/templates-compiled/'))
     .pipe($.size({title: 'templates'}));
 });
 
@@ -184,12 +183,8 @@ gulp.task('watch:server', function () {
 
   browserSync({
     notify: false,
-    server: {
-      baseDir: './',
-      directory: true,
-    },
-    host: 'localhost',
-    port: 3000,
+    proxy: 'b3.dev',
+    port: 8080,
     logLevel: 'debug'
   });
 
@@ -223,7 +218,7 @@ gulp.task('watch:server', function () {
  * gulp clean
  */
 gulp.task('clean', function (cb) {
-  return del(['app/templates-compiled', 'dist/', 'lib/'], cb);
+  return del(['app/templates-compiled/', 'dist/', 'lib/'], cb);
 });
 
 /**

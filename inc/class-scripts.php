@@ -83,7 +83,9 @@ class B3_Scripts {
 			$routes        = $routes_helper->get_routes();
 		}
 
-		wp_enqueue_script( 'heartbeat' );
+		if ( current_theme_supports( 'live-updates' ) ) {
+			wp_enqueue_script( 'heartbeat' );
+		}
 
 		$this->require_scripts();
 
