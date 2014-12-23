@@ -157,6 +157,19 @@ gulp.task('phpunit', function () {
 gulp.task('test', ['jasmine', 'phpunit']);
 
 /**
+ * gulp test:server
+ */
+gulp.task('test:server', function () {
+  browserSync({
+    notify: true,
+    server: {
+      baseDir: './',
+    },
+    logLevel: 'debug'
+  });
+});
+
+/**
  * gulp watch
  */
 gulp.task('watch', function () {
@@ -182,7 +195,7 @@ gulp.task('watch', function () {
 gulp.task('watch:server', function () {
 
   browserSync({
-    notify: false,
+    notify: true,
     proxy: 'b3.dev',
     port: 8080,
     logLevel: 'debug'
