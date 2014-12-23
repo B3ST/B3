@@ -136,6 +136,8 @@ class B3_Theme {
 
 		add_theme_support( 'automatic-feed-links' );
 
+		add_theme_support( 'live-updates' );
+
 		add_theme_support( 'html5', array(
 			'search-form',
 			'comment-form',
@@ -147,8 +149,10 @@ class B3_Theme {
 		add_action( 'widgets_init', array( $this, 'setup_widgets' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 
-		$b3_heartbeat = new B3_Heartbeat;
-		$b3_heartbeat->ready();
+		if ( current_theme_supports( 'live-updates' ) ) {
+			$b3_heartbeat = new B3_Heartbeat;
+			$b3_heartbeat->ready();
+		}
 	}
 
 	/**
