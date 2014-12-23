@@ -64,7 +64,7 @@
       "main": "i18n.js"
     },
     "sinon": {
-      "main": "sinon.js"
+      "main": "pkg/sinon.js"
     },
     "jasmine": {
       "main": [
