@@ -38,7 +38,7 @@ gulp.task('build:styles', function () {
       .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
       .pipe($.minifyCss())
       .pipe($.concat('style.css'))
-    .pipe($.sourcemaps.write('./maps'))
+    .pipe($.sourcemaps.write())
     .pipe(gulp.dest('dist/assets/styles/'))
     .pipe($.size({title: 'styles'}));
 });
@@ -53,7 +53,7 @@ gulp.task('build:scripts', function () {
       .pipe($.changed('dist/'))
       .pipe($.uglify())
         .on('error', _onError)
-    .pipe($.sourcemaps.write('./maps'))
+    .pipe($.sourcemaps.write())
     .pipe(gulp.dest('dist/'))
     .pipe($.size({title: 'scripts'}));
 });
