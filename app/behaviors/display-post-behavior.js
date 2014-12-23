@@ -7,12 +7,12 @@ define([
 ], function (Backbone, Marionette, EventBus) {
   'use strict';
 
-  window.Behaviors.DisplayPost = Marionette.Behavior.extend({
+  var DisplayPost = Marionette.Behavior.extend({
     events: {
-      'click @ui.title': 'onTitleClicked'
+      'click @ui.postLink': 'onPostLinkClicked'
     },
 
-    onTitleClicked: function (event) {
+    onPostLinkClicked: function (event) {
       var slug = $(event.currentTarget).attr('slug'),
           id   = parseInt(event.currentTarget.id, 10),
           post = this.view.collection.findWhere({ ID: id });
@@ -21,4 +21,12 @@ define([
       event.preventDefault();
     }
   });
+
+  /**
+   * Register display post behavior.
+   * @type {DisplayPost}
+   */
+  window.Behaviors.DisplayPost = DisplayPost;
+
+  return DisplayPost;
 });

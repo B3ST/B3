@@ -7,8 +7,13 @@ define([
   'helpers/dust/renderer-helper',
   'helpers/archive-header',
   'buses/event-bus',
+  // Behavior shims
   'behaviors/display-post-behavior',
-  // Shims
+  'behaviors/display-taxonomy-behavior',
+  'behaviors/display-category-behavior',
+  'behaviors/display-tag-behavior',
+  'behaviors/display-author-behavior',
+  // Template shims
   'templates/archive/archive-template',
   'templates/archive/posts-template',
   'templates/entry-meta-template'
@@ -24,19 +29,24 @@ define([
     },
 
     ui: {
-      'title': '.title > a'
+      'postLink':     '.title > a',
+      'categoryLink': '.category > a',
+      'tagLink':      '.tag > a',
+      'authorLink':   '.author > a',
+      'taxonomyLink': '.taxonomy > a',
+      'excerptLink':  '.excerpt > a'
     },
 
     behaviors: {
-      DisplayPost: { event: 'archive:view:display:post' }
+      DisplayPost:     { event: 'archive:view:display:post' },
+      DisplayTaxonomy: { event: 'archive:view:display:taxonomy' },
+      DisplayCategory: { event: 'archive:view:display:category' },
+      DisplayTag:      { event: 'archive:view:display:tag' },
+      DisplayAuthor:   { event: 'archive:view:display:author' }
+      //DisplayLink:     { event: 'archive:view:link:clicked' }
     },
 
     events: {
-      //'click .title > a':    'onTitleClicked',
-      'click .category > a': 'onCategoryClicked',
-      'click .tag > a':      'onTagClicked',
-      'click .author > a':   'onAuthorClicked',
-      'click .taxonomy > a': 'onTaxonomyClicked',
       'click .excerpt > a':  'onLinkClicked'
     },
 
@@ -63,47 +73,10 @@ define([
       this.collection.stopHeartbeat();
     },
 
-    // onTitleClicked: function (event) {
-    //   var slug = $(event.currentTarget).attr('slug'),
-    //       id   = parseInt(event.currentTarget.id, 10),
-    //       post = this.collection.findWhere({ ID: id });
-
-    //   EventBus.trigger('archive:view:display:post', { slug: slug, post: post });
-    //   event.preventDefault();
-    // },
-
-    onCategoryClicked: function (event) {
-      this._triggerEvent('archive:view:display:category', event, 'category');
-      event.preventDefault();
-    },
-
-    onTagClicked: function (event) {
-      this._triggerEvent('archive:view:display:tag', event, 'post_tag');
-      event.preventDefault();
-    },
-
-    onAuthorClicked: function (event) {
-      this._triggerEvent('archive:view:display:author', event, 'author');
-      event.preventDefault();
-    },
-
-    onTaxonomyClicked: function (event) {
-      var link = $(event.currentTarget).attr('href');
-      EventBus.trigger('archive:view:display:taxonomy', { href: link });
-      event.preventDefault();
-    },
-
     onLinkClicked: function (event) {
       var link = $(event.currentTarget).attr('href');
       EventBus.trigger('archive:view:link:clicked', { href: link });
       event.preventDefault();
-    },
-
-    _triggerEvent: function (ev, event, type) {
-      var id   = parseInt(event.currentTarget.id, 10),
-          slug = $(event.currentTarget).attr('slug');
-
-      EventBus.trigger(ev, { id: id, slug: slug, type: type });
     },
 
     _getPosts: function () {
