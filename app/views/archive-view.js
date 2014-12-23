@@ -13,6 +13,7 @@ define([
   'behaviors/display-category-behavior',
   'behaviors/display-tag-behavior',
   'behaviors/display-author-behavior',
+  'behaviors/display-link-behavior',
   // Template shims
   'templates/archive/archive-template',
   'templates/archive/posts-template',
@@ -34,7 +35,7 @@ define([
       'tagLink':      '.tag > a',
       'authorLink':   '.author > a',
       'taxonomyLink': '.taxonomy > a',
-      'excerptLink':  '.excerpt > a'
+      'link':         '.excerpt > a'
     },
 
     behaviors: {
@@ -42,13 +43,11 @@ define([
       DisplayTaxonomy: { event: 'archive:view:display:taxonomy' },
       DisplayCategory: { event: 'archive:view:display:category' },
       DisplayTag:      { event: 'archive:view:display:tag' },
-      DisplayAuthor:   { event: 'archive:view:display:author' }
-      //DisplayLink:     { event: 'archive:view:link:clicked' }
+      DisplayAuthor:   { event: 'archive:view:display:author' },
+      DisplayLink:     { event: 'archive:view:link:clicked' }
     },
 
-    events: {
-      'click .excerpt > a':  'onLinkClicked'
-    },
+    events: {},
 
     collectionEvents: {
       'reset': 'renderPosts'
@@ -71,12 +70,6 @@ define([
 
     onBeforeDestroy: function () {
       this.collection.stopHeartbeat();
-    },
-
-    onLinkClicked: function (event) {
-      var link = $(event.currentTarget).attr('href');
-      EventBus.trigger('archive:view:link:clicked', { href: link });
-      event.preventDefault();
     },
 
     _getPosts: function () {

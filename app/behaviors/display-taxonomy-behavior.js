@@ -1,5 +1,13 @@
 /* global define */
 
+/**
+ * FIXME: Duplicates DisplayLink behavior.
+ *
+ * We'll keep this module around until the entire application
+ * is refactored to use behaviors, then we'll consider
+ * eliminating it.
+ */
+
 define([
   'backbone',
   'marionette',
