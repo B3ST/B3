@@ -28,6 +28,14 @@ define([
     _previousSearch: '',
 
     /**
+     * Behavior option defaults.
+     * @type {Object}
+     */
+    defaults: {
+      min: 3
+    },
+
+    /**
      * Behavior events.
      * @type {Object}
      */

@@ -8,13 +8,12 @@ define([
   'use strict';
 
   var DisplayTag = DisplayArchive.extend({
-    events: {
-      'click @ui.tagLink': 'onTagLinkClicked'
+    defaults: {
+      type: 'post_tag'
     },
 
-    onTagLinkClicked: function (event) {
-      this._trigger(this.options.event, event, 'post_tag');
-      event.preventDefault();
+    events: {
+      'click @ui.tagLink': 'onArchiveLinkClicked'
     }
   });
 

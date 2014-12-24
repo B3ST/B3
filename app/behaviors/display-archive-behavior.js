@@ -11,6 +11,15 @@ define([
     events: {},
 
     /**
+     * Archive link activation handler.
+     * @param {Event} event Click event.
+     */
+    onArchiveLinkClicked: function (event) {
+      this._trigger(this.options.event, event, this.options.type);
+      event.preventDefault();
+    },
+
+    /**
      * Trigger the display of an archive by type.
      * @param {String} ev       Event to trigger.
      * @param {Event}  event    Original event.

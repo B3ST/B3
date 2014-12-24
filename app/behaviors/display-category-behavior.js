@@ -8,13 +8,12 @@ define([
   'use strict';
 
   var DisplayCategory = DisplayArchive.extend({
-    events: {
-      'click @ui.categoryLink': 'onCategoryLinkClicked'
+    defaults: {
+      type: 'category'
     },
 
-    onCategoryLinkClicked: function (event) {
-      this._trigger(this.options.event, event, 'category');
-      event.preventDefault();
+    events: {
+      'click @ui.categoryLink': 'onArchiveLinkClicked'
     }
   });
 
