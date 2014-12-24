@@ -29,7 +29,9 @@ define([
     onSearchSubmit: function (event) {
       var search = $(event.currentTarget).find(this.view.ui.search).val();
 
-      EventBus.trigger(this.options.event, { search: search });
+      if (search.length > 0) {
+        EventBus.trigger(this.options.event, { search: search });
+      }
 
       return false;
     }
