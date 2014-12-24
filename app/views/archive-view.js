@@ -47,8 +47,6 @@ define([
       DisplayLink:     { event: 'archive:view:link:clicked' }
     },
 
-    events: {},
-
     collectionEvents: {
       'reset': 'renderPosts'
     },
