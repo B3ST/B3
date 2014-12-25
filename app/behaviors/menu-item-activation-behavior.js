@@ -11,12 +11,35 @@ define([
   var MenuItemActivation = Marionette.Behavior.extend({
 
     defaults: {
-      event:       'menu-item:view:navigate',
-      activeClass: 'active'
+      navigationEvent: 'menu-item:view:navigate',
+      activationEvent: 'view:menu:activation',
+      activeClass:     'active'
     },
 
     events: {
       'click @ui.menuItem': 'onMenuItemActivation'
+    },
+
+    /**
+     * Menu item update handler.
+     * @param {Object} activeItem Data about the currently active item.
+     */
+    onMenuItemUpdate: function (activeItem) {
+      var id = this.view.model.get('ID');
+
+      if (id === activeItem.parent || id === activeItem.id) {
+        this.view.activeChildId = activeItem.id;
+      }
+
+      if (activeItem.parent === id) {
+        // Propagate up the menu hierarchy
+        var parent = this.view.model.get('parent'),
+          updatedActiveItem = {id: activeItem.id, parent: parent};
+
+        EventBus.trigger(this.options.activationEvent, updatedActiveItem);
+      }
+
+      this.$el.toggleClass(this.options.activeClass, this.view.activeChildId === activeItem.id);
     },
 
     /**
@@ -33,11 +56,12 @@ define([
       }
 
       if (!this.view.dropdown) {
-        this.view.$el.addClass('active');
-        EventBus.trigger(this.options.event, {link: link});
+        var activeItem = {id: this.view.model.get('ID'), parent: this.view.model.get('parent')};
 
-        // Highlight selection up the menu hierarchy:
-        EventBus.trigger('view:menu:activation', {id: this.view.model.get('ID'), parent: this.view.model.get('parent')});
+        this.$el.addClass(this.options.activeClass);
+
+        EventBus.trigger(this.options.activationEvent, activeItem);
+        EventBus.trigger(this.options.navigationEvent, {link: link});
       }
 
       event.preventDefault();
