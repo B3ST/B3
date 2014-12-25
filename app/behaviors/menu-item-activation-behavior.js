@@ -23,6 +23,9 @@ define([
     /**
      * Menu item update handler.
      * @param {Object} activeItem Data about the currently active item.
+     *
+     * @todo Consider also taking object, object_parent and object_type
+     * to update menu item state on deep link navigation.
      */
     onMenuItemUpdate: function (activeItem) {
       var id = this.view.model.get('ID');
@@ -33,10 +36,8 @@ define([
 
       if (activeItem.parent === id) {
         // Propagate up the menu hierarchy
-        var parent = this.view.model.get('parent'),
-          updatedActiveItem = {id: activeItem.id, parent: parent};
-
-        EventBus.trigger(this.options.activationEvent, updatedActiveItem);
+        activeItem.parent = this.view.model.get('parent');
+        EventBus.trigger(this.options.activationEvent, activeItem);
       }
 
       this.$el.toggleClass(this.options.activeClass, this.view.activeChildId === activeItem.id);
@@ -47,16 +48,19 @@ define([
      * @param {Event} event Click event.
      */
     onMenuItemActivation: function (event) {
-      var link = event.currentTarget.href,
-        baseUrl = Settings.get('site_url');
+      var baseUrl = Settings.get('site_url'),
+        link = event.currentTarget.href;
 
-      // Do not handle external links:
       if (link.indexOf(baseUrl) !== 0) {
+        // Do not handle external links:
         return;
       }
 
       if (!this.view.dropdown) {
-        var activeItem = {id: this.view.model.get('ID'), parent: this.view.model.get('parent')};
+        var activeItem = {
+          id:     this.view.model.get('ID')     || 0,
+          parent: this.view.model.get('parent') || 0
+        };
 
         this.$el.addClass(this.options.activeClass);
 

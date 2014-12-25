@@ -47,7 +47,7 @@ define([
 
     onItemActivation: function (activeItem) {
       // Tell the behaviour to update menu items up the hierarchy:
-      this.triggerMethod('MenuItemUpdate', activeItem);
+      this.triggerMethod('menu:item:update', activeItem);
     },
 
     setDropdown: function () {
