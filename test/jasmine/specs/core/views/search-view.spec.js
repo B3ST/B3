@@ -36,10 +36,10 @@ define([
       });
 
       describe("deleting all terms", function() {
-        it("should trigger a search:view:search:empty when term is empty", function() {
+        it("should trigger a search:reset when term is empty", function() {
           view.$('input#search-site').val('');
           view.$('input#search-site').keyup();
-          expect(trigger).toHaveBeenCalledWith('search:view:search:empty');
+          expect(trigger).toHaveBeenCalledWith('search:reset');
         });
 
         it("should save the previously typed term", function() {
@@ -51,25 +51,25 @@ define([
       });
 
       describe("typing a term that is more than 3 characters", function() {
-        it("should trigger a search:view:search:term event after 500ms", function() {
+        it("should trigger a search:lookup event after 500ms", function() {
           var clock = sinon.useFakeTimers();
           view.$('input#search-site').val('term');
           view.$('input#search-site').keyup();
           clock.tick(500);
-          expect(trigger).toHaveBeenCalledWith('search:view:search:term', { search: 'term' });
+          expect(trigger).toHaveBeenCalledWith('search:lookup', { search: 'term' });
           clock.restore();
         });
       });
 
       describe("pressing the enter key", function() {
-        it("should trigger a search:view:search:submit event", function() {
+        it("should trigger a search:submit event", function() {
           var e = $.Event("keyup");
           e.type = 'submit';
 
           view.$('input#search-site').val('term');
           view.$('input#search-site').keyup();
           view.$("input#search-site").trigger(e);
-          expect(trigger).toHaveBeenCalledWith('search:view:search:submit', { search: 'term' });
+          expect(trigger).toHaveBeenCalledWith('search:submit', { search: 'term' });
         });
       });
     });

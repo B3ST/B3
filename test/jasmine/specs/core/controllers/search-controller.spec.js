@@ -26,9 +26,9 @@ define([
     it("should bind to a given set of events", function() {
       controller = new SearchController();
       expect(controller.busEvents).toEqual({
-        "search:view:search:term":   "searchTerm",
-        "search:view:search:submit": "navigateSearchUrl",
-        "search:view:search:empty":  "teardownSearch"
+        "search:lookup": "searchTerm",
+        "search:submit": "navigateSearchUrl",
+        "search:reset":  "teardownSearch"
       });
     });
 
