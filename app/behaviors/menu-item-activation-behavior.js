@@ -16,8 +16,7 @@ define([
     },
 
     events: {
-      'click @ui.menuItem': 'onMenuItemActivation',
-      'event view:menu:activation': 'onMenuActivationStateChange'
+      'click @ui.menuItem': 'onMenuItemActivation'
     },
 
     /**

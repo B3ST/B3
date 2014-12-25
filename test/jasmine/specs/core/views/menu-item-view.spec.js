@@ -21,7 +21,7 @@ define([
         var bus = spyOn(EventBus, 'on');
         view = new MenuItemView({model: item});
 
-        expect(bus).toHaveBeenCalledWith('menu-item:view:select', view.itemSelected, view);
+        expect(bus).toHaveBeenCalledWith('view:menu:activation', view.itemSelected, view);
         expect(bus).toHaveBeenCalledWith('header:view:index', view.itemSelected, view);
       });
     });
@@ -47,7 +47,7 @@ define([
         it("should trigger the same event setting its own parent", function() {
           var trigger = spyOn(EventBus, 'trigger');
           view.itemSelected({ id: 1130, parent: 1257 });
-          expect(trigger).toHaveBeenCalledWith('menu-item:view:select', {id: 1130, parent: 0});
+          expect(trigger).toHaveBeenCalledWith('view:menu:activation', {id: 1130, parent: 0});
         });
       });
     });
@@ -88,7 +88,7 @@ define([
 
         it("should trigger menu selection events", function() {
           view.$('.menu-item').click();
-          expect(trigger).toHaveBeenCalledWith('menu-item:view:select', {id: 1257, parent: 0});
+          expect(trigger).toHaveBeenCalledWith('view:menu:activation', {id: 1257, parent: 0});
         });
 
         it("should trigger navigate event to the given link", function() {
