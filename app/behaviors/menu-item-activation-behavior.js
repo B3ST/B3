@@ -41,10 +41,6 @@ define([
       }
 
       event.preventDefault();
-    },
-
-    onMenuActivationStateChange: function (event, item) {
-      event.preventDefault();
     }
   });
 

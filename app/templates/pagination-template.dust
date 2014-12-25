@@ -1,9 +1,9 @@
 {@gt key=pages value=1}
   <ul class="pagination">
-    <li class="previous {?prev_disabled}disabled{/prev_disabled}">
+    <li class="previous {?isPreviousDisabled}disabled{/isPreviousDisabled}">
       <a href="#">&laquo;</a>
     </li>
-    {?include_pages}
+    {?hasNumberPicker}
       {@pageIterator size="{pages}"}
         <li class="number {?current}active{/current}" data-page="{page}">
           <a href="{url}" data-page="{page}">
@@ -15,8 +15,8 @@
           </a>
         </li>
       {/pageIterator}
-    {/include_pages}
-    <li class="next {?next_disabled}disabled{/next_disabled}">
+    {/hasNumberPicker}
+    <li class="next {?isNextDisabled}disabled{/isNextDisabled}">
       <a href="#">&raquo;</a>
     </li>
   </ul>

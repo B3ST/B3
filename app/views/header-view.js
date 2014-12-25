@@ -3,10 +3,9 @@
 define([
   'backbone',
   'models/settings-model',
-  'buses/event-bus',
   'behaviors/display-home-behavior',
   'templates/header-template'
-], function (Backbone, Settings, EventBus) {
+], function (Backbone, Settings) {
   'use strict';
 
   var HeaderView = Backbone.Marionette.LayoutView.extend({
