@@ -13,6 +13,7 @@ define([
 
   var MenuView = Backbone.Marionette.CollectionView.extend({
     childView: MenuItemView,
+
     tagName:   function() {
       return 'ul class="nav navbar-nav"';
     },
@@ -40,7 +41,7 @@ define([
         var placeholder  = '#menu-item-' + parentMenu + ' > ul.dropdown-menu',
             dropdownView = collectionView.children.findByModel(this.collection.get(parentMenu));
 
-        dropdownView.toggleDropdown();
+        dropdownView.setDropdown();
         collectionView.$(placeholder).append(itemView.el);
       } else {
         collectionView.$el.append(itemView.el);

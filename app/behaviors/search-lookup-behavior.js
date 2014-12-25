@@ -13,7 +13,7 @@ define([
 ], function (Backbone, Marionette, EventBus) {
   'use strict';
 
-  var SearchTerm = Marionette.Behavior.extend({
+  var SearchLookup = Marionette.Behavior.extend({
 
     /**
      * Timeout ID.
@@ -32,7 +32,9 @@ define([
      * @type {Object}
      */
     defaults: {
-      min: 3
+      event: 'search:lookup',
+      min:   3,
+      delay: 500
     },
 
     /**
@@ -55,7 +57,7 @@ define([
       if (this._isSearchTermValid(event)) {
         this._triggerAfterDelay(function () {
           EventBus.trigger(behavior.options.event, { search: search });
-        }, 500);
+        }, behavior.options.delay);
       }
 
       this._previousSearch = search;
@@ -71,10 +73,7 @@ define([
     _isSearchTermValid: function (event) {
       var search = $(event.currentTarget).val();
 
-      return search.length >= this.options.min &&
-             search !== this._previousSearch &&
-             event.keyCode !== 8 && // backspace
-             event.keyCode !== 46; // delete
+      return search.length >= this.options.min && search !== this._previousSearch;
     },
 
     /**
@@ -93,9 +92,9 @@ define([
 
   /**
    * Register search term input behavior.
-   * @type {SearchTerm}
+   * @type {SearchLookup}
    */
-  window.Behaviors.SearchTerm = SearchTerm;
+  window.Behaviors.SearchLookup = SearchLookup;
 
-  return SearchTerm;
+  return SearchLookup;
 });

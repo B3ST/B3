@@ -14,6 +14,10 @@ define([
 
   var SearchSubmit = Marionette.Behavior.extend({
 
+    defaults: {
+      event: 'search:submit'
+    },
+
     /**
      * Behavior events.
      * @type {Object}

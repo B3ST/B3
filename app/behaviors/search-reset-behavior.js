@@ -8,6 +8,11 @@ define([
   'use strict';
 
   var SearchReset = Marionette.Behavior.extend({
+
+    defaults: {
+      event: 'search:reset'
+    },
+
     events: {
       'change @ui.search': 'onSearchChange',
       'keyup @ui.search':  'onSearchChange'

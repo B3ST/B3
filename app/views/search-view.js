@@ -5,8 +5,8 @@ define([
   'marionette',
   'buses/event-bus',
   // Behaviors
+  'behaviors/search-lookup-behavior',
   'behaviors/search-reset-behavior',
-  'behaviors/search-term-behavior',
   'behaviors/search-submit-behavior',
   // Templates
   'templates/forms/navigation-search-template'
@@ -23,9 +23,9 @@ define([
     },
 
     behaviors: {
-      SearchReset:  { event: 'search:view:search:empty' },
-      SearchTerm:   { event: 'search:view:search:term', min: 3 },
-      SearchSubmit: { event: 'search:view:search:submit' }
+      SearchLookup: { min: 3 },
+      SearchReset:  {},
+      SearchSubmit: {}
     },
 
     initialize: function (options) {
