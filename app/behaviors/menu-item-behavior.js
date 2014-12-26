@@ -3,21 +3,18 @@
 define([
   'backbone',
   'marionette',
-  'buses/event-bus',
-  'models/settings-model'
-], function (Backbone, Marionette, EventBus, Settings) {
+  'buses/event-bus'
+], function (Backbone, Marionette, EventBus) {
   'use strict';
 
   var MenuItem = Marionette.Behavior.extend({
 
     defaults: {
-      navigationEvent: 'menu-item:view:navigate',
-      activationEvent: 'view:menu:activation',
-      activeClass:     'active'
+      activeClass: 'active'
     },
 
     events: {
-      'click @ui.menuItem': 'onActivation'
+      'click @ui.menuItem': 'onMenuItemActivation'
     },
 
     /**
@@ -37,7 +34,7 @@ define([
       if (activeItem.parent === id) {
         // Propagate up the menu hierarchy
         activeItem.parent = this.view.model.get('parent');
-        EventBus.trigger(this.options.activationEvent, activeItem);
+        EventBus.trigger('view:menu:state:change', activeItem);
       }
 
       this.$el.toggleClass(this.options.activeClass, this.view.activeChildId === activeItem.id);
@@ -47,15 +44,7 @@ define([
      * Menu item activation handler.
      * @param {Event} event Click event.
      */
-    onActivation: function (event) {
-      var baseUrl = Settings.get('site_url'),
-        link = event.currentTarget.href;
-
-      if (link.indexOf(baseUrl) !== 0) {
-        // Do not handle external links:
-        return;
-      }
-
+    onMenuItemActivation: function (event) {
       if (!this.view.dropdown) {
         var activeItem = {
           id:     this.view.model.get('ID')     || 0,
@@ -64,13 +53,8 @@ define([
 
         this.$el.addClass(this.options.activeClass);
 
-        EventBus.trigger(this.options.activationEvent, activeItem);
-
-        // FIXME: Use navigation behaviors instead of this
-        EventBus.trigger(this.options.navigationEvent, {link: link});
+        EventBus.trigger('view:menu:state:change', activeItem);
       }
-
-      event.preventDefault();
     }
   });
 

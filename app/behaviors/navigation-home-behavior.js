@@ -8,9 +8,6 @@ define([
   'use strict';
 
   var NavigationHome = Marionette.Behavior.extend({
-    defaults: {
-      event: 'header:view:index'
-    },
 
     events: {
       'click @ui.homeLink': 'onHomeLinkClicked'
@@ -21,7 +18,7 @@ define([
      * @param {Event} event Click event.
      */
     onHomeLinkClicked: function (event) {
-      EventBus.trigger(this.options.event, { id: 0 });
+      EventBus.trigger('header:view:index', {id: 0});
       event.preventDefault();
     }
   });

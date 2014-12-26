@@ -8,6 +8,7 @@ define([
   'models/settings-model',
   'buses/event-bus',
   'behaviors/menu-item-behavior',
+  'behaviors/navigation-behavior',
   'templates/navigation/menus/menu-item-template'
 ], function (_, Backbone, Marionette, MenuItem, Settings, EventBus) {
   'use strict';
@@ -22,22 +23,24 @@ define([
     },
 
     ui: {
-      menuItem: '.menu-item'
+      menuItem: '.menu-item',
+      link:     '.menu-item'
     },
 
     behaviors: {
-      MenuItem: { activeClass: 'active' }
+      MenuItem:   {activeClass: 'active'},
+      Navigation: {}
     },
 
     initialize: function () {
       this.dropdown = false;
 
-      EventBus.on('view:menu:activation', this.onItemActivation, this);
+      EventBus.on('view:menu:state:change', this.onItemActivation, this);
       EventBus.on('header:view:index', this.onItemActivation, this);
     },
 
     onDestroy: function () {
-      EventBus.off('view:menu:activation', this.onItemActivation, this);
+      EventBus.off('view:menu:state:change', this.onItemActivation, this);
       EventBus.off('header:view:index', this.onItemActivation, this);
     },
 
@@ -47,7 +50,7 @@ define([
 
     onItemActivation: function (activeItem) {
       // Tell the behaviour to update menu items up the hierarchy:
-      this.triggerMethod('menu:item:update', activeItem);
+      this.triggerMethod('MenuItemUpdate', activeItem);
     },
 
     setDropdown: function () {

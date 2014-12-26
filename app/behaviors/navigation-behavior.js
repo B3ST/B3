@@ -4,8 +4,9 @@ define([
   'backbone',
   'marionette',
   'buses/event-bus',
-  'buses/navigator'
-], function (Backbone, Marionette, EventBus, Navigator) {
+  'buses/navigator',
+  'models/settings-model'
+], function (Backbone, Marionette, EventBus, Navigator, Settings) {
   'use strict';
 
   var Navigation = Marionette.Behavior.extend({
@@ -35,7 +36,7 @@ define([
       page = parseInt(page, 10);
 
       if (slug.length === 0) {
-        this.onLinkClicked(event);
+        this.view.triggerMethod('LinkClicked', event);
         return;
       }
 
@@ -48,9 +49,21 @@ define([
      * @param {Event} event Click event.
      */
     onLinkClicked: function (event) {
-      var href = $(event.currentTarget).attr('href');
-      Navigator.navigateToLink(href, true);
+      var baseUrl = Settings.get('site_url'),
+        link = event.currentTarget.href;
+
+      // FIXME: Allow relative URLs
+      if (link.indexOf(baseUrl) !== 0) {
+        // Do not handle external links:
+        return;
+      }
+
+      Navigator.navigateToLink(link, true);
+
+      // TODO: What are we to do with these triggers?
       // EventBus.trigger('navigation:link:clicked', { href: link });
+      // EventBus.trigger('menu-item:view:navigate', { link: link });
+
       event.preventDefault();
     }
   });
