@@ -3,7 +3,7 @@
 define([
   'backbone',
   'models/settings-model',
-  'behaviors/display-home-behavior',
+  'behaviors/navigation-home-behavior',
   'templates/header-template'
 ], function (Backbone, Settings) {
   'use strict';
@@ -16,7 +16,7 @@ define([
     },
 
     behaviors: {
-      DisplayHome: {}
+      NavigationHome: {}
     },
 
     regions: {

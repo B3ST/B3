@@ -7,7 +7,7 @@ define([
   'models/menu-item-model',
   'models/settings-model',
   'buses/event-bus',
-  'behaviors/menu-item-activation-behavior',
+  'behaviors/menu-item-behavior',
   'templates/navigation/menus/menu-item-template'
 ], function (_, Backbone, Marionette, MenuItem, Settings, EventBus) {
   'use strict';
@@ -26,7 +26,7 @@ define([
     },
 
     behaviors: {
-      MenuItemActivation: { activeClass: 'active' }
+      MenuItem: { activeClass: 'active' }
     },
 
     initialize: function () {

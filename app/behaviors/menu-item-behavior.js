@@ -8,7 +8,7 @@ define([
 ], function (Backbone, Marionette, EventBus, Settings) {
   'use strict';
 
-  var MenuItemActivation = Marionette.Behavior.extend({
+  var MenuItem = Marionette.Behavior.extend({
 
     defaults: {
       navigationEvent: 'menu-item:view:navigate',
@@ -17,7 +17,7 @@ define([
     },
 
     events: {
-      'click @ui.menuItem': 'onMenuItemActivation'
+      'click @ui.menuItem': 'onActivation'
     },
 
     /**
@@ -47,7 +47,7 @@ define([
      * Menu item activation handler.
      * @param {Event} event Click event.
      */
-    onMenuItemActivation: function (event) {
+    onActivation: function (event) {
       var baseUrl = Settings.get('site_url'),
         link = event.currentTarget.href;
 
@@ -65,6 +65,8 @@ define([
         this.$el.addClass(this.options.activeClass);
 
         EventBus.trigger(this.options.activationEvent, activeItem);
+
+        // FIXME: Use navigation behaviors instead of this
         EventBus.trigger(this.options.navigationEvent, {link: link});
       }
 
@@ -74,9 +76,9 @@ define([
 
   /**
    * Register behavior.
-   * @type {MenuItemActivation}
+   * @type {MenuItem}
    */
-  window.Behaviors.MenuItemActivation = MenuItemActivation;
+  window.Behaviors.MenuItem = MenuItem;
 
-  return MenuItemActivation;
+  return MenuItem;
 });

@@ -12,10 +12,7 @@ define([
       // page:           1,
       // pages:          1,
       disabledClass:     'disabled',
-      activeClass:       'active',
-      pageNumberEvent:   'pagination:view:display:page',
-      previousPageEvent: 'pagination:view:display:previous:page',
-      nextPageEvent:     'pagination:view:display:next:page'
+      activeClass:       'active'
     },
 
     events: {
@@ -30,10 +27,9 @@ define([
      */
     onPageActivation: function (event) {
       if (!$(event.currentTarget).hasClass(this.options.activeClass)) {
-        var pageData = $(event.currentTarget).attr('data-page'),
-          page = this._sanitizePage(parseInt(pageData, 10));
-        this.view.update(page); // TODO: Why not reuse the event?
-        EventBus.trigger(this.options.pageNumberEvent, { page: page });
+        var page = $(event.currentTarget).data('page');
+        this._updatePage(parseInt(page, 10));
+        EventBus.trigger('pagination:view:display:page', { page: this.view.page });
       }
       event.preventDefault();
     },
@@ -44,9 +40,8 @@ define([
      */
     onPreviousPageActivation: function (event) {
       if (!$(event.currentTarget).hasClass(this.options.disabledClass)) {
-        var page = this._sanitizePage(this.view.page - 1);
-        this.view.update(page); // TODO: Why not reuse the event?
-        EventBus.trigger(this.options.previousPageEvent, { page: page });
+        this._updatePage(this.view.page - 1);
+        EventBus.trigger('pagination:view:display:previous:page', { page: this.view.page });
       }
       event.preventDefault();
     },
@@ -57,11 +52,30 @@ define([
      */
     onNextPageActivation: function (event) {
       if (!$(event.currentTarget).hasClass(this.options.disabledClass)) {
-        var page = this._sanitizePage(this.view.page + 1);
-        this.view.update(page); // TODO: Why not reuse the event?
-        EventBus.trigger(this.options.nextPageEvent, { page: page });
+        this._updatePage(this.view.page + 1);
+        EventBus.trigger('pagination:view:display:next:page', { page: this.view.page });
       }
       event.preventDefault();
+    },
+
+    /**
+     * Updates the view on a page number change.
+     * @param  {Number} page Page number.
+     */
+    _updatePage: function (page) {
+      var active = this.options.activeClass,
+        disabled = this.options.disabledClass;
+
+      page = this._sanitizePage(page);
+
+      this.$('li[data-page="' + this.view.page + '"]').removeClass(active);
+
+      this.view.page = page;
+
+      this.$('li[data-page="' + page + '"]').addClass(active);
+
+      this.$('.previous').toggleClass(disabled, page === 1);
+      this.$('.next').toggleClass(disabled, page === this.view.pages);
     },
 
     /**

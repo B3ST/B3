@@ -8,12 +8,9 @@ define([
   'helpers/archive-header',
   'buses/event-bus',
   // Behavior shims
-  'behaviors/display-post-behavior',
-  'behaviors/display-taxonomy-behavior',
-  'behaviors/display-category-behavior',
-  'behaviors/display-tag-behavior',
-  'behaviors/display-author-behavior',
-  'behaviors/display-link-behavior',
+  'behaviors/navigation-archive-behavior',
+  'behaviors/navigation-post-behavior',
+  'behaviors/navigation-url-behavior',
   // Template shims
   'templates/archive/archive-template',
   'templates/archive/posts-template',
@@ -39,12 +36,9 @@ define([
     },
 
     behaviors: {
-      DisplayPost:     { event: 'archive:view:display:post' },
-      DisplayTaxonomy: { event: 'archive:view:display:taxonomy' },
-      DisplayCategory: { event: 'archive:view:display:category' },
-      DisplayTag:      { event: 'archive:view:display:tag' },
-      DisplayAuthor:   { event: 'archive:view:display:author' },
-      DisplayLink:     { event: 'archive:view:link:clicked' }
+      NavigationArchive: {},
+      NavigationPost:    {},
+      NavigationURL:     {}
     },
 
     collectionEvents: {

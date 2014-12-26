@@ -7,7 +7,7 @@ define([
 ], function (Backbone, Marionette, EventBus) {
   'use strict';
 
-  var DisplayHome = Marionette.Behavior.extend({
+  var NavigationHome = Marionette.Behavior.extend({
     defaults: {
       event: 'header:view:index'
     },
@@ -28,9 +28,9 @@ define([
 
   /**
    * Register behavior.
-   * @type {DisplayHome}
+   * @type {NavigationHome}
    */
-  window.Behaviors.DisplayHome = DisplayHome;
+  window.Behaviors.NavigationHome = NavigationHome;
 
-  return DisplayHome;
+  return NavigationHome;
 });

@@ -37,29 +37,6 @@ define([
         isNextDisabled:     this.page === this.pages,
         hasNumberPicker:    this.hasNumberPicker
       };
-    },
-
-    /**
-     * Updates the view on a page number change.
-     * @param  {Number} page Page number.
-     *
-     * @todo Maybe turn this into an event handler?
-     */
-    update: function (page) {
-      this.page = page;
-
-      this.$('.disabled').removeClass('disabled');
-      this.$('.active').removeClass('active');
-
-      if (this.page === 1) {
-        this.$('.previous').addClass('disabled');
-      }
-
-      if (this.page === this.pages) {
-        this.$('.next').addClass('disabled');
-      }
-
-      this.$('li[data-page="' + this.page + '"]').addClass('active');
     }
   });
 
