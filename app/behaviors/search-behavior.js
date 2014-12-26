@@ -41,9 +41,9 @@ define([
      * @type {Object}
      */
     events: {
-      'change @ui.search': 'onSearchChange',
-      'keyup @ui.search':  'onSearchChange',
-      'submit':            'onSearchSubmit'
+      'change @ui.searchField': 'onSearchChange',
+      'keyup @ui.searchField':  'onSearchChange',
+      'submit @ui.searchForm':  'onSearchSubmit'
     },
 
     /**
@@ -54,9 +54,8 @@ define([
       var search = $(event.currentTarget).val(),
         behavior = this;
 
-      if (search.length === 0) {
+      if (this._previousSearch !== search && search.length === 0) {
         EventBus.trigger('search:reset');
-        return false;
       }
 
       if (this._isSearchTermValid(event)) {
@@ -75,7 +74,7 @@ define([
      * @param {Event} event Search form submit event.
      */
     onSearchSubmit: function (event) {
-      var search = $(event.currentTarget).find(this.view.ui.search).val();
+      var search = $(event.currentTarget).find(this.view.ui.searchField).val();
 
       if (search.length > 0) {
         EventBus.trigger('search:submit', { search: search });

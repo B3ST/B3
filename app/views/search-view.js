@@ -17,7 +17,8 @@ define([
     template:  'forms/navigation-search-template.dust',
 
     ui: {
-      'search': 'input#search-site'
+      searchForm:  'form#search-site',
+      searchField: 'form#search-site input#s'
     },
 
     behaviors: {
