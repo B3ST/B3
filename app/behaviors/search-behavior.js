@@ -13,7 +13,7 @@ define([
 ], function (Backbone, Marionette, EventBus) {
   'use strict';
 
-  var SearchLookup = Marionette.Behavior.extend({
+  var Search = Marionette.Behavior.extend({
 
     /**
      * Timeout ID.
@@ -32,7 +32,6 @@ define([
      * @type {Object}
      */
     defaults: {
-      event: 'search:lookup',
       min:   3,
       delay: 500
     },
@@ -43,7 +42,8 @@ define([
      */
     events: {
       'change @ui.search': 'onSearchChange',
-      'keyup @ui.search':  'onSearchChange'
+      'keyup @ui.search':  'onSearchChange',
+      'submit':            'onSearchSubmit'
     },
 
     /**
@@ -54,13 +54,32 @@ define([
       var search = $(event.currentTarget).val(),
         behavior = this;
 
+      if (search.length === 0) {
+        EventBus.trigger('search:reset');
+        return false;
+      }
+
       if (this._isSearchTermValid(event)) {
         this._triggerAfterDelay(function () {
-          EventBus.trigger(behavior.options.event, { search: search });
+          EventBus.trigger('search:lookup', { search: search });
         }, behavior.options.delay);
       }
 
       this._previousSearch = search;
+
+      return false;
+    },
+
+    /**
+     * Triggers a search request on submit.
+     * @param {Event} event Search form submit event.
+     */
+    onSearchSubmit: function (event) {
+      var search = $(event.currentTarget).find(this.view.ui.search).val();
+
+      if (search.length > 0) {
+        EventBus.trigger('search:submit', { search: search });
+      }
 
       return false;
     },
@@ -92,9 +111,9 @@ define([
 
   /**
    * Register search term input behavior.
-   * @type {SearchLookup}
+   * @type {Search}
    */
-  window.Behaviors.SearchLookup = SearchLookup;
+  window.Behaviors.Search = Search;
 
-  return SearchLookup;
+  return Search;
 });
