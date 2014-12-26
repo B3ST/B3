@@ -8,9 +8,7 @@ define([
   'helpers/archive-header',
   'buses/event-bus',
   // Behavior shims
-  'behaviors/navigation-archive-behavior',
-  'behaviors/navigation-post-behavior',
-  'behaviors/navigation-url-behavior',
+  'behaviors/navigation-behavior',
   // Template shims
   'templates/archive/archive-template',
   'templates/archive/posts-template',
@@ -27,18 +25,16 @@ define([
     },
 
     ui: {
-      'postLink':     '.title > a',
-      'categoryLink': '.category > a',
-      'tagLink':      '.tag > a',
-      'authorLink':   '.author > a',
-      'taxonomyLink': '.taxonomy > a',
-      'link':         '.excerpt > a'
+      postLink:     '.title > a',
+      categoryLink: '.category > a',
+      tagLink:      '.tag > a',
+      authorLink:   '.author > a',
+      taxonomyLink: '.taxonomy > a',
+      link:         '.excerpt > a'
     },
 
     behaviors: {
-      NavigationArchive: {},
-      NavigationPost:    {},
-      NavigationURL:     {}
+      Navigation: {}
     },
 
     collectionEvents: {
