@@ -17,6 +17,14 @@ define([
       'click @ui.menuItem': 'onMenuItemActivation'
     },
 
+    initialize: function () {
+      EventBus.on('change:menu:item:state', this.onMenuItemUpdate, this);
+    },
+
+    onDestroy: function () {
+      EventBus.off('change:menu:item:state', this.onMenuItemUpdate, this);
+    },
+
     /**
      * Menu item update handler.
      * @param {Object} activeItem Data about the currently active item.
@@ -25,7 +33,16 @@ define([
      * to update menu item state on deep link navigation.
      */
     onMenuItemUpdate: function (activeItem) {
-      var id = this.view.model.get('ID');
+      var id       = this.view.model.get('ID'),
+        parent     = this.view.model.get('parent'),
+        object     = this.view.model.get('object'),
+        objectType = this.view.model.get('object_type');
+
+      if (objectType === activeItem.objectType && object === activeItem.object) {
+        activeItem.id     = id;
+        activeItem.parent = parent;
+        EventBus.trigger('change:menu:item:state', activeItem);
+      }
 
       if (id === activeItem.parent || id === activeItem.id) {
         this.view.activeChildId = activeItem.id;
@@ -33,8 +50,8 @@ define([
 
       if (activeItem.parent === id) {
         // Propagate up the menu hierarchy
-        activeItem.parent = this.view.model.get('parent');
-        EventBus.trigger('view:menu:state:change', activeItem);
+        activeItem.parent = parent;
+        EventBus.trigger('change:menu:item:state', activeItem);
       }
 
       this.$el.toggleClass(this.options.activeClass, this.view.activeChildId === activeItem.id);
@@ -53,7 +70,7 @@ define([
 
         this.$el.addClass(this.options.activeClass);
 
-        EventBus.trigger('view:menu:state:change', activeItem);
+        EventBus.trigger('change:menu:item:state', activeItem);
       }
     }
   });

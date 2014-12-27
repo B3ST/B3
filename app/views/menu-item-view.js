@@ -5,12 +5,10 @@ define([
   'backbone',
   'marionette',
   'models/menu-item-model',
-  'models/settings-model',
-  'buses/event-bus',
   'behaviors/menu-item-behavior',
   'behaviors/navigation-behavior',
   'templates/navigation/menus/menu-item-template'
-], function (_, Backbone, Marionette, MenuItem, Settings, EventBus) {
+], function (_, Backbone, Marionette, MenuItem) {
   'use strict';
 
   var MenuItemView = Backbone.Marionette.ItemView.extend({
@@ -24,7 +22,7 @@ define([
 
     ui: {
       menuItem:       '.menu-item',
-      navigationLink: '.menu-item'
+      navigationLink: 'a.menu-item:not(.dropdown-toggle)'
     },
 
     behaviors: {
@@ -34,23 +32,10 @@ define([
 
     initialize: function () {
       this.dropdown = false;
-
-      EventBus.on('view:menu:state:change', this.onItemActivation, this);
-      EventBus.on('header:view:index', this.onItemActivation, this);
-    },
-
-    onDestroy: function () {
-      EventBus.off('view:menu:state:change', this.onItemActivation, this);
-      EventBus.off('header:view:index', this.onItemActivation, this);
     },
 
     serializeData: function () {
       return _.extend(this.model.toJSON(), { dropdown: this.dropdown });
-    },
-
-    onItemActivation: function (activeItem) {
-      // Tell the behaviour to update menu items up the hierarchy:
-      this.triggerMethod('MenuItemUpdate', activeItem);
     },
 
     setDropdown: function () {
