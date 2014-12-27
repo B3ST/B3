@@ -44,7 +44,7 @@ define([
      * Menu item activation handler.
      * @param {Event} event Click event.
      */
-    onMenuItemActivation: function (event) {
+    onMenuItemActivation: function () {
       if (!this.view.dropdown) {
         var activeItem = {
           id:     this.view.model.get('ID')     || 0,

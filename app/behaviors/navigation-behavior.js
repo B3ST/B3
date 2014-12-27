@@ -12,24 +12,24 @@ define([
   var Navigation = Marionette.Behavior.extend({
 
     events: {
-      'click @ui.authorLink':   'onAuthorLinkClicked',
-      'click @ui.categoryLink': 'onLinkClicked',
-      'click @ui.link':         'onLinkClicked',
-      'click @ui.postLink':     'onLinkClicked',
-      'click @ui.tagLink':      'onLinkClicked',
-      'click @ui.taxonomyLink': 'onLinkClicked'
+      'click @ui.navigationLink': 'onLinkClicked',
+
+      'click @ui.authorLink':     'onAuthorLinkClicked',
+      'click @ui.categoryLink':   'onLinkClicked',
+      'click @ui.link':           'onLinkClicked',
+      'click @ui.postLink':       'onLinkClicked',
+      'click @ui.tagLink':        'onLinkClicked',
+      'click @ui.taxonomyLink':   'onLinkClicked'
     },
 
     /**
      * [onAuthorLinkClicked description]
      * @param  {[type]} event [description]
-     * @return {[type]}       [description]
      */
     onAuthorLinkClicked: function (event) {
       var $target = $(event.currentTarget),
         id   = $target.data('id'),
         slug = $target.data('slug'),
-        type = $target.data('type'),
         page = $target.data('page') || 1;
 
       id   = parseInt(id, 10);

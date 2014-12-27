@@ -2,10 +2,10 @@
 
 define([
   'backbone',
+  'buses/event-bus',
   'models/settings-model',
-  'behaviors/navigation-home-behavior',
   'templates/header-template'
-], function (Backbone, Settings) {
+], function (Backbone, EventBus, Settings) {
   'use strict';
 
   var HeaderView = Backbone.Marionette.LayoutView.extend({
@@ -15,8 +15,8 @@ define([
       'homeLink': '.navbar-brand'
     },
 
-    behaviors: {
-      NavigationHome: {}
+    triggers: {
+      'click @ui.homeLink': 'HomeLinkClicked'
     },
 
     regions: {
@@ -26,6 +26,11 @@ define([
 
     serializeData: function () {
       return { name: Settings.get('name') };
+    },
+
+    onHomeLinkClicked: function (event) {
+      EventBus.trigger('header:view:index', {id: 0});
+      event.preventDefault();
     }
   });
 

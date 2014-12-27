@@ -9,10 +9,9 @@ define([
 
   var Pagination = Marionette.Behavior.extend({
     defaults: {
-      // page:           1,
-      // pages:          1,
-      disabledClass:     'disabled',
-      activeClass:       'active'
+      pages:         1,
+      disabledClass: 'disabled',
+      activeClass:   'active'
     },
 
     events: {
@@ -75,7 +74,7 @@ define([
       this.$('li[data-page="' + page + '"]').addClass(active);
 
       this.$('.previous').toggleClass(disabled, page === 1);
-      this.$('.next').toggleClass(disabled, page === this.view.pages);
+      this.$('.next').toggleClass(disabled, page === this.options.pages);
     },
 
     /**
@@ -88,8 +87,8 @@ define([
         page = 1;
       }
 
-      if (page > this.view.pages) {
-        page = this.view.pages;
+      if (page > this.options.pages) {
+        page = this.options.pages;
       }
 
       return page;
