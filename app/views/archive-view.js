@@ -25,12 +25,12 @@ define([
     },
 
     ui: {
-      postLink:     '.title > a',
-      categoryLink: '.category > a',
-      tagLink:      '.tag > a',
-      authorLink:   '.author > a',
-      taxonomyLink: '.taxonomy > a',
-      link:         '.excerpt > a'
+      postLink:       '.title > a',
+      categoryLink:   '.category > a',
+      tagLink:        '.tag > a',
+      authorLink:     '.author > a',
+      taxonomyLink:   '.taxonomy > a',
+      navigationLink: '.excerpt > a'
     },
 
     behaviors: {

@@ -35,10 +35,10 @@ define([
 
     scroll: function (comments) {
       this.render();
-      this._scrollToReply(comments.last().get('ID'));
+      this.scrollToReply(comments.last().get('ID'));
     },
 
-    _scrollToReply: function (id) {
+    scrollToReply: function (id) {
       var placeholder = "#comment-" + id,
           offset      = $(placeholder).offset();
       if (offset) {

@@ -23,8 +23,8 @@ define([
     },
 
     ui: {
-      menuItem: '.menu-item',
-      link:     '.menu-item'
+      menuItem:       '.menu-item',
+      navigationLink: '.menu-item'
     },
 
     behaviors: {

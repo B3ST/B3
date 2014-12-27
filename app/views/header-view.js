@@ -4,6 +4,7 @@ define([
   'backbone',
   'buses/event-bus',
   'models/settings-model',
+  'behaviors/navigation-behavior',
   'templates/header-template'
 ], function (Backbone, EventBus, Settings) {
   'use strict';
@@ -12,11 +13,11 @@ define([
     template: 'header-template.dust',
 
     ui: {
-      'homeLink': '.navbar-brand'
+      navigationLink: 'a.navbar-brand'
     },
 
-    events: {
-      'click @ui.homeLink': 'onHomeLinkClicked'
+    behaviors: {
+      Navigation: {}
     },
 
     regions: {
@@ -25,12 +26,10 @@ define([
     },
 
     serializeData: function () {
-      return { name: Settings.get('name') };
-    },
-
-    onHomeLinkClicked: function (event) {
-      EventBus.trigger('header:view:index', {id: 0});
-      event.preventDefault();
+      return {
+        name:     Settings.get('name'),
+        site_url: Settings.get('site_url')
+      };
     }
   });
 

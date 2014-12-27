@@ -13,10 +13,8 @@ define([
 
     events: {
       'click @ui.navigationLink': 'onLinkClicked',
-
       'click @ui.authorLink':     'onAuthorLinkClicked',
       'click @ui.categoryLink':   'onLinkClicked',
-      'click @ui.link':           'onLinkClicked',
       'click @ui.postLink':       'onLinkClicked',
       'click @ui.tagLink':        'onLinkClicked',
       'click @ui.taxonomyLink':   'onLinkClicked'
@@ -60,7 +58,7 @@ define([
 
       Navigator.navigateToLink(link, true);
 
-      // TODO: What are we to do with these triggers?
+      // TODO: Event to trigger menu item state updates.
       // EventBus.trigger('navigation:link:clicked', { href: link });
       // EventBus.trigger('menu-item:view:navigate', { link: link });
 
