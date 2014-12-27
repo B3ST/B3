@@ -15,8 +15,8 @@ define([
       'homeLink': '.navbar-brand'
     },
 
-    triggers: {
-      'click @ui.homeLink': 'HomeLinkClicked'
+    events: {
+      'click @ui.homeLink': 'onHomeLinkClicked'
     },
 
     regions: {
