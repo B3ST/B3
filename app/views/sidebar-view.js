@@ -5,18 +5,19 @@ define([
   'backbone',
   'marionette',
   'buses/event-bus',
+  'behaviors/navigation-behavior',
   'templates/widget-areas/sidebar-template'
 ], function (_, Backbone, Marionette, EventBus) {
   'use strict';
 
   var SidebarView = Backbone.Marionette.ItemView.extend({
-    events: {
-      'click a': 'onLinkClicked'
+
+    ui: {
+      navigationLink: 'a'
     },
 
-    onLinkClicked: function (ev) {
-      EventBus.trigger('sidebar:view:link', { link: ev.currentTarget.href });
-      ev.preventDefault();
+    behaviors: {
+      Navigation: {}
     },
 
     serializeData: function () {
