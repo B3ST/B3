@@ -18,13 +18,8 @@ define([
       nextPage:     '.next > a'
     },
 
-    behaviors: function () {
-      return {
-        Pagination: {
-          pages:         this.pages,
-          activeClass:   'active',
-          disabledClass: 'disabled' }
-      };
+    behaviors: {
+      Pagination: { activeClass: 'active', disabledClass: 'disabled' }
     },
 
     initialize: function (options) {
