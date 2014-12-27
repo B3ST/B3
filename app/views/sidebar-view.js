@@ -1,13 +1,11 @@
 /* global define */
 
 define([
-  'underscore',
   'backbone',
   'marionette',
-  'buses/event-bus',
   'behaviors/navigation-behavior',
   'templates/widget-areas/sidebar-template'
-], function (_, Backbone, Marionette, EventBus) {
+], function (Backbone, Marionette) {
   'use strict';
 
   var SidebarView = Backbone.Marionette.ItemView.extend({
