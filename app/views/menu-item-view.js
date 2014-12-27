@@ -30,9 +30,7 @@ define([
       Navigation: {}
     },
 
-    initialize: function () {
-      this.dropdown = false;
-    },
+    dropdown: false,
 
     serializeData: function () {
       return _.extend(this.model.toJSON(), { dropdown: this.dropdown });

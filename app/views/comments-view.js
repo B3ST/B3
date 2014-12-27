@@ -3,6 +3,7 @@
 define([
   'views/replyable-view',
   'views/comment-view',
+  'behaviors/heartbeat-behavior',
   'templates/content/comments/comments-section-template'
 ], function (ReplyableView, CommentView) {
   'use strict';
@@ -18,6 +19,10 @@ define([
       'reset': 'render'
     },
 
+    behaviors: {
+      Heartbeat: {}
+    },
+
     attachHtml: function (collectionView, itemView) {
       itemView.setPost(this.model);
 
@@ -27,10 +32,6 @@ define([
         var commentSection = collectionView.$('.comments');
         $(commentSection[0]).append(itemView.el);
       }
-    },
-
-    onBeforeDestroy: function () {
-      this.collection.stopHeartbeat();
     },
 
     scroll: function (comments) {

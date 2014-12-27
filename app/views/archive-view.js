@@ -7,9 +7,9 @@ define([
   'helpers/dust/renderer-helper',
   'helpers/archive-header',
   'buses/event-bus',
-  // Behavior shims
+  // Shims
   'behaviors/navigation-behavior',
-  // Template shims
+  'behaviors/heartbeat-behavior',
   'templates/archive/archive-template',
   'templates/archive/posts-template',
   'templates/entry-meta-template'
@@ -34,7 +34,8 @@ define([
     },
 
     behaviors: {
-      Navigation: {}
+      Navigation: {},
+      Heartbeat: {}
     },
 
     collectionEvents: {
@@ -45,7 +46,17 @@ define([
       options       = options || {};
       this.archive  = ArchiveHeader.archiveBy(this.collection, options.options);
       this.template = options.template || 'archive/archive-template.dust';
+
       EventBus.trigger('title:change', this.archive.name || this.archive.date);
+
+      /**
+       * FIXME: Menu may not yet be available at this point.
+       */
+      EventBus.trigger('change:menu:item:state', {
+        object:       this.archive.ID,
+        objectParent: this.archive.parent,
+        objectType:   this.archive.taxonomy || ''
+      });
     },
 
     serializeData: function () {
@@ -54,10 +65,6 @@ define([
 
     renderPosts: function () {
       this.$('.entries').html(this._getPosts());
-    },
-
-    onBeforeDestroy: function () {
-      this.collection.stopHeartbeat();
     },
 
     _getPosts: function () {

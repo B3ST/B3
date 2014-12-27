@@ -50,17 +50,13 @@ define([
       var baseUrl = Settings.get('site_url'),
         link = event.currentTarget.href;
 
-      // FIXME: Allow relative URLs
+      // FIXME: Handle relative URLs
       if (link.indexOf(baseUrl) !== 0) {
         // Do not handle external links:
         return;
       }
 
       Navigator.navigateToLink(link, true);
-
-      // TODO: Event to trigger menu item state updates.
-      // EventBus.trigger('navigation:link:clicked', { href: link });
-      // EventBus.trigger('menu-item:view:navigate', { link: link });
 
       event.preventDefault();
     }

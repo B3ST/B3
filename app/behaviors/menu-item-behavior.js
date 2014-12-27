@@ -38,10 +38,11 @@ define([
         object     = this.view.model.get('object'),
         objectType = this.view.model.get('object_type');
 
-      if (objectType === activeItem.objectType && object === activeItem.object) {
+      if (!activeItem.id && activeItem.object && objectType === activeItem.objectType && object === activeItem.object) {
         activeItem.id     = id;
         activeItem.parent = parent;
         EventBus.trigger('change:menu:item:state', activeItem);
+        return;
       }
 
       if (id === activeItem.parent || id === activeItem.id) {
@@ -54,7 +55,7 @@ define([
         EventBus.trigger('change:menu:item:state', activeItem);
       }
 
-      this.$el.toggleClass(this.options.activeClass, this.view.activeChildId === activeItem.id);
+      this.$el.toggleClass(this.options.activeClass, !!activeItem.id && this.view.activeChildId === activeItem.id);
     },
 
     /**
