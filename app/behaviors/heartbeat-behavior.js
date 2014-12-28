@@ -2,9 +2,8 @@
 
 define([
   'backbone',
-  'marionette',
-  'buses/event-bus'
-], function (Backbone, Marionette, EventBus) {
+  'marionette'
+], function (Backbone, Marionette) {
   'use strict';
 
   var Heartbeat = Marionette.Behavior.extend({

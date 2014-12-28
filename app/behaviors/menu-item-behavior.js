@@ -33,15 +33,12 @@ define([
      * to update menu item state on deep link navigation.
      */
     onMenuItemUpdate: function (activeItem) {
-      var id       = this.view.model.get('ID'),
-        parent     = this.view.model.get('parent'),
-        object     = this.view.model.get('object'),
-        objectType = this.view.model.get('object_type');
+      var id = this.view.model.get('ID'),
+        parent = this.view.model.get('parent');
 
-      if (!activeItem.id && activeItem.object && objectType === activeItem.objectType && object === activeItem.object) {
-        activeItem.id     = id;
-        activeItem.parent = parent;
-        EventBus.trigger('change:menu:item:state', activeItem);
+      if (this._isMenuItemObject(activeItem)) {
+        activeItem.id = id;
+        this._propagateMenuItemState(activeItem, parent);
         return;
       }
 
@@ -50,12 +47,10 @@ define([
       }
 
       if (activeItem.parent === id) {
-        // Propagate up the menu hierarchy
-        activeItem.parent = parent;
-        EventBus.trigger('change:menu:item:state', activeItem);
+        this._propagateMenuItemState(activeItem, parent);
       }
 
-      this.$el.toggleClass(this.options.activeClass, !!activeItem.id && this.view.activeChildId === activeItem.id);
+      this.$el.toggleClass(this.options.activeClass, this._isActiveChild(activeItem));
     },
 
     /**
@@ -73,7 +68,24 @@ define([
 
         EventBus.trigger('change:menu:item:state', activeItem);
       }
+    },
+
+    _isMenuItemObject: function (activeItem) {
+      var object   = this.view.model.get('object'),
+        objectType = this.view.model.get('object_type');
+
+      return !activeItem.id && activeItem.object && objectType === activeItem.objectType && object === activeItem.object;
+    },
+
+    _isActiveChild: function (activeItem) {
+      return !!activeItem.id && this.view.activeChildId === activeItem.id;
+    },
+
+    _propagateMenuItemState: function (activeItem, parent) {
+        activeItem.parent = parent;
+        EventBus.trigger('change:menu:item:state', activeItem);
     }
+
   });
 
   /**

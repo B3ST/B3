@@ -5,7 +5,7 @@ define([
   'marionette',
   'behaviors/navigation-behavior',
   'templates/widget-areas/sidebar-template'
-], function (Backbone, Marionette) {
+], function (Backbone) {
   'use strict';
 
   var SidebarView = Backbone.Marionette.ItemView.extend({

@@ -5,7 +5,7 @@ define([
   'marionette',
   // Shims
   'templates/footer-template'
-], function (Backbone, Marionette) {
+], function (Backbone) {
   'use strict';
 
   var FooterView = Backbone.Marionette.ItemView.extend({
