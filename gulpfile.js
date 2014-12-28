@@ -38,22 +38,29 @@ gulp.task('build:styles', function () {
       .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
       .pipe($.minifyCss())
       .pipe($.concat('style.css'))
-    .pipe($.sourcemaps.write('maps'))
+    .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('dist/assets/styles/'))
     .pipe($.size({title: 'styles'}));
 });
 
 /**
  * gulp build:scripts
+ *
+ * Due to a bug in gulp-uglify, sourcemaps aren't behaving correctly.
+ * As a workaround, edit `node_modules/gulp-uglify/index.js` and add the
+ * following at line 85 (before `applySourceMap(file, mangled.map);`):
+ *
+ *    mangled.map = JSON.parse(mangled.map);
+ *    mangled.map.sources = file.sourceMap.sources;
  */
-gulp.task('build:scripts', function () {
+gulp.task('build:scripts', ['build:templates'], function () {
   return gulp.src('app/**/*.js')
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
       .pipe($.changed('dist/'))
       .pipe($.uglify())
         .on('error', _onError)
-    .pipe($.sourcemaps.write('maps'))
+    .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('dist/'))
     .pipe($.size({title: 'scripts'}));
 });
@@ -64,11 +71,10 @@ gulp.task('build:scripts', function () {
 gulp.task('build:templates', function () {
   return gulp.src('app/templates/**/*.{html,dust}')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init('maps'))
+    .pipe($.sourcemaps.init())
       .pipe($.dust())
         .on('error', _onError)
-    .pipe($.sourcemaps.write('maps'))
-    .pipe(gulp.dest('dist/templates-compiled/'))
+    .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('app/templates-compiled/'))
     .pipe($.size({title: 'templates'}));
 });
