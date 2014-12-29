@@ -45,8 +45,9 @@ define([
       this.mainView.destroy();
     },
 
-    onFail: function () {
-      this.mainView.displayWarning('Could not reply to comment');
+    onFail: function (err) {
+      var message = err.responseJSON[0].message;
+      this.mainView.displayWarning(message || 'Could not reply to comment');
     },
 
     _getReplyFormView: function () {
