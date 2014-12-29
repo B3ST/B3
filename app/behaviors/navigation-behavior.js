@@ -50,15 +50,20 @@ define([
       var baseUrl = Settings.get('site_url'),
         link = event.currentTarget.href;
 
+      event.preventDefault();
       // FIXME: Handle relative URLs
       if (link.indexOf(baseUrl) !== 0) {
         // Do not handle external links:
         return;
       }
 
-      Navigator.navigateToLink(link, true);
+      // the absolute home link will
+      // equal baseUrl
+      if (link === baseUrl) {
+        return Navigator.navigateToHome('', 0, true);
+      }
 
-      event.preventDefault();
+      Navigator.navigateToLink(link, true);
     }
   });
 
