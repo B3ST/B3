@@ -6,10 +6,9 @@ define([
   'backbone',
   'marionette',
   'buses/event-bus',
-  'models/user-model',
   'behaviors/reply-behavior',
   'templates/forms/replyform-template'
-], function ($, _, Backbone, Marionette, EventBus, User) {
+], function ($, _, Backbone, Marionette, EventBus) {
   'use strict';
 
   var ReplyFormView = Backbone.Marionette.ItemView.extend({

@@ -7,8 +7,9 @@ define([
   'marionette',
   'buses/event-bus',
   'buses/command-bus',
-  'models/settings-model'
-], function ($, _, Backbone, Marionette, EventBus, CommandBus, Settings) {
+  'models/settings-model',
+  'models/user-model'
+], function ($, _, Backbone, Marionette, EventBus, CommandBus, Settings, User) {
   'use strict';
 
   var Reply = Marionette.Behavior.extend({
