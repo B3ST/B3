@@ -7,6 +7,7 @@ define([
   'marionette',
   'buses/event-bus',
   'models/user-model',
+  'behaviors/reply-behavior',
   'templates/forms/replyform-template'
 ], function ($, _, Backbone, Marionette, EventBus, User) {
   'use strict';
@@ -14,9 +15,16 @@ define([
   var ReplyFormView = Backbone.Marionette.ItemView.extend({
     template: 'forms/replyform-template.dust',
     events: {
-      'click .cancel':          'onCancelClicked',
-      'click .reply':           'onReplyClicked',
-      'submit #replyform form': 'onReplyClicked'
+      'click .cancel': 'onCancelClicked'
+    },
+
+    ui: {
+      submitButton: '#replyactions > .reply',
+      replyForm:    '#replyform form'
+    },
+
+    behaviors: {
+      Reply: {}
     },
 
     tagName: function () {
@@ -44,76 +52,27 @@ define([
     },
 
     onCancelClicked: function (ev) {
-      this._slideUp();
+      this.$el.slideUp('slow', function() {
+        EventBus.trigger('replyform:view:cancel');
+        this.destroy();
+      }.bind(this));
       ev.preventDefault();
-    },
-
-    onReplyClicked: function (ev) {
-      ev.preventDefault();
-
-      if (this._validateForm()) {
-        EventBus.trigger('replyform:view:reply', this._getComment());
-      }
     },
 
     displayWarning: function (message) {
       this.$('#warning').addClass('alert alert-danger').text(message);
 
       if (_.isEmpty(message)) {
-        this._resetWarning();
+        this.resetWarning();
       }
     },
 
-    _slideUp: function () {
-      this.$el.slideUp('slow', function() {
-        EventBus.trigger('replyform:view:cancel');
-        this.destroy();
-      }.bind(this));
-    },
-
-    _validateForm: function () {
-      var valid = this._validateFormGroup();
-
-      if (!valid) {
-        this.displayWarning('Please fill all required fields.');
-      } else {
-        this._resetWarning();
-      }
-
-      return valid;
-    },
-
-    _resetWarning: function () {
+    resetWarning: function () {
       this.$('#warning').removeClass('alert alert-danger').text('');
     },
 
-    _validateFormGroup: function () {
-      var valid = true;
-
-      this.$('.form-group').each(function (index, group) {
-        $(group).removeClass('has-error');
-
-        $(group).find('.required').each(function(index, input) {
-          if (_.isEmpty($(input).val())) {
-            $(group).addClass('has-error');
-            valid = false;
-          }
-        });
-      }.bind(this));
-
-      return valid;
-    },
-
-    _getComment: function () {
-      return {
-        content:        this.$('[name="comment_content"]').val(),
-        post:           this.post.get('ID'),
-        parent_comment: this.parentId,
-        author:         this._getUser()
-      };
-    },
-
-    _getUser: function () {
+    // For Reply behavior
+    getUser: function () {
       if (this.user.isLoggedIn()) {
         return this.user;
       }

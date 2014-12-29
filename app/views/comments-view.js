@@ -1,14 +1,17 @@
 /* global define */
 
 define([
-  'views/replyable-view',
+  'underscore',
+  'backbone',
+  'marionette',
   'views/comment-view',
+  'behaviors/reply-behavior',
   'behaviors/heartbeat-behavior',
   'templates/content/comments/comments-section-template'
-], function (ReplyableView, CommentView) {
+], function (_, Backbone, Marionette, CommentView) {
   'use strict';
 
-  var CommentsView = ReplyableView.extend({
+  var CommentsView = Backbone.Marionette.CompositeView.extend({
     template:       'content/comments/comments-section-template.dust',
     tagName:        'div id="comments-container"',
     childView:      CommentView,
@@ -19,8 +22,13 @@ define([
       'reset': 'render'
     },
 
+    ui: {
+      replyButton: 'a.reply'
+    },
+
     behaviors: {
-      Heartbeat: {}
+      Heartbeat: {},
+      Reply: {}
     },
 
     attachHtml: function (collectionView, itemView) {
