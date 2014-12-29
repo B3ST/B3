@@ -69,19 +69,6 @@ define([
 
     resetWarning: function () {
       this.$('#warning').removeClass('alert alert-danger').text('');
-    },
-
-    // For Reply behavior
-    getUser: function () {
-      if (this.user.isLoggedIn()) {
-        return this.user;
-      }
-
-      return new User({
-        name:  this.$('[name="author_name"]').val(),
-        email: this.$('[name="author_email"]').val(),
-        URL:   this.$('[name="author_url"]').val()
-      });
     }
   });
 

@@ -82,8 +82,20 @@ define([
         content:        this.$('[name="comment_content"]').val(),
         post:           this.view.post.get('ID'),
         parent_comment: this.view.parentId,
-        author:         this.view.getUser()
+        author:         this.view._getUser()
       };
+    },
+
+    _getUser: function () {
+      if (this.user.isLoggedIn()) {
+        return this.user;
+      }
+
+      return new User({
+        name:  this.$('[name="author_name"]').val(),
+        email: this.$('[name="author_email"]').val(),
+        URL:   this.$('[name="author_url"]').val()
+      });
     },
 
     _displayReplyForm: function (button, id, region) {
