@@ -1,21 +1,20 @@
 /* global define */
 
 define([
-  'jquery',
-  'underscore',
   'backbone',
   'marionette',
-  'dust',
-  'dust.marionette',
-  'buses/command-bus',
+  'behaviors/loading-behavior',
   'templates/loading-template'
-  /* jshint unused: false */
-], function ($, _, Backbone, Marionette, dust, dustMarionette, CommandBus) {
+], function (Backbone) {
   'use strict';
 
   var LoadingView = Backbone.Marionette.ItemView.extend({
     template: 'loading-template.dust',
     tagName:  'div id="progress-loading"',
+
+    behaviors: {
+      Loading: {}
+    },
 
     progress: function (options) {
       var progress = options.loaded / options.total * 100;
