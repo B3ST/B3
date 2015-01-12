@@ -49,22 +49,22 @@ define([
      */
     onLinkClicked: function (event) {
       var baseUrl = Settings.get('site_url'),
-          $link   = $(event.currentTarget).attr('href');
+          link    = $(event.currentTarget).attr('href');
 
       event.preventDefault();
       // FIXME: Handle relative URLs
-      if ($link.indexOf(baseUrl) !== 0) {
+      if (link.indexOf(baseUrl) !== 0) {
         // Do not handle external links:
         return;
       }
 
       // the absolute home link will
       // equal baseUrl
-      if ($link === baseUrl) {
+      if (link === baseUrl) {
         return Navigator.navigateToHome('', 0, true);
       }
 
-      Navigator.navigateToLink($link, true);
+      Navigator.navigateToLink(link, true);
     }
   });
 
