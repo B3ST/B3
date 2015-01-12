@@ -34,7 +34,9 @@ define([
       [{ title: 'content', ui: '.post-content > a' },
        { title: 'taxonomy', ui: '.taxonomy > a' },
        { title: 'category', ui: '.category > a' },
-       { title: 'tag', ui: '.tag > a' }], function (data) {
+       { title: 'tag', ui: '.tag > a' },
+       { title: 'author', ui: '.author > a' },
+       { title: 'author', ui: '#author > a' }], function (data) {
       describe('When clicking in a ' + data.title + ' link', function() {
         it('should navigate to the given link', function() {
           var navigate = spyOn(Navigator, 'navigateToLink'),
@@ -45,21 +47,6 @@ define([
           link.click();
 
           expect(navigate).toHaveBeenCalledWith(link.attr('href'), true);
-        });
-      });
-    });
-
-    using('Author links', ['.author > a', '#author > a'], function (link) {
-      describe('When clicking in an author link', function() {
-        it('should navigate to that link', function() {
-          var navigate = spyOn(Navigator, 'navigateToAuthor'),
-              view     = new SinglePostView({ model: post, template: 'content/type-post-template.dust' });
-
-          view.render();
-          link = view.$(link).first();
-          link.click();
-
-          expect(navigate).toHaveBeenCalledWith('author-1', 1, true);
         });
       });
     });

@@ -24,14 +24,15 @@ define([
 
     describe('When clicking in author', function() {
       it('should trigger a navigation event', function() {
-        var bus = spyOn(Navigator, 'navigateToAuthor');
+        var bus = spyOn(Navigator, 'navigateToLink'), link;
 
         view = new CommentView({ model: comment });
         view.user = this.user;
         view.render();
 
-        view.$('.comment-author').click();
-        expect(bus).toHaveBeenCalledWith('author-slug', 1, true);
+        link = view.$('.comment-author');
+        link.click();
+        expect(bus).toHaveBeenCalledWith(link.attr('href'), true);
       });
     });
   });

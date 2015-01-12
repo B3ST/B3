@@ -44,7 +44,8 @@ define([
        { title: 'taxonomy', ui: '.taxonomy > a' },
        { title: 'category', ui: '.category > a' },
        { title: 'tag', ui: '.tag > a' },
-       { title: 'excerpt', ui: '.excerpt > a' }], function (data) {
+       { title: 'excerpt', ui: '.excerpt > a' },
+       { title: 'author', ui: '.author > a' }], function (data) {
       describe('When clicking in a ' + data.title + ' link', function() {
         it('should navigate to the given post', function() {
           var navigate = spyOn(Navigator, 'navigateToLink'), link;
@@ -56,18 +57,6 @@ define([
 
           expect(navigate).toHaveBeenCalledWith(link.attr('href'), true);
         });
-      });
-    });
-
-    describe('When clicking in an author link', function() {
-      it('should display the authors posts', function() {
-        var navigate = spyOn(Navigator, 'navigateToAuthor');
-
-        view = new ArchiveView({ collection: posts, options: model });
-        view.render();
-        view.$('.author > a').first().click();
-
-        expect(navigate).toHaveBeenCalledWith('author-1', 1, true);
       });
     });
   });
