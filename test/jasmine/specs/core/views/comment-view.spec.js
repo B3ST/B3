@@ -7,7 +7,7 @@ define([
 ], function (CommentView, Comment, Post, User, Navigator) {
   'use strict';
 
-  describe("CommentView", function() {
+  describe('CommentView', function() {
     var view, comment;
 
     beforeEach(function() {
@@ -22,8 +22,8 @@ define([
       });
     });
 
-    describe("When clicking in author", function() {
-      it("should trigger a navigation event", function() {
+    describe('When clicking in author', function() {
+      it('should trigger a navigation event', function() {
         var bus = spyOn(Navigator, 'navigateToAuthor');
 
         view = new CommentView({ model: comment });
