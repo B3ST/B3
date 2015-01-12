@@ -2,8 +2,8 @@
 
 define([
   'views/header-view',
-  'buses/event-bus'
-], function (HeaderView, EventBus) {
+  'buses/navigator'
+], function (HeaderView, Navigator) {
   describe("HeaderView", function() {
     var view;
 
@@ -14,9 +14,9 @@ define([
       });
 
       it("should trigger a navigation to index event", function() {
-        var trigger = spyOn(EventBus, 'trigger');
+        var trigger = spyOn(Navigator, 'navigateToHome');
         view.$('.navbar-brand').click();
-        expect(trigger).toHaveBeenCalledWith('header:view:index', { id: -1 });
+        expect(trigger).toHaveBeenCalledWith('', 0, true);
       });
     });
   });
