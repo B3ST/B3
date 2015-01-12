@@ -157,22 +157,6 @@ define([
       });
     });
 
-    describe('When triggering search:term', function() {
-      it('should fetch the new posts', function() {
-        var show = spyOn(ArchiveController.prototype, 'show');
-
-        controller = new ArchiveController(options);
-        controller.triggerMethod('search:term');
-
-        expect(show).toHaveBeenCalledWith(null, {
-          loading: {
-            style: 'opacity',
-            entities: [jasmine.any(Posts)]
-          }
-        });
-      });
-    });
-
     describe('.navigateToLink', function() {
       it('should call navigateToLink of Navigator', function() {
         var navigate = spyOn(Navigator, 'navigateToLink');

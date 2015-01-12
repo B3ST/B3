@@ -145,18 +145,6 @@ define([
     },
 
     /**
-     * Displays the given results
-     */
-    onSearchTerm: function () {
-      this.show(null, {
-        loading: {
-          style: 'opacity',
-          entities: [this.posts]
-        }
-      });
-    },
-
-    /**
      * It navigates to an external or internal link
      */
     navigateToLink: function (params) {
