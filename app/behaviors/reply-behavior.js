@@ -83,13 +83,13 @@ define([
         content:        this.$('[name="comment_content"]').val(),
         post:           this.view.post.get('ID'),
         parent_comment: this.view.parentId,
-        author:         this.view._getUser()
+        author:         this._getUser()
       };
     },
 
     _getUser: function () {
-      if (this.user.isLoggedIn()) {
-        return this.user;
+      if (this.view.user.isLoggedIn()) {
+        return this.view.user;
       }
 
       return new User({
