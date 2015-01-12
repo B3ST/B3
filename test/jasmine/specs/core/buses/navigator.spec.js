@@ -10,15 +10,15 @@ define([
 
   var bus;
 
-  describe("Navigator", function() {
+  describe('Navigator', function() {
     beforeEach(function() {
       var routes = getJSONFixture('route.json');
       Settings.set('routes', routes);
       bus = spyOn(EventBus, 'trigger');
     });
 
-    describe(".initialize", function() {
-      it("should set the default routes", function() {
+    describe('.initialize', function() {
+      it('should set the default routes', function() {
         Navigator.initialize();
 
         expect(Navigator.routes.root[0]).toEqual('(/page/{paged})');
@@ -37,23 +37,23 @@ define([
       });
     });
 
-    describe(".navigate", function() {
-      it("should trigger an event of router:nav", function() {
+    describe('.navigate', function() {
+      it('should trigger an event of router:nav', function() {
         Navigator.navigate('route', false);
         expect(bus).toHaveBeenCalledWith('router:nav', {route: 'route', options: {trigger: false}});
       });
     });
 
-    describe(".navigateToLink", function() {
-      describe("When link is internal", function() {
-        it("should navigate to that link", function() {
+    describe('.navigateToLink', function() {
+      describe('When link is internal', function() {
+        it('should navigate to that link', function() {
           Navigator.navigateToLink(Settings.get('site_url') + '/post/post', true);
           expect(bus).toHaveBeenCalledWith('router:nav', {route: 'post/post', options: { trigger: true }});
         });
       });
 
-      describe("When link is external", function() {
-        it("should open a new window", function() {
+      describe('When link is external', function() {
+        it('should open a new window', function() {
           var open = spyOn(window, 'open');
           Navigator.navigateToLink('http://local.pt/', true);
           expect(open).toHaveBeenCalledWith('http://local.pt/');
@@ -61,76 +61,24 @@ define([
       });
     });
 
-    sharedNavigationBehaviour(".navigateToHome", {
-      type:         '',
-      url:          '',
-      methodToTest: function (content, page) {
-        Navigator.navigateToHome(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToPost", {
-      type:         'post',
-      url:          'post/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToPost(new Post({ slug: 'post', date: new Date(2013, 7, 21, 13, 19, 20, 21) }), page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToPage", {
-      type:         'page',
-      url:          '',
-      methodToTest: function (content, page) {
-        Navigator.navigateToPage(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToAuthor", {
-      type:         'author',
-      url:          'post/author/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToAuthor(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToTaxonomy", {
-      type:         'author',
-      url:          'post/category/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToTaxonomy('category', content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToSearch", {
-      type:         'search',
-      url:          'search/',
-      methodToTest: function (content, page) {
-        Navigator.navigateToSearch(content, page, false);
-      }
-    });
-
-    sharedNavigationBehaviour(".navigateToDate", {
-      type:         '',
-      url:          'post/2014/03',
-      methodToTest: function (content, page) {
-        Navigator.navigateToDate({year: '2014', monthnum: '03'}, page, false);
-      }
-    });
-  });
-
-  function sharedNavigationBehaviour (navigator, options) {
-    describe(navigator, function() {
-      it("should trigger an event of router:nav to a " + options.type + " route", function() {
-        options.methodToTest(options.type, null);
-        expect(bus).toHaveBeenCalledWith('router:nav', {route: options.url +  options.type, options: {trigger: false}});
+    describe('.navigateToHome', function() {
+      it('should trigger an event of router:nav to a \'\' route', function() {
+        Navigator.navigateToHome('', null, false);
+        expect(bus).toHaveBeenCalledWith('router:nav', {route: '', options: { trigger: false }});
       });
 
-      describe("When specifying a page", function() {
-        it("should trigger an event of router:nav to a " + options.type + " route", function() {
-          options.methodToTest(options.type, 2);
-          expect(bus).toHaveBeenCalledWith('router:nav', {route: options.url + options.type + '/page/2', options: {trigger: false}});
+      describe('When specifying a page', function() {
+        it('should trigger an event of router:nav to a \'\' route', function() {
+          Navigator.navigateToHome('', 2, false);
+          expect(bus).toHaveBeenCalledWith('router:nav', {route: '/page/2', options: { trigger: false }});
         });
       });
     });
-  }
+
+    describe('.getAuthorLink', function() {
+      it('should return the authors link', function() {
+        expect(Navigator.getAuthorLink('author')).toEqual('post/author/author');
+      });
+    });
+  });
 });
