@@ -5,21 +5,18 @@ define([
   'models/post-model',
   'models/user-model',
   'collections/post-collection',
-  'buses/event-bus',
-  'buses/command-bus',
-  'sinon'
-], function (ArchiveView, Settings, Taxonomy, Post, User, Posts, EventBus, CommandBus) {
+  'buses/navigator'
+], function (ArchiveView, Settings, Taxonomy, Post, User, Posts, Navigator) {
   'use strict';
 
   describe("ArchiveView", function() {
-    var cbus, view, posts, model;
+    var view, posts, model;
 
     beforeEach(function() {
-      cbus  = spyOn(CommandBus, 'execute');
       model = new Taxonomy({ name: 'Title', slug: 'title' });
       posts = new Posts([
-        new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1', terms: { category: [model] } }),
-        new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', terms: { category: [model] }})
+        new Post({ID: 1, title: 'Sticky', excerpt: 'Excerpt 1 <a href="http://wordpress.example.org/some-href">link</a>', link: 'http://wordpress.example.org/post-1', author: new User({ID: 1, slug: 'author-1', name: 'author-name'}), terms: { portfolio: [{ID: 1, slug: 'post-1', link: 'http://wordpress.example.org/post/portfolio/content'}], category: {ID: 1, slug: 'post-1', link: "http://wordpress.example.org/post/category/content"}, post_tag: {ID: 1, slug: 'tag-1', link: "http://wordpress.example.org/post/tag/content"}}}),
+        new Post({ID: 2, title: 'Oh post', excerpt: 'Excerpt 2', link: 'http://wordpress.example.org/post-2', author: new User({ID: 1, slug: 'author-2', name: 'author-name'}), terms: {category: {ID: 1, slug: 'post-2', link: "http://wordpress.example.org/post/category/content"}, post_tag: {ID: 2, slug: 'tag-2', link: "http://wordpress.example.org/post/tag/content"}}})
       ]);
     });
 
@@ -42,108 +39,36 @@ define([
       });
     });
 
-    describe("When clicking in title link", function() {
-      var trigger;
+    using('Archive links',
+      [{ title: 'title', ui: '.title > a' },
+       { title: 'taxonomy', ui: '.taxonomy > a' },
+       { title: 'category', ui: '.category > a' },
+       { title: 'tag', ui: '.tag > a' },
+       { title: 'excerpt', ui: '.excerpt > a' }], function (data) {
+      describe('When clicking in a ' + data.title + ' link', function() {
+        it('should navigate to the given post', function() {
+          var navigate = spyOn(Navigator, 'navigateToLink'), link;
 
-      beforeEach(function() {
-        trigger = spyOn(EventBus, 'trigger');
-        posts = new Posts([
-          new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1', slug: 'post-1'}),
-          new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
-        ]);
+          view = new ArchiveView({ collection: posts, options: model });
+          view.render();
+          link = view.$(data.ui).first();
+          link.click();
+
+          expect(navigate).toHaveBeenCalledWith(link.attr('href'), true);
+        });
+      });
+    });
+
+    describe('When clicking in an author link', function() {
+      it('should display the authors posts', function() {
+        var navigate = spyOn(Navigator, 'navigateToAuthor');
 
         view = new ArchiveView({ collection: posts, options: model });
         view.render();
+        view.$('.author > a').first().click();
+
+        expect(navigate).toHaveBeenCalledWith('author-1', 1, true);
       });
-
-      it("should trigger a archive:view:display:post event", function() {
-        var post = view.$('.title > a').first();
-        post.click();
-        expect(trigger).toHaveBeenCalledWith('archive:view:display:post', { slug: 'post-1', post: posts.first() });
-      });
-    });
-
-    describe("When clicking in a taxonomy link", function() {
-      var trigger;
-
-      beforeEach(function() {
-        trigger = spyOn(EventBus, 'trigger');
-        posts = new Posts([
-          new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1 <a href="some-href">link</a>', slug: 'post-1', terms: {portfolio: [{ID: 1, slug: 'post-1', link: "http://localhost:8888/wordpress/post/portfolio/content"}]}}),
-          new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
-        ]);
-
-        view = new ArchiveView({ collection: posts, options: model });
-        view.render();
-      });
-
-      it("should trigger a archive:view:link:clicked event", function() {
-        var link = view.$('.taxonomy > a').first();
-        link.click();
-        expect(trigger).toHaveBeenCalledWith('archive:view:display:taxonomy', { href: link.attr('href') });
-      });
-    });
-
-    describe("When clicking in a link", function() {
-      var trigger;
-
-      beforeEach(function() {
-        trigger = spyOn(EventBus, 'trigger');
-        posts = new Posts([
-          new Post({ID: 1, title: 'title-1', excerpt: 'Excerpt 1 <a href="some-href">link</a>', slug: 'post-1'}),
-          new Post({ID: 2, title: 'title-2', excerpt: 'Excerpt 2', slug: 'post-2'})
-        ]);
-
-        view = new ArchiveView({ collection: posts, options: model });
-        view.render();
-      });
-
-      it("should trigger a archive:view:link:clicked event", function() {
-        var link = view.$('.excerpt > a').first();
-        link.click();
-        expect(trigger).toHaveBeenCalledWith('archive:view:link:clicked', { href: link.attr('href') });
-      });
-    });
-
-    sharedBehaviourFor('category', {
-      click:     '.category > a',
-      event:     'archive:view:display:category',
-      eventOpts: { id: 1, slug: 'post-1', type: 'category' }
-    });
-
-    sharedBehaviourFor('tag', {
-      click:     '.tag > a',
-      event:     'archive:view:display:tag',
-      eventOpts: { id: 1, slug: 'tag-1', type: 'post_tag' }
-    });
-
-    sharedBehaviourFor('author', {
-      click:     '.author > a',
-      event:     'archive:view:display:author',
-      eventOpts: { id: 1, slug: 'author-1', type: 'author' }
     });
   });
-
-  function sharedBehaviourFor (action, options) {
-    describe("When clicking in a " + action, function() {
-      var posts, bus, view, model;
-
-      beforeEach(function() {
-        posts = new Posts([
-          new Post({ID: 1, title: 'Sticky', excerpt: 'Excerpt 1', author: new User({ID: 1, slug: 'author-1', name: 'author-name'}), terms: {category: {ID: 1, slug: 'post-1', link: "http://localhost:8888/wordpress/post/category/content"}, post_tag: {ID: 1, slug: 'tag-1', link: "http://localhost:8888/wordpress/post/tag/content"}}}),
-          new Post({ID: 2, title: 'Oh post', excerpt: 'Excerpt 2', author: new User({ID: 1, slug: 'author-2', name: 'author-name'}), terms: {category: {ID: 1, slug: 'post-2', link: "http://localhost:8888/wordpress/post/category/content"}, post_tag: {ID: 2, slug: 'tag-2', link: "http://localhost:8888/wordpress/post/tag/content"}}})
-        ]);
-        bus   = spyOn(EventBus, 'trigger');
-        model = new Taxonomy({ name: 'Title', slug: 'title' });
-        view  = new ArchiveView({collection: posts, options: model});
-
-        view.render();
-        view.$(options.click).first().click();
-      });
-
-      it("should trigger a " + options.event + " event to display the given " + action, function() {
-        expect(bus).toHaveBeenCalledWith(options.event, options.eventOpts);
-      });
-    });
-  }
 });
