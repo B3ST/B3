@@ -52,7 +52,7 @@ define([
      */
     onSearchChange: function (event) {
       var search = $(event.currentTarget).val(),
-        behavior = this;
+          behavior = this;
 
       if (this._previousSearch !== search && search.length === 0) {
         EventBus.trigger('search:reset');
