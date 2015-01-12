@@ -10,7 +10,7 @@ define([
 ], function (ReplyFormController, BaseController, ReplyFormView, EventBus, Comment, Settings) {
   'use strict';
 
-  describe("ReplyFormController", function() {
+  describe('ReplyFormController', function() {
     var options, controller;
 
     beforeEach(function() {
@@ -18,11 +18,11 @@ define([
       options = { region: region, parentId: 1 };
     });
 
-    it("should extend from BaseController", function() {
+    it('should extend from BaseController', function() {
       expect(inherits(ReplyFormController, BaseController)).toBeTruthy();
     });
 
-    it("should bind to a given set of events", function() {
+    it('should bind to a given set of events', function() {
       controller = new ReplyFormController(options);
       expect(controller.busEvents).toEqual({
         'replyform:view:cancel': 'cancelReply',
@@ -30,8 +30,8 @@ define([
       });
     });
 
-    describe(".showForm", function() {
-      it("should display a ReplyFormView", function() {
+    describe('.showForm', function() {
+      it('should display a ReplyFormView', function() {
         var show = spyOn(ReplyFormController.prototype, 'show');
 
         controller = new ReplyFormController(options);
@@ -41,8 +41,8 @@ define([
       });
     });
 
-    describe(".cancelReply", function() {
-      it("should trigger a replyform:cancel", function() {
+    describe('.cancelReply', function() {
+      it('should trigger a replyform:cancel', function() {
         var trigger = spyOn(EventBus, 'trigger');
 
         controller = new ReplyFormController(options);
@@ -52,7 +52,7 @@ define([
       });
     });
 
-    describe(".sendReply", function() {
+    describe('.sendReply', function() {
       var comment, show;
 
       beforeEach(function() {
@@ -68,7 +68,7 @@ define([
         controller.mainView = jasmine.createSpyObj('view', ['destroy', 'displayWarning']);
       });
 
-      it("should save the comment", function() {
+      it('should save the comment', function() {
         controller.sendReply(comment);
         expect(show).toHaveBeenCalledWith(null, {
           loading: {
@@ -81,7 +81,7 @@ define([
         });
       });
 
-      describe("When it is successful", function() {
+      describe('When it is successful', function() {
         var trigger;
         beforeEach(function() {
           trigger = spyOn(EventBus, 'trigger');
@@ -90,22 +90,21 @@ define([
           });
         });
 
-        it("should trigger a comment:create event with the newly create comment", function() {
-
+        it('should trigger a comment:create event with the newly create comment', function() {
           controller.sendReply(comment);
           expect(trigger).toHaveBeenCalledWith('comment:create', jasmine.any(Comment));
         });
 
-        it("should destroy its mainView", function() {
+        it('should destroy its mainView', function() {
           controller.sendReply(comment);
           expect(controller.mainView.destroy).toHaveBeenCalled();
         });
       });
 
-      describe("When it fails", function() {
-        it("should display a warning", function() {
+      describe('When it fails', function() {
+        it('should display a warning', function() {
           show.and.callFake(function (view, options) {
-            options.loading.fail();
+            options.loading.fail({ responseJSON: [{ message: 'Could not reply to comment' }]});
           });
           controller.sendReply(comment);
           expect(controller.mainView.displayWarning).toHaveBeenCalledWith('Could not reply to comment');
