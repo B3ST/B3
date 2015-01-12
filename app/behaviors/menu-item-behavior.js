@@ -82,10 +82,9 @@ define([
     },
 
     _propagateMenuItemState: function (activeItem, parent) {
-        activeItem.parent = parent;
-        EventBus.trigger('change:menu:item:state', activeItem);
+      activeItem.parent = parent;
+      EventBus.trigger('change:menu:item:state', activeItem);
     }
-
   });
 
   /**
