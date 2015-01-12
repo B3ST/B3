@@ -39,11 +39,7 @@ define([
       var page = options.paged || 1;
 
       this.filter.bySearchingFor(options.search).onPage(page);
-      if (this.posts.length > 0) {
-        this._archiveController().triggerMethod('search:term');
-      } else {
-        this._archiveController().showArchive();
-      }
+      this._archiveController().showArchive();
     },
 
     navigateSearchUrl: function (options) {

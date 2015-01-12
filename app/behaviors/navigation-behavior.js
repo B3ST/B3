@@ -1,12 +1,13 @@
 /* global define */
 
 define([
+  'jquery',
   'backbone',
   'marionette',
   'buses/event-bus',
   'buses/navigator',
   'models/settings-model'
-], function (Backbone, Marionette, EventBus, Navigator, Settings) {
+], function ($, Backbone, Marionette, EventBus, Navigator, Settings) {
   'use strict';
 
   var Navigation = Marionette.Behavior.extend({
@@ -34,7 +35,7 @@ define([
       page = parseInt(page, 10);
 
       if (slug.length === 0) {
-        this.view.triggerMethod('LinkClicked', event);
+        this.view.triggerMethod('link:clicked', event);
         return;
       }
 
@@ -48,7 +49,7 @@ define([
      */
     onLinkClicked: function (event) {
       var baseUrl = Settings.get('site_url'),
-        link = event.currentTarget.href;
+          link    = $(event.currentTarget).attr('href');
 
       event.preventDefault();
       // FIXME: Handle relative URLs

@@ -4,7 +4,7 @@
 
 <div class="comment-body media-body">
   <h4 class="comment-meta media-heading {?isPostAuthor}bypostauthor{/isPostAuthor}">
-    <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" class="comment-author">{author.name}</a>
+    <a href="{author.URL}" id="{author.ID}" data-slug="{author.slug}" class="comment-author">{author.name}</a>
     {~s} {@nls key="b3.meta.on" /} {~s}
     <a href="{post.link}#comment-{ID}">
       <time datetime="{date}">{@formatDate date="{date}" format="D MMMM YYYY \a\t HH:mm" /}</time>

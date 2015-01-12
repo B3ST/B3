@@ -1,17 +1,17 @@
 /* global define */
 
 define([
-  "controllers/search-controller",
-  "controllers/base-controller",
-  "controllers/archive-controller",
-  "views/search-view",
-  "helpers/post-filter",
-  "buses/command-bus",
-  "buses/navigator"
+  'controllers/search-controller',
+  'controllers/base-controller',
+  'controllers/archive-controller',
+  'views/search-view',
+  'helpers/post-filter',
+  'buses/command-bus',
+  'buses/navigator'
 ], function (SearchController, BaseController, ArchiveController, SearchView, PostFilter, CommandBus, Navigator) {
-  "use strict";
+  'use strict';
 
-  describe("SearchController", function() {
+  describe('SearchController', function() {
     var controller, options;
 
     beforeEach(function() {
@@ -19,31 +19,31 @@ define([
       options = { region: region };
     });
 
-    it("should extend from BaseController", function() {
+    it('should extend from BaseController', function() {
       expect(inherits(SearchController, BaseController)).toBeTruthy();
     });
 
-    it("should bind to a given set of events", function() {
+    it('should bind to a given set of events', function() {
       controller = new SearchController();
       expect(controller.busEvents).toEqual({
-        "search:lookup": "searchTerm",
-        "search:submit": "navigateSearchUrl",
-        "search:reset":  "teardownSearch"
+        'search:lookup': 'searchTerm',
+        'search:submit': 'navigateSearchUrl',
+        'search:reset':  'teardownSearch'
       });
     });
 
-    describe("When initializing", function() {
-      it("should bind to a search:term command", function() {
-        var handler = spyOn(CommandBus, "setHandler");
+    describe('When initializing', function() {
+      it('should bind to a search:term command', function() {
+        var handler = spyOn(CommandBus, 'setHandler');
 
         controller = new SearchController();
-        expect(handler).toHaveBeenCalledWith("search:term", controller.searchTerm, controller);
+        expect(handler).toHaveBeenCalledWith('search:term', controller.searchTerm, controller);
       });
     });
 
-    describe(".showSearch", function() {
-      it("should display a SearchView", function() {
-        var show = spyOn(SearchController.prototype, "show");
+    describe('.showSearch', function() {
+      it('should display a SearchView', function() {
+        var show = spyOn(SearchController.prototype, 'show');
 
         controller = new SearchController();
         controller.showSearch(options);
@@ -52,35 +52,28 @@ define([
       });
     });
 
-    describe(".searchTerm", function() {
-      var trigger, filter, show;
+    describe('.searchTerm', function() {
+      var filter, show;
 
       beforeEach(function() {
         controller = new SearchController({ filter: new PostFilter() });
-        trigger = spyOn(ArchiveController.prototype, "triggerMethod");
-        filter = spyOn(controller.filter, "bySearchingFor").and.callThrough();
-        show = spyOn(ArchiveController.prototype, "showArchive");
+        filter = spyOn(controller.filter, 'bySearchingFor').and.callThrough();
+        show = spyOn(ArchiveController.prototype, 'showArchive');
       });
 
-      it("should setup the filter", function() {
-        controller.searchTerm({ search: "term" });
-        expect(filter).toHaveBeenCalledWith("term");
+      it('should setup the filter', function() {
+        controller.searchTerm({ search: 'term' });
+        expect(filter).toHaveBeenCalledWith('term');
       });
 
-      it("should call showArchive in archive controller if it was not previously loaded", function() {
-        controller.searchTerm({ search: "term" });
+      it('should call showArchive in archive controller if it was not previously loaded', function() {
+        controller.searchTerm({ search: 'term' });
         expect(show).toHaveBeenCalled();
-      });
-
-      it("should trigger a method in archive controller if it was previously loaded", function() {
-        controller.posts.length = 1;
-        controller.searchTerm({ search: "term" });
-        expect(trigger).toHaveBeenCalledWith("search:term");
       });
     });
 
-    describe(".navigateSearchUrl", function() {
-      it("should navigate to the given search", function() {
+    describe('.navigateSearchUrl', function() {
+      it('should navigate to the given search', function() {
         var navigate = spyOn(Navigator, 'navigateToSearch');
 
         controller = new SearchController();
@@ -90,7 +83,7 @@ define([
       });
     });
 
-    describe(".teardownSearch", function() {
+    describe('.teardownSearch', function() {
       var navigate, reset;
 
       beforeEach(function() {
@@ -100,11 +93,11 @@ define([
         controller.teardownSearch();
       });
 
-      it("should reset the posts", function() {
+      it('should reset the posts', function() {
         expect(reset).toHaveBeenCalled();
       });
 
-      it("should navigate to the current URL", function() {
+      it('should navigate to the current URL', function() {
         expect(navigate).toHaveBeenCalled();
       });
     });
