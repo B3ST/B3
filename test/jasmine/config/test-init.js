@@ -198,7 +198,7 @@
 
     require(specs, function() {
       jasmine.getJSONFixtures().fixturesPath = 'fixtures/json';
-      loadJSONFixtures('routes.json', 'post.json', 'menu_item.json', 'taxonomies.json', 'route.json');
+      loadJSONFixtures('routes.json', 'post.json', 'menu_item.json', 'taxonomies.json', 'route.json', 'sidebar.json');
       Settings.set('require.config', config);
       window.onload();
       // jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
