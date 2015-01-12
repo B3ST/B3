@@ -13,9 +13,9 @@ define([
 
   var SearchController = BaseController.extend({
     busEvents: {
-      'search:view:search:term':   'searchTerm',
-      'search:view:search:submit': 'navigateSearchUrl',
-      'search:view:search:empty':  'teardownSearch'
+      'search:lookup': 'searchTerm',
+      'search:submit': 'navigateSearchUrl',
+      'search:reset':  'teardownSearch'
     },
 
     initialize: function (options) {

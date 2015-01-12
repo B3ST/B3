@@ -1,19 +1,27 @@
 /* global define */
 
 define([
-  'jquery',
   'underscore',
-  'views/replyable-view',
-  'buses/navigator',
+  'backbone',
+  'marionette',
+  'behaviors/reply-behavior',
+  'behaviors/navigation-behavior',
   'templates/content/comments/comment-template'
-], function ($, _, ReplyableView, Navigator) {
+], function (_, Backbone) {
   'use strict';
 
-  var CommentView = ReplyableView.extend({
+  var CommentView = Backbone.Marionette.CompositeView.extend({
     template: 'content/comments/comment-template.dust',
-    events: _.extend({}, ReplyableView.prototype.events, {
-      'click .comment-author': 'displayAuthor'
-    }),
+
+    ui: {
+      authorLink:  '.comment-author',
+      replyButton: 'a.reply'
+    },
+
+    behaviors: {
+      Navigation: {},
+      Reply: {}
+    },
 
     tagName:  function () {
       return 'li id="comment-' + this.model.get('ID') + '" class="media comment"';
@@ -39,16 +47,6 @@ define([
 
     parentId: function () {
       return this.model.get('ID');
-    },
-
-    displayAuthor: function (ev) {
-      var slug = $(ev.currentTarget).attr('slug'),
-          page = 1, trigger = true;
-
-      if (slug) {
-        Navigator.navigateToAuthor(slug, page, trigger);
-      }
-      ev.preventDefault();
     },
 
     _isByPostAuthor: function () {

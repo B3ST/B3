@@ -16,7 +16,9 @@ define([
   'models/settings-model',
 
   'config/marionette/application',
-  'controllers/loading-controller'
+  'controllers/loading-controller',
+
+  'behaviors/behaviors'
 ], function (_, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, SearchAPI, HomeAPI, HeaderController, SidebarController, FooterController, Communicator, Settings) {
   'use strict';
 

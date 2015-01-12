@@ -18,12 +18,13 @@ define([
     busEvents: {
       'archive:show':                  'showArchive',
 
+      // TODO: Remove?
+      'archive:view:link:clicked':     'navigateToLink',
       'archive:view:display:post':     'showPost',
       'archive:view:display:category': 'showPostsByTaxonomy',
       'archive:view:display:tag':      'showPostsByTaxonomy',
+      'archive:view:display:taxonomy': 'showPostsByTaxonomy',
       'archive:view:display:author':   'showPostsByAuthor',
-      'archive:view:display:taxonomy': 'navigateToLink',
-      'archive:view:link:clicked':     'navigateToLink',
 
       'pagination:previous:page':      'showPage',
       'pagination:next:page':          'showPage',

@@ -44,7 +44,6 @@ define([
       this.view = options.view;
       _.defaults(config, this._getDefaults(options.options));
 
-      this._bindCommand();
       this._showLoading(config, options.options);
       this._fetchEntities(this.view, config);
     },
@@ -57,20 +56,6 @@ define([
       if (!this.view) {
         this.unregister();
       }
-    },
-
-    /**
-     * Display the current progress
-     * @param  {Object} data An object containing the current progress (total and loaded)
-     */
-    displayProgress: function (data) {
-      if (this.mainView) {
-        this.mainView.progress(data);
-      }
-    },
-
-    _bindCommand: function () {
-      CommandBus.setHandler('loading:progress', this.displayProgress, this);
     },
 
     _showLoading: function (config, options) {

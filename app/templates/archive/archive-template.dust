@@ -10,7 +10,7 @@
       {/archive.name}
       </span>
     </h1>
-    <h4>{archive.description|s} {?archive.count}({@nls key="b3.archive.total" /} {archive.count}){/archive.count}</h4>
+    <p>{archive.description|s} {?archive.count}({@nls key="b3.archive.total" /} {archive.count}){/archive.count}</p>
   </div>
 </header>
 {/archive}

@@ -1,8 +1,8 @@
 <div class="post-author">
-  {@nls key="b3.meta.published" /} <time class="published" datetime="{date}">{@formatDate date="{date}" format="D/M/YYYY H:m" /}</time>
+  {@nls key="b3.meta.published" /} <time class="published" datetime="{date}">{@formatDate date="{date}" format="D MMMM YYYY \a\t HH:mm" /}</time>
     {~n}
     {@nls key="b3.meta.by" /} <span class="byline author vcard">
-        <a href="{author.URL}" id="{author.ID}" slug="{author.slug}" rel="author" class="fn">{author.name}</a>
+        <a href="{author.URL}" data-type="author" data-id="{author.ID}" data-slug="{author.slug}" rel="author" class="fn">{author.name}</a>
       </span>
   </div>
 
@@ -10,7 +10,7 @@
   <div class="post-categories">
   {#terms.category}
     <span class="label-category category">
-      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
+      <a href="{link}" data-id="{ID}" data-slug="{slug}">{name}</a>
     </span>
     {~s}
   {/terms.category}
@@ -20,7 +20,7 @@
   <div class="post-tags">
   {#terms.post_tag}
     <span class="label label-primary tag">
-      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
+      <a href="{link}" data-id="{ID}" data-slug="{slug}">{name}</a>
     </span>
     {~s}
   {/terms.post_tag}
@@ -28,7 +28,7 @@
   <div class="taxonomies">
   {@terms terms=terms}
     <span class="label label-primary taxonomy">
-      <a href="{link}" id="{ID}" slug="{slug}">{name}</a>
+      <a href="{link}" data-id="{ID}" data-slug="{slug}">{name}</a>
     </span>
     {~s}
   {/terms}

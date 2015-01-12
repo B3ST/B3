@@ -2,16 +2,22 @@
 
 define([
   'backbone',
-  'models/settings-model',
   'buses/event-bus',
+  'models/settings-model',
+  'behaviors/navigation-behavior',
   'templates/header-template'
-], function (Backbone, Settings, EventBus) {
+], function (Backbone, EventBus, Settings) {
   'use strict';
 
   var HeaderView = Backbone.Marionette.LayoutView.extend({
     template: 'header-template.dust',
-    events: {
-      'click .navbar-brand': 'onIndexClicked',
+
+    ui: {
+      navigationLink: 'a.navbar-brand'
+    },
+
+    behaviors: {
+      Navigation: {}
     },
 
     regions: {
@@ -20,12 +26,10 @@ define([
     },
 
     serializeData: function () {
-      return { name: Settings.get('name') };
-    },
-
-    onIndexClicked: function (ev) {
-      EventBus.trigger('header:view:index', { id: -1 });
-      ev.preventDefault();
+      return {
+        name:     Settings.get('name'),
+        site_url: Settings.get('site_url')
+      };
     }
   });
 

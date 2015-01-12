@@ -188,6 +188,8 @@
     'helpers/dust/terms-helper',
     'helpers/dust/translate-helper',
 
+    'behaviors/behaviors',
+
     '../test/jasmine/config/using',
     '../test/jasmine/config/stub-server',
     '../test/jasmine/config/inherits',
