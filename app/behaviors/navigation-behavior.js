@@ -34,7 +34,7 @@ define([
       page = parseInt(page, 10);
 
       if (slug.length === 0) {
-        this.view.triggerMethod('LinkClicked', event);
+        this.view.triggerMethod('link:clicked', event);
         return;
       }
 
