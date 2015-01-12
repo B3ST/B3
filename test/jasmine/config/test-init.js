@@ -187,6 +187,7 @@
     'helpers/dust/sidebar-widgets-helper',
     'helpers/dust/terms-helper',
     'helpers/dust/translate-helper',
+    'helpers/dust/author-link-helper',
 
     'behaviors/behaviors',
 

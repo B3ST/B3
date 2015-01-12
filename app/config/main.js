@@ -101,7 +101,8 @@
     'helpers/dust/format-date-helper',
     'helpers/dust/sidebar-widgets-helper',
     'helpers/dust/terms-helper',
-    'helpers/dust/translate-helper'
+    'helpers/dust/translate-helper',
+    'helpers/dust/author-link-helper'
   ], function ($, _, Backbone, Marionette, App, Initializer, Heartbeat, Settings) {
     Settings.set('require.config', config);
     new Initializer({ app: App }).init();
