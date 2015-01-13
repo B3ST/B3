@@ -1,12 +1,11 @@
 /* global define */
 
 define([
-  'jquery',
   'underscore',
   'backbone',
   'marionette',
   'models/settings-model'
-], function ($, _, Backbone, Marionette, Settings) {
+], function (_, Backbone, Marionette, Settings) {
   'use strict';
 
   var methodNames = {
