@@ -116,16 +116,5 @@ define([
         });
       });
     });
-
-    describe('.showPostByAuthor', function() {
-      it('should navigate to the authors posts', function() {
-        var navigate = spyOn(Navigator, 'navigateToAuthor');
-        controller = new ArchiveController(options);
-
-        controller.showPostsByAuthor({ slug: 'author' });
-        expect(navigate).toHaveBeenCalledWith('author', 1, true);
-      });
-    });
-
   });
 });
