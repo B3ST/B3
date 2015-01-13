@@ -66,16 +66,5 @@ define([
         expect(set).toHaveBeenCalledWith({ content: split[1] });
       });
     });
-
-    describe(".showAuthor", function() {
-      it("should navigate to the given author", function() {
-        var navigate = spyOn(Navigator, 'navigateToAuthor');
-
-        controller = new SingleController({ template: '' });
-        controller.showAuthor({ type: 'author', slug: 'slug' });
-
-        expect(navigate).toHaveBeenCalledWith('slug', 1, true);
-      });
-    });
   });
 });
