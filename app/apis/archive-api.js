@@ -7,8 +7,9 @@ define([
   'controllers/archive-controller',
   'buses/event-bus',
   'models/settings-model',
-  'helpers/post-filter'
-], function (_, Backbone, Marionette, ArchiveController, EventBus, Settings, PostFilter) {
+  'helpers/post-filter',
+  'config/routes'
+], function (_, Backbone, Marionette, ArchiveController, EventBus, Settings, PostFilter, Routes) {
   'use strict';
 
   var ArchiveAPI = Backbone.Marionette.Controller.extend({
@@ -21,7 +22,7 @@ define([
       var page   = this._getPage(params),
           filter = new PostFilter().onPage(page);
 
-      this._showArchive(page, filter);
+      this._showArchive({ page: page, filter: filter });
     },
 
     showPostByCategory: function (params) {
@@ -71,7 +72,7 @@ define([
     },
 
     _getPage: function (params) {
-      return parseInt(params.paged, 10) || 1;
+      return parseInt(params.paged, 10) || Routes.getCurrentPage();
     }
   });
 

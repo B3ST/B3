@@ -83,6 +83,13 @@ define([
       return route;
     },
 
+    getCurrentPage: function () {
+      var regex = /page\/(\d)|&page=\d/,
+          route = this._getRoute();
+
+      return regex.test(route) ? parseInt(route.match(regex)[1], 10) : 1;
+    },
+
     _getRoute: function () {
       return Backbone.history.fragment;
     }
