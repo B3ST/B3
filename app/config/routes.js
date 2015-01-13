@@ -87,7 +87,7 @@ define([
       var regex = /page\/(\d)|&page=\d/,
           route = this._getRoute();
 
-      return parseInt(route.match(regex)[1], 10) || 1;
+      return regex.test(route) ? parseInt(route.match(regex)[1], 10) : 1;
     },
 
     _getRoute: function () {
