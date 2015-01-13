@@ -14,14 +14,6 @@ define([
 
     behaviors: {
       Loading: {}
-    },
-
-    progress: function (options) {
-      var progress = options.loaded / options.total * 100;
-
-      this.$('.progress-bar').prop('aria-valuenow', progress)
-                             .css('width', progress + '%');
-      this.$('.screen-reader-text').text(progress + '% Complete');
     }
   });
 

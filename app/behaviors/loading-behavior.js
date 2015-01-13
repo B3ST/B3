@@ -8,7 +8,6 @@ define([
   'use strict';
 
   var Loading = Marionette.Behavior.extend({
-
     onShow: function () {
       CommandBus.setHandler('loading:progress', this.displayProgress, this);
     },
@@ -19,10 +18,14 @@ define([
 
     /**
      * Display the current progress
-     * @param  {Object} data An object containing the current progress (total and loaded)
+     * @param  {Object} options An object containing the current progress (total and loaded)
      */
-    displayProgress: function (data) {
-      this.view.progress(data);
+    displayProgress: function (options) {
+      var progress = options.loaded / options.total * 100;
+
+      this.view.$('.progress-bar').prop('aria-valuenow', progress)
+                                  .css('width', progress + '%');
+      this.view.$('.screen-reader-text').text(progress + '% Complete');
     }
   });
 
