@@ -18,13 +18,6 @@ define([
     it("should bind to a given set of events", function() {
       controller = new SingleController();
       expect(controller.busEvents).toEqual({
-        'single:view:display:category': 'showTaxonomy',
-        'single:view:display:tag':      'showTaxonomy',
-        'single:view:display:author':   'showAuthor',
-        'single:view:display:page':     'showPage',
-        'single:view:display:taxonomy': 'navigateToLink',
-        'single:view:link:clicked':     'navigateToLink',
-
         'pagination:next:page':         'showPageContent',
         'pagination:previous:page':     'showPageContent',
         'pagination:select:page':       'showPageContent'
@@ -71,41 +64,6 @@ define([
         controller.showPageContent({ page: 2 });
 
         expect(set).toHaveBeenCalledWith({ content: split[1] });
-      });
-    });
-
-    using('Taxonomy values', ['category', 'post_tag'], function (value) {
-      describe(".showTaxonomy", function() {
-        it("should navigate to the given taxonomy", function() {
-          var navigate = spyOn(Navigator, 'navigateToTaxonomy');
-
-          controller = new SingleController({ template: '' });
-          controller.showTaxonomy({ type: value, slug: 'slug' });
-
-          expect(navigate).toHaveBeenCalledWith(value, 'slug', 1, true);
-        });
-      });
-    });
-
-    describe(".showAuthor", function() {
-      it("should navigate to the given author", function() {
-        var navigate = spyOn(Navigator, 'navigateToAuthor');
-
-        controller = new SingleController({ template: '' });
-        controller.showAuthor({ type: 'author', slug: 'slug' });
-
-        expect(navigate).toHaveBeenCalledWith('slug', 1, true);
-      });
-    });
-
-    describe(".navigateToLink", function() {
-      it("should navigate to the given link", function() {
-        var navigate = spyOn(Navigator, 'navigateToLink');
-
-        controller = new SingleController({ template: '' });
-        controller.navigateToLink({ href: 'link' });
-
-        expect(navigate).toHaveBeenCalledWith('link', true);
       });
     });
   });

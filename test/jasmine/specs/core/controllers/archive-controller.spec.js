@@ -29,14 +29,6 @@ define([
       controller = new ArchiveController({});
       expect(controller.busEvents).toEqual({
         'archive:show':                  'showArchive',
-
-        'archive:view:link:clicked':     'navigateToLink',
-        'archive:view:display:post':     'showPost',
-        'archive:view:display:category': 'showPostsByTaxonomy',
-        'archive:view:display:tag':      'showPostsByTaxonomy',
-        'archive:view:display:taxonomy': 'showPostsByTaxonomy',
-        'archive:view:display:author':   'showPostsByAuthor',
-
         'pagination:previous:page':      'showPage',
         'pagination:next:page':          'showPage',
         'pagination:select:page':        'showPage'
@@ -122,49 +114,6 @@ define([
           controller.showPage({ page: 2 });
           expect(navigate).toHaveBeenCalledWith('/wordpress/page/2', false);
         });
-      });
-    });
-
-    using('Taxonomy types', ['category', 'post_tag', 'author'], function (type) {
-      describe('.showPostsByTaxonomy', function() {
-        it('should navigate to the category taxonomy', function() {
-          var navigate = spyOn(Navigator, 'navigateToTaxonomy');
-          controller = new ArchiveController(options);
-
-          controller.showPostsByTaxonomy({ slug: 'slug', type: type });
-          expect(navigate).toHaveBeenCalledWith(type, 'slug', 1, true);
-        });
-      });
-    });
-
-    describe('.showPost', function() {
-      it('should navigate to the given post', function() {
-        var navigate = spyOn(Navigator, 'navigateToPost');
-        controller = new ArchiveController(options);
-
-        controller.showPost({ slug: 'post', post: post });
-        expect(navigate).toHaveBeenCalledWith(post, 1, true);
-      });
-    });
-
-    describe('.showPostByAuthor', function() {
-      it('should navigate to the authors posts', function() {
-        var navigate = spyOn(Navigator, 'navigateToAuthor');
-        controller = new ArchiveController(options);
-
-        controller.showPostsByAuthor({ slug: 'author' });
-        expect(navigate).toHaveBeenCalledWith('author', 1, true);
-      });
-    });
-
-    describe('.navigateToLink', function() {
-      it('should call navigateToLink of Navigator', function() {
-        var navigate = spyOn(Navigator, 'navigateToLink');
-
-        controller = new ArchiveController(options);
-        controller.navigateToLink({ href: 'link' });
-
-        expect(navigate).toHaveBeenCalledWith('link', true);
       });
     });
   });

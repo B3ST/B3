@@ -7,20 +7,12 @@ define([
   'controllers/reply-form-controller',
   'views/single-post-view',
   'models/settings-model',
-  'buses/event-bus',
-  'buses/navigator'
-], function (BaseController, PaginationController, CommentsController, ReplyFormController, SinglePostView, Settings, EventBus, Navigator) {
+  'buses/event-bus'
+], function (BaseController, PaginationController, CommentsController, ReplyFormController, SinglePostView, Settings, EventBus) {
   'use strict';
 
   var SingleController = BaseController.extend({
     busEvents: {
-      'single:view:display:category': 'showTaxonomy',
-      'single:view:display:tag':      'showTaxonomy',
-      'single:view:display:author':   'showAuthor',
-      'single:view:display:page':     'showPage',
-      'single:view:display:taxonomy': 'navigateToLink',
-      'single:view:link:clicked':     'navigateToLink',
-
       'pagination:next:page':         'showPageContent',
       'pagination:previous:page':     'showPageContent',
       'pagination:select:page':       'showPageContent'
@@ -73,21 +65,6 @@ define([
         this.page = options.page;
         this.model.set({ content: this.splitContent[this.page - 1] });
       }
-    },
-
-    showTaxonomy: function (options) {
-      var taxonomy = options.type, slug = options.slug,
-          page = 1, trigger = true;
-      Navigator.navigateToTaxonomy(taxonomy, slug, page, trigger);
-    },
-
-    showAuthor: function (options) {
-      var author = options.slug, page = 1, trigger = true;
-      Navigator.navigateToAuthor(author, page, trigger);
-    },
-
-    navigateToLink: function (options) {
-      Navigator.navigateToLink(options.href, true);
     },
 
     paginationController: function () {

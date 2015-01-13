@@ -9,7 +9,6 @@ define([
 
   var PaginationView = Backbone.Marionette.ItemView.extend({
     template: 'pagination-template.dust',
-
     tagName: 'div id="paginated"',
 
     ui: {

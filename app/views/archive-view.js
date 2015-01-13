@@ -1,7 +1,6 @@
 /* global define */
 
 define([
-  'jquery',
   'backbone',
   'marionette',
   'helpers/dust/renderer-helper',
@@ -13,7 +12,7 @@ define([
   'templates/archive/archive-template',
   'templates/archive/posts-template',
   'templates/entry-meta-template'
-], function ($, Backbone, Marionette, Renderer, ArchiveHeader, EventBus) {
+], function (Backbone, Marionette, Renderer, ArchiveHeader, EventBus) {
   'use strict';
 
   var ArchiveView = Backbone.Marionette.LayoutView.extend({

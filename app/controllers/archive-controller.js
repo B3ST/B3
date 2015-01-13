@@ -17,15 +17,6 @@ define([
   var ArchiveController = BaseController.extend({
     busEvents: {
       'archive:show':                  'showArchive',
-
-      // TODO: Remove?
-      'archive:view:link:clicked':     'navigateToLink',
-      'archive:view:display:post':     'showPost',
-      'archive:view:display:category': 'showPostsByTaxonomy',
-      'archive:view:display:tag':      'showPostsByTaxonomy',
-      'archive:view:display:taxonomy': 'showPostsByTaxonomy',
-      'archive:view:display:author':   'showPostsByAuthor',
-
       'pagination:previous:page':      'showPage',
       'pagination:next:page':          'showPage',
       'pagination:select:page':        'showPage'
@@ -91,37 +82,6 @@ define([
     },
 
     /**
-     * Display posts of a given category
-     *
-     * @param  {Object} params Object containing the category name and page number
-     */
-    showPostsByTaxonomy: function (params) {
-      var slug = params.slug, type = params.type,
-          page = 1, trigger = true;
-      Navigator.navigateToTaxonomy(type, slug, page, trigger);
-    },
-
-    /**
-     * Display posts of a given author
-     *
-     * @param  {Object} params Object containing the author and page number
-     */
-    showPostsByAuthor: function (params) {
-      var slug = params.slug, page = 1, trigger = true;
-      Navigator.navigateToAuthor(slug, page, trigger);
-    },
-
-    /**
-     * Display a given post
-     *
-     * @param  {Object} params Object containing the post
-     */
-    showPost: function (params) {
-      var post = params.post, page = 1, trigger = true;
-      Navigator.navigateToPost(post, page, trigger);
-    },
-
-    /**
      * Display the archive view and the pagination
      * @param  {int} pages   the number of pages to display
      * @param  {Object} options the options indicating information about the archive
@@ -132,23 +92,6 @@ define([
       // there's some weird bug in this region, haven't figured it out yet.
       var region = this.mainView.pagination || new Marionette.Region({ el: '#pagination' });
       this.pagination.showPagination({ region: region, page: this.page, pages: pages, include: true });
-    },
-
-    /**
-     * Navigates to a given post
-     * @param  {Object} params The object containing the post
-     */
-    onDisplayPost: function (params) {
-      var post = this.posts.get(params.post);
-      EventBus.trigger('post:show', { post: post });
-      Navigator.navigateToPost(post.get('slug'), null, false);
-    },
-
-    /**
-     * It navigates to an external or internal link
-     */
-    navigateToLink: function (params) {
-      Navigator.navigateToLink(params.href, true);
     },
 
     paginationController: function () {

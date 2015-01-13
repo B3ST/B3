@@ -6,7 +6,7 @@
         {title|s}
       </h1>
       <h2 class="byline author vcard" id="author">
-        {@nls key="b3.meta.by" /} <a data-type="object" data-id="{author.ID}" data-slug="{author.slug}" href="{author.URL}" rel="author" class="fn">{author.name}</a></small>
+        {@nls key="b3.meta.by" /} <a data-type="object" data-id="{author.ID}" data-slug="{author.slug}" href="{@authorLink author=author /}" rel="author" class="fn">{author.name}</a></small>
       </h2>
       <p class="lead">
         {excerpt|s}

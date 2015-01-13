@@ -27,7 +27,7 @@ define([
       if (!$(event.currentTarget).hasClass(this.options.activeClass)) {
         var page = $(event.currentTarget).data('page');
         this._updatePage(parseInt(page, 10));
-        EventBus.trigger('pagination:view:display:page', { page: this.view.page });
+        EventBus.trigger('pagination:select:page', { page: this.view.page });
       }
       event.preventDefault();
     },
@@ -39,7 +39,7 @@ define([
     onPreviousPageActivation: function (event) {
       if (!$(event.currentTarget).hasClass(this.options.disabledClass)) {
         this._updatePage(this.view.page - 1);
-        EventBus.trigger('pagination:view:display:previous:page', { page: this.view.page });
+        EventBus.trigger('pagination:previous:page', { page: this.view.page });
       }
       event.preventDefault();
     },
@@ -51,7 +51,7 @@ define([
     onNextPageActivation: function (event) {
       if (!$(event.currentTarget).hasClass(this.options.disabledClass)) {
         this._updatePage(this.view.page + 1);
-        EventBus.trigger('pagination:view:display:next:page', { page: this.view.page });
+        EventBus.trigger('pagination:next:page', { page: this.view.page });
       }
       event.preventDefault();
     },

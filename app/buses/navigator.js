@@ -16,6 +16,10 @@ define([
       this.routes = Routes.processRoutes(Settings.get('routes'));
     },
 
+    getAuthorLink: function (author) {
+      return Routes.buildUri(this.routes.author[0], { author: author });
+    },
+
     navigateToCurrent: function () {
       Backbone.history.loadUrl();
     },
@@ -43,32 +47,6 @@ define([
 
     navigateToAuthor: function (author, paged, trigger) {
       this._navigateToType(this.routes.author[0], {author: author, paged: paged}, trigger);
-    },
-
-    navigateToDate: function (date, paged, trigger) {
-      var numValues = _.keys(date).length;
-      this._navigateToType(this.routes.date[numValues - 1], _.extend(date, {paged: paged}), trigger);
-    },
-
-    navigateToPost: function (post, paged, trigger) {
-      var routeParams = _.extend({}, { paged: paged, post: post.get('slug') }, post.getFormattedDate());
-      this._navigateToType(this.routes.post[0], routeParams, trigger);
-    },
-
-    navigateToPage: function (page, paged, trigger) {
-      this.navigateToPostType('page', page, paged, trigger);
-    },
-
-    navigateToPostType: function (type, post, paged, trigger) {
-      var routeParams = {paged: paged};
-      routeParams[type] = post;
-      this._navigateToType(this.routes[type][0], routeParams, trigger);
-    },
-
-    navigateToTaxonomy: function (taxonomy, term, paged, trigger) {
-      var routeParams = {paged: paged};
-      routeParams[taxonomy] = term;
-      this._navigateToType(this.routes[taxonomy][0], routeParams, trigger);
     },
 
     _navigateToType: function (type, data, trigger) {

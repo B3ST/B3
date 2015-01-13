@@ -55,8 +55,8 @@ define([
     },
 
     buildUri: function (route, replace) {
-      var pageRegex   = /(\(\/?page\/.*\))/g;
-      var pageSection = route.match(pageRegex);
+      var pageRegex   = /(\(\/?page\/.*\))/g,
+          pageSection = route.match(pageRegex);
 
       pageSection = (_.isEmpty(pageSection)) ? '' : pageSection[0];
 
@@ -64,8 +64,8 @@ define([
         route = route.replace(pageSection, '');
         delete replace.paged;
       } else {
-        var pageSectionContentRegex = new RegExp(pageSection, 'g');
-        var pageSectionContent      = pageSection.match(pageSectionContentRegex);
+        var pageSectionContentRegex = new RegExp(pageSection, 'g'),
+            pageSectionContent      = pageSection.match(pageSectionContentRegex);
 
         route = route.replace(pageSection, pageSectionContent);
       }
@@ -79,7 +79,7 @@ define([
           route = this._getRoute();
 
       route = (this.routeIsPaged(route)) ? route.replace(regex, url(page))
-                                           : route + '/' + url(page);
+                                         : route + '/' + url(page);
       return route;
     },
 
