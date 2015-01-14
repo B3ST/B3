@@ -6,7 +6,8 @@ define([
   'models/settings-model',
   'buses/event-bus',
   // Shims
-  'behaviors/navigation-behavior',
+  'behaviors/transition-in-behavior',
+  'behaviors/transitioned-navigation-behavior',
   'templates/content/type-post-template',
   'templates/content/type-page-template',
   'templates/entry-meta-template'
@@ -30,7 +31,8 @@ define([
     },
 
     behaviors: {
-      Navigation: {}
+      TransitionedNavigation: {},
+      TransitionIn: {}
     },
 
     modelEvents: {
