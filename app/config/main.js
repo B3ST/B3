@@ -94,6 +94,7 @@
     'config/utils/supplant',
     'config/utils/startsWith',
     'config/utils/endsWith',
+    'config/utils/removeAt',
     'config/fetch',
     'config/save',
 
