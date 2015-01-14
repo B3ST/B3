@@ -32,14 +32,10 @@ define([
 
   Backbone.Router.prototype._extractParameters = function (route, fragment) {
     var params = route.exec(fragment).slice(1),
-        paramsObj = {}, key;
+        paramsObj = {};
 
-    _.each(this.appParams[route], function (k, index) {
-      key = k.replace(':', '').replace('*', '');
-      paramsObj[key] = params[index] ? params[index] : null;
-      if (paramsObj[key] && paramsObj[key].endsWith('/')) {
-        paramsObj[key] = paramsObj[key].removeAt(paramsObj[key].length - 1);
-      }
+    _.each(this.appParams[route], function (key, index) {
+      paramsObj[key.replace(':', '').replace('*', '')] = params[index] ? params[index] : null;
     });
 
     return [paramsObj];

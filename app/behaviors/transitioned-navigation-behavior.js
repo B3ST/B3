@@ -7,7 +7,7 @@ define([
 
   var TransitionedNavigation = Navigation.extend({
     onNavigateLink: function (options) {
-      this.$el.fadeOut(1000, function () {
+      this.$el.fadeOut('slow', function () {
         this.triggerMethod('navigate', options);
       }.bind(this));
     }
