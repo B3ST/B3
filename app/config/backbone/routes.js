@@ -1,12 +1,11 @@
 /* global define */
 
 define([
-  'jquery',
   'underscore',
   'backbone',
   'marionette',
   'models/settings-model'
-], function ($, _, Backbone, Marionette, Settings) {
+], function (_, Backbone, Marionette, Settings) {
   'use strict';
 
   var methodNames = {
@@ -33,10 +32,14 @@ define([
 
   Backbone.Router.prototype._extractParameters = function (route, fragment) {
     var params = route.exec(fragment).slice(1),
-        paramsObj = {};
+        paramsObj = {}, key;
 
-    _.each(this.appParams[route], function (key, index) {
-      paramsObj[key.replace(':', '').replace('*', '')] = params[index] ? params[index] : null;
+    _.each(this.appParams[route], function (k, index) {
+      key = k.replace(':', '').replace('*', '');
+      paramsObj[key] = params[index] ? params[index] : null;
+      if (paramsObj[key] && paramsObj[key].endsWith('/')) {
+        paramsObj[key] = paramsObj[key].removeAt(paramsObj[key].length - 1);
+      }
     });
 
     return [paramsObj];
