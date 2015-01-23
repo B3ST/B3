@@ -10,6 +10,11 @@
   removeCombined:          true,
   preserveLicenseComments: false,
   generateSourceMaps:      true,
+  keepBuildDir: false,
+
+  // Exclude non-JS files.
+  // TODO: In the future, consider moving all JS sources to a common directory.
+  fileExclusionRegExp: /^\.|^README$|\.(map|css|less|sass|scss|jpg|jpeg|png|gif|ico|dust|svg|ttf|otf|eot|woff)$/i,
 
   paths: {
     'jquery':               '../lib/jquery',
