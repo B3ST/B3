@@ -72,22 +72,12 @@
 
   // Includes Desktop Specific JavaScript files here (or inside of your Desktop router)
   require([
-    'jquery',
-    'underscore',
-    'backbone',
-    'marionette',
     'app',
     'config/initializer',
     'config/heartbeat',
     'models/settings-model',
 
-    'jqueryui',
-    'bootstrap',
-    'bootstrap.notify',
-    'backbone.validateAll',
-    'dust',
-    'dust.marionette',
-    'dust.helpers',
+    'infrastructure',
 
     'config/backbone/sync',
     'config/backbone/routes',
@@ -103,7 +93,7 @@
     'helpers/dust/terms-helper',
     'helpers/dust/translate-helper',
     'helpers/dust/author-link-helper'
-  ], function ($, _, Backbone, Marionette, App, Initializer, Heartbeat, Settings) {
+  ], function (App, Initializer, Heartbeat, Settings) {
     Settings.set('require.config', config);
     new Initializer({ app: App }).init();
 
