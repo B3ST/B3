@@ -38,30 +38,16 @@
   },
 
   shim: {
-      'jqueryui':  ['jquery'],
-      'bootstrap': ['jquery'],
-      'backbone': {
-        'deps':    ['underscore'],
-        'exports': 'Backbone'
-      },
-      'marionette': {
-        'deps':    ['underscore', 'backbone', 'jquery'],
-        'exports': 'Marionette'
-      },
-      'dust': {
-        'exports': 'dust'
-      },
-      'dust.helpers': {
-        'deps':    ['dust'],
-        'exports': 'dustHelpers'
-      },
-      'dust.marionette': {
-        'deps':    ['marionette', 'dust'],
-        'exports': 'dustMarionette',
-      },
+      'jqueryui':             ['jquery'],
+      'bootstrap':            ['jquery'],
+      'backbone':             ['underscore'],
+      'marionette':           ['underscore', 'backbone', 'jquery'],
+      'dust.helpers':         ['dust'],
+      'dust.marionette':      ['marionette', 'dust'],
       'backbone.validateAll': ['backbone'],
       'bootstrap.notify':     ['bootstrap'],
-      'templates':            ['dust']
+      'templates':            ['dust'],
+      'dust':                 {'exports': 'dust'}
   },
 
   modules: [
