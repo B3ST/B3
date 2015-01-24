@@ -7,7 +7,8 @@ define([
   'helpers/archive-header',
   'buses/event-bus',
   // Shims
-  'behaviors/navigation-behavior',
+  'behaviors/transition-in-behavior',
+  'behaviors/transitioned-navigation-behavior',
   'behaviors/heartbeat-behavior',
   'templates/archive/archive-template',
   'templates/archive/posts-template',
@@ -33,7 +34,8 @@ define([
     },
 
     behaviors: {
-      Navigation: {},
+      TransitionIn: {},
+      TransitionedNavigation: {},
       Heartbeat: {}
     },
 

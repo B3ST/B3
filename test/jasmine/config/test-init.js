@@ -182,6 +182,7 @@
     'config/utils/supplant',
     'config/utils/startsWith',
     'config/utils/endsWith',
+    'config/utils/removeAt',
     'helpers/dust/page-iterator-helper',
     'helpers/dust/format-date-helper',
     'helpers/dust/sidebar-widgets-helper',

@@ -36,6 +36,17 @@ define([
         return;
       }
 
+      this.triggerMethod('navigate:link', { link: link, baseUrl: baseUrl });
+    },
+
+    onNavigateLink: function (options) {
+      this.triggerMethod('navigate', options);
+    },
+
+    onNavigate: function (options) {
+      var link    = options.link,
+          baseUrl = options.baseUrl;
+
       // the absolute home link will
       // equal baseUrl
       if (link === baseUrl) {
