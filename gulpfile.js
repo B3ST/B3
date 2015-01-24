@@ -76,8 +76,8 @@ gulp.task('build:templates', function () {
       .pipe($.dust())
         .on('error', _onError)
       // AMDify dust modules
-      .pipe($.replace(/^\(function\(\)\{/, 'define(["dust"],function(dust){'))
-      .pipe($.replace(/\(\);$/, ';'))
+      .pipe($.insert.prepend('define(["dust"],function(dust){return '))
+      .pipe($.insert.append('});'))
     .pipe($.if(debug, $.sourcemaps.write('.')))
     .pipe(gulp.dest('app/scripts/templates/'))
     .pipe($.size({title: 'templates'}));

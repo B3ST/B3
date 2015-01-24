@@ -10,7 +10,7 @@
   removeCombined:          true,
   preserveLicenseComments: false,
   generateSourceMaps:      false,
-  keepBuildDir:            true,
+  keepBuildDir:            false,
   wrapShim:                true,
 
   paths: {
