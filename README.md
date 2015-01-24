@@ -36,9 +36,8 @@ This brief guide assumes you have at least some familiarity with WordPress and J
 
     ```
     $ cd b3
-    $ npm install -g gulp bower
+    $ npm install -g gulp bower requirejs
     $ npm install
-    $ bower install
     ```
 
 6. Activate the theme. You're ready to start hacking!
@@ -48,10 +47,9 @@ This brief guide assumes you have at least some familiarity with WordPress and J
 B3 is bundled with a number of [Gulp](http://gulpjs.com/) tasks to automate building and testing:
 
 * `gulp build`: Builds the theme application.
-* `gulp clean`: Removes all compiled files, leaving only the original sources.
-* `gulp rebuild`: Builds the theme application from scratch.
-* `gulp test`: Runs automated tests (JavaScript and PHP).
 * `gulp watch`: Watches your codebase for changes, triggering a partial rebuild and refreshing the browser.
+* `gulp jasmine`: Runs automated Jasmine tests in the browser, with support for live updates.
+* `gulp phpunit`: Runs automated PHPUnit tests in the terminal.
 
 ### Extra Tasks
 
@@ -61,11 +59,33 @@ B3 is bundled with a number of [Gulp](http://gulpjs.com/) tasks to automate buil
 * `gulp build:scripts`: Compiles, minifies and deploys JavaScript sources.
 * `gulp build:styles`: Compiles, lints, minifies and deploys LESS styles as CSS.
 * `gulp build:templates`: Compiles and deploys [Dust.js](https://linkedin.github.io/dustjs/) templates.
-* `gulp jasmine`: Runs automated Jasmine tests only.
+* `gulp clean`: Removes all compiled files, leaving only the original sources.
 * `gulp jshint`: Lints JavaScript sources.
-* `gulp phpunit`: Runs automated PHPUnit tests only.
+* `gulp rebuild`: Builds the theme application from scratch.
 
 We don't use Grunt, so it's not (yet) supported.  We welcome your pull requests, though!
+
+### Build Configuration
+
+Gulp task parameters (such as file paths and BrowserSync configurations) are provided in a centralized file located at _gulp/config.js_.
+
+### Optimization
+
+By default, the provided Gulp tasks will minify scripts but not concatenate them, leading to dozens of files being requested to the server.
+
+To avoid this, theme modules can be bundled for deployment using the [RequireJS Optimizer](http://requirejs.org/docs/optimization.html).
+
+The easiest and fastest way to do this is using the [r.js](https://github.com/jrburke/r.js) command line utility. If you completed the installation steps at the start of this guide, you should already have it. To package the site for deployment, open a terminal at the theme's root folder and enter:
+
+```
+$ r.js -o build.js
+```
+
+This will convert most scripts in your theme's _dist_ folder into concatenated versions.
+
+Most scripts will go into _main.js_, the same file your un-optimized theme would load on launch. Files that for any reason were not concatenated into _main.js_ will remain in their original places, ensuring the theme is still able to find them.
+
+External libraries will be combined as _infrastructure.js_. This file will likely be larger than your theme, but also less likely to change over time, and so it makes sense to keep it separate to make the most of browser and CDN caches.
 
 ## Licensing
 
