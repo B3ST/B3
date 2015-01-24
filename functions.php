@@ -7,6 +7,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+require_once 'inc/class-http.php';
 require_once 'inc/class-permalinks.php';
 require_once 'inc/class-scripts.php';
 require_once 'inc/class-heartbeat.php';
@@ -17,36 +18,34 @@ class B3_Theme {
 	 * Theme slug.
 	 * @var [type]
 	 */
-	protected $slug = 'b3';
+	private $slug = 'b3';
 
 	/**
 	 * [$version description]
 	 * @var string
 	 */
-	protected $version = '0.1.0';
+	private $version = '0.1.0';
 
 	/**
 	 * Permalinks handler.
 	 * @var B3_Permalinks
 	 */
-	protected $permalinks;
+	private $permalinks;
 
 	/**
 	 * Scripts handler.
 	 * @var B3_Scripts
 	 */
-	protected $scripts;
+	private $scripts;
 
 	/**
 	 * [__construct description]
 	 */
 	public function __construct( $slug ) {
-		$this->slug           = $slug;
-		$this->stylesheet_uri = get_template_directory_uri() . '/dist/assets/styles/style.css';
-
-		$this->wp_api_check();
-
-		$this->setup();
+		$this->slug   = $slug;
+		$this->styles = array(
+			'main' => get_template_directory_uri() . '/dist/assets/styles/style.css',
+		);
 	}
 
 	/**
@@ -135,9 +134,7 @@ class B3_Theme {
 		$this->setup_menus();
 
 		add_theme_support( 'automatic-feed-links' );
-
 		add_theme_support( 'live-updates' );
-
 		add_theme_support( 'html5', array(
 			'search-form',
 			'comment-form',
@@ -150,8 +147,8 @@ class B3_Theme {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 
 		if ( current_theme_supports( 'live-updates' ) ) {
-			$b3_heartbeat = new B3_Heartbeat;
-			$b3_heartbeat->ready();
+			$heartbeat = new B3_Heartbeat();
+			$heartbeat->ready();
 		}
 	}
 
@@ -161,7 +158,9 @@ class B3_Theme {
 	 * Executed by the `wp_enqueue_scripts` action.
 	 */
 	public function enqueue_assets() {
-		wp_enqueue_style( $this->get_slug() . '-style', $this->stylesheet_uri, null, $this->get_version(), 'screen' );
+		foreach ( $this->styles as $slug => $url ) {
+			wp_enqueue_style( $this->get_slug() . ' ' . $slug, $url, null, $this->get_version(), 'screen' );
+		}
 	}
 
 	/**
@@ -193,14 +192,19 @@ class B3_Theme {
 	}
 }
 
+add_action( 'init', function () {
+	$http = new B3_HTTP();
+	add_filter( 'wp_headers', array( $http, 'send_headers_cors' ), 11, 1 );
+});
+
 add_action( 'after_setup_theme',
 	function () {
 		global $GLOBALS;
 
 		// Setup theme:
 		$b3 = new B3_Theme( 'b3' );
-
-		// Set theme handlers:
+		$b3->wp_api_check();
+		$b3->setup();
 		$b3->set_permalinks( new B3_Permalinks( $b3 ) );
 		$b3->set_scripts( new B3_Scripts( $b3 ) );
 

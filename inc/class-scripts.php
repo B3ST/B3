@@ -111,7 +111,7 @@ class B3_Scripts {
 	 *
 	 * @return array List of all dequeued scripts.
 	 */
-	protected function require_scripts() {
+	private function require_scripts() {
 		global $wp_scripts;
 
 		// Prefix handles to minimize conflicts when requiring scripts:
@@ -166,7 +166,7 @@ class B3_Scripts {
 	 *
 	 * @todo Unmet dependencies should be removed to minimize loading errors.
 	 */
-	protected function cleanup_dependencies() {
+	private function cleanup_dependencies() {
 		foreach ( $this->scripts as $handle => &$script ) {
 			if ( isset( $this->script_replacements[ $handle ] ) ) {
 				$script['src'] = $this->script_replacements[ $handle ];
@@ -185,7 +185,7 @@ class B3_Scripts {
 	 * @param  string $replace     Dependency to replace.
 	 * @param  array  $replacement Replacement dependencies (empty by default).
 	 */
-	protected function replace_dependency( $replace, $replacement = array() ) {
+	private function replace_dependency( $replace, $replacement = array() ) {
 		foreach ( $this->scripts as $handle => $script ) {
 			$offset = array_search( $replace, $script['deps'] );
 			if ( $offset !== false ) {

@@ -14,7 +14,6 @@ module.exports = {
   browserSync: {
     notify:   true,
     proxy:    "b3.dev",
-    port:     8080,
     logLevel: "debug"
   },
 
@@ -23,7 +22,7 @@ module.exports = {
     specs:  "test/jasmine/specs/**/*.spec.js",
     browserSync: {
       notify:    true,
-      server:    "./",
+      server:    ".",
       startPath: "/test/jasmine/SpecRunner.html",
       logLevel:  "debug"
     }
