@@ -27,9 +27,7 @@
       'boot':                 root + '/lib/boot',
       'sinon':                root + '/lib/sinon',
       'moment':               root + '/lib/moment',
-      'i18n':                 root + '/lib/i18n',
-
-      'templates':            'templates-compiled'
+      'i18n':                 root + '/lib/i18n'
     },
 
     shim: {
@@ -192,10 +190,10 @@
 
     'behaviors/behaviors',
 
-    '../test/jasmine/config/using',
-    '../test/jasmine/config/stub-server',
-    '../test/jasmine/config/inherits',
-    '../test/jasmine/config/is-promise'
+    '../../test/jasmine/config/using',
+    '../../test/jasmine/config/stub-server',
+    '../../test/jasmine/config/inherits',
+    '../../test/jasmine/config/is-promise'
   ], function ($, _, Backbone, Marionette, jasmine, Settings) {
 
     require(specs, function() {
