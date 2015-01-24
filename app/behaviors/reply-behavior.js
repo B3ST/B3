@@ -8,7 +8,8 @@ define([
   'buses/event-bus',
   'buses/command-bus',
   'models/settings-model',
-  'models/user-model'
+  'models/user-model',
+  'behaviors/behaviors'
 ], function ($, _, Backbone, Marionette, EventBus, CommandBus, Settings, User) {
   'use strict';
 

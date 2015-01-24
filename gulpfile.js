@@ -61,7 +61,7 @@ gulp.task('build:scripts', ['build:templates'], function () {
       .pipe($.uglify())
         .on('error', _onError)
     .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('dist/'))
+//    .pipe(gulp.dest('dist/'))
     .pipe($.size({title: 'scripts'}));
 });
 
@@ -74,6 +74,9 @@ gulp.task('build:templates', function () {
     .pipe($.sourcemaps.init())
       .pipe($.dust())
         .on('error', _onError)
+      // AMDify dust modules
+      .pipe($.replace(/^\(function\(\)\{/, 'define(["dust"],function(dust){'))
+      .pipe($.replace(/\(\);$/, ';'))
     .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('app/templates-compiled/'))
     .pipe($.size({title: 'templates'}));

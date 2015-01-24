@@ -10,7 +10,8 @@
   removeCombined:          true,
   preserveLicenseComments: false,
   generateSourceMaps:      true,
-  keepBuildDir: false,
+  keepBuildDir:            true,
+  wrapShim:                true,
 
   // Exclude non-JS files.
   // TODO: In the future, consider moving all JS sources to a common directory.
@@ -37,50 +38,41 @@
   },
 
   shim: {
-      'jqueryui': ['jquery'],
+      'jqueryui':  ['jquery'],
       'bootstrap': ['jquery'],
-
       'backbone': {
         'deps':    ['underscore'],
         'exports': 'Backbone'
       },
-
       'marionette': {
         'deps':    ['underscore', 'backbone', 'jquery'],
         'exports': 'Marionette'
       },
-
       'dust': {
         'exports': 'dust'
       },
-
       'dust.helpers': {
         'deps':    ['dust'],
         'exports': 'dustHelpers'
       },
-
       'dust.marionette': {
         'deps':    ['marionette', 'dust'],
         'exports': 'dustMarionette',
       },
-
-      'templates': {
-        'deps': ['dust']
-      },
-
       'backbone.validateAll': ['backbone'],
       'bootstrap.notify':     ['bootstrap'],
+      'templates':            ['dust']
   },
 
   modules: [
     {
-      name: 'main',
+      name: 'main'/*,
       exclude: [
         'infrastructure'
       ]
     },
     {
-      name: 'infrastructure'
+      name: 'infrastructure'*/
     }
   ]
 })

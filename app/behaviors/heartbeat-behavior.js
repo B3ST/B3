@@ -2,7 +2,8 @@
 
 define([
   'backbone',
-  'marionette'
+  'marionette',
+  'behaviors/behaviors'
 ], function (Backbone, Marionette) {
   'use strict';
 

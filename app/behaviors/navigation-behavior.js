@@ -6,7 +6,8 @@ define([
   'marionette',
   'buses/event-bus',
   'buses/navigator',
-  'models/settings-model'
+  'models/settings-model',
+  'behaviors/behaviors'
 ], function ($, Backbone, Marionette, EventBus, Navigator, Settings) {
   'use strict';
 

@@ -3,7 +3,8 @@
 define([
   'backbone',
   'marionette',
-  'buses/event-bus'
+  'buses/event-bus',
+  'behaviors/behaviors'
 ], function (Backbone, Marionette, EventBus) {
   'use strict';
 

@@ -1,7 +1,8 @@
 /* global define */
 
 define([
-  'behaviors/navigation-behavior'
+  'behaviors/navigation-behavior',
+  'behaviors/behaviors'
 ], function (Navigation) {
   'use strict';
 
