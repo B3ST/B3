@@ -52,13 +52,13 @@
 
   modules: [
     {
-      name: 'main'/*,
+      name: 'main',
       exclude: [
         'infrastructure'
       ]
     },
     {
-      name: 'infrastructure'*/
+      name: 'infrastructure'
     }
   ]
 })
