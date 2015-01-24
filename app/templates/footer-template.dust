@@ -1,16 +1,4 @@
 <div class="b3-credits">
-  <ul class="social-buttons">
-    <li>
-      <iframe class="github" src="http://ghbtns.com/github-btn.html?user=B3ST&amp;repo=B3&amp;type=watch&amp;count=true" width="100" height="20" title="Star on GitHub"></iframe>
-    </li>
-    <li>
-      <iframe class="github" src="http://ghbtns.com/github-btn.html?user=B3ST&amp;repo=B3&amp;type=fork&amp;count=true" width="102" height="20" title="Fork on GitHub"></iframe>
-    </li>
-    <li class="tweet">
-      <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://beebeebee.be/" data-count="horizontal">Tweet</a>
-    </li>
-  </ul>
-
   {@section key="b3.footer.disclaimer"}
   <p>{nls1|s}</p>
   <p>{nls2|s}</p>
@@ -18,7 +6,7 @@
 
   <ul class="footer-links muted">
     <li><a href="http://beebeebee.be">{nls4|s}</a></li>
-    <li><a href="https://github.com/b3st">{nls5|s}</a></li>
+    <li><a href="https://github.com/B3ST">{nls5|s}</a></li>
   </ul>
   {/section}
 </div>

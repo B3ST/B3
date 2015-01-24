@@ -49,7 +49,7 @@ class B3_Scripts {
 	function __construct( B3_Theme $theme ) {
 		$this->theme       = $theme;
 		$this->require_uri = get_template_directory_uri() . '/lib/require.js';
-		$this->loader_uri  = get_template_directory_uri() . '/dist/main.js';
+		$this->loader_uri  = get_template_directory_uri() . '/dist/scripts/main.js';
 		$this->scripts     = array();
 
 		if ( ! is_admin() ) {

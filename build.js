@@ -3,38 +3,33 @@
  */
 ({
 
-  baseUrl:                 'app',
-  dir:                     'dist',
+  baseUrl:                 'app/scripts',
+  dir:                     'dist/scripts',
   optimize:                'uglify2',
   findNestedDependencies:  true,
   removeCombined:          true,
   preserveLicenseComments: false,
-  generateSourceMaps:      true,
+  generateSourceMaps:      false,
   keepBuildDir:            true,
   wrapShim:                true,
 
-  // Exclude non-JS files.
-  // TODO: In the future, consider moving all JS sources to a common directory.
-  fileExclusionRegExp: /^\.|^README$|\.(map|css|less|sass|scss|jpg|jpeg|png|gif|ico|dust|svg|ttf|otf|eot|woff)$/i,
-
   paths: {
-    'jquery':               '../lib/jquery',
-    'jqueryui':             '../lib/jquery-ui',
-    'underscore':           '../lib/lodash.compat',
-    'backbone':             '../lib/backbone',
-    'backbone.wreqr':       '../lib/backbone.wreqr',
-    'backbone.babysitter':  '../lib/backbone.babysitter',
-    'marionette':           '../lib/backbone.marionette',
-    'dust':                 '../lib/dust-full.min',
-    'dust.helpers':         '../lib/dust-helpers.min',
-    'dust.marionette':      '../lib/backbone.marionette.dust',
-    'backbone.validateAll': '../lib/Backbone.validateAll.min',
-    'bootstrap':            '../lib/bootstrap',
-    'bootstrap.notify':     '../lib/bootstrap-notify',
-    'text':                 '../lib/text',
-    'moment':               '../lib/moment',
-    'i18n':                 '../lib/i18n',
-    'templates':            'templates-compiled'
+    'jquery':               '../../lib/jquery',
+    'jqueryui':             '../../lib/jquery-ui',
+    'underscore':           '../../lib/lodash.compat',
+    'backbone':             '../../lib/backbone',
+    'backbone.wreqr':       '../../lib/backbone.wreqr',
+    'backbone.babysitter':  '../../lib/backbone.babysitter',
+    'marionette':           '../../lib/backbone.marionette',
+    'dust':                 '../../lib/dust-full.min',
+    'dust.helpers':         '../../lib/dust-helpers.min',
+    'dust.marionette':      '../../lib/backbone.marionette.dust',
+    'backbone.validateAll': '../../lib/Backbone.validateAll.min',
+    'bootstrap':            '../../lib/bootstrap',
+    'bootstrap.notify':     '../../lib/bootstrap-notify',
+    'text':                 '../../lib/text',
+    'moment':               '../../lib/moment',
+    'i18n':                 '../../lib/i18n'
   },
 
   shim: {

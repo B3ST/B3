@@ -8,7 +8,8 @@ var gulp        = require('gulp'),
     $           = require('gulp-load-plugins')(),
     bowerFiles  = require('bower-files')({'dev': true}),
     browserSync = require('browser-sync'),
-    reload      = browserSync.reload;
+    reload      = browserSync.reload,
+    debug       = true;
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -32,13 +33,13 @@ function _onError (error) {
 gulp.task('build:styles', function () {
   return gulp.src('app/styles/less/style.less')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
+    .pipe($.if(debug, $.sourcemaps.init()))
       .pipe($.less())
         .on('error', _onError)
       .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
       .pipe($.minifyCss())
       .pipe($.concat('style.css'))
-    .pipe($.sourcemaps.write('.'))
+    .pipe($.if(debug, $.sourcemaps.write('.')))
     .pipe(gulp.dest('dist/assets/styles/'))
     .pipe($.size({title: 'styles'}));
 });
@@ -54,14 +55,14 @@ gulp.task('build:styles', function () {
  *    mangled.map.sources = file.sourceMap.sources;
  */
 gulp.task('build:scripts', ['build:templates'], function () {
-  return gulp.src('app/**/*.js')
+  return gulp.src('app/scripts/**/*.js')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
-      .pipe($.changed('dist/'))
+    .pipe($.if(debug, $.sourcemaps.init()))
+      .pipe($.changed('dist/scripts/'))
       .pipe($.uglify())
         .on('error', _onError)
-    .pipe($.sourcemaps.write('.'))
-//    .pipe(gulp.dest('dist/'))
+    .pipe($.if(debug, $.sourcemaps.write('.')))
+    .pipe(gulp.dest('dist/scripts/'))
     .pipe($.size({title: 'scripts'}));
 });
 
@@ -71,14 +72,14 @@ gulp.task('build:scripts', ['build:templates'], function () {
 gulp.task('build:templates', function () {
   return gulp.src('app/templates/**/*.{html,dust}')
     .pipe($.plumber())
-    .pipe($.sourcemaps.init())
+    .pipe($.if(debug, $.sourcemaps.init()))
       .pipe($.dust())
         .on('error', _onError)
       // AMDify dust modules
       .pipe($.replace(/^\(function\(\)\{/, 'define(["dust"],function(dust){'))
       .pipe($.replace(/\(\);$/, ';'))
-    .pipe($.sourcemaps.write('.'))
-    .pipe(gulp.dest('app/templates-compiled/'))
+    .pipe($.if(debug, $.sourcemaps.write('.')))
+    .pipe(gulp.dest('app/scripts/templates/'))
     .pipe($.size({title: 'templates'}));
 });
 
@@ -126,7 +127,7 @@ gulp.task('bower', function () {
  * gulp jshint
  */
 gulp.task('jshint', function () {
-  return gulp.src(['app/**/*.js', '!app/templates-compiled/**/*'])
+  return gulp.src(['app/scripts/**/*.js', '!app/scripts/templates/**/*'])
     .pipe(reload({stream: true, once: true}))
     .pipe($.plumber())
     .pipe($.jshint())
@@ -182,7 +183,7 @@ gulp.task('test:server', function () {
  * gulp watch
  */
 gulp.task('watch', function () {
-  gulp.watch(['app/**/*.js', 'lib/**/*.js'],
+  gulp.watch(['app/scripts/**/*.js', 'lib/**/*.js'],
     ['build:scripts', 'jshint']);
 
   gulp.watch('app/templates/**/*.{html,dust}',
@@ -220,7 +221,7 @@ gulp.task('watch:server', function () {
   gulp.watch(['index.html', '*.php'],
     reload);
 
-  gulp.watch(['app/**/*.js', 'lib/**/*.js'],
+  gulp.watch(['app/scripts/**/*.js', 'lib/**/*.js'],
     ['build:scripts', 'jshint', reload]);
 
   gulp.watch('app/templates/**/*.{html,dust}',
@@ -240,7 +241,7 @@ gulp.task('watch:server', function () {
  * gulp clean
  */
 gulp.task('clean', function (cb) {
-  return del(['app/templates-compiled/', 'dist/', 'lib/'], cb);
+  return del(['app/scripts/templates/', 'dist/', 'lib/'], cb);
 });
 
 /**

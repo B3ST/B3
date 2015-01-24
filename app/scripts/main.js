@@ -7,7 +7,7 @@
 
   var config = {
     //urlArgs: 'bust=' + (new Date()).getTime(),
-    baseUrl: root + '/dist',
+    baseUrl: root + '/dist/scripts',
 
     paths: {
       'jquery':               root + '/lib/jquery',
@@ -25,9 +25,9 @@
       'bootstrap.notify':     root + '/lib/bootstrap-notify',
       'text':                 root + '/lib/text',
       'moment':               root + '/lib/moment',
-      'i18n':                 root + '/lib/i18n',
+      'i18n':                 root + '/lib/i18n'
 
-      'templates':            'templates-compiled'
+      //'templates':            'templates-compiled'
     },
 
     shim: {
@@ -70,39 +70,42 @@
 
   require.config(config);
 
-  // Includes Desktop Specific JavaScript files here (or inside of your Desktop router)
-  require([
-    'app',
-    'config/initializer',
-    'config/heartbeat',
-    'models/settings-model',
+  // Ensure the infrastructure is loaded first:
+  require(['infrastructure'], function () {
 
-    'infrastructure',
+    // Includes Desktop Specific JavaScript files here (or inside of your Desktop router)
+    require([
+      'app',
+      'config/initializer',
+      'config/heartbeat',
+      'models/settings-model',
 
-    'config/backbone/sync',
-    'config/backbone/routes',
-    'config/utils/supplant',
-    'config/utils/startsWith',
-    'config/utils/endsWith',
-    'config/utils/removeAt',
-    'config/fetch',
-    'config/save',
+      'config/backbone/sync',
+      'config/backbone/routes',
+      'config/utils/supplant',
+      'config/utils/startsWith',
+      'config/utils/endsWith',
+      'config/utils/removeAt',
+      'config/fetch',
+      'config/save',
 
-    'helpers/dust/page-iterator-helper',
-    'helpers/dust/format-date-helper',
-    'helpers/dust/sidebar-widgets-helper',
-    'helpers/dust/terms-helper',
-    'helpers/dust/translate-helper',
-    'helpers/dust/author-link-helper'
-  ], function (App, Initializer, Heartbeat, Settings) {
-    Settings.set('require.config', config);
-    new Initializer({ app: App }).init();
+      'helpers/dust/page-iterator-helper',
+      'helpers/dust/format-date-helper',
+      'helpers/dust/sidebar-widgets-helper',
+      'helpers/dust/terms-helper',
+      'helpers/dust/translate-helper',
+      'helpers/dust/author-link-helper'
+    ], function (App, Initializer, Heartbeat, Settings) {
+      Settings.set('require.config', config);
+      new Initializer({ app: App }).init();
 
-    var scripts = Object.keys(WP_API_SETTINGS.scripts);
-    require(scripts, function () {
-      new Heartbeat();
+      var scripts = Object.keys(WP_API_SETTINGS.scripts);
+      require(scripts, function () {
+        new Heartbeat();
+      });
+
+      window.App = App;
     });
 
-    window.App = App;
   });
 })();

@@ -5,7 +5,7 @@
 
   var root = '../../../..';
   var config = {
-    baseUrl: root + '/app',
+    baseUrl: root + '/app/scripts',
     paths: {
       'jquery':               root + '/lib/jquery',
       'jqueryui':             root + '/lib/jquery-ui',
