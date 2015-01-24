@@ -18,11 +18,14 @@ module.exports = {
     logLevel: "debug"
   },
 
-  test: {
+  jasmine: {
+    runner: "test/jasmine/config/test-init.js",
+    specs:  "test/jasmine/specs/**/*.spec.js",
     browserSync: {
-      notify: true,
-      server: "./",
-      logLevel: "debug"
+      notify:    true,
+      server:    "./",
+      startPath: "/test/jasmine/SpecRunner.html",
+      logLevel:  "debug"
     }
   },
 
@@ -53,11 +56,6 @@ module.exports = {
       lib + "fonts/**/*.{eot,svg,ttf,woff}"
     ],
     dest: dest + "assets/fonts/"
-  },
-
-  jasmine: {
-    runner: "test/jasmine/config/test-init.js",
-    specs:  "test/jasmine/specs/**/*.spec.js"
   },
 
   phpunit: {
