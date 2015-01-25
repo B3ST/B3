@@ -13,7 +13,9 @@ require_once 'inc/class-permalinks.php';
 require_once 'inc/class-scripts.php';
 require_once 'inc/class-heartbeat.php';
 
-
+/**
+ * WordPress initialization.
+ */
 function b3_init() {
 	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		$http = new B3_HTTP();
@@ -23,6 +25,9 @@ function b3_init() {
 
 add_action( 'init', 'b3_init' );
 
+/**
+ * Theme initialization.
+ */
 function b3_setup_theme() {
 	// Setup theme:
 	$b3 = new B3_Theme( 'b3', '0.1.0' );

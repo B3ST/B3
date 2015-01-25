@@ -8,7 +8,7 @@ class B3_HTTP {
 	 * You can use the `allowed_http_origins` filter to control per-origin
 	 * access.
 	 *
-	 * This is added only in debug mode to allow BrowserSync proxying.
+	 * Headers are sent only in debug mode to allow BrowserSync proxying.
 	 *
 	 * DO NOT USE ON LIVE SITES.
 	 *
@@ -27,7 +27,7 @@ class B3_HTTP {
 			'X-WP-TotalPages',
 		);
 
-		$headers['Access-Control-Allow-Origin']      = esc_url_raw( $origin );
+		$headers['Access-Control-Allow-Origin']      = esc_url_raw( get_http_origin() );
 		$headers['Access-Control-Allow-Credentials'] = 'true';
 		$headers['Access-Control-Expose-Headers']    = implode( ', ', $expose_headers );
 

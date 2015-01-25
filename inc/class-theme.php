@@ -33,7 +33,7 @@ class B3_Theme {
 		$this->slug    = $slug;
 		$this->version = $version;
 		$this->styles  = array(
-			'main' => get_template_directory_uri() . '/dist/assets/styles/style.css',
+			'main' => get_template_directory_uri() . '/dist/styles/style.css',
 		);
 	}
 

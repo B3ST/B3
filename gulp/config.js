@@ -40,21 +40,21 @@ module.exports = {
 
   less: {
     src:    src + "styles/less/style.less",
-    dest:   dest + "assets/styles/",
+    dest:   dest + "styles/",
     concat: "style.css"
   },
 
   images: {
-    src:  src + "assets/images/**/*",
-    dest: dest + "assets/images/"
+    src:  src + "images/**/*",
+    dest: dest + "images/"
   },
 
   fonts: {
     src:  [
-      src + "assets/fonts/**/*.{eot,svg,ttf,woff}",
+      src + "fonts/**/*.{eot,svg,ttf,woff}",
       lib + "fonts/**/*.{eot,svg,ttf,woff}"
     ],
-    dest: dest + "assets/fonts/"
+    dest: dest + "fonts/"
   },
 
   phpunit: {
