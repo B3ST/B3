@@ -2,9 +2,9 @@
 
 "use strict";
 
-var gulp      = require("gulp"),
-  browserSync = require("browser-sync"),
-  config      = require("../config");
+var gulp        = require("gulp"),
+    browserSync = require("browser-sync"),
+    config      = require("../config");
 
 gulp.task('watch', function () {
 
