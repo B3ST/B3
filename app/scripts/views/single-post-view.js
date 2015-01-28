@@ -36,7 +36,7 @@ define([
     },
 
     modelEvents: {
-      'change': 'renderContent'
+      'update:content': 'renderContent'
     },
 
     initialize: function () {

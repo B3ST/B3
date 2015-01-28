@@ -1,6 +1,7 @@
 /* globals define */
 
 define([
+  'marionette',
   'controllers/base-controller',
   'controllers/pagination-controller',
   'controllers/comments-controller',
@@ -8,7 +9,7 @@ define([
   'views/single-post-view',
   'models/settings-model',
   'buses/event-bus'
-], function (BaseController, PaginationController, CommentsController, ReplyFormController, SinglePostView, Settings, EventBus) {
+], function (Marionette, BaseController, PaginationController, CommentsController, ReplyFormController, SinglePostView, Settings, EventBus) {
   'use strict';
 
   var SingleController = BaseController.extend({
@@ -64,6 +65,7 @@ define([
       if (this.page !== options.page) {
         this.page = options.page;
         this.model.set({ content: this.splitContent[this.page - 1] });
+        Marionette.triggerMethodOn(this.model, 'update:content');
       }
     },
 
@@ -82,7 +84,7 @@ define([
     },
 
     _singleView: function () {
-      return new SinglePostView({ model: this.model, template: this.template, page: this.page });
+      return new SinglePostView({ model: this.model, template: this.template });
     }
   });
 
