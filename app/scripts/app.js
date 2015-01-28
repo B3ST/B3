@@ -4,6 +4,7 @@ define([
   'underscore',
   'backbone',
   'marionette',
+  'views/application-view',
   'routers/app-router',
   'apis/archive-api',
   'apis/single-api',
@@ -19,13 +20,14 @@ define([
   'controllers/loading-controller',
 
   'behaviors/behaviors'
-], function (_, Backbone, Marionette, AppRouter, ArchiveAPI, SingleAPI, SearchAPI, HomeAPI, HeaderController, SidebarController, FooterController, Communicator, Settings) {
+], function (_, Backbone, Marionette, AppView, AppRouter, ArchiveAPI, SingleAPI, SearchAPI, HomeAPI, HeaderController, SidebarController, FooterController, Communicator, Settings) {
   'use strict';
 
-  var App = new Backbone.Marionette.Application();
+  var App = new Backbone.Marionette.Application(),
+      appView = new AppView();
 
   Communicator.requests.setHandler('default:region', function () {
-    return App.main;
+    return appView.main;
   });
 
   Communicator.requests.setHandler('is:mobile', function () {
@@ -60,16 +62,10 @@ define([
   });
 
   App.addInitializer(function (options) {
-    App.addRegions({
-      header:  '#header',
-      main:    '#main',
-      sidebar: '#sidebar',
-      footer:  '#footer'
-    });
-
-    new HeaderController({ menus: options.menus, region: App.header }).showHeader();
-    new SidebarController({ sidebar: options.sidebars.sidebar, template: 'widget-areas/sidebar-template.dust', region: App.sidebar }).showSidebar();
-    new FooterController({ region: App.footer }).showFooter();
+    appView.render();
+    new HeaderController({ menus: options.menus, region: appView.header }).showHeader();
+    new SidebarController({ sidebar: options.sidebars.sidebar, template: 'widget-areas/sidebar-template.dust', region: appView.sidebar }).showSidebar();
+    new FooterController({ region: appView.footer }).showFooter();
   });
 
   App.addInitializer(function (options) {
