@@ -22,6 +22,7 @@ module.exports = {
     specs:  "test/jasmine/specs/**/*.spec.js",
     browserSync: {
       notify:    true,
+      port:      3002,
       server:    ".",
       startPath: "/test/jasmine/SpecRunner.html",
       logLevel:  "debug"
