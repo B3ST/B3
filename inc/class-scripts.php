@@ -9,7 +9,7 @@
 class B3_Scripts {
 
 	/**
-	 * [$script_replacements description]
+	 * Force WordPress to use our version of these scripts.
 	 * @var array
 	 */
 	protected $script_replacements = array(

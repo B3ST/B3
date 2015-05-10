@@ -11,7 +11,6 @@ var gulp        = require("gulp"),
 
 gulp.task("jshint", function () {
   return gulp.src(config.jshint.src)
-    .pipe(browserSync.reload({stream: true, once: true}))
     .pipe(plumber())
     .pipe(jshint())
       .pipe(jshint.reporter(config.jshint.reporter))
