@@ -1,0 +1,86 @@
+/* Gallery */
+
+.gallery {
+  @extend .container;
+
+  & .gallery-item {
+    clear: right;
+  }
+
+  &.gallery-columns-1 .gallery-item {
+    @include make-xs-column(12);
+    @include make-md-column(12);
+  }
+
+  &.gallery-columns-2 .gallery-item {
+    @include make-md-column(6);
+    @include make-xs-column(12);
+  }
+
+  &.gallery-columns-3 .gallery-item {
+    @include make-md-column(4);
+    @include make-xs-column(6);
+  }
+
+  &.gallery-columns-4 .gallery-item {
+    @include make-md-column(3);
+    @include make-xs-column(6);
+  }
+
+  &.gallery-columns-5 .gallery-item {
+    @include make-lg-column(2.4);
+    @include make-md-column(3);
+    @include make-xs-column(6);
+  }
+
+  &.gallery-columns-6 .gallery-item {
+    @include make-lg-column(2);
+    @include make-md-column(3);
+    @include make-xs-column(6);
+  }
+
+  &.gallery-columns-7 .gallery-item {
+    @include make-lg-column(1.714);
+    @include make-md-column(3);
+    @include make-xs-column(6);
+  }
+
+  &.gallery-columns-8 .gallery-item {
+    @include make-lg-column(1.5);
+    @include make-md-column(3);
+    @include make-xs-column(6);
+  }
+
+  &.gallery-columns-9 .gallery-item {
+    @include make-lg-column(1.333);
+    @include make-md-column(3);
+    @include make-xs-column(6);
+  }
+
+  &.gallery-columns-10 .gallery-item {
+    @include make-lg-column(1.2);
+    @include make-md-column(3);
+    @include make-xs-column(6);
+  }
+
+  .gallery-icon {
+    @extend .thumbnail;
+    display: inline-block;
+  }
+
+  .wp-caption-text {
+    padding: $thumbnail-caption-padding 0;
+    color:   $thumbnail-caption-color;
+  }
+}
+
+.wp-caption {
+  @extend .thumbnail;
+  max-width: 100%;
+  height: 100%;
+
+  .wp-caption-text {
+    padding: $thumbnail-caption-padding 0;
+    color:   $thumbnail-caption-color;
+  }
+}

@@ -39,8 +39,8 @@ module.exports = {
     dest: src + "scripts/templates/"
   },
 
-  less: {
-    src:    src + "styles/less/style.less",
+  sass: {
+    src:    src + "styles/scss/style.scss",
     dest:   dest + "styles/",
     concat: "style.css"
   },

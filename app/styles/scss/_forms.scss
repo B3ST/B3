@@ -1,0 +1,37 @@
+/* Forms and Buttons */
+
+.label a {
+  color: white;
+  text-decoration: none;
+}
+
+button,
+.button {
+  @extend .btn;
+
+  &.reply {
+    @extend .btn-default;
+  }
+
+  &.search {
+    @extend .btn-primary;
+  }
+}
+
+form.comment {
+  a.cancel {
+    @extend .btn;
+    @extend .text-danger;
+    @extend .pull-right;
+  }
+
+  button.reply {
+    @extend .btn;
+    @extend .btn-primary;
+    @extend .pull-right;
+  }
+
+  .form-help {
+    @extend .help-block;
+  }
+}

@@ -1,7 +1,7 @@
 
 .widget {
-  .panel;
-  .panel-default;
+  @extend .panel;
+  @extend .panel-default;
 
   .widget-heading,
   .panel-heading {
@@ -13,12 +13,12 @@
   .panel-body {
     #wp-calendar,
     table {
-      .table;
+      @extend .table;
     }
 
     input,
     select {
-      .form-control;
+      @extend .form-control;
     }
   }
 
