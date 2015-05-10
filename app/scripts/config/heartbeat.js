@@ -18,7 +18,8 @@ define([
       var heartbeat = data.b3.live,
           keys      = _.keys(heartbeat);
 
-      console.log(data);
+      // console.log(data);
+
       _.each(keys, function (key) {
         if (!_.isEmpty(heartbeat[key])) {
           EventBus.trigger(key, heartbeat[key]);
