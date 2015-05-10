@@ -49,7 +49,7 @@ module.exports = {
 
   dust: {
     src:  src + 'templates/**/*.{html,dust}',
-    dest: src + 'scripts/templates/'
+    dest: dest + 'scripts/templates/'
   },
 
   less: {
