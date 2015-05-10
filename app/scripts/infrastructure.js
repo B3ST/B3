@@ -2,7 +2,6 @@
 
 define([
   'jquery',
-  'jqueryui',
   'underscore',
   'backbone',
   'backbone.wreqr',

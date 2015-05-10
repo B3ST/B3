@@ -6,11 +6,11 @@ It is designed as a launchpad for your own cutting edge themes: so clone it, ren
 
 ## Warning
 
-**The official WP API is undergoing substantial changes and may break compatibility with B3 at any time.**
+**B3 is compatible with v1 of the WP API _only_. We're waiting for development on the v2 branch to stabilise before making further changes to this project.**
 
-It is recommended that you either use [the version on WordPress.org](https://wordpress.org/plugins/json-rest-api/) or at the very least stick to the [master branch](https://github.com/WP-API/WP-API) in order to minimize issues.
+We recommend that you either use [the version on WordPress.org](https://wordpress.org/plugins/json-rest-api/) or at the very least stick to the [master branch](https://github.com/WP-API/WP-API) to minimize issues.
 
-Also, please bear in mind that B3 is a work in progress and can't (yet) be considered ready for production use. Do so at your own risk.
+Also, please bear in mind that B3 is a work in progress and as such we can't (yet) recommend it for production use. Do so at your own risk.
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ This brief guide assumes you have at least some familiarity with WordPress and J
 
 ## Build Automation
 
-B3 is bundled with a number of [Gulp](http://gulpjs.com/) tasks to automate building and testing:
+B3 comes with a few [Gulp](http://gulpjs.com/) tasks to automate building and testing:
 
 * `gulp build`: Builds the theme application.
 * `gulp watch`: Watches your codebase for changes, triggering a partial rebuild and refreshing the browser.
@@ -52,6 +52,8 @@ B3 is bundled with a number of [Gulp](http://gulpjs.com/) tasks to automate buil
 * `gulp phpunit`: Runs automated PHPUnit tests in the terminal.
 
 ### Extra Tasks
+
+You'll need these less often, since most of them are subtasks called by the ones above:
 
 * `gulp bower`: Installs Bower dependencies. This runs on `build`.
 * `gulp build:fonts`: Deploys font assets to the public application folder.
@@ -63,19 +65,17 @@ B3 is bundled with a number of [Gulp](http://gulpjs.com/) tasks to automate buil
 * `gulp jshint`: Lints JavaScript sources.
 * `gulp rebuild`: Builds the theme application from scratch.
 
-We don't use Grunt, so it's not (yet) supported.  We welcome your pull requests, though!
-
 ### Build Configuration
 
 Gulp task parameters (such as file paths and BrowserSync configurations) are provided in a centralized file located at _gulp/config.js_.
 
-### Optimization
+## Optimization
 
-By default, the provided Gulp tasks will minify scripts but not concatenate them, leading to dozens of files being requested to the server.
+By default, the provided Gulp tasks will minify scripts but not concatenate them, leading to dozens of file requests to the server.
 
-To avoid this, theme modules can be bundled for deployment using the [RequireJS Optimizer](http://requirejs.org/docs/optimization.html).
+To avoid this, you can bundle theme modules for deployment using the [RequireJS Optimizer](http://requirejs.org/docs/optimization.html).
 
-The easiest and fastest way to do this is using the [r.js](https://github.com/jrburke/r.js) command line utility. If you completed the installation steps at the start of this guide, you should already have it. To package the site for deployment, open a terminal at the theme's root folder and enter:
+The easiest and fastest way to do this is by using the [r.js](https://github.com/jrburke/r.js) command line utility. If you completed the installation steps at the start of this guide, you should already have it. To package the site for deployment, open a terminal at the theme's root folder and enter:
 
 ```
 $ r.js -o build.js
@@ -85,8 +85,8 @@ This will convert most scripts in your theme's _dist_ folder into concatenated v
 
 Most scripts will go into _main.js_, the same file your un-optimized theme would load on launch. Files that for any reason were not concatenated into _main.js_ will remain in their original places, ensuring the theme is still able to find them.
 
-External libraries will be combined as _infrastructure.js_. This file will likely be larger than your theme, but also less likely to change over time, and so it makes sense to keep it separate to make the most of browser and CDN caches.
+r.js will combine external libraries as _infrastructure.js_. This file will probably be larger than your theme, but also less likely to change over time, and so it makes sense to keep it separate to make the most of browser and CDN caches.
 
 ## Licensing
 
-B3 is released under an MIT license. This is to make sure you don't run into licensing issues should you decide to repackage portions of the project as a Phonegap/Cordova application.
+We release B3 under an MIT license. This is to make sure you don't run into licensing issues should you decide to repackage portions of the project as a Phonegap/Cordova application.

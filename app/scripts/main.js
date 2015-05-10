@@ -11,7 +11,6 @@
 
     paths: {
       'jquery':               root + '/lib/jquery',
-      'jqueryui':             root + '/lib/jquery-ui',
       'underscore':           root + '/lib/lodash.compat',
       'backbone':             root + '/lib/backbone',
       'backbone.wreqr':       root + '/lib/backbone.wreqr',
@@ -31,7 +30,6 @@
     },
 
     shim: {
-      'jqueryui': ['jquery'],
       'bootstrap': ['jquery'],
       'backbone': {
         'deps': ['underscore'],
