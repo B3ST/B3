@@ -68,9 +68,8 @@ define([
    * router, and turn them in to routes that trigger the
    * specified method on the specified `controller`.
    *
-   * @param  {Array}  controllers [description]
-   * @param  {[type]} appRoutes   [description]
-   * @return {[type]}             [description]
+   * @param  {Array}  controllers Application controllers.
+   * @param  {Object} appRoutes   Application routes.
    */
   Marionette.AppRouter.prototype.processAppRoutes = function (controllers, appRoutes) {
     var routes = Settings.getRoutes(methodNames),
