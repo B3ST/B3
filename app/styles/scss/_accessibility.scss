@@ -1,4 +1,4 @@
 .screen-reader-text {
-  @include sr-only;
-  @include sr-only-focusable;
+  @extend sr-only;
+  @extend sr-only-focusable;
 }
