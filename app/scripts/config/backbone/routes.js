@@ -46,11 +46,11 @@ define([
   // - Support for named regex parameters (in the `$name<regex>` form.)
   // - Disabled regexp escaping to allow named regex parameters.
   Backbone.Router.prototype._routeToRegExp = function (route) {
-    var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]+/g,
+    var //escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]+/g,
         optionalParam = /\((.*?)\)/g,
         namedParam    = /(\(\?)?:[\w\-_\\]+/g,
         splatParam    = /\*[\w\-_\\]+/g,
-        regexpParam   = /\$([\w\-_\\]+)\<([^>]+)\>/g;
+        regexpParam   = /\$([\w\-_\\]+)<([^>]+)>/g;
 
     route = route//.replace(escapeRegExp, '\\$&')
                  .replace(optionalParam, '(?:$1)?')
