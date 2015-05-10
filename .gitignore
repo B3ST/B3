@@ -1,7 +1,7 @@
 # Project
 .tmp
-dist/**/*
-lib/**/*
+dist/
+lib/
 
 # Tests
 .coverrun
@@ -10,9 +10,8 @@ debug/
 test/jasmine/coverage.html
 
 # JavaScript
-node_modules/**/*
-bower_components/**/*
-app/scripts/templates/**/*
+node_modules/
+bower_components/
 
 # PHP
 composer.phar
