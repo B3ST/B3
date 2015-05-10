@@ -13,7 +13,7 @@ var gulp         = require("gulp"),
     handleErrors = require("../../util/handleErrors"),
     config       = require("../../config");
 
-gulp.task("build:scripts", function () {
+gulp.task("build:scripts", ["build:templates"], function () {
   return gulp.src(config.scripts.src)
     .pipe(plumber())
     .pipe(gulpIf(config.debug, sourcemaps.init()))
