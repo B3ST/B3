@@ -17,8 +17,8 @@ var gulp         = require("gulp"),
 gulp.task('build:templates', function () {
   return gulp.src(config.dust.src)
     .pipe(plumber())
-    .pipe(changed(config.dust.dest))
     .pipe(gulpIf(config.debug, sourcemaps.init()))
+    .pipe(changed(config.dust.dest))
     .pipe(dust())
       .on('error', handleErrors)
       // AMDify dust modules
