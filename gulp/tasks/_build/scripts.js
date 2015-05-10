@@ -13,13 +13,13 @@ var gulp         = require("gulp"),
     handleErrors = require("../../util/handleErrors"),
     config       = require("../../config");
 
-gulp.task("build:scripts", ["build:templates"], function () {
+gulp.task("build:scripts", function () {
   return gulp.src(config.scripts.src)
     .pipe(plumber())
     .pipe(gulpIf(config.debug, sourcemaps.init()))
-      .pipe(changed(config.scripts.dest))
-      .pipe(uglify())
-        .on("error", handleErrors)
+    .pipe(changed(config.scripts.dest))
+    .pipe(uglify())
+      .on("error", handleErrors)
     .pipe(gulpIf(config.debug, sourcemaps.write(".")))
     .pipe(gulp.dest(config.scripts.dest))
     .pipe(browserSync.reload({stream: true}))

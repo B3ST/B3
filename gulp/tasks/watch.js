@@ -10,9 +10,6 @@ gulp.task('watch', function () {
 
   browserSync(config.browserSync);
 
-  gulp.watch(config.jasmine.specs,
-    browserSync.reload);
-
   gulp.watch(['index.html', '**/*.php'],
     browserSync.reload);
 

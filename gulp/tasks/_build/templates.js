@@ -4,6 +4,7 @@
 
 var gulp         = require("gulp"),
     browserSync  = require("browser-sync"),
+    changed      = require("gulp-changed"),
     dust         = require("gulp-dust"),
     gulpIf       = require("gulp-if"),
     insert       = require("gulp-insert"),
@@ -16,9 +17,10 @@ var gulp         = require("gulp"),
 gulp.task('build:templates', function () {
   return gulp.src(config.dust.src)
     .pipe(plumber())
+    .pipe(changed(config.dust.dest))
     .pipe(gulpIf(config.debug, sourcemaps.init()))
-      .pipe(dust())
-        .on('error', handleErrors)
+    .pipe(dust())
+      .on('error', handleErrors)
       // AMDify dust modules
       .pipe(insert.prepend('define(["dust"],function(dust){return '))
       .pipe(insert.append('});'))

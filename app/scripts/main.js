@@ -25,8 +25,6 @@
       'text':                 root + '/lib/text',
       'moment':               root + '/lib/moment',
       'i18n':                 root + '/lib/i18n'
-
-      //'templates':            'templates-compiled'
     },
 
     shim: {
@@ -94,13 +92,14 @@
       'helpers/dust/translate-helper',
       'helpers/dust/author-link-helper'
     ], function (App, Initializer, Heartbeat, Settings) {
-      Settings.set('require.config', config);
-      new Initializer({ app: App }).init();
-
       var scripts = Object.keys(WP_API_SETTINGS.scripts);
+
       require(scripts, function () {
         new Heartbeat();
       });
+
+      Settings.set('require.config', config);
+      new Initializer({ app: App }).init();
 
       window.App = App;
     });
