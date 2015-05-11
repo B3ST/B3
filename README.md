@@ -59,7 +59,7 @@ You'll need these less often, since most of them are subtasks called by the ones
 * `gulp build:fonts`: Deploys font assets to the public application folder.
 * `gulp build:images`: Compresses image assets and deploys them to the public application folder.
 * `gulp build:scripts`: Compiles, minifies and deploys JavaScript sources.
-* `gulp build:styles`: Compiles, lints, minifies and deploys LESS styles as CSS.
+* `gulp build:styles`: Compiles, lints, minifies and deploys Sass styles as CSS.
 * `gulp build:templates`: Compiles and deploys [Dust.js](https://linkedin.github.io/dustjs/) templates.
 * `gulp clean`: Removes all compiled files, leaving only the original sources.
 * `gulp jshint`: Lints JavaScript sources.

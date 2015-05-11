@@ -1,10 +1,11 @@
 /* global module */
 
 var debug = true,
-  src     = 'app/',
-  dest    = 'dist/',
-  test    = 'test/',
-  lib     = 'lib/';
+    src   = 'app/',
+    dest  = 'dist/',
+    test  = 'test/',
+    lib   = 'lib/',
+    bower = 'bower_components/';
 
 module.exports = {
   debug: debug,
@@ -18,8 +19,8 @@ module.exports = {
     files:  [
       '**/*.php',
       dest + '**',
-      '!' + dest + '**/*.map', // Exclude sourcemaps
-      '!' + test + '**/*'  // Exclude PHPUnit tests
+      '!' + test + '**/*',              // Exclude PHPUnit tests
+      '!**/*.map'                       // Exclude sourcemaps
     ]
   },
 
@@ -33,8 +34,8 @@ module.exports = {
       startPath: '/test/jasmine/SpecRunner.html',
       files:     [
         dest + '**',
-        '!' + dest + '**/*.map', // Exclude sourcemaps
-        test + 'jasmine/**'
+        test + 'jasmine/**',
+        '!**/*.map'                     // Exclude sourcemaps
       ]
     }
   },
@@ -49,13 +50,17 @@ module.exports = {
 
   dust: {
     src:  src + 'templates/**/*.{html,dust}',
-    dest: dest + 'scripts/templates/'
+    dest: src + 'scripts/templates/'
   },
 
-  less: {
-    src:    src + 'styles/less/style.less',
-    dest:   dest + 'styles/',
-    concat: 'style.css'
+  sass: {
+    src:      src + 'styles/scss/style.scss',
+    dest:     dest + 'styles/',
+    settings: {
+      sourceComments: debug ? 'map' : null,
+      imagePath:      dest + 'images',
+      includePaths:   []
+    }
   },
 
   images: {
@@ -66,7 +71,7 @@ module.exports = {
   fonts: {
     src:  [
       src + 'fonts/**/*.{eot,svg,ttf,woff}',
-      lib + 'fonts/**/*.{eot,svg,ttf,woff}'
+      bower + 'bootstrap-sass/assets/fonts/**/*.{eot,svg,ttf,woff}'
     ],
     dest: dest + 'fonts/'
   },

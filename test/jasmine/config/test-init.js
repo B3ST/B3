@@ -8,7 +8,6 @@
     baseUrl: root + '/dist/scripts',
     paths: {
       'jquery':               root + '/lib/jquery',
-      'jqueryui':             root + '/lib/jquery-ui',
       'underscore':           root + '/lib/lodash.compat',
       'backbone':             root + '/lib/backbone',
       'backbone.wreqr':       root + '/lib/backbone.wreqr',
@@ -18,8 +17,18 @@
       'dust.helpers':         root + '/lib/dust-helpers.min',
       'dust.marionette':      root + '/lib/backbone.marionette.dust',
       'backbone.validateAll': root + '/lib/Backbone.validateAll.min',
-      'bootstrap':            root + '/lib/bootstrap',
-      'bootstrap.notify':     root + '/lib/bootstrap-notify',
+      'bootstrap.affix':      root + '/lib/affix',
+      'bootstrap.alert':      root + '/lib/alert',
+      'bootstrap.button':     root + '/lib/button',
+      'bootstrap.carousel':   root + '/lib/carousel',
+      'bootstrap.collapse':   root + '/lib/collapse',
+      'bootstrap.dropdown':   root + '/lib/dropdown',
+      'bootstrap.tab':        root + '/lib/tab',
+      'bootstrap.transition': root + '/lib/transition',
+      'bootstrap.scrollspy':  root + '/lib/scrollspy',
+      'bootstrap.modal':      root + '/lib/modal',
+      'bootstrap.tooltip':    root + '/lib/tooltip',
+      'bootstrap.popover':    root + '/lib/popover',
       'text':                 root + '/lib/text',
       'jasmine':              root + '/lib/jasmine',
       'jasmine-html':         root + '/lib/jasmine-html',
@@ -31,8 +40,6 @@
     },
 
     shim: {
-      'bootstrap': ['jquery'],
-      'jqueryui': ['jquery'],
       'backbone': {
         'deps': ['underscore'],
         'exports': 'Backbone'
@@ -57,9 +64,20 @@
         'exports': 'dustHelpers'
       },
 
-      'bootstrap.notify': ['bootstrap'],
-
       'backbone.validateAll': ['backbone'],
+
+      'bootstrap.affix':      ['jquery'],
+      'bootstrap.alert':      ['jquery'],
+      'bootstrap.button':     ['jquery'],
+      'bootstrap.carousel':   ['jquery'],
+      'bootstrap.collapse':   ['jquery'],
+      'bootstrap.dropdown':   ['jquery'],
+      'bootstrap.tab':        ['jquery'],
+      'bootstrap.transition': ['jquery'],
+      'bootstrap.scrollspy':  ['jquery'],
+      'bootstrap.modal':      ['jquery'],
+      'bootstrap.tooltip':    ['jquery'],
+      'bootstrap.popover':    ['jquery'],
 
       'jasmine': {
         'exports': 'jasmine'
@@ -173,9 +191,20 @@
     'models/settings-model',
 
     'jasmine-jquery',
-    'bootstrap',
-    'bootstrap.notify',
     'backbone.validateAll',
+
+    'bootstrap.affix',
+    'bootstrap.alert',
+    'bootstrap.button',
+    'bootstrap.carousel',
+    'bootstrap.collapse',
+    'bootstrap.dropdown',
+    'bootstrap.tab',
+    'bootstrap.transition',
+    'bootstrap.scrollspy',
+    'bootstrap.modal',
+    'bootstrap.tooltip',
+    'bootstrap.popover',
 
     'config/utils/supplant',
     'config/utils/startsWith',

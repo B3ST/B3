@@ -1,32 +1,27 @@
 /**
  * Import Bootstrap
  */
-@import url(../../../bower_components/bootstrap/less/bootstrap.less);
-
-/**
- * Import Bootstrap notify
- */
-@import url(../../../bower_components/bootstrap-notify/css/bootstrap-notify.css);
+@import "../../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
 
 /**
  * Import theme style variables.
  */
-@import url(_variables.less);
+@import "variables";
 
 /**
  * Import theme mixins.
  */
-@import url(_mixins.less);
+@import "mixins";
 
 /**
  * Import accessibility styles.
  */
-@import url(_accessibility.less);
+@import "accessibility";
 
 /**
  * Import WordPress specific styles.
  */
-@import url(_wordpress.less);
+@import "wordpress";
 
 body {
   word-wrap: break-word;
@@ -37,11 +32,12 @@ body {
 }
 
 .navbar-container {
-  .container;
+  @extend .container;
 }
 
 .jumbotron {
-  .container-fluid;
+  @extend .container-fluid;
+
   .jumbotron-container {
   }
 }
@@ -51,29 +47,29 @@ body {
 }
 
 #content-wrapper {
-  .container;
+  @extend .container;
 
   #main {
-    .make-md-column(9);
-    .make-xs-column(12);
+    @include make-md-column(9);
+    @include make-xs-column(12);
 
     .entry,
     .entries {
-      .make-md-column(12);
-      .make-xs-column(12);
+      @include make-md-column(12);
+      @include make-xs-column(12);
     }
 
-    @media (min-width: @screen-md-min) {
+    @media (min-width: $screen-md-min) {
       padding-left: 0;
     }
   }
 
   #sidebar {
-    .container;
-    .make-md-column(3);
-    .make-xs-column(12);
+    @extend .container;
+    @include make-md-column(3);
+    @include make-xs-column(12);
 
-    @media (min-width: @screen-md-min) {
+    @media (min-width: $screen-md-min) {
       padding-right: 0;
     }
   }
@@ -87,28 +83,28 @@ body {
 .loading-container {
   margin: 100px;
   .progress-bar {
-    .progress-bar-striped;
+    @extend .progress-bar-striped;
   }
 }
 
 .alignleft,
 .alignright,
 .aligncenter {
-  margin: @padding-base-vertical @padding-base-horizontal;
+  margin: $padding-base-vertical $padding-base-horizontal;
 }
 
 .alignleft {
-  .pull-left;
+  @extend .pull-left;
   margin-left: 0;
 }
 
 .alignright {
-  .pull-right;
+  @extend .pull-right;
   margin-right: 0;
 }
 
 .aligncenter {
-  .clearfix();
+  @include clearfix;
   clear:        both;
   margin-left:  auto;
   margin-right: auto;
@@ -116,7 +112,7 @@ body {
 }
 
 .alignnone {
-  .clearfix();
+  @include clearfix;
   clear: both;
 }
 
@@ -126,13 +122,13 @@ img {
 }
 
 .entry-content table {
-  .table;
-  .table-striped;
+  @extend .table;
+  @extend .table-striped;
 }
 
 .label-category {
-  .label;
-  .label-primary;
+  @extend .label;
+  @extend .label-primary;
   a {
     color: #fff;
   }
@@ -141,29 +137,29 @@ img {
 /**
  * Import gallery styles.
  */
-@import url(_gallery.less);
+@import "gallery";
 
 /**
  * Import comment styles.
  */
-@import url(_comments.less);
+@import "comments";
 
 /**
  * Import sidebar styles.
  */
-@import url(_sidebar.less);
+@import "sidebar";
 
 /**
  * Import icon styles.
  */
-@import url(_icons.less);
+@import "icons";
 
 /**
  * Import form styles.
  */
-@import url(_forms.less);
+@import "forms";
 
 /**
  * Import footer styles.
  */
-@import url(_footer.less);
+@import "footer";

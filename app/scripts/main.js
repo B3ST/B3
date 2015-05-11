@@ -20,15 +20,24 @@
       'dust.helpers':         root + '/lib/dust-helpers.min',
       'dust.marionette':      root + '/lib/backbone.marionette.dust',
       'backbone.validateAll': root + '/lib/Backbone.validateAll.min',
-      'bootstrap':            root + '/lib/bootstrap',
-      'bootstrap.notify':     root + '/lib/bootstrap-notify',
+      'bootstrap.affix':      root + '/lib/affix',
+      'bootstrap.alert':      root + '/lib/alert',
+      'bootstrap.button':     root + '/lib/button',
+      'bootstrap.carousel':   root + '/lib/carousel',
+      'bootstrap.collapse':   root + '/lib/collapse',
+      'bootstrap.dropdown':   root + '/lib/dropdown',
+      'bootstrap.tab':        root + '/lib/tab',
+      'bootstrap.transition': root + '/lib/transition',
+      'bootstrap.scrollspy':  root + '/lib/scrollspy',
+      'bootstrap.modal':      root + '/lib/modal',
+      'bootstrap.tooltip':    root + '/lib/tooltip',
+      'bootstrap.popover':    root + '/lib/popover',
       'text':                 root + '/lib/text',
       'moment':               root + '/lib/moment',
       'i18n':                 root + '/lib/i18n'
     },
 
     shim: {
-      'bootstrap': ['jquery'],
       'backbone': {
         'deps': ['underscore'],
         'exports': 'Backbone'
@@ -48,10 +57,19 @@
         'deps': ['marionette', 'dust'],
         'exports': 'dustMarionette',
       },
-
-      // Backbone.validateAll plugin (https://github.com/gfranko/Backbone.validateAll)
       'backbone.validateAll': ['backbone'],
-      'bootstrap.notify': ['bootstrap'],
+      'bootstrap.affix':      ['jquery'],
+      'bootstrap.alert':      ['jquery'],
+      'bootstrap.button':     ['jquery'],
+      'bootstrap.carousel':   ['jquery'],
+      'bootstrap.collapse':   ['jquery'],
+      'bootstrap.dropdown':   ['jquery'],
+      'bootstrap.tab':        ['jquery'],
+      'bootstrap.transition': ['jquery'],
+      'bootstrap.scrollspy':  ['jquery'],
+      'bootstrap.modal':      ['jquery'],
+      'bootstrap.tooltip':    ['jquery'],
+      'bootstrap.popover':    ['jquery']
     }
   };
 

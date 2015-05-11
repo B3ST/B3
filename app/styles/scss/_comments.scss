@@ -1,32 +1,30 @@
 /* Comments */
 
 .comment {
-  .media;
+  @extend .media;
 
   &, &:first-child {
     margin-top: 20px;
   }
 
   .avatar {
-    .pull-left;
+    @extend .pull-left;
 
     img {
-      .media-object;
+      @extend .media-object;
     }
   }
 
   .comment-body {
-    .media-body;
+    @extend .media-body;
 
     .comment-heading {
-      .media-heading;
+      @extend .media-heading;
     }
 
-    .comment-meta {
-    }
+    .comment-meta {}
 
-    .comments {
-    }
+    .comments {}
   }
 }
 
