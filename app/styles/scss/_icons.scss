@@ -1,0 +1,31 @@
+/* Icons */
+
+.icon-cancel {
+  @extend .glyphicon;
+  @extend .glyphicon-remove;
+}
+
+.icon-comment {
+  @extend .glyphicon;
+  @extend .glyphicon-comment;
+}
+
+.icon-info {
+  @extend .glyphicon;
+  @extend .glyphicon-info-sign;
+}
+
+.icon-reply {
+  @extend .glyphicon;
+  @extend .glyphicon-comment;
+}
+
+.icon-search {
+  @extend .glyphicon;
+  @extend .glyphicon-search;
+}
+
+.icon-send {
+  @extend .glyphicon;
+  @extend .glyphicon-send;
+}
