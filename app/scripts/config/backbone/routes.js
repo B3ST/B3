@@ -35,48 +35,61 @@ define([
         paramsObj = {};
 
     _.each(this.appParams[route], function (key, index) {
-      paramsObj[key.replace(':', '').replace('*', '')] = params[index] ? params[index] : null;
+      paramsObj[key.replace(/[:*$]/, '')] = params[index] ? params[index] : null;
     });
 
     return [paramsObj];
   };
 
-  // Nothing was changed, except for the namedParams and the splatParam.
-  // The Backbone regex  did not capture named params like :some-thing or *some-thing
-  // because this regex does not include non-word characters like - or _.
-  // With the new regex, we capture word characters, - and _.
+  // We changed the way the Backbone router captures URL parameters:
+  // - Support for the `-` and `_` characters in `:named` and `*splat` parameters.
+  // - Support for named regex parameters (in the `$name<regex>` form.)
+  // - Disabled regexp escaping to allow named regex parameters.
   Backbone.Router.prototype._routeToRegExp = function (route) {
-    var optionalParam = /\((.*?)\)/g,
-        namedParam    = /(\(\?)?:[\w\-\_\\]+/g,
-        splatParam    = /\*[\w\-\_\\]+/g,
-        escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
+    var //escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]+/g,
+        optionalParam = /\((.*?)\)/g,
+        namedParam    = /(\(\?)?:[\w\-_\\]+/g,
+        splatParam    = /\*[\w\-_\\]+/g,
+        regexpParam   = /\$([\w\-_\\]+)<([^>]+)>/g;
 
-
-    route = route.replace(escapeRegExp, '\\$&')
+    route = route//.replace(escapeRegExp, '\\$&')
                  .replace(optionalParam, '(?:$1)?')
                  .replace(namedParam, function(match, optional) {
                     return optional ? match : '([^/?]+)';
                   })
-                 .replace(splatParam, '([^?]*?)');
+                 .replace(splatParam, '([^?]*?)')
+                 .replace(regexpParam, '($2)');
+
     return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$');
   };
 
+  /**
+   * Internal method to process the `appRoutes` for the
+   * router, and turn them in to routes that trigger the
+   * specified method on the specified `controller`.
+   *
+   * @param  {Array}  controllers Application controllers.
+   * @param  {Object} appRoutes   Application routes.
+   */
   Marionette.AppRouter.prototype.processAppRoutes = function (controllers, appRoutes) {
-    var routes = Settings.getRoutes(methodNames);
+    var routes = Settings.getRoutes(methodNames),
+        routeNames;
 
     if (appRoutes) {
       appRoutes = _.extend(routes, appRoutes);
     }
 
-    var routeNames = _.keys(appRoutes).reverse(); // Backbone requires reverted order of routes
+    routeNames = _.keys(appRoutes).reverse(); // Backbone requires reverted order of routes
 
     this.appParams = {};
+
     _.each(routeNames, function(route) {
       var controller = _.find(controllers, function (controller) {
-        return controller[routes[route]] ? true : false;
+        return controller[routes[route]];
       });
 
-      this.appParams[this._routeToRegExp(route)] = route.match(/(:([^\/:()*]+)|(\*([^\/:()*]+)))/g);
+      this.appParams[this._routeToRegExp(route)] = route.match(/([:*$]([^\/:()*<]+))/g);
+
       this._addAppRoute(controller, route, routes[route]);
     }, this);
 

@@ -96,12 +96,7 @@ define([
   };
 
   function getCurlyKey (key) {
-    var attrs = key.match(/([:*]([^\/:()*]+))/g);
-    _.each(attrs, function (attr) {
-      key = key.replace(attr, '{' + attr.replace(/(:)|(\*)/g, '') + '}');
-    });
-
-    return key;
+    return key.replace(/[:*$]([\w\-_\\]+)(<[^>]+>)?/g, '{$1}');
   }
 
   return new Routes();
