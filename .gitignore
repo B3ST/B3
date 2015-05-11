@@ -1,5 +1,6 @@
 # Project
 .tmp
+app/scripts/templates/
 dist/
 lib/
 
