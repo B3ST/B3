@@ -42,14 +42,16 @@ module.exports = {
 
   scripts: {
     src:  [
-      src + 'scripts/**/*.js'
+      src + 'scripts/**/*.js',
+      '!' + src + 'scripts/templates/**'
     ],
     dest: dest + 'scripts/'
   },
 
   dust: {
     src:  src + 'templates/**/*.{html,dust}',
-    dest: src + 'scripts/templates/'
+    app:  src + 'scripts/templates/',
+    dest: dest + 'scripts/templates/'
   },
 
   sass: {

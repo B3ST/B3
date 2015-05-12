@@ -58,7 +58,7 @@
       'bootstrap.scrollspy':  ['jquery'],
       'bootstrap.modal':      ['jquery'],
       'bootstrap.tooltip':    ['jquery'],
-      'bootstrap.popover':    ['jquery'],
+      'bootstrap.popover':    ['jquery', 'bootstrap.tooltip'],
       'templates':            ['dust'],
       'dust':                 {'exports': 'dust'}
   },

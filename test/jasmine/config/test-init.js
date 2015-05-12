@@ -77,7 +77,7 @@
       'bootstrap.scrollspy':  ['jquery'],
       'bootstrap.modal':      ['jquery'],
       'bootstrap.tooltip':    ['jquery'],
-      'bootstrap.popover':    ['jquery'],
+      'bootstrap.popover':    ['jquery', 'bootstrap.tooltip'],
 
       'jasmine': {
         'exports': 'jasmine'

@@ -25,6 +25,7 @@ gulp.task('build:templates', function () {
       .pipe(insert.prepend('define(["dust"],function(dust){return '))
       .pipe(insert.append('});'))
     .pipe(gulpIf(config.debug, sourcemaps.write('.')))
+    .pipe(gulp.dest(config.dust.app))
     .pipe(gulp.dest(config.dust.dest))
     .pipe(browserSync.reload({stream: true}))
     .pipe(size({title: 'build:templates'}));
