@@ -36,6 +36,7 @@ This brief guide assumes you have at least some familiarity with WordPress and J
 
     ```
     $ cd b3
+    $ gem install scss-lint
     $ npm install -g gulp bower requirejs
     $ npm install
     ```

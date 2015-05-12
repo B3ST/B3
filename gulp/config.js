@@ -42,8 +42,7 @@ module.exports = {
 
   scripts: {
     src:  [
-      src + 'scripts/**/*.js',
-      '!' + src + 'scripts/templates/**/*'
+      src + 'scripts/**/*.js'
     ],
     dest: dest + 'scripts/'
   },
