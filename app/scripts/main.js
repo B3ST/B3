@@ -76,8 +76,9 @@
   // Includes WordPress scripts
   for (var handle in WP_API_SETTINGS.scripts) {
     if (WP_API_SETTINGS.scripts[handle]) {
-      var script           = WP_API_SETTINGS.scripts[handle];
-      config.paths[handle] = WP_API_SETTINGS.site_url + script.src;
+      var script           = WP_API_SETTINGS.scripts[handle],
+          scriptRoot       = /^(https?:)?\/\//.test(script.src) ? '' : WP_API_SETTINGS.site_url;
+      config.paths[handle] = scriptRoot + script.src;
       config.shim[handle]  = ['app'].concat(script.deps || []);
     }
   }
