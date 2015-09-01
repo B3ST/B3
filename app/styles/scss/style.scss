@@ -11,7 +11,7 @@
 /**
  * Import theme mixins.
  */
-@import "mixins";
+@import "mixins/mixins";
 
 /**
  * Import accessibility styles.
@@ -42,14 +42,14 @@ body {
   }
 }
 
-#header {
+.site-header {
   min-height: 50px;
 }
 
-#content-wrapper {
+.site-body {
   @extend .container;
 
-  #main {
+  .site-body__main {
     @include make-md-column(9);
     @include make-xs-column(12);
 
@@ -64,7 +64,7 @@ body {
     }
   }
 
-  #sidebar {
+  .site-body__sidebar {
     @extend .container;
     @include make-md-column(3);
     @include make-xs-column(12);
@@ -75,7 +75,7 @@ body {
   }
 
   #b3-error,
-  #sidebar {
+  .site-body__sidebar {
     margin-top: 40px;
   }
 }
@@ -108,7 +108,6 @@ body {
   clear:        both;
   margin-left:  auto;
   margin-right: auto;
-
 }
 
 .alignnone {

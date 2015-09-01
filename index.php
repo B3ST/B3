@@ -15,13 +15,13 @@
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> role="document">
-    <div id="header" role="header"></div>
-    <div id="content-wrapper">
-        <div id="main" role="main"></div>
-        <div id="sidebar"></div>
+    <div id="header" class="site-header" role="header"></div>
+    <div id="content-wrapper" class="site-body">
+        <div id="main" class="site-body__main" role="main"></div>
+        <div id="sidebar" class="site-body__sidebar"></div>
     </div>
-    <div id="footer" role="footer"></div>
-    <div id="notifications"></div>
+    <div id="footer" class="site-footer" role="footer"></div>
+    <div id="notifications" class="site-notifications"></div>
     <?php wp_footer(); ?>
 </body>
 </html>

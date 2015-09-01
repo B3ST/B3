@@ -1,22 +1,26 @@
 body.admin-bar {
   padding-top: 28px;
 
-  #content-wrapper,
-  .navbar-fixed-top {
-    top: 28px;
-  }
-
   @media screen and (max-width: 782px) {
     padding-top: 46px;
+  }
 
-    #content-wrapper,
-    .navbar-fixed-top {
+  .site-body {
+    top: 28px;
+
+    @media screen and (max-width: 782px) {
       top: 46px;
     }
   }
 
-  @media screen and (max-width: 600px) {
-    .navbar-fixed-top {
+  .navbar-fixed-top {
+    top: 28px;
+
+    @media screen and (max-width: 782px) {
+      top: 46px;
+    }
+
+    @media screen and (max-width: 600px) {
       position: absolute;
     }
   }
